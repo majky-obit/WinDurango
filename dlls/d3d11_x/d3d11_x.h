@@ -3,8 +3,28 @@
 #define D3D11_X
 
 #include "dxgi1_5.h"
+#include <d3d11.h>
 
 typedef GUID DXGI_DEBUG_ID;
+
+typedef enum D3D11_GRAPHICS_MEMORY_ACCESS_FLAG
+{
+    D3D11_GRAPHICS_MEMORY_ACCESS_CPU_CACHE_COHERENT = 0,
+    D3D11_GRAPHICS_MEMORY_ACCESS_CPU_WRITECOMBINE_NONCOHERENT = 1,
+    D3D11_GRAPHICS_MEMORY_ACCESS_CPU_CACHE_NONCOHERENT_GPU_READONLY = 2
+} D3D11_GRAPHICS_MEMORY_ACCESS_FLAG;
+
+typedef struct D3D11X_CREATE_DEVICE_PARAMETERS {
+    UINT Version;
+    UINT Flags;
+    void* pOffchipTessellationBuffer;
+    void* pTessellationFactorsBuffer;
+    UINT DeferredDeletionThreadAffinityMask;
+    UINT ImmediateContextDeRingSizeBytes;
+    UINT ImmediateContextCeRingSizeBytes;
+    UINT ImmediateContextDeSegmentSizeBytes;
+    UINT ImmediateContextCeSegmentSizeBytes;
+} D3D11X_CREATE_DEVICE_PARAMETERS;
 
 extern "C" const GUID  DXGI_DEBUG_ALL;
 DEFINE_GUID(DXGI_DEBUG_DX, 0x35cdd7fc, 0x13b2, 0x421d, 0xa5, 0xd7, 0x7e, 0x44, 0x51, 0x28, 0x7d, 0x64);
