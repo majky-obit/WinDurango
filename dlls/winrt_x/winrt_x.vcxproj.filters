@@ -186,14 +186,32 @@
     <Midl Include="External\Windows.Xbox.Shell.Social.idl">
       <Filter>External</Filter>
     </Midl>
-    <Midl Include="External\Windows.Xbox.Management.Deployment.idl" />
-    <Midl Include="External\Windows.Xbox.ApplicationModel.State.Internal.idl" />
-    <Midl Include="External\Windows.Xbox.Management.idl" />
-    <Midl Include="External\Windows.Xbox.Shell.idl" />
-    <Midl Include="External\Windows.Xbox.ApplicationModel.State.idl" />
-    <Midl Include="External\Windows.Xbox.ApplicationModel.Store.idl" />
-    <Midl Include="External\Windows.Xbox.Media.idl" />
-    <Midl Include="External\Windows.Xbox.Achievements.idl" />
-    <Midl Include="External\Windows.Xbox.Media.GameTransportControls.idl" />
+    <Midl Include="External\Windows.Xbox.Media.GameTransportControls.idl">
+      <Filter>External</Filter>
+    </Midl>
+	<Midl Include="External\Windows.Xbox.Achievements.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.ApplicationModel.State.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.ApplicationModel.State.Internal.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.ApplicationModel.Store.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.Management.Deployment.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.Management.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.Media.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.Shell.idl">
+      <Filter>External</Filter>
+    </Midl>
   </ItemGroup>
 </Project>

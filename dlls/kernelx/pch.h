@@ -18,6 +18,7 @@
 #include <string>
 #include <string_view>
 #include <__msvc_string_view.hpp>
+#include <ntstatus.h>
 
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;

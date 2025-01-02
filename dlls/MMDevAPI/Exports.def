@@ -1,7 +1,10 @@
 LIBRARY	MMDevAPI
 EXPORTS
 	ActivateAudioInterfaceAsync	 =  ActivateAudioInterfaceAsync_X		
+	DisableBitstreamOut			 =	DisableBitstreamOut_X		
 	DllCanUnloadNow				 =	DllCanUnloadNow_X					
 	DllGetClassObject			 =	DllGetClassObject_X					
+	EnableSpatialAudio			 =	EnableSpatialAudio_X		
 	RefreshWasapiDeviceList		 =	RefreshWasapiDeviceList_X			
+	RestoreBitstreamOut			 =	RestoreBitstreamOut_X		
 	SetWasapiThreadAffinityMask	 =	SetWasapiThreadAffinityMask_X		

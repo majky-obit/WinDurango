@@ -28,22 +28,27 @@ DllGetActivationFactoryFunc pDllGetActivationFactory = nullptr;
 /* Function pointers for the WinRT RoGetActivationFactory function. */
 HRESULT(WINAPI* TrueRoGetActivationFactory)(HSTRING classId, REFIID iid, void** factory) = RoGetActivationFactory;
 
-// As Zombie suggested, this check if the function get called from a xbox dll or not
 BOOL IsXboxModule(HMODULE module)
 {
-	// probably better to check for dlls in the game folder but idk this works i think
 	wchar_t moduleFilePath[MAX_PATH];
 	if (GetModuleFileNameW(module, moduleFilePath, MAX_PATH) > 0)
 	{
 		std::wstring moduleFileName(moduleFilePath);
 		wprintf(L"%ls\n", moduleFileName.c_str());
 
-		// Testing (i'll complete those)
-
-		/*if (!(moduleFileName.find(L"CoreUIComponents") != std::wstring::npos)) // Example check for "Xbox" in the file name
+		wchar_t exeFilePath[MAX_PATH];
+		if (GetModuleFileNameW(NULL, exeFilePath, MAX_PATH) > 0)
 		{
-			return TRUE; // The caller is from an Xbox module
-		}*/
+			std::wstring exeDir(exeFilePath);
+			size_t pos = exeDir.find_last_of(L"\\/");
+			if (pos != std::wstring::npos) {
+				exeDir = exeDir.substr(0, pos);
+			}
+
+			if (moduleFileName.find(exeDir) == 0) {
+				return TRUE;
+			}
+		}
 	}
 
 	return FALSE;
@@ -111,7 +116,8 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 		return wrappedFactory.CopyTo(iid, factory);
 	}
-	else if (IsClassName(classId, "Windows.UI.Core.CoreWindow"))
+
+	if (IsClassName(classId, "Windows.UI.Core.CoreWindow"))
 	{
 		//
 		// for now we just hook GetForCurrentThread to get the CoreWindow but i'll change it later to
