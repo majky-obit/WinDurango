@@ -85,7 +85,7 @@ BOOL TitleMemoryStatus_X(LPTITLEMEMORYSTATUS Buffer)
     // equivalent to the previous code
     (++Buffer)->dwLength = ProcessInformation[7];
     (++Buffer)->dwReserved = ProcessInformation[8];
-    
+
     return TRUE;
 }
 
@@ -222,7 +222,7 @@ BOOL GetThreadName_X(HANDLE hThread, PWSTR lpThreadName, SIZE_T nBufferLength, S
 }
 
 void GetSystemOSVersion_X(LPSYSTEMOSVERSIONINFO VersionInformation) {
-    if (!VersionInformation) 
+    if (!VersionInformation)
     {
         return;
     }
@@ -313,19 +313,20 @@ void XMemSetAllocationHooks_X(decltype(&XMemAlloc_X) Alloc, decltype(&XMemFree_X
 // TODO
 // absolutely temporary implementation I just want to make it work
 // sub_18001BCA0 
-char* qword_18002B880;
-char* qword_18002B890;
-HANDLE qword_18002B820;
-HANDLE qword_18002B830;
-HANDLE qword_18002B818;
-HANDLE qword_18002B850;
-HANDLE qword_18002B858;
-HANDLE qword_18002B888;
-HANDLE P;
+char* TblPtrs;
+HANDLE hExtendedLocaleKey;
+HANDLE hCustomLocaleKey;
+HANDLE hLangGroupsKey;
+HANDLE hAltSortsKey;
+HANDLE hLocaleKey;
+HANDLE hCodePageKey;
+HANDLE gpACPHashN;
 char* dword_18002B84C;
+LPVOID P; // ?!?! ?
+LPVOID P_0; // ¡!¡ ¡!?!??
 
 //sub_18001BB8C
-int dword_18002BF68;
+int IsNlsProcessInitialized;
 
 
 int sub_18001D528()
@@ -395,12 +396,12 @@ __int64 sub_18001BB8C()
                     else
                     {
                         RtlReleaseSRWLockExclusive(&unk_18002B838);
-                        v3 = P;
-                        v4 = (HMODULE) * ((_QWORD*)P + 8);
+                        v3 = gpACPHashN;
+                        v4 = (HMODULE) * ((_QWORD*)gpACPHashN + 8);
                         if (v4)
                             FreeLibrary(v4);
                         RtlFreeHeap(NtCurrentPeb()->ProcessHeap, 0, v3);
-                        P = 0LL;
+                        gpACPHashN = 0LL;
                         return 87;
                     }
                 }
@@ -414,7 +415,7 @@ __int64 sub_18001BB8C()
 
 // absolutely temporary implementation I just want to make it work
 // decompilation from ghidra (it looks horrible lol)
-NTSTATUS sub_18001BCA0(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReserved)
+NTSTATUS NlsProcessDestroy(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReserved)
 {
     char* v0; // rax
     __int64 v1; // rdi
@@ -432,8 +433,8 @@ NTSTATUS sub_18001BCA0(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReser
     NTSTATUS result; // al
 
 
-    v0 = (char*)qword_18002B880;
-    if (qword_18002B880)
+    v0 = (char*)TblPtrs;
+    if (TblPtrs)
     {
         v1 = 0LL;
         v2 = 197LL;
@@ -451,16 +452,16 @@ NTSTATUS sub_18001BCA0(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReser
                     HeapFree(GetProcessHeap(), 0, v3);
                     v3 = v5;
                 } while (v5);
-                v0 = (char*)qword_18002B880;
+                v0 = (char*)TblPtrs;
             }
             v1 += 8LL;
             --v2;
         } while (v2);
         if (v0)
-            HeapFree(GetProcessHeap(), 0, qword_18002B880);
-        qword_18002B880 = 0LL;
+            HeapFree(GetProcessHeap(), 0, TblPtrs);
+        TblPtrs = 0LL;
     }
-    v6 = (char*)qword_18002B890;
+    v6 = (char*)P;
     v7 = 0LL;
     v8 = 128LL;
     do
@@ -474,53 +475,53 @@ NTSTATUS sub_18001BCA0(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReser
                 HeapFree(GetProcessHeap(), 0, v9);
                 v9 = v10;
             } while (v10);
-            v6 = (char*)qword_18002B890;
+            v6 = (char*)P;
         }
         v7 += 8LL;
         --v8;
     } while (v8);
     if (v6)
-        HeapFree(GetProcessHeap(), 0, qword_18002B890);
-    qword_18002B890 = 0LL;
-    if (qword_18002B888)
-        HeapFree(GetProcessHeap(), 0, qword_18002B888);
-    // P ?!?
-    v11 = P;
-    qword_18002B888 = 0LL;
-    v12 = (HMODULE) * ((char*)P + 8);
+        HeapFree(GetProcessHeap(), 0, P);
+    P = 0LL;
+    if (P_0)
+        HeapFree(GetProcessHeap(), 0, P_0);
+    v11 = gpACPHashN;
+    P_0 = 0LL;
+    v12 = (HMODULE) * ((char*)gpACPHashN + 8);
     if (v12)
         FreeLibrary(v12);
     result = HeapFree(GetProcessHeap(), 0, v11);
-    P = 0LL;
-    if (GetModuleHandle)
+    gpACPHashN = 0LL;
+    if (hCodePageKey)
     {
-        result = NtClose(GetModuleHandle);
+        result = NtClose(hCodePageKey);
+        hCodePageKey = 0LL;
     }
-    if (qword_18002B820)
+    if (hLocaleKey)
     {
-        result = NtClose(qword_18002B820);
-        qword_18002B820 = 0LL;
+        result = NtClose(hLocaleKey);
+        hLocaleKey = 0LL;
     }
-    if (qword_18002B830)
+    if (hAltSortsKey)
     {
-        result = NtClose(qword_18002B830);
-        qword_18002B830 = 0LL;
+        result = NtClose(hAltSortsKey);
+        hAltSortsKey = 0LL;
     }
-    if (qword_18002B818)
+    if (hLangGroupsKey)
     {
-        result = NtClose(qword_18002B818);
-        qword_18002B818 = 0LL;
+        result = NtClose(hLangGroupsKey);
+        hLangGroupsKey = 0LL;
     }
-    if (qword_18002B850)
+    if (hCustomLocaleKey)
     {
-        result = NtClose(qword_18002B850);
-        qword_18002B850 = 0LL;
+        result = NtClose(hCustomLocaleKey);
+        hCustomLocaleKey = 0LL;
     }
-    if (qword_18002B858)
+    if (hExtendedLocaleKey)
     {
-        result = NtClose(qword_18002B858);
-        qword_18002B858 = 0LL;
+        result = NtClose(hExtendedLocaleKey);
+        hExtendedLocaleKey = 0LL;
     }
-    dword_18002B84C = 0;
+    IsNlsProcessInitialized = 0;
     return result;
 }
