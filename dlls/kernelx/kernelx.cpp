@@ -256,44 +256,8 @@ HANDLE HeapHandle;
 
 
 void XMemFreeDefault_X(PVOID pADDRESS, uint64_t dwAllocAttributes) {
-
-    uint64_t v3 = dwAllocAttributes >> 29;
-    uint32_t v2 = static_cast<uint32_t>(dwAllocAttributes);
-
-    // Check if RtlFreeHeap can be used
-    if (!dword_180021A60[v3 & 0xF] && (v2 & 0x1F000000) <= 0x4000000 && (v2 & 0xC000) == 0) {
-        HeapFree(HeapHandle, 0, pADDRESS);
-    }
-
-    uint64_t v6 = v3 & 0xF;
-    int64_t v7 = qword_18002C7E0[v6];
-
-    // Check if the memory can be freed using sub_18000EA08
-    if (!v7 || !*reinterpret_cast<uint64_t*>(v7 + 48) ||
-        *reinterpret_cast<uint64_t*>(v7 + 48) > reinterpret_cast<uint64_t>(pADDRESS) ||
-        *reinterpret_cast<uint64_t*>(v7 + 56) < reinterpret_cast<uint64_t>(pADDRESS)) {
-
-        v7 = qword_18002C7E0[static_cast<unsigned int>(v6 + 16)];
-        if (!v7 || !*reinterpret_cast<uint64_t*>(v7 + 48) ||
-            *reinterpret_cast<uint64_t*>(v7 + 48) > reinterpret_cast<uint64_t>(pADDRESS) ||
-            *reinterpret_cast<uint64_t*>(v7 + 56) < reinterpret_cast<uint64_t>(pADDRESS)) {
-            v7 = 0;
-        }
-    }
-
-    if (v7) {
-        //Bored to implement
-        //return sub_18000EA08() ? TRUE : FALSE;
-    }
-
-    SIZE_T RegionSize = 0;
-    // Attempt to free virtual memory
-    NtFreeVirtualMemory(
-        reinterpret_cast<HANDLE>(0xFFFFFFFFFFFFFFFF),
-        &pADDRESS,
-        &RegionSize,
-        MEM_RELEASE
-    );
+	// note from unixian: previous implementation used invalid handle, Alloc uses malloc, so we use free here
+	free(pADDRESS);
 }
 
 void XMemFree_X(PVOID pADDRESS, uint64_t dwAllocAttributes) {
