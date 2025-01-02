@@ -21,70 +21,72 @@ BOOL __stdcall WaitOnAddress_X(volatile void* Address, PVOID CompareAddress, SIZ
     return WaitOnAddress(Address, CompareAddress, AddressSize, dwMilliseconds);
 }
 
-bool ToolingMemoryStatus_X(__int64 a1)
+BOOL ToolingMemoryStatus_X(LPTOOLINGMEMORYSTATUS buffer)
 {
-    int v3; // eax
-    __int64 SystemInformation[4]; // [rsp+20h] [rbp-38h] BYREF
+    __int64 SystemInformation[4];
 
-    if (*(DWORD*)a1 != 40)
+    if (buffer->dwLength != 40)
     {
         SetLastError(0x57u);
-        return false;
+        return FALSE;
     }
-    v3 = NtQuerySystemInformation((SYSTEM_INFORMATION_CLASS)(0x96 | 0x80), SystemInformation, 0x20u, 0i64);
-    if (v3 < 0)
+
+    NTSTATUS Status = NtQuerySystemInformation((SYSTEM_INFORMATION_CLASS)(0x96 | 0x80), SystemInformation, 0x20u, 0i64);
+    if (!NT_SUCCESS(Status))
     {
-        SetLastError(v3);
-        return false;
+        SetLastError(Status);
+        return FALSE;
     }
-    *(DWORD*)(a1 + 8) = SystemInformation[0];
-    *(DWORD*)(a1 + 16) = SystemInformation[1];
-    *(DWORD*)(a1 + 24) = SystemInformation[2];
-    *(DWORD*)(a1 + 32) = SystemInformation[3];
-    return true;
+
+    buffer->ullTotalMem = SystemInformation[0];
+    buffer->ullAvailMem = SystemInformation[1];
+    buffer->ulPeakUsage = SystemInformation[2];
+    buffer->ullPageTableUsage = SystemInformation[3];
+
+    return TRUE;
 }
 
-bool TitleMemoryStatus_X(__int64 a1)
+BOOL TitleMemoryStatus_X(LPTITLEMEMORYSTATUS Buffer)
 {
-    int v3; // eax
-    __int64 v4; // rcx
-    __int64 v5; // rax
-    __int64 v6; // rax
-    __int64 v7; // rcx
-    __int64 v8; // rax
     __int64 ProcessInformation[10]; // [rsp+30h] [rbp-68h] BYREF
 
-    if (*(DWORD*)a1 != 80)
+    if (Buffer->dwLength != 80)
     {
         SetLastError(0x57u);
         return false;
     }
-    v3 = NtQueryInformationProcess(
+
+    NTSTATUS Status = NtQueryInformationProcess(
         (HANDLE)0xFFFFFFFFFFFFFFFFi64,
         (PROCESSINFOCLASS)(0x3A | 0x3A),
         ProcessInformation,
         0x48u,
         0i64);
-    if (v3 < 0)
+
+    if (!NT_SUCCESS(Status))
     {
-        SetLastError(v3);
-        return false;
+        SetLastError(Status);
+        return FALSE;
     }
-    v4 = ProcessInformation[2];
-    v5 = ProcessInformation[0];
-    *(DWORD*)(a1 + 8) = ProcessInformation[0];
-    *(DWORD*)(a1 + 16) = v5 - ProcessInformation[1];
-    v6 = ProcessInformation[4] - v4;
-    *(DWORD*)(a1 + 24) = v4;
-    v7 = ProcessInformation[5];
-    *(DWORD*)(a1 + 40) = v6;
-    *(DWORD*)(a1 + 32) = ProcessInformation[3];
-    v8 = ProcessInformation[6] - v7;
-    *(DWORD*)(a1 + 48) = v7;
-    *(DWORD*)(a1 + 56) = v8;
-    *(DWORD*)(a1 + 64) = ProcessInformation[7];
-    *(DWORD*)(a1 + 72) = ProcessInformation[8];
-    return true;
+
+    Buffer->ullTotalMem = ProcessInformation[0];
+    Buffer->ullAvailMem = ProcessInformation[0] - ProcessInformation[1];
+
+    Buffer->ullLegacyUsed = ProcessInformation[2];
+    Buffer->ullAvailMem = ProcessInformation[4] - ProcessInformation[2];
+
+    Buffer->ullTitleUsed = ProcessInformation[5];
+    Buffer->ullTitleUsed = ProcessInformation[5] - ProcessInformation[6];
+
+    //// @Patoke todo: what is this doing? it's writing outside the bounds of TITLEMEMORYSTATUS
+    //*(DWORD*)((uint8_t*)Buffer + 64) = ProcessInformation[7];
+    //*(DWORD*)((uint8_t*)Buffer + 72) = ProcessInformation[8];
+
+    // equivalent to the previous code
+    (++Buffer)->dwLength = ProcessInformation[7];
+    (++Buffer)->dwReserved = ProcessInformation[8];
+    
+    return TRUE;
 }
 
 // We ignore setting this as we actually don't care about this.
@@ -93,21 +95,19 @@ bool SetThreadpoolAffinityMask_X()
     return true;
 }
 
-__int64 SetThreadName_X(HANDLE ThreadHandle, const WCHAR* a2)
+BOOL SetThreadName_X(HANDLE hThread, const WCHAR* lpThreadName)
 {
-    int v3; // eax
-    _UNICODE_STRING DestinationString; // [rsp+20h] [rbp-18h] BYREF
+    UNICODE_STRING DestinationString;
 
-    RtlInitUnicodeString(&DestinationString, a2);
-    v3 = NtSetInformationThread(ThreadHandle, ThreadNameInformation, &DestinationString, 0x10u);
-    if (v3 >= 0)
-        return 1i64;
-    return 0i64;
+    RtlInitUnicodeString(&DestinationString, lpThreadName);
+    NTSTATUS Status = NtSetInformationThread(hThread, ThreadNameInformation, &DestinationString, 0x10u);
+    if (NT_SUCCESS(Status))
+        return TRUE;
+    return FALSE;
 }
 
-unsigned __int64 QueryProcessorSchedulingStatistics_X(unsigned __int64* a1)
+void QueryProcessorSchedulingStatistics_X(PPROCESSOR_SCHEDULING_STATISTICS ProcessorSchedulingStatistics)
 {
-    unsigned __int64 result = 0;
     LARGE_INTEGER frequency = { 0 };
     LARGE_INTEGER counter = { 0 };
 
@@ -116,126 +116,120 @@ unsigned __int64 QueryProcessorSchedulingStatistics_X(unsigned __int64* a1)
     QueryPerformanceCounter(&counter);
 
     // Set a1[2] based on the performance counter and frequency
-    a1[2] = counter.QuadPart / (frequency.QuadPart / 10000000);
+    ProcessorSchedulingStatistics->GlobalTime = counter.QuadPart / (frequency.QuadPart / 10000000);
 
     // Use the CPUID instruction
     int cpuInfo[4] = { 0 }; // {EAX, EBX, ECX, EDX}
     __cpuid(cpuInfo, 0);  // This gets the highest function supported by CPUID
 
     // Combine RBX and RAX as a 64-bit value and store in *a1
-    a1[0] = __ull_rshift(cpuInfo[1], cpuInfo[0]);  // EBX (RBX), EAX (RAX)
+    ProcessorSchedulingStatistics->RunningTime = __ull_rshift(cpuInfo[1], cpuInfo[0]);  // EBX (RBX), EAX (RAX)
 
     // Combine RDX and RCX as a 64-bit value and store in a1[1]
-    result = __ull_rshift(cpuInfo[3], cpuInfo[2]); // EDX (RDX), ECX (RCX)
-    a1[1] = result;
-
-    return result;
+    ProcessorSchedulingStatistics->IdleTime = __ull_rshift(cpuInfo[3], cpuInfo[2]); // EDX (RDX), ECX (RCX)
 }
 
-bool JobTitleMemoryStatus_X(void* a1, __int64 a2)
+BOOL JobTitleMemoryStatus_X(void* pJob, LPTITLEMEMORYSTATUS Buffer)
 {
-    int v4; // eax
-    __int64 v5; // rcx
-    __int64 v6; // rax
-    __int64 v7; // rax
-    __int64 v8; // rcx
-    __int64 v9; // rax
     __int64 JobInformation[10]; // [rsp+30h] [rbp-68h] BYREF
 
-    if (*(DWORD*)a2 != 80)
+    if (Buffer->dwLength != 80)
     {
         SetLastError(0x57u);
-        return false;
+        return FALSE;
     }
-    v4 = QueryInformationJobObject(a1, (JOBOBJECTINFOCLASS)(JobObjectGroupInformation | 0x10), JobInformation, 0x48u, 0i64);
-    if (v4 < 0)
+
+    NTSTATUS Status = QueryInformationJobObject(pJob, (JOBOBJECTINFOCLASS)(JobObjectGroupInformation | 0x10), JobInformation, 0x48u, 0i64);
+    if (!NT_SUCCESS(Status))
     {
-        SetLastError(v4);
-        return false;
+        SetLastError(Status);
+        return FALSE;
     }
-    v5 = JobInformation[2];
-    v6 = JobInformation[0];
-    *(DWORD*)(a2 + 8) = JobInformation[0];
-    *(DWORD*)(a2 + 16) = v6 - JobInformation[1];
-    v7 = JobInformation[4] - v5;
-    *(DWORD*)(a2 + 24) = v5;
-    v8 = JobInformation[5];
-    *(DWORD*)(a2 + 40) = v7;
-    *(DWORD*)(a2 + 32) = JobInformation[3];
-    v9 = JobInformation[6] - v8;
-    *(DWORD*)(a2 + 48) = v8;
-    *(DWORD*)(a2 + 56) = v9;
-    *(DWORD*)(a2 + 64) = JobInformation[7];
-    *(DWORD*)(a2 + 72) = JobInformation[8];
-    return true;
+
+    Buffer->ullTotalMem = JobInformation[0];
+    Buffer->ullAvailMem = JobInformation[0] - JobInformation[1];
+
+    Buffer->ullLegacyUsed = JobInformation[2];
+    Buffer->ullAvailMem = JobInformation[4] - JobInformation[2];
+
+    Buffer->ullTitleUsed = JobInformation[5];
+    Buffer->ullTitleUsed = JobInformation[5] - JobInformation[6];
+
+    //// @Patoke todo: what is this doing? it's writing outside the bounds of TITLEMEMORYSTATUS
+    //*(DWORD*)((uint8_t*)Buffer + 64) = JobInformation[7];
+    //*(DWORD*)((uint8_t*)Buffer + 72) = JobInformation[8];
+
+    // equivalent to the previous code
+    (++Buffer)->dwLength = JobInformation[7];
+    (++Buffer)->dwReserved = JobInformation[8];
+
+    return TRUE;
 }
 
-__int64 GetThreadName_X(HANDLE ThreadHandle, void* a2, unsigned __int64 a3, unsigned __int64* a4)
+BOOL GetThreadName_X(HANDLE hThread, PWSTR lpThreadName, SIZE_T nBufferLength, SIZE_T* pnRequiredLength)
 {
-    NTSTATUS v8; // ecx
-    const void** v10; // rbp
     ULONG v11; // ebx
-    unsigned __int64 v12; // rsi
-    NTSTATUS v13; // eax
-    int v14; // edi
+    NTSTATUS iError; // edi
     ULONG ReturnLength; // [rsp+78h] [rbp+20h] BYREF
 
-    if (!a4)
+    if (!pnRequiredLength)
     {
-        v8 = -1073741811;
-    LABEL_3:
-        SetLastError(v8);
-        return 0i64;
+        SetLastError(STATUS_INVALID_PARAMETER);
+        return FALSE;
     }
-    v10 = 0i64;
+
+    PUNICODE_STRING lpData = NULL;
     v11 = 144;
-    v12 = 0i64;
-    while (1)
+    SIZE_T iNameSize = 0;
+    while (TRUE)
     {
-        if (v10)
-            HeapFree(GetProcessHeap(), 0, v10);
-        v10 = (const void**)HeapAlloc(GetProcessHeap(), 0, v11);
-        if (!v10)
+        if (lpData)
+            HeapFree(GetProcessHeap(), 0, lpData);
+        lpData = (PUNICODE_STRING)HeapAlloc(GetProcessHeap(), 0, v11);
+        if (!lpData)
         {
-            v14 = -1073741801;
-            goto LABEL_18;
+            SetLastError(STATUS_NO_MEMORY);
+            return FALSE;
         }
-        v13 = NtQueryInformationThread(ThreadHandle, ThreadNameInformation, v10, v11, &ReturnLength);
-        v14 = v13;
-        if (v13 != -1073741820 && v13 != -1073741789 && v13 != -2147483643)
+        iError = NtQueryInformationThread(hThread, ThreadNameInformation, lpData, v11, &ReturnLength);
+        if (iError != STATUS_INFO_LENGTH_MISMATCH && iError != STATUS_BUFFER_TOO_SMALL && iError != STATUS_BUFFER_OVERFLOW)
             break;
         v11 = ReturnLength;
     }
-    if (v13 >= 0)
+    if (NT_SUCCESS(iError))
     {
-        v12 = (unsigned __int64)*(unsigned __int16*)v10 >> 1;
-        if (a2 && v12 < a3)
+        iNameSize = lpData->Length / 2;
+        if (lpThreadName && iNameSize < nBufferLength)
         {
-            memcpy(a2, v10[1], 2 * v12);
-            *((WORD*)a2 + v12) = 0;
+            memcpy(lpThreadName, lpData->Buffer, iNameSize * sizeof(WCHAR));
+            lpThreadName[iNameSize] = 0;
         }
         else
         {
-            ++v12;
-            v14 = -1073741789;
+            ++iNameSize;
+            iError = STATUS_BUFFER_TOO_SMALL;
         }
     }
-LABEL_18:
-    *a4 = v12;
-    HeapFree(GetProcessHeap(), 0, v10);
-    if (v14 < 0)
+
+    *pnRequiredLength = iNameSize;
+    HeapFree(GetProcessHeap(), 0, lpData);
+    if (!NT_SUCCESS(iError))
     {
-        v8 = v14;
-        goto LABEL_3;
+        SetLastError(iError);
+        return FALSE;
     }
-    return 1i64;
+    return TRUE;
 }
 
-void GetSystemOSVersion_X(uint8_t* buffer) {
-    if (!buffer) return;
+void GetSystemOSVersion_X(LPSYSTEMOSVERSIONINFO VersionInformation) {
+    if (!VersionInformation) 
+    {
+        return;
+    }
 
     int cpuInfo[4] = { -1 };
 
+    // @Patoke note: the XBOX passes 0x4000000D for its default hypervisor, we're not running a hypervisor
     // Execute CPUID with EAX = 1
     __cpuid(cpuInfo, 1);
 
@@ -243,12 +237,11 @@ void GetSystemOSVersion_X(uint8_t* buffer) {
     int ebx = cpuInfo[1];
     int edx = cpuInfo[3];
 
-    // Store parts of the results in the buffer
-    buffer[0] = (uint8_t)(ebx & 0xFF);              // Lowest 8 bits of EBX
-    buffer[1] = (uint8_t)((eax >> 24) & 0xFF);      // Highest 8 bits of EAX
+    VersionInformation->MajorVersion = LOBYTE(ebx);             // Lowest 8 bits of EBX
+    VersionInformation->MinorVersion = HIBYTE(HIDWORD(eax));    // Highest 8 bits of EAX
 
-    *(uint16_t*)(buffer + 2) = (uint16_t)((eax >> 16) & 0xFFFF); // Second 16 bits of EAX (High 16 bits of lower 32 bits)
-    *(uint16_t*)(buffer + 4) = (uint16_t)(edx & 0xFFFF);         // Low 16 bits of EDX
+    VersionInformation->Revision = LOWORD(edx);                 // Lowest 16 bits of EDX
+    VersionInformation->BuildNumber = LOWORD(eax);              // Lowest 16 bits of EAX     
 }
 
 
