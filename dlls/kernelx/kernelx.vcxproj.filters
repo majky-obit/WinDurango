@@ -10,6 +10,18 @@
     <ClCompile Include="CoreApplicationWrapperX.cpp">
       <Filter>Windows.ApplicationModel.Core\CoreApplication</Filter>
     </ClCompile>
+    <ClCompile Include="FrameworkViewSourceWrapper.cpp">
+      <Filter>Windows.ApplicationModel.Core\IFrameworkViewSource</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameworkViewWrapper.cpp">
+      <Filter>Windows.ApplicationModel.Core\IFrameworkView</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\download\kernelx\FrameworkViewSourceWrapper.cpp">
+      <Filter>Windows.ApplicationModel.Core\FrameworkViewSource</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\download\kernelx\FrameworkViewWrapper.cpp">
+      <Filter>Windows.ApplicationModel.Core\FrameworkView</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -32,6 +44,18 @@
     <ClInclude Include="ICoreApplicationResourceAvailabilityX.h">
       <Filter>Windows.ApplicationModel.Core</Filter>
     </ClInclude>
+    <ClInclude Include="FrameworkViewSourceWrapper.h">
+      <Filter>Windows.ApplicationModel.Core\IFrameworkViewSource</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameworkViewWrapper.h">
+      <Filter>Windows.ApplicationModel.Core\IFrameworkView</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\download\kernelx\FrameworkViewSourceWrapper.h">
+      <Filter>Windows.ApplicationModel.Core\FrameworkViewSource</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\download\kernelx\FrameworkViewWrapper.h">
+      <Filter>Windows.ApplicationModel.Core\FrameworkView</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Exports.def" />
@@ -50,6 +74,18 @@
     </Filter>
     <Filter Include="Windows.ApplicationModel.Core\CoreApplication">
       <UniqueIdentifier>{ee124397-8dbc-48c3-869f-10201a7d04fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Core\IFrameworkViewSource">
+      <UniqueIdentifier>{e4e6dd70-819e-4474-944f-b4f103ca6495}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Core\IFrameworkView">
+      <UniqueIdentifier>{50e486e8-0793-466a-8e95-9bac142a64d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Core\FrameworkView">
+      <UniqueIdentifier>{eb1da86f-f7df-4caf-b16e-5a0370129af7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Core\FrameworkViewSource">
+      <UniqueIdentifier>{0d451cd9-d433-42a7-b303-9b41681d8d10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
