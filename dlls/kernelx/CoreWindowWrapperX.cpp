@@ -3,19 +3,16 @@
 
 HRESULT CoreWindowWrapperX::GetIids(ULONG* iidCount, IID** iids)
 {
-	printf("[CoreWindowWrapperX] --> GetIids\n");
 	return m_realWindow->GetIids(iidCount, iids);
 }
 
 HRESULT CoreWindowWrapperX::GetRuntimeClassName(HSTRING* className)
 {
-	printf("[CoreWindowWrapperX] --> GetRuntimeClassName\n");
 	return m_realWindow->GetRuntimeClassName(className);
 }
 
 HRESULT CoreWindowWrapperX::GetTrustLevel(TrustLevel* trustLevel)
 {
-	printf("[CoreWindowWrapperX] --> GetTrustLevel\n");
 	return m_realWindow->GetTrustLevel(trustLevel);
 }
 
@@ -90,12 +87,7 @@ INT32 CoreWindowWrapperX::_abi_add_CharacterReceived(ITypedEventHandler<CoreWind
 	EventRegistrationToken* token)
 {
 	printf("[CoreWindowWrapperX] --> _abi_add_CharacterReceived\n");
-
-	// STUB
-	*token = EventRegistrationToken();
-	return S_OK;
-
-	//return m_realWindow->add_CharacterReceived(handler, token);
+	return m_realWindow->add_CharacterReceived(handler, token);
 }
 
 INT32 CoreWindowWrapperX::_abi_remove_CharacterReceived(EventRegistrationToken token)
@@ -108,12 +100,7 @@ INT32 CoreWindowWrapperX::_abi_add_Closed(ITypedEventHandler<CoreWindow*, CoreWi
 	EventRegistrationToken* token)
 {
 	printf("[CoreWindowWrapperX] --> _abi_add_Closed\n");
-
-	// STUB
-	*token = EventRegistrationToken();
-	return S_OK;
-
-	//return m_realWindow->add_Closed(handler, token);
+	return m_realWindow->add_Closed(handler, token);
 }
 
 INT32 CoreWindowWrapperX::_abi_remove_Closed(EventRegistrationToken token)
@@ -139,12 +126,7 @@ INT32 CoreWindowWrapperX::_abi_add_KeyDown(ITypedEventHandler<CoreWindow*, KeyEv
 	EventRegistrationToken* token)
 {
 	printf("[CoreWindowWrapperX] --> _abi_add_KeyDown\n");
-
-	// STUB
-	*token = EventRegistrationToken();
-	return S_OK;
-
-	//return m_realWindow->add_KeyDown(handler, token);
+	return m_realWindow->add_KeyDown(handler, token);
 }
 
 INT32 CoreWindowWrapperX::_abi_remove_KeyDown(EventRegistrationToken token)
@@ -157,12 +139,7 @@ INT32 CoreWindowWrapperX::_abi_add_KeyUp(ITypedEventHandler<CoreWindow*, KeyEven
 	EventRegistrationToken* token)
 {
 	printf("[CoreWindowWrapperX] --> _abi_add_KeyUp\n");
-
-	// STUB
-	*token = EventRegistrationToken();
-	return S_OK;
-
-	//return m_realWindow->add_KeyUp(handler, token);
+	return m_realWindow->add_KeyUp(handler, token);
 }
 
 INT32 CoreWindowWrapperX::_abi_remove_KeyUp(EventRegistrationToken token)
@@ -238,32 +215,22 @@ INT32 CoreWindowWrapperX::_abi_remove_VisibilityChanged(EventRegistrationToken t
 
 HRESULT CoreWindowWrapperX::QueryInterface(const IID& riid, void** ppvObject)
 {
-	printf("[CoreWindowWrapperX] --> QueryInterface\n");
-	if (riid == __uuidof(IUnknown) || 
-		riid == __uuidof(IInspectable) || 
-		riid == __uuidof(ICoreWindow) || 
-		riid == __uuidof(IAgileObject))
+	if (riid == __uuidof(ICoreWindow) || true)
 	{
-		*ppvObject = this;
+		*ppvObject = static_cast<ICoreWindowX*>(this);
 		AddRef();
 		return S_OK;
 	}
-	
-	*ppvObject = nullptr;
-
-	return E_NOINTERFACE;
-	//return m_realWindow->QueryInterface(riid, ppvObject);
+	return m_realWindow->QueryInterface(riid, ppvObject);
 }
 
 ULONG CoreWindowWrapperX::AddRef()
 {
-	printf("[CoreWindowWrapperX] --> AddRef\n");
 	return InterlockedIncrement(&m_refCount);
 }
 
 ULONG CoreWindowWrapperX::Release()
 {
-	printf("[CoreWindowWrapperX] --> Release\n");
 	ULONG refCount = InterlockedDecrement(&m_refCount);
 	if (refCount == 0) delete this;
 	return refCount;
