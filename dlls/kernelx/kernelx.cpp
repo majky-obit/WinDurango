@@ -257,6 +257,7 @@ HANDLE HeapHandle;
 
 void XMemFreeDefault_X(PVOID pADDRESS, uint64_t dwAllocAttributes) {
 	// note from unixian: previous implementation used invalid handle, Alloc uses malloc, so we use free here
+	// this SHOULD be replaced with a proper reversal of xmem, but for now, this *should* be fine
 	free(pADDRESS);
 }
 
