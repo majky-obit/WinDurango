@@ -155,8 +155,24 @@ HRESULT __stdcall D3D11CreateDevice_X(
         printf("SDK Version mismatch: %d, correcting to %d\n", SDKVersion, D3D11_SDK_VERSION);
         SDKVersion = D3D11_SDK_VERSION;
     }
-	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
-    *ppDevice = reinterpret_cast<ID3D11Device*>(new GraphicsUnknown(*ppDevice));
+
+    D3D_FEATURE_LEVEL featurelevels[] = {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+        D3D_FEATURE_LEVEL_9_3,
+        D3D_FEATURE_LEVEL_9_2,
+        D3D_FEATURE_LEVEL_9_1,
+    };
+
+    ID3D11Device2* device2{};
+	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, Flags & CREATE_DEVICE_FLAG_MASK, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
+    
+    // get dx11.2 feature level, since that's what dx11.x inherits from
+    (*ppDevice)->QueryInterface(&device2);
+    
+    *ppDevice = new D3D11DeviceXWrapperX(device2);
     return hr;
 }
 
