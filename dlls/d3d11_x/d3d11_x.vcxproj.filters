@@ -27,6 +27,9 @@
     <ClInclude Include="Exports.def">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="d3d_x\d3d_x.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="d3d11_x.cpp">

@@ -4,6 +4,8 @@
 
 #include <cstdio>
 
+#include "d3d_x/d3d_x.hpp"
+
 void D3DQuerySEQCounters_X()
 {
 
@@ -116,7 +118,7 @@ HRESULT __stdcall D3D11CreateDevice_X(
     _In_reads_opt_(FeatureLevels) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
     UINT FeatureLevels,
     UINT SDKVersion,
-    _Out_opt_ ID3D11Device** ppDevice,
+    ID3D11Device** ppDevice,
     _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
     _Out_opt_ ID3D11DeviceContext** ppImmediateContext)
 {
@@ -128,8 +130,9 @@ HRESULT __stdcall D3D11CreateDevice_X(
 		printf("SDK Version mismatch: %d, correcting to %d\n", SDKVersion, D3D11_SDK_VERSION);
         SDKVersion = D3D11_SDK_VERSION;
     }
-
-	return D3D11CreateDevice(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
+	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
+    *ppDevice = reinterpret_cast<ID3D11Device*>(new GraphicsUnknown(*ppDevice));
+    return hr;
 }
 
 HRESULT __stdcall D3D11XCreateDeviceX_X(
