@@ -5,6 +5,11 @@
 #include "dxgi1_5.h"
 #include <d3d11.h>
 
+// remove all XBOX only flags passed to CreateDevice 
+#define CREATE_DEVICE_FLAG_MASK (D3D11_CREATE_DEVICE_SINGLETHREADED | D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_SWITCH_TO_REF | \
+        D3D11_CREATE_DEVICE_PREVENT_INTERNAL_THREADING_OPTIMIZATIONS | D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUGGABLE | \
+        D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY | D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT | D3D11_CREATE_DEVICE_VIDEO_SUPPORT)
+
 typedef GUID DXGI_DEBUG_ID;
 
 typedef enum D3D11_GRAPHICS_MEMORY_ACCESS_FLAG
@@ -25,6 +30,65 @@ typedef struct D3D11X_CREATE_DEVICE_PARAMETERS {
     UINT ImmediateContextDeSegmentSizeBytes;
     UINT ImmediateContextCeSegmentSizeBytes;
 } D3D11X_CREATE_DEVICE_PARAMETERS;
+
+typedef struct _DXGIX_FRAME_STATISTICS
+{
+    UINT64 CPUTimePresentCalled;
+    UINT64 CPUTimeAddedToQueue;
+    UINT32 QueueLengthAddedToQueue;
+    UINT64 CPUTimeFrameComplete;
+    UINT64 GPUTimeFrameComplete;
+    UINT64 GPUCountTitleUsed;
+    UINT64 GPUCountSystemUsed;
+    UINT64 CPUTimeVSync;
+    UINT64 GPUTimeVSync;
+    UINT64 CPUTimeFlip;
+    UINT64 GPUTimeFlip;
+    UINT64 VSyncCount;
+    FLOAT  PercentScanned;
+    VOID* Cookie[ 2 ];
+} DXGIX_FRAME_STATISTICS;
+
+struct D3D11X_VIRTUAL_MEMORY_CONFIGURATION
+{
+    UINT Flags;
+    UINT PageTableMemory4MBPageCount;
+    UINT64 MinimumValidGraphicsAddress;
+    UINT64 MaximumValidGraphicsAddress;
+};
+
+struct D3D_SEQ_COUNTER_DATA
+{
+    unsigned int ReadCount[ 12 ];
+    unsigned int ReadEdcCount[ 12 ];
+    unsigned int WriteCount[ 12 ];
+    unsigned int WriteEdcCount[ 12 ];
+};
+
+typedef struct _DXGIX_PRESENTARRAY_PARAMETERS
+{
+    BOOL        Disable;
+    BOOL        UsePreviousBuffer;
+    D3D11_RECT  SourceRect;
+    POINT       DestRectUpperLeft;
+    FLOAT       ScaleFactorVert;
+    FLOAT       ScaleFactorHorz;
+    void*       Cookie;
+    UINT        Flags;
+} DXGIX_PRESENTARRAY_PARAMETERS;
+
+typedef enum DXGIX_FRAME_NOTIFICATION
+{
+    FRAME_NOTIFICATION_QUEUED = 0,
+    FRAME_NOTIFICATION_COMPLETED = 1,
+    FRAME_NOTIFICATION_FLIPPED = 2
+} DXGIX_FRAME_NOTIFICATION;
+
+typedef enum DXGIX_VLINECOUNTER
+{
+    VLINECOUNTER0 = 0,
+    VLINECOUNTER1 = 1
+} DXGIX_VLINECOUNTER;
 
 extern "C" const GUID  DXGI_DEBUG_ALL;
 DEFINE_GUID(DXGI_DEBUG_DX, 0x35cdd7fc, 0x13b2, 0x421d, 0xa5, 0xd7, 0x7e, 0x44, 0x51, 0x28, 0x7d, 0x64);
