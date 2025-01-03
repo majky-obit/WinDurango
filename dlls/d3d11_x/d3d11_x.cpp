@@ -36,8 +36,7 @@ HRESULT __stdcall D3D11XCreateDeviceXAndSwapChain1_X(const D3D11X_CREATE_DEVICE_
 
     printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
     printf("SDK Version: %d\n", pParameters->Version);
-    // @Patoke todo: should we be using pParameters->Flags? there's XBOX specific flags, also should we use pParameters->Version instead of D3D11_SDK_VERSION?
-    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
+    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
 }
 
 HRESULT __stdcall D3DAllocateGraphicsMemory_X(SIZE_T SizeBytes, SIZE_T AlignmentBytes, UINT64 DesiredGpuVirtualAddress, UINT Flags, void** ppAddress)
@@ -156,8 +155,24 @@ HRESULT __stdcall D3D11CreateDevice_X(
         printf("SDK Version mismatch: %d, correcting to %d\n", SDKVersion, D3D11_SDK_VERSION);
         SDKVersion = D3D11_SDK_VERSION;
     }
-	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
-    *ppDevice = reinterpret_cast<ID3D11Device*>(new GraphicsUnknown(*ppDevice));
+
+    D3D_FEATURE_LEVEL featurelevels[] = {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+        D3D_FEATURE_LEVEL_9_3,
+        D3D_FEATURE_LEVEL_9_2,
+        D3D_FEATURE_LEVEL_9_1,
+    };
+
+    ID3D11Device2* device2{};
+	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, Flags & CREATE_DEVICE_FLAG_MASK, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
+    
+    // get dx11.2 feature level, since that's what dx11.x inherits from
+    (*ppDevice)->QueryInterface(&device2);
+    
+    *ppDevice = new D3D11DeviceXWrapperX(device2);
     return hr;
 }
 
@@ -168,7 +183,7 @@ HRESULT __stdcall D3D11XCreateDeviceX_X(
 {
     printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
     printf("SDK Version: %d\n", pParameters->Version);
-    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
+    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
 }
 
 HRESULT __stdcall D3D11CreateDeviceAndSwapChain_X(
