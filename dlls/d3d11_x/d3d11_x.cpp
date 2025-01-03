@@ -2,18 +2,29 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedFunction
 #include "pch.h"
 
-void D3DQuerySEQCounters_X()
-{
+#include <cstdio>
 
+#include "d3d_x/d3d_x.hpp"
+
+HRESULT _stdcall D3DQuerySEQCounters_X(D3D_SEQ_COUNTER_DATA* pData)
+{
+    return E_NOTIMPL;
 }
 
-void D3DUploadCustomMicrocode_X()
+HRESULT _stdcall D3DUploadCustomMicrocode_X(
+    _In_ UINT32 MicrocodeVersion,
+    _In_ SIZE_T CeMicrocodeSizeBytes,
+    _In_reads_bytes_(CeMicrocodeSizeBytes) const void* pCeMicrocode,
+    _In_ SIZE_T PfpMicrocodeSizeBytes,
+    _In_reads_bytes_(PfpMicrocodeSizeBytes) const void* pPfpMicrocode,
+    _In_ SIZE_T MeMicrocodeSizeBytes,
+    _In_reads_bytes_(MeMicrocodeSizeBytes) const void* pMeMicrocode)
 {
-
+    return E_NOTIMPL;
 }
 
 HRESULT __stdcall D3D11XCreateDeviceXAndSwapChain1_X(const D3D11X_CREATE_DEVICE_PARAMETERS* pParameters,
-    const DXGI_SWAP_CHAIN_DESC1* pSwapChainDesc, IDXGISwapChain1** ppSwapChain, 
+    const DXGI_SWAP_CHAIN_DESC1* pSwapChainDesc, IDXGISwapChain1** ppSwapChain,
     // ID3D11DeviceX** ppDevice, ID3D11DeviceContextX** ppImmediateContext
     ID3D11Device** ppDevice, ID3D11DeviceContext** ppImmediateContext)
 {
@@ -22,21 +33,22 @@ HRESULT __stdcall D3D11XCreateDeviceXAndSwapChain1_X(const D3D11X_CREATE_DEVICE_
     {
         return E_INVALIDARG;
     }
-    else
-    {
-        // @Patoke todo: should we be using pParameters->Flags? there's XBOX specific flags, also should we use pParameters->Version instead of D3D11_SDK_VERSION?
-        return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
-    }
+
+    printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
+    printf("SDK Version: %d\n", pParameters->Version);
+    // @Patoke todo: should we be using pParameters->Flags? there's XBOX specific flags, also should we use pParameters->Version instead of D3D11_SDK_VERSION?
+    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
 }
 
-HRESULT __stdcall D3DAllocateGraphicsMemory_X(SIZE_T SizeBytes, SIZE_T AlignmentBytes, UINT64 DesiredGpuVirtualAddress, UINT Flags, void **ppAddress)
+HRESULT __stdcall D3DAllocateGraphicsMemory_X(SIZE_T SizeBytes, SIZE_T AlignmentBytes, UINT64 DesiredGpuVirtualAddress, UINT Flags, void** ppAddress)
 {
     DWORD Protect = 0;
 
     if (!ppAddress || AlignmentBytes > 0x20000)
         return E_INVALIDARG;
 
-    // @Patoke note: these 2 types in the XBOX also use the MEM_GRAPHICS flag
+    // @Patoke todo: these 2 types in the XBOX also use the MEM_GRAPHICS flag
+    //  meaning it's allocating GPU memory, fix
     DWORD AllocType = MEM_4MB_PAGES | MEM_COMMIT | MEM_RESERVE;
     if (AlignmentBytes <= 0x10000)
         AllocType = MEM_LARGE_PAGES | MEM_COMMIT | MEM_RESERVE;
@@ -65,9 +77,9 @@ HRESULT __stdcall D3DAllocateGraphicsMemory_X(SIZE_T SizeBytes, SIZE_T Alignment
     return AllocBase == nullptr ? E_OUTOFMEMORY : S_OK;
 }
 
-void D3DConfigureVirtualMemory_X()
+HRESULT __stdcall D3DConfigureVirtualMemory_X(_Inout_ D3D11X_VIRTUAL_MEMORY_CONFIGURATION* pVMConfiguration)
 {
-
+    return E_NOTIMPL;
 }
 
 void __stdcall D3DFlushEntireCpuCache_X()
@@ -77,31 +89,103 @@ void __stdcall D3DFlushEntireCpuCache_X()
 
 HRESULT __stdcall D3DFreeGraphicsMemory_X(void* pAddress)
 {
-	VirtualFree(pAddress, NULL, MEM_RELEASE);
-	return S_OK;
+    // @Patoke todo: this should be freeing GPU memory
+    VirtualFree(pAddress, NULL, MEM_RELEASE);
+    return S_OK;
 }
 
-void D3DMapEsramMemory_X()
+HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags,
+    VOID* pVirtualAddress,
+    UINT NumPages,
+    _In_reads_opt_(NumPages) const UINT* pPageList)
 {
-
+    return E_NOTIMPL;
 }
 
-void DXGIXGetFrameStatistics_X()
+HRESULT __stdcall DXGIXGetFrameStatistics_X(
+    _In_ UINT NumberFramesRequested,
+    _Out_writes_(NumberFramesRequested) DXGIX_FRAME_STATISTICS* pStats)
 {
-
+    return E_NOTIMPL;
 }
 
-void DXGIXPresentArray_X()
+HRESULT _stdcall DXGIXPresentArray_X(
+    _In_ UINT SyncInterval,
+    _In_ UINT PresentImmediateThreshold,
+    _In_ UINT Flags,
+    _In_ UINT NumSwapChains,
+    _In_ IDXGISwapChain1* const* ppSwapChain,
+    _In_ const DXGIX_PRESENTARRAY_PARAMETERS* pPresentParameters)
 {
-
+    printf("[d3d11_x] !!! STUBBED: DXGIXPresentArray !!!");
+    return E_NOTIMPL;
 }
 
-void DXGIXSetFrameNotification_X()
+HRESULT __stdcall DXGIXSetFrameNotification_X(
+    _In_ DXGIX_FRAME_NOTIFICATION NotificationType,
+    _In_ HANDLE hEvent)
 {
-
+    return E_NOTIMPL;
 }
 
-void DXGIXSetVLineNotification_X()
+HRESULT __stdcall DXGIXSetVLineNotification_X(
+    _In_ DXGIX_VLINECOUNTER VLineCounter,
+    _In_ UINT32 VLineNumber,
+    _In_opt_ HANDLE hEvent)
 {
+    return E_NOTIMPL;
+}
 
+HRESULT __stdcall D3D11CreateDevice_X(
+    _In_opt_ IDXGIAdapter* pAdapter,
+    D3D_DRIVER_TYPE DriverType,
+    HMODULE Software,
+    UINT Flags,
+    _In_reads_opt_(FeatureLevels) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
+    UINT FeatureLevels,
+    UINT SDKVersion,
+    _Out_opt_ ID3D11Device** ppDevice,
+    _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
+    _Out_opt_ ID3D11DeviceContext** ppImmediateContext)
+{
+    printf("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!\n");
+    printf("SDK Version: %d\n", SDKVersion);
+
+    if (SDKVersion != D3D11_SDK_VERSION)
+    {
+        printf("SDK Version mismatch: %d, correcting to %d\n", SDKVersion, D3D11_SDK_VERSION);
+        SDKVersion = D3D11_SDK_VERSION;
+    }
+	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
+    *ppDevice = reinterpret_cast<ID3D11Device*>(new GraphicsUnknown(*ppDevice));
+    return hr;
+}
+
+HRESULT __stdcall D3D11XCreateDeviceX_X(
+    _In_ const D3D11X_CREATE_DEVICE_PARAMETERS* pParameters,
+    _Out_opt_ ID3D11Device** ppDevice,
+    _Out_opt_ ID3D11DeviceContext** ppImmediateContext)
+{
+    printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
+    printf("SDK Version: %d\n", pParameters->Version);
+    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
+}
+
+HRESULT __stdcall D3D11CreateDeviceAndSwapChain_X(
+    _In_opt_ IDXGIAdapter* pAdapter,
+    D3D_DRIVER_TYPE DriverType,
+    HMODULE Software,
+    UINT Flags,
+    _In_reads_opt_(FeatureLevels) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
+    UINT FeatureLevels,
+    UINT SDKVersion,
+    _In_opt_ CONST DXGI_SWAP_CHAIN_DESC* pSwapChainDesc,
+    _Out_opt_ IDXGISwapChain** ppSwapChain,
+    _Out_opt_ ID3D11Device** ppDevice,
+    _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
+    _Out_opt_ ID3D11DeviceContext** ppImmediateContext)
+{
+    printf("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!");
+    printf("SDK Version: %d\n", SDKVersion);
+    return D3D11CreateDeviceAndSwapChain(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion, pSwapChainDesc, ppSwapChain, ppDevice, pFeatureLevel, ppImmediateContext);
 }

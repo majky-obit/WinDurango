@@ -11,8 +11,29 @@
 
 #define GetXDKVersion() "10.0.19041.0"
 
-inline BOOL IsXboxModule(HMODULE Module)
+BOOL IsXboxModule(HMODULE module)
 {
+	wchar_t moduleFilePath[MAX_PATH];
+	if (GetModuleFileNameW(module, moduleFilePath, MAX_PATH) > 0)
+	{
+		std::wstring moduleFileName(moduleFilePath);
+		wprintf(L"%ls\n", moduleFileName.c_str());
+
+		wchar_t exeFilePath[MAX_PATH];
+		if (GetModuleFileNameW(NULL, exeFilePath, MAX_PATH) > 0)
+		{
+			std::wstring exeDir(exeFilePath);
+			size_t pos = exeDir.find_last_of(L"\\/");
+			if (pos != std::wstring::npos) {
+				exeDir = exeDir.substr(0, pos);
+			}
+
+			if (moduleFileName.find(exeDir) == 0) {
+				return TRUE;
+			}
+		}
+	}
+
 	return FALSE;
 }
 
