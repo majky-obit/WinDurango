@@ -3,7 +3,7 @@
 #define D3D11_X
 
 #include "dxgi1_5.h"
-#include <d3d11.h>
+#include "d3d_x/d3d_x.hpp"
 
 // remove all XBOX only flags passed to CreateDevice 
 #define CREATE_DEVICE_FLAG_MASK (D3D11_CREATE_DEVICE_SINGLETHREADED | D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_SWITCH_TO_REF | \

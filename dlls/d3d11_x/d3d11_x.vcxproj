@@ -89,6 +89,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="d3d11_x.h" />
+    <ClInclude Include="d3d_x\d3d11_x_device.h" />
     <ClInclude Include="d3d_x\d3d_x.hpp" />
     <ClInclude Include="Exports.def" />
     <ClInclude Include="framework.h" />
@@ -96,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="d3d11_x.cpp" />
+    <ClCompile Include="d3d_x\d3d11_x_device.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

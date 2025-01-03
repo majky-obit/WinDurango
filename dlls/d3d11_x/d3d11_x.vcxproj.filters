@@ -30,6 +30,9 @@
     <ClInclude Include="d3d_x\d3d_x.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="d3d_x\d3d11_x_device.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="d3d11_x.cpp">
@@ -39,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d_x\d3d11_x_device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
