@@ -36,8 +36,7 @@ HRESULT __stdcall D3D11XCreateDeviceXAndSwapChain1_X(const D3D11X_CREATE_DEVICE_
 
     printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
     printf("SDK Version: %d\n", pParameters->Version);
-    // @Patoke todo: should we be using pParameters->Flags? there's XBOX specific flags, also should we use pParameters->Version instead of D3D11_SDK_VERSION?
-    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
+    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
 }
 
 HRESULT __stdcall D3DAllocateGraphicsMemory_X(SIZE_T SizeBytes, SIZE_T AlignmentBytes, UINT64 DesiredGpuVirtualAddress, UINT Flags, void** ppAddress)
@@ -168,7 +167,7 @@ HRESULT __stdcall D3D11XCreateDeviceX_X(
 {
     printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
     printf("SDK Version: %d\n", pParameters->Version);
-    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
+    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
 }
 
 HRESULT __stdcall D3D11CreateDeviceAndSwapChain_X(
