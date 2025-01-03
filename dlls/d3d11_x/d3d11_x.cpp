@@ -167,12 +167,15 @@ HRESULT __stdcall D3D11CreateDevice_X(
     };
 
     ID3D11Device2* device2{};
-	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, Flags & CREATE_DEVICE_FLAG_MASK, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
+    auto flags = Flags & CREATE_DEVICE_FLAG_MASK;
+	flags |= D3D11_CREATE_DEVICE_DEBUG;
+
+	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
     
     // get dx11.2 feature level, since that's what dx11.x inherits from
     (*ppDevice)->QueryInterface(&device2);
     
-    *ppDevice = new D3D11DeviceXWrapperX(device2);
+    *ppDevice = reinterpret_cast<ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
     return hr;
 }
 
