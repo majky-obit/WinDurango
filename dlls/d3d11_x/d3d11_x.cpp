@@ -143,7 +143,7 @@ HRESULT __stdcall D3D11CreateDevice_X(
     _In_reads_opt_(FeatureLevels) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
     UINT FeatureLevels,
     UINT SDKVersion,
-    _Out_opt_ ID3D11Device** ppDevice,
+    _Out_opt_ d3d11x::ID3D11Device** ppDevice,
     _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
     _Out_opt_ ID3D11DeviceContext** ppImmediateContext)
 {
@@ -159,23 +159,26 @@ HRESULT __stdcall D3D11CreateDevice_X(
     D3D_FEATURE_LEVEL featurelevels[] = {
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-        D3D_FEATURE_LEVEL_9_3,
-        D3D_FEATURE_LEVEL_9_2,
-        D3D_FEATURE_LEVEL_9_1,
     };
 
     ID3D11Device2* device2{};
     auto flags = Flags & CREATE_DEVICE_FLAG_MASK;
-	flags |= D3D11_CREATE_DEVICE_DEBUG;
+	//flags |= D3D11_CREATE_DEVICE_DEBUG;
 
-	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
+	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, (ID3D11Device**)ppDevice, pFeatureLevel, ppImmediateContext);
     
-    // get dx11.2 feature level, since that's what dx11.x inherits from
-    (*ppDevice)->QueryInterface(&device2);
+    if (SUCCEEDED(hr))
+    {
+        // get dx11.2 feature level, since that's what dx11.x inherits from
+        (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
+
+        *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
+    }
+    else
+    {
+        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError());
+    }
     
-    *ppDevice = reinterpret_cast<ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
     return hr;
 }
 

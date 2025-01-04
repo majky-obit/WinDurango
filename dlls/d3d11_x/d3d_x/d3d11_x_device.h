@@ -424,7 +424,8 @@ namespace d3d11x
 			WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
 			printf("[D3D11DeviceXWrapperX] QueryInterface: %s\n", iidstr);
 
-			if (riid == __uuidof(ID3D11DeviceX)) // allow ID3D11DeviceX interface
+			if (riid == __uuidof(ID3D11DeviceX) || riid == __uuidof(ID3D11Device2) ||
+				riid == __uuidof(ID3D11Device1) || riid == __uuidof(ID3D11Device))
 			{
 				*ppvObject = static_cast<ID3D11DeviceX*>(this);
 				AddRef( );
@@ -458,8 +459,7 @@ namespace d3d11x
 
 		HRESULT SetPrivateDataInterfaceGraphics(const GUID& guid, const IGraphicsUnknown* pData) override
 		{
-			printf("[D3D11DeviceXWrapperX] ID3D11Device->SetPrivateDataInterfaceGraphics | NOT IMPLEMENTED\n");
-			return E_NOTIMPL;
+			return m_realDevice->SetPrivateDataInterface(guid, (IUnknown*)pData);
 		}
 
 		HRESULT CreateBuffer(
