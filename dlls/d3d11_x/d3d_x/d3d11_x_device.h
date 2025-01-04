@@ -94,6 +94,7 @@ namespace d3d11x
 		IUnknown* m_pUnknown;
 	};
 
+	class IDXGIDeviceWrapper;
 	class IGraphicsUnknown;
 	class ID3D11DeviceContextX;
 	class ID3D11CounterSetX;
@@ -125,38 +126,31 @@ namespace d3d11x
 	public:
 		UINT m_CreationFlags;
 
-		virtual HRESULT CreateBuffer(_Inout_ ID3D11Device* pDevice,
-			_In_ const D3D11_BUFFER_DESC* pDesc,
+		virtual HRESULT CreateBuffer(_In_ const D3D11_BUFFER_DESC* pDesc,
 			_In_opt_ const D3D11_SUBRESOURCE_DATA* pInitialData,
 			_Out_opt_ ID3D11Buffer** ppBuffer) = 0;
 
-		virtual HRESULT CreateTexture1D(_Inout_ ID3D11Device* pDevice,
-			_In_ const D3D11_TEXTURE1D_DESC* pDesc,
+		virtual HRESULT CreateTexture1D(_In_ const D3D11_TEXTURE1D_DESC* pDesc,
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels* pDesc->ArraySize)) const D3D11_SUBRESOURCE_DATA* pInitialData,
 			_Out_opt_ ID3D11Texture1D** ppTexture1D) = 0;
 
-		virtual HRESULT CreateTexture2D(_Inout_ ID3D11Device* pDevice,
-			_In_ const D3D11_TEXTURE2D_DESC* pDesc,
+		virtual HRESULT CreateTexture2D(_In_ const D3D11_TEXTURE2D_DESC* pDesc,
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels* pDesc->ArraySize)) const D3D11_SUBRESOURCE_DATA* pInitialData,
 			_Out_opt_ ID3D11Texture2D** ppTexture2D) = 0;
 
-		virtual HRESULT CreateTexture3D(_Inout_ ID3D11Device* pDevice,
-			_In_ const D3D11_TEXTURE3D_DESC* pDesc,
+		virtual HRESULT CreateTexture3D(_In_ const D3D11_TEXTURE3D_DESC* pDesc,
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels)) const D3D11_SUBRESOURCE_DATA* pInitialData,
 			_Out_opt_ ID3D11Texture3D** ppTexture3D) = 0;
 
-		virtual HRESULT CreateShaderResourceView(_Inout_ ID3D11Device* pDevice,
-			_In_ ID3D11Resource* pResource,
+		virtual HRESULT CreateShaderResourceView(_In_ ID3D11Resource* pResource,
 			_In_opt_ const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
 			_Out_opt_ ID3D11ShaderResourceView** ppSRView) = 0;
 
-		virtual HRESULT CreateUnorderedAccessView(_Inout_ ID3D11Device* pDevice,
-			_In_ ID3D11Resource* pResource,
+		virtual HRESULT CreateUnorderedAccessView(_In_ ID3D11Resource* pResource,
 			_In_opt_ const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc,
 			_Out_opt_ ID3D11UnorderedAccessView** ppUAView) = 0;
 
-		virtual HRESULT CreateRenderTargetView(_Inout_ ID3D11Device* pDevice,
-			_In_ ID3D11Resource* pResource,
+		virtual HRESULT CreateRenderTargetView(_In_ ID3D11Resource* pResource,
 			_In_opt_ const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
 			_Out_opt_ ID3D11RenderTargetView** ppRTView) = 0;
 
@@ -415,25 +409,8 @@ namespace d3d11x
 			m_RefCount = 1;
 		}
 
-		HRESULT QueryInterface(REFIID riid, void** ppvObject) override
-		{
-			// note from unixian: for debugging purposes
-			char iidstr[ sizeof("{AAAAAAAA-BBBB-CCCC-DDEE-FFGGHHIIJJKK}") ];
-			OLECHAR iidwstr[ sizeof(iidstr) ];
-			StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
-			WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
-			printf("[D3D11DeviceXWrapperX] QueryInterface: %s\n", iidstr);
-
-			if (riid == __uuidof(ID3D11DeviceX) || riid == __uuidof(ID3D11Device2) ||
-				riid == __uuidof(ID3D11Device1) || riid == __uuidof(ID3D11Device))
-			{
-				*ppvObject = static_cast<ID3D11DeviceX*>(this);
-				AddRef( );
-				return S_OK;
-			}
-
-			return m_realDevice->QueryInterface(riid, ppvObject);
-		}
+		HRESULT QueryInterface(REFIID riid, void** ppvObject) override;
+		
 
 		ULONG AddRef( ) override
 		{
@@ -463,7 +440,6 @@ namespace d3d11x
 		}
 
 		HRESULT CreateBuffer(
-			   ID3D11Device* pDevice,
 			   const D3D11_BUFFER_DESC* pDesc,
 			   const D3D11_SUBRESOURCE_DATA* pInitialData,
 			   ID3D11Buffer** ppBuffer) override {
@@ -471,7 +447,6 @@ namespace d3d11x
 		}
 
 		HRESULT CreateTexture1D(
-			ID3D11Device* pDevice,
 			const D3D11_TEXTURE1D_DESC* pDesc,
 			const D3D11_SUBRESOURCE_DATA* pInitialData,
 			ID3D11Texture1D** ppTexture1D) override {
@@ -479,7 +454,6 @@ namespace d3d11x
 		}
 
 		HRESULT CreateTexture2D(
-			ID3D11Device* pDevice,
 			const D3D11_TEXTURE2D_DESC* pDesc,
 			const D3D11_SUBRESOURCE_DATA* pInitialData,
 			ID3D11Texture2D** ppTexture2D) override {
@@ -487,7 +461,6 @@ namespace d3d11x
 		}
 
 		HRESULT CreateTexture3D(
-			ID3D11Device* pDevice,
 			const D3D11_TEXTURE3D_DESC* pDesc,
 			const D3D11_SUBRESOURCE_DATA* pInitialData,
 			ID3D11Texture3D** ppTexture3D) override {
@@ -495,7 +468,6 @@ namespace d3d11x
 		}
 
 		HRESULT CreateShaderResourceView(
-			ID3D11Device* pDevice,
 			ID3D11Resource* pResource,
 			const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
 			ID3D11ShaderResourceView** ppSRView) override {
@@ -503,7 +475,6 @@ namespace d3d11x
 		}
 
 		HRESULT CreateUnorderedAccessView(
-			ID3D11Device* pDevice,
 			ID3D11Resource* pResource,
 			const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc,
 			ID3D11UnorderedAccessView** ppUAView) override {
@@ -511,7 +482,6 @@ namespace d3d11x
 		}
 
 		HRESULT CreateRenderTargetView(
-			ID3D11Device* pDevice,
 			ID3D11Resource* pResource,
 			const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
 			ID3D11RenderTargetView** ppRTView) override {

@@ -1,8 +1,41 @@
 #include "pch.h"
 #include "d3d11_x_device.h"
 #include "d3d_x.hpp"
+#include "../IDXGIWrappers.h"
 
 #pragma region ID3D11DeviceX
+
+// QueryInterface need to be in the cpp file because of circular dependency for IDXGIDeviceWrapper :}
+
+HRESULT d3d11x::D3D11DeviceXWrapperX::QueryInterface(REFIID riid, void** ppvObject) 
+{
+    // note from unixian: for debugging purposes
+    char iidstr[ sizeof("{AAAAAAAA-BBBB-CCCC-DDEE-FFGGHHIIJJKK}") ];
+    OLECHAR iidwstr[ sizeof(iidstr) ];
+    StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
+    WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
+    printf("[D3D11DeviceXWrapperX] QueryInterface: %s\n", iidstr);
+
+    if (riid == __uuidof(ID3D11DeviceX) || riid == __uuidof(ID3D11Device2) ||
+        riid == __uuidof(ID3D11Device1) || riid == __uuidof(ID3D11Device))
+    {
+        *ppvObject = static_cast<ID3D11DeviceX*>(this);
+        AddRef( );
+        return S_OK;
+    }
+
+    if (riid == __uuidof(IDXGIDevice) ||
+        riid == __uuidof(IDXGIDevice1))
+    {
+        void** giDevice = nullptr;
+        HRESULT hr = m_realDevice->QueryInterface(riid, ppvObject);
+        *ppvObject = new IDXGIDeviceWrapper(static_cast<IDXGIDevice1*>(*ppvObject));
+        return S_OK;
+    }
+
+    return m_realDevice->QueryInterface(riid, ppvObject);
+}
+
 void d3d11x::D3D11DeviceXWrapperX::GetImmediateContextX(
     _Out_ ID3D11DeviceContextX** ppImmediateContextX)
 {
