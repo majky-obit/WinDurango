@@ -54,6 +54,9 @@
     <ClInclude Include="ID3DWrappers.h">
       <Filter>Header Files\ID3D</Filter>
     </ClInclude>
+    <ClInclude Include="ID3DDeviceContext.h">
+      <Filter>Header Files\ID3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="d3d11_x.cpp">
@@ -87,7 +90,7 @@
       <Filter>Source Files\IDXGI</Filter>
     </ClCompile>
     <ClCompile Include="ID3D11DeviceContextWrapper.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ID3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
