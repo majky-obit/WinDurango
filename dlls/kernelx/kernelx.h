@@ -61,3 +61,5 @@ typedef struct _TITLEMEMORYSTATUS {
 __int64 sub_18001BB8C();
 
 NTSTATUS sub_18001BCA0(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReserved);
+
+static CRITICAL_SECTION XMemSetAllocationHooksLock_X;

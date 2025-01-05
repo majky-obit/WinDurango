@@ -5,10 +5,6 @@
 #include "CoreApplicationWrapperX.h"
 #include <windows.applicationmodel.core.h>
 
-
-
-#define IsXboxCallee() IsXboxAddress(_ReturnAddress())
-
 /* This function is used to compare the class name of the classId with the classIdName. */
 inline bool IsClassName(HSTRING classId, const char* classIdName)
 {
