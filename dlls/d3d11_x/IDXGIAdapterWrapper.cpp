@@ -9,7 +9,23 @@ namespace d3d11x
 
     HRESULT IDXGIAdapterWrapper::QueryInterface(REFIID riid, void** ppvObject)
     {
-        return E_NOTIMPL;
+        if (riid == __uuidof(IDXGIAdapter))
+        {
+            *ppvObject = this;
+            AddRef( );
+            return S_OK;
+        }
+        else
+        {
+            // DEBUG
+            char iidstr[ sizeof("{AAAAAAAA-BBBB-CCCC-DDEE-FFGGHHIIJJKK}") ];
+            OLECHAR iidwstr[ sizeof(iidstr) ];
+            StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
+            WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
+            printf("[IDXGIDeviceWrapper] QueryInterface: %s\n", iidstr);
+        }
+
+        return m_realAdapter->QueryInterface(riid, ppvObject);
     }
 
     ULONG IDXGIAdapterWrapper::AddRef( )
@@ -42,16 +58,19 @@ namespace d3d11x
 
     HRESULT __stdcall IDXGIAdapterWrapper::GetParent(REFIID riid, void** ppParent)
     {
-        HRESULT hr = m_realAdapter->GetParent(riid, ppParent);
         if (riid == __uuidof(IDXGIFactory) ||
-           riid == __uuidof(IDXGIFactory1) ||
-           riid == __uuidof(IDXGIFactory2))
+        riid == __uuidof(IDXGIFactory1) ||
+        riid == __uuidof(IDXGIFactory2))
         {
-            *ppParent = new IDXGIFactoryWrapper(static_cast<IDXGIFactory2*>(*ppParent));
+            IDXGIFactory2* factory = nullptr;
+            HRESULT hr = m_realAdapter->GetParent(IID_PPV_ARGS(&factory));
+            *ppParent = new IDXGIFactoryWrapper(factory);
+            this->AddRef( );
+            return hr;
         }
 
-
-        return hr;
+        *ppParent = nullptr;
+        return E_NOINTERFACE;
     }
 
     HRESULT __stdcall IDXGIAdapterWrapper::EnumOutputs(UINT Output, IDXGIOutput** ppOutput)

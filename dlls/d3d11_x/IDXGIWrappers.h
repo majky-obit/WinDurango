@@ -66,7 +66,7 @@ namespace d3d11x
             IUnknown* pWindow,
             const DXGI_SWAP_CHAIN_DESC1* pDesc,
             IDXGIOutput* pRestrictToOutput,
-            IDXGISwapChain1** ppSwapChain) override;
+            IDXGISwapChain1_X** ppSwapChain) override;
 
 
         HRESULT STDMETHODCALLTYPE GetSharedResourceAdapterLuid(
@@ -98,7 +98,7 @@ namespace d3d11x
 
     private:
         long m_refCount = 1;
-        IDXGIFactory2* m_realFactory;
+        ::IDXGIFactory2* m_realFactory;
     };
 
     
@@ -137,7 +137,7 @@ namespace d3d11x
 
     private:
         long m_refCount = 1;
-        IDXGIAdapter* m_realAdapter;
+        ::IDXGIAdapter* m_realAdapter;
     };
 
     class IDXGIDeviceWrapper : public IDXGIDevice_X
@@ -183,6 +183,144 @@ namespace d3d11x
 
     private:
         long m_refCount = 1;
-        IDXGIDevice* m_realDevice;
+        ::IDXGIDevice* m_realDevice;
     };
+
+
+
+
+    class IDXGISwapChainWrapper : public IDXGISwapChain1_X
+    {
+    public:
+
+        IDXGISwapChainWrapper(IDXGISwapChain1* swapchain) : m_realSwapchain(swapchain)
+        {
+
+        }
+
+        // IGraphicsUnknown
+        HRESULT QueryInterface(REFIID riid, void** ppvObject) override;
+        ULONG AddRef( ) override;
+        ULONG Release( ) override;
+
+        // IDXGIObject
+        HRESULT STDMETHODCALLTYPE SetPrivateData(_In_  REFGUID Name, UINT DataSize, _In_reads_bytes_(DataSize)  const void* pData) override;
+        HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(_In_  REFGUID Name, _In_opt_  const IUnknown* pUnknown) override;
+        HRESULT STDMETHODCALLTYPE GetPrivateData(_In_  REFGUID Name, _Inout_  UINT* pDataSize, _Out_writes_bytes_(*pDataSize)  void* pData) override;
+        HRESULT STDMETHODCALLTYPE GetParent(_In_  REFIID riid, _COM_Outptr_  void** ppParent) override;
+
+        // IDXGIDeviceSubObject
+        HRESULT STDMETHODCALLTYPE GetDevice(
+            /* [annotation][in] */
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */
+            _COM_Outptr_  void** ppDevice) override;
+    
+
+        // IDXGISwapChain
+        HRESULT STDMETHODCALLTYPE Present(
+            /* [in] */ UINT SyncInterval,
+            /* [in] */ UINT Flags) override;
+
+        HRESULT STDMETHODCALLTYPE GetBuffer(
+            /* [in] */ UINT Buffer,
+            /* [annotation][in] */
+            _In_  REFIID riid,
+            /* [annotation][out][in] */
+            _COM_Outptr_  void** ppSurface) override;
+
+        HRESULT STDMETHODCALLTYPE SetFullscreenState(
+            /* [in] */ BOOL Fullscreen,
+            /* [annotation][in] */
+            _In_opt_  IDXGIOutput* pTarget) override;
+
+        HRESULT STDMETHODCALLTYPE GetFullscreenState(
+            /* [annotation][out] */
+            _Out_opt_  BOOL* pFullscreen,
+            /* [annotation][out] */
+            _COM_Outptr_opt_result_maybenull_  IDXGIOutput** ppTarget) override;
+
+        HRESULT STDMETHODCALLTYPE GetDesc(
+            /* [annotation][out] */
+            _Out_  DXGI_SWAP_CHAIN_DESC* pDesc) override;
+
+        HRESULT STDMETHODCALLTYPE ResizeBuffers(
+            /* [in] */ UINT BufferCount,
+            /* [in] */ UINT Width,
+            /* [in] */ UINT Height,
+            /* [in] */ DXGI_FORMAT NewFormat,
+            /* [in] */ UINT SwapChainFlags) override;
+
+        HRESULT STDMETHODCALLTYPE ResizeTarget(
+            /* [annotation][in] */
+            _In_  const DXGI_MODE_DESC* pNewTargetParameters) override;
+
+        HRESULT STDMETHODCALLTYPE GetContainingOutput(
+            /* [annotation][out] */
+            _COM_Outptr_  IDXGIOutput** ppOutput) override;
+
+        HRESULT STDMETHODCALLTYPE GetFrameStatistics(
+            /* [annotation][out] */
+            _Out_  DXGI_FRAME_STATISTICS* pStats) override;
+
+        HRESULT STDMETHODCALLTYPE GetLastPresentCount(
+            /* [annotation][out] */
+            _Out_  UINT* pLastPresentCount) override;
+
+
+
+
+        HRESULT STDMETHODCALLTYPE GetDesc1(
+            /* [annotation][out] */
+            _Out_  DXGI_SWAP_CHAIN_DESC1* pDesc) override;
+
+        HRESULT STDMETHODCALLTYPE GetFullscreenDesc(
+            /* [annotation][out] */
+            _Out_  DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pDesc) override;
+
+        HRESULT STDMETHODCALLTYPE GetHwnd(
+            /* [annotation][out] */
+            _Out_  HWND* pHwnd) override;
+
+        HRESULT STDMETHODCALLTYPE GetCoreWindow(
+            /* [annotation][in] */
+            _In_  REFIID refiid,
+            /* [annotation][out] */
+            _COM_Outptr_  void** ppUnk) override;
+
+        HRESULT STDMETHODCALLTYPE Present1(
+            /* [in] */ UINT SyncInterval,
+            /* [in] */ UINT PresentFlags,
+            /* [annotation][in] */
+            _In_  const DXGI_PRESENT_PARAMETERS* pPresentParameters) override;
+
+        BOOL STDMETHODCALLTYPE IsTemporaryMonoSupported(void) override;
+
+        HRESULT STDMETHODCALLTYPE GetRestrictToOutput(
+            /* [annotation][out] */
+            _Out_  IDXGIOutput** ppRestrictToOutput) override;
+
+        HRESULT STDMETHODCALLTYPE SetBackgroundColor(
+            /* [annotation][in] */
+            _In_  const DXGI_RGBA* pColor)override;
+
+        HRESULT STDMETHODCALLTYPE GetBackgroundColor(
+            /* [annotation][out] */
+            _Out_  DXGI_RGBA* pColor) override;
+
+        HRESULT STDMETHODCALLTYPE SetRotation(
+            /* [annotation][in] */
+            _In_  DXGI_MODE_ROTATION Rotation) override;
+
+        HRESULT STDMETHODCALLTYPE GetRotation(
+            /* [annotation][out] */
+            _Out_  DXGI_MODE_ROTATION* pRotation) override;
+
+
+
+    private:
+        long m_refCount = 1;
+        IDXGISwapChain1* m_realSwapchain;
+    };
+
 }

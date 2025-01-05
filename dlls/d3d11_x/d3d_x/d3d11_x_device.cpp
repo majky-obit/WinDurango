@@ -2,6 +2,7 @@
 #include "d3d11_x_device.h"
 #include "d3d_x.hpp"
 #include "../IDXGIWrappers.h"
+#include "../ID3DWrappers.h"
 
 #pragma region ID3D11DeviceX
 
@@ -34,6 +35,34 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::QueryInterface(REFIID riid, void** ppvObje
     }
 
     return m_realDevice->QueryInterface(riid, ppvObject);
+}
+
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture2D(
+            const D3D11_TEXTURE2D_DESC* pDesc,
+            const D3D11_SUBRESOURCE_DATA* pInitialData,
+            ID3D11Texture2D** ppTexture2D) {
+
+    ID3D11Texture2D* texture2d = nullptr;
+    HRESULT hr = m_realDevice->CreateTexture2D(pDesc, pInitialData, &texture2d);
+    *reinterpret_cast<ID3D11Texture2D_X**>(ppTexture2D) = new ID3D11Texture2DWrapper(texture2d);
+    return hr;
+}
+
+
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateRenderTargetView(
+            ID3D11Resource* pResource,
+            const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
+            ID3D11RenderTargetView** ppRTView) {
+
+
+    return m_realDevice->CreateRenderTargetView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, ppRTView);
+}
+
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateDepthStencilView(
+            ID3D11Resource* pResource,
+            const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
+            ID3D11DepthStencilView** ppDepthStencilView) {
+    return m_realDevice->CreateDepthStencilView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, ppDepthStencilView);
 }
 
 void d3d11x::D3D11DeviceXWrapperX::GetImmediateContextX(
