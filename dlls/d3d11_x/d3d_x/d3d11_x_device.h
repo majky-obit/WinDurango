@@ -245,7 +245,7 @@ namespace d3d11x
 			_In_ const D3D11_COUNTER_DESC* pCounterDesc,
 			_Out_opt_ ID3D11Counter** ppCounter) = 0;
 
-		virtual HRESULT CreateDeferredContext(UINT ContextFlags, _Out_opt_ ID3D11DeviceContext** ppDeferredContext) = 0;
+		virtual HRESULT CreateDeferredContext(UINT ContextFlags, _Out_opt_ ::ID3D11DeviceContext** ppDeferredContext) = 0;
 
 		virtual HRESULT OpenSharedResource(
 			_In_ HANDLE hResource,
@@ -296,7 +296,7 @@ namespace d3d11x
 
 		virtual HRESULT GetDeviceRemovedReason( ) = 0;
 
-		virtual void GetImmediateContext(_Out_ ID3D11DeviceContext** ppImmediateContext) = 0;
+		virtual void GetImmediateContext(_Out_ ::ID3D11DeviceContext** ppImmediateContext) = 0;
 
 		virtual HRESULT SetExceptionMode(UINT RaiseFlags) = 0;
 
@@ -305,11 +305,11 @@ namespace d3d11x
 
 	D3DINTERFACE(ID3D11Device1, a04bfb29, 08ef, 43d6, a4, 9c, a9, bd, bd, cb, e6, 86) : public ID3D11Device{
 	public:
-		virtual void GetImmediateContext1(_Out_ ID3D11DeviceContext1** ppImmediateContext) = 0;
+		virtual void GetImmediateContext1(_Out_ ::ID3D11DeviceContext1** ppImmediateContext) = 0;
 
 		virtual HRESULT CreateDeferredContext1(
 			UINT ContextFlags,
-			_Out_ ID3D11DeviceContext1** ppDeferredContext) = 0;
+			_Out_ ::ID3D11DeviceContext1** ppDeferredContext) = 0;
 
 		virtual HRESULT CreateBlendState1(
 			_In_ const D3D11_BLEND_DESC1* pBlendStateDesc,
@@ -343,11 +343,11 @@ namespace d3d11x
 	D3DINTERFACE(ID3D11Device2, 9d06dffa, d1e5, 4d07, 83, a8, 1b, b1, 23, f2, f8, 41) : public ID3D11Device1 {
 
 		virtual void GetImmediateContext2(
-			_Out_ ID3D11DeviceContext2** ppImmediateContext) = 0;
+			_Out_ ::ID3D11DeviceContext2** ppImmediateContext) = 0;
 
 		virtual HRESULT CreateDeferredContext2(
 			UINT ContextFlags,
-			_Out_ ID3D11DeviceContext2** ppDeferredContext) = 0;
+			_Out_ ::ID3D11DeviceContext2** ppDeferredContext) = 0;
 
 		virtual void GetResourceTiling(
 			_In_  ID3D11Resource* pTiledResource,
@@ -606,9 +606,10 @@ namespace d3d11x
 			return m_realDevice->CreateCounter(pCounterDesc, ppCounter);
 		}
 
+		// @Patoke todo: unwrap
 		HRESULT CreateDeferredContext(
 			UINT ContextFlags,
-				ID3D11DeviceContext** ppDeferredContext) override {
+				::ID3D11DeviceContext** ppDeferredContext) override {
 			return m_realDevice->CreateDeferredContext(ContextFlags, ppDeferredContext);
 		}
 
@@ -689,8 +690,9 @@ namespace d3d11x
 			return m_realDevice->GetDeviceRemovedReason( );
 		}
 
+		// @Patoke todo: unwrap
 		void GetImmediateContext(
-				ID3D11DeviceContext** ppImmediateContext) override {
+				::ID3D11DeviceContext** ppImmediateContext) override {
 			m_realDevice->GetImmediateContext(ppImmediateContext);
 		}
 
@@ -703,11 +705,13 @@ namespace d3d11x
 
 
 		// ID3D11Device1
-		void GetImmediateContext1(ID3D11DeviceContext1** ppImmediateContext) override {
+		// @Patoke todo: unwrap
+		void GetImmediateContext1(::ID3D11DeviceContext1** ppImmediateContext) override {
 			m_realDevice->GetImmediateContext1(ppImmediateContext);
 		}
 
-		HRESULT CreateDeferredContext1(UINT ContextFlags, ID3D11DeviceContext1** ppDeferredContext) override {
+		// @Patoke todo: unwrap
+		HRESULT CreateDeferredContext1(UINT ContextFlags, ::ID3D11DeviceContext1** ppDeferredContext) override {
 			return m_realDevice->CreateDeferredContext1(ContextFlags, ppDeferredContext);
 		}
 
@@ -732,12 +736,14 @@ namespace d3d11x
 		}
 
 		// ID3D11Device2
-		void GetImmediateContext2(ID3D11DeviceContext2** ppImmediateContext) override
+		// @Patoke todo: unwrap
+		void GetImmediateContext2(::ID3D11DeviceContext2** ppImmediateContext) override
 		{
 			m_realDevice->GetImmediateContext2(ppImmediateContext);
 		}
 
-		HRESULT CreateDeferredContext2(UINT ContextFlags, ID3D11DeviceContext2** ppDeferredContext) override
+		// @Patoke todo: unwrap
+		HRESULT CreateDeferredContext2(UINT ContextFlags, ::ID3D11DeviceContext2** ppDeferredContext) override
 		{
 			return m_realDevice->CreateDeferredContext2(ContextFlags, ppDeferredContext);
 		}

@@ -26,17 +26,18 @@ namespace d3d11x
 
     ULONG ID3D11Texture2DWrapper::AddRef( )
     {
-        return InterlockedIncrement(&m_refCount);
+        return InterlockedIncrement(&m_RefCount);
     }
 
     ULONG ID3D11Texture2DWrapper::Release( )
     {
-        ULONG refCount = InterlockedDecrement(&m_refCount);
+        ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
         return refCount;
     }
 
+    // @Patoke todo: unwrap?
     void __stdcall ID3D11Texture2DWrapper::GetDevice(ID3D11Device** ppDevice)
     {
         // Probably not necessary but just to be sure -AleBlbl
