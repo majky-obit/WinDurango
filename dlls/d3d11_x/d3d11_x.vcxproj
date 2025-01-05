@@ -102,6 +102,7 @@
     <ClCompile Include="d3d11_x.cpp" />
     <ClCompile Include="d3d_x\d3d11_x_device.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ID3D11DeviceContextWrapper.cpp" />
     <ClCompile Include="ID3D11Texture2DWrapper.cpp" />
     <ClCompile Include="IDXGI.h" />
     <ClCompile Include="IDXGIAdapterWrapper.cpp" />

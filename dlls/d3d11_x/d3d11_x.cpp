@@ -5,6 +5,7 @@
 #include <cstdio>
 
 #include "d3d_x/d3d_x.hpp"
+#include "ID3DWrappers.h"
 
 HRESULT _stdcall D3DQuerySEQCounters_X(D3D_SEQ_COUNTER_DATA* pData)
 {
@@ -145,7 +146,7 @@ HRESULT __stdcall D3D11CreateDevice_X(
     UINT SDKVersion,
     _Out_opt_ d3d11x::ID3D11Device** ppDevice,
     _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
-    _Out_opt_ ID3D11DeviceContext** ppImmediateContext)
+    _Out_opt_ d3d11x::ID3D11DeviceContext** ppImmediateContext)
 {
     printf("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!\n");
     printf("SDK Version: %d\n", SDKVersion);
@@ -162,17 +163,20 @@ HRESULT __stdcall D3D11CreateDevice_X(
     };
 
     ID3D11Device2* device2{};
+    ID3D11DeviceContext2* device_context2{};
     auto flags = Flags & CREATE_DEVICE_FLAG_MASK;
 	//flags |= D3D11_CREATE_DEVICE_DEBUG;
 
-	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, (ID3D11Device**)ppDevice, pFeatureLevel, ppImmediateContext);
+	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, (ID3D11Device**)ppDevice, pFeatureLevel, (ID3D11DeviceContext**)ppImmediateContext);
     
     if (SUCCEEDED(hr))
     {
         // get dx11.2 feature level, since that's what dx11.x inherits from
         (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
+        (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
 
         *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
+        *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapperX(device_context2));
     }
     else
     {
