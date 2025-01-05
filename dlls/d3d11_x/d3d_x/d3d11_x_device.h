@@ -97,6 +97,7 @@ namespace d3d11x
 	class IDXGIDeviceWrapper;
 	class ID3D11Texture2DWrapper;
 	class IGraphicsUnknown;
+	class ID3D11DeviceContext;
 	class ID3D11DeviceContextX;
 	class ID3D11CounterSetX;
 	class ID3D11CounterSampleX;
@@ -296,7 +297,7 @@ namespace d3d11x
 
 		virtual HRESULT GetDeviceRemovedReason( ) = 0;
 
-		virtual void GetImmediateContext(_Out_ ::ID3D11DeviceContext** ppImmediateContext) = 0;
+		virtual void GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) = 0;
 
 		virtual HRESULT SetExceptionMode(UINT RaiseFlags) = 0;
 
@@ -691,10 +692,8 @@ namespace d3d11x
 		}
 
 		// @Patoke todo: unwrap
-		void GetImmediateContext(
-				::ID3D11DeviceContext** ppImmediateContext) override {
-			m_realDevice->GetImmediateContext(ppImmediateContext);
-		}
+		// @Aleblbl don :} (check cpp file)
+		void GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) override;
 
 		HRESULT SetExceptionMode(
 			UINT RaiseFlags) override {

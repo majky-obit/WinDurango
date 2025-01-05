@@ -176,7 +176,7 @@ HRESULT __stdcall D3D11CreateDevice_X(
         (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
 
         *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
-        *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapperX(device_context2));
+        *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(device_context2));
     }
     else
     {

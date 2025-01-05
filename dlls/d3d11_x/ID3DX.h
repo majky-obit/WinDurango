@@ -13,7 +13,9 @@ namespace d3d11x
 
     struct ID3D11DeviceChild_X : public IGraphicsUnknown
     {
-    
+        public: ID3D11Device* m_pDevice;
+        public: void* m_pPrivateData;
+
         virtual void STDMETHODCALLTYPE GetDevice(
             /* [annotation] */
             _Outptr_  ID3D11Device * *ppDevice) PURE;

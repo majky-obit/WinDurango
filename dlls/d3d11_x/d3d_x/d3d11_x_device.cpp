@@ -65,6 +65,14 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateDepthStencilView(
     return m_realDevice->CreateDepthStencilView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, ppDepthStencilView);
 }
 
+void d3d11x::D3D11DeviceXWrapperX::GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) 
+{
+    ::ID3D11DeviceContext2* ctx;
+    m_realDevice->GetImmediateContext(reinterpret_cast<::ID3D11DeviceContext**>(&ctx));
+    *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(ctx));
+}
+
+
 void d3d11x::D3D11DeviceXWrapperX::GetImmediateContextX(
     _Out_ ID3D11DeviceContextX** ppImmediateContextX)
 {
