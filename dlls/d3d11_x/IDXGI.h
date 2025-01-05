@@ -5,19 +5,11 @@
 #include <typeinfo>
 
 
+
 namespace d3d11x
 {
-
-    /*struct IGraphicsUnknownn
-    {
-    public:
-
-
-
-        virtual HRESULT QueryInterface(REFIID riid, void** ppvObject) PURE;
-        virtual ULONG AddRef( ) = 0;
-        virtual ULONG Release( ) = 0;
-    };*/
+    struct IDXGISwapChain1_X;
+   
 
     //MIDL_INTERFACE("aec22fb8-76f3-4639-9be0-28eb43a67a2e")
     struct IDXGIObject_X : public IGraphicsUnknown
@@ -99,11 +91,11 @@ namespace d3d11x
             IDXGISwapChain1** ppSwapChain) PURE;
 
         virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForCoreWindow(
-            IGraphicsUnknown* pDevice,
-            IUnknown* pWindow,
-            const DXGI_SWAP_CHAIN_DESC1* pDesc,
-            IDXGIOutput* pRestrictToOutput,
-            IDXGISwapChain1** ppSwapChain) PURE;
+           IGraphicsUnknown* pDevice,
+           IUnknown* pWindow,
+           const DXGI_SWAP_CHAIN_DESC1* pDesc,
+           IDXGIOutput* pRestrictToOutput,
+           IDXGISwapChain1_X** ppSwapChain) PURE;
 
         virtual HRESULT STDMETHODCALLTYPE GetSharedResourceAdapterLuid(
             HANDLE hResource,
@@ -170,6 +162,123 @@ namespace d3d11x
 
         virtual HRESULT STDMETHODCALLTYPE GetGPUThreadPriority(
             _Out_  INT* pPriority) PURE;
+
+    };
+   
+
+    struct IDXGIDeviceSubObject_X : public IDXGIObject_X
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetDevice(
+            /* [annotation][in] */
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */
+            _COM_Outptr_  void** ppDevice) = 0;
+    };
+
+
+    struct IDXGISwapChain_X : public IDXGIDeviceSubObject_X
+    {
+        virtual HRESULT STDMETHODCALLTYPE Present(
+            /* [in] */ UINT SyncInterval,
+            /* [in] */ UINT Flags) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetBuffer(
+            /* [in] */ UINT Buffer,
+            /* [annotation][in] */
+            _In_  REFIID riid,
+            /* [annotation][out][in] */
+            _COM_Outptr_  void** ppSurface) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE SetFullscreenState(
+            /* [in] */ BOOL Fullscreen,
+            /* [annotation][in] */
+            _In_opt_  IDXGIOutput* pTarget) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetFullscreenState(
+            /* [annotation][out] */
+            _Out_opt_  BOOL* pFullscreen,
+            /* [annotation][out] */
+            _COM_Outptr_opt_result_maybenull_  IDXGIOutput** ppTarget) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetDesc(
+            /* [annotation][out] */
+            _Out_  DXGI_SWAP_CHAIN_DESC* pDesc) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE ResizeBuffers(
+            /* [in] */ UINT BufferCount,
+            /* [in] */ UINT Width,
+            /* [in] */ UINT Height,
+            /* [in] */ DXGI_FORMAT NewFormat,
+            /* [in] */ UINT SwapChainFlags) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE ResizeTarget(
+            /* [annotation][in] */
+            _In_  const DXGI_MODE_DESC* pNewTargetParameters) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetContainingOutput(
+            /* [annotation][out] */
+            _COM_Outptr_  IDXGIOutput** ppOutput) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetFrameStatistics(
+            /* [annotation][out] */
+            _Out_  DXGI_FRAME_STATISTICS* pStats) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetLastPresentCount(
+            /* [annotation][out] */
+            _Out_  UINT* pLastPresentCount) = 0;
+
+    };
+
+
+    struct IDXGISwapChain1_X : public IDXGISwapChain_X
+    {
+    
+        virtual HRESULT STDMETHODCALLTYPE GetDesc1(
+            /* [annotation][out] */
+            _Out_  DXGI_SWAP_CHAIN_DESC1 * pDesc) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetFullscreenDesc(
+            /* [annotation][out] */
+            _Out_  DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pDesc) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetHwnd(
+            /* [annotation][out] */
+            _Out_  HWND* pHwnd) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetCoreWindow(
+            /* [annotation][in] */
+            _In_  REFIID refiid,
+            /* [annotation][out] */
+            _COM_Outptr_  void** ppUnk) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE Present1(
+            /* [in] */ UINT SyncInterval,
+            /* [in] */ UINT PresentFlags,
+            /* [annotation][in] */
+            _In_  const DXGI_PRESENT_PARAMETERS* pPresentParameters) = 0;
+
+        virtual BOOL STDMETHODCALLTYPE IsTemporaryMonoSupported(void) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetRestrictToOutput(
+            /* [annotation][out] */
+            _Out_  IDXGIOutput** ppRestrictToOutput) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE SetBackgroundColor(
+            /* [annotation][in] */
+            _In_  const DXGI_RGBA* pColor) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetBackgroundColor(
+            /* [annotation][out] */
+            _Out_  DXGI_RGBA* pColor) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE SetRotation(
+            /* [annotation][in] */
+            _In_  DXGI_MODE_ROTATION Rotation) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetRotation(
+            /* [annotation][out] */
+            _Out_  DXGI_MODE_ROTATION* pRotation) = 0;
 
     };
 

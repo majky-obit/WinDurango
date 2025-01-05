@@ -58,7 +58,11 @@ namespace d3d11x
 
     HRESULT __stdcall IDXGIDeviceWrapper::GetParent(REFIID riid, void** ppParent)
     {
-        return m_realDevice->GetParent(riid, ppParent);
+        // this should probably check if fails -AleBlbl
+        HRESULT hr = m_realDevice->GetParent(riid, ppParent);
+        this->AddRef( );
+
+        return hr;
     }
 
     HRESULT __stdcall IDXGIDeviceWrapper::GetAdapter(IDXGIAdapter_X** pAdapter)
