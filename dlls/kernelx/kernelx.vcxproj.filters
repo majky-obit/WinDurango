@@ -4,8 +4,17 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="kernelx.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="CoreWindowX.cpp">
+    <ClCompile Include="CoreWindowWrapperX.cpp">
       <Filter>Windows.UI.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreApplicationWrapperX.cpp">
+      <Filter>Windows.ApplicationModel.Core\CoreApplication</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameworkViewWrapper.cpp">
+      <Filter>Windows.ApplicationModel.Core\FrameworkView</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameworkViewSourceWrapper.cpp">
+      <Filter>Windows.ApplicationModel.Core\FrameworkViewSource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -15,14 +24,31 @@
     <ClInclude Include="ICoreWindowX.h">
       <Filter>Windows.UI.Core</Filter>
     </ClInclude>
-    <ClInclude Include="CoreWindowX.h">
+    <ClInclude Include="CoreWindowWrapperX.h">
       <Filter>Windows.UI.Core</Filter>
     </ClInclude>
     <ClInclude Include="hooks.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="ICoreApplicationX.h">
+      <Filter>Windows.ApplicationModel.Core\CoreApplication</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreApplicationWrapperX.h">
+      <Filter>Windows.ApplicationModel.Core\CoreApplication</Filter>
+    </ClInclude>
+    <ClInclude Include="ICoreApplicationResourceAvailabilityX.h">
+      <Filter>Windows.ApplicationModel.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameworkViewWrapper.h">
+      <Filter>Windows.ApplicationModel.Core\FrameworkView</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameworkViewSourceWrapper.h">
+      <Filter>Windows.ApplicationModel.Core\FrameworkViewSource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Exports.def" />
+    <None Include=".editorconfig" />
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -30,6 +56,18 @@
     </Filter>
     <Filter Include="Windows.UI.Core">
       <UniqueIdentifier>{bb53c96d-38a7-46b6-bfc9-84fc5b33678e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Core">
+      <UniqueIdentifier>{22d419bf-d552-4ab7-a078-94a3d47e5051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Core\CoreApplication">
+      <UniqueIdentifier>{ee124397-8dbc-48c3-869f-10201a7d04fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Core\FrameworkView">
+      <UniqueIdentifier>{1dfef95c-7e52-4c34-862d-18e9cd60a9de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Core\FrameworkViewSource">
+      <UniqueIdentifier>{c767c192-a92b-4536-b8a9-51f27fa78800}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

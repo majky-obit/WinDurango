@@ -36,4 +36,10 @@ EXPORTS
     ;DllCanUnloadNow = MMDevAPI.DllCanUnloadNow @35
     ;DllGetClassObject = MMDevAPI.DllGetClassObject @36
     ;DllRegisterServer = MMDevAPI.DllRegisterServer @37
-    ;DllUnregisterServer = MMDevAPI.DllUnregisterServer @38
+    ;DllUnregisterServer = MMDevAPI.DllUnregisterServer @38		
+	DllCanUnloadNow				 =	DllCanUnloadNow_X					
+	DllGetClassObject			 =	DllGetClassObject_X					
+	EnableSpatialAudio			 =	EnableSpatialAudio_X		
+	RefreshWasapiDeviceList		 =	RefreshWasapiDeviceList_X			
+	RestoreBitstreamOut			 =	RestoreBitstreamOut_X		
+	SetWasapiThreadAffinityMask	 =	SetWasapiThreadAffinityMask_X

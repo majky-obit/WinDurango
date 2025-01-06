@@ -4,7 +4,7 @@
 #include "framework.h"
 #include "kernelx.h"
 
-#include "CoreWindowX.h"
+#include "CoreWindowWrapperX.h"
 #include "ICoreWindowX.h"
 
 #include "../src/detours.h"
@@ -18,6 +18,7 @@
 #include <string>
 #include <string_view>
 #include <__msvc_string_view.hpp>
+#include <ntstatus.h>
 
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;

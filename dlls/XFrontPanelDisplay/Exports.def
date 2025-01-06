@@ -1,0 +1,10 @@
+LIBRARY XFrontPanelDisplay
+EXPORTS
+	XFrontPanelGetButtonStates							   = XFrontPanelGetButtonStates_X                            @1
+	XFrontPanelGetLightStates                              = XFrontPanelGetLightStates_X                             @2
+	XFrontPanelGetScreenDimensions                         = XFrontPanelGetScreenDimensions_X                        @3
+	XFrontPanelGetScreenPixelFormat                        = XFrontPanelGetScreenPixelFormat_X                       @4
+	XFrontPanelIsSupported								   = XFrontPanelIsSupported_X                                @5
+	XFrontPanelPresentBuffer                               = XFrontPanelPresentBuffer_X                              @6
+	XFrontPanelSetDisplayName                              = XFrontPanelSetDisplayName_X                             @7
+	XFrontPanelSetLightStates                              = XFrontPanelSetLightStates_X                             @8

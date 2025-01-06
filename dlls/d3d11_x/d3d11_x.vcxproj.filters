@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\ID3D">
+      <UniqueIdentifier>{21a7221a-d303-4d64-98fa-eb1ef76f3c17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ID3D">
+      <UniqueIdentifier>{a66d9c88-9c40-410e-8899-f02975549067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IDXGI">
+      <UniqueIdentifier>{cc2a8930-4142-49f7-9b17-f71e472520ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IDXGI">
+      <UniqueIdentifier>{93367b01-f957-4ef5-82c7-4aab1139fc9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -27,6 +39,24 @@
     <ClInclude Include="Exports.def">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="d3d_x\d3d_x.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d_x\d3d11_x_device.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDXGIWrappers.h">
+      <Filter>Header Files\IDXGI</Filter>
+    </ClInclude>
+    <ClInclude Include="ID3DX.h">
+      <Filter>Header Files\ID3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ID3DWrappers.h">
+      <Filter>Header Files\ID3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ID3DDeviceContext.h">
+      <Filter>Header Files\ID3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="d3d11_x.cpp">
@@ -37,6 +67,30 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d_x\d3d11_x_device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IDXGI.h">
+      <Filter>Header Files\IDXGI</Filter>
+    </ClCompile>
+    <ClCompile Include="IDXGIFactoryWrapper.cpp">
+      <Filter>Source Files\IDXGI</Filter>
+    </ClCompile>
+    <ClCompile Include="IDXGIDeviceWrapper.cpp">
+      <Filter>Source Files\IDXGI</Filter>
+    </ClCompile>
+    <ClCompile Include="IDXGIAdapterWrapper.cpp">
+      <Filter>Source Files\IDXGI</Filter>
+    </ClCompile>
+    <ClCompile Include="ID3D11Texture2DWrapper.cpp">
+      <Filter>Source Files\ID3D</Filter>
+    </ClCompile>
+    <ClCompile Include="IDXGISwapChainWrapper.cpp">
+      <Filter>Source Files\IDXGI</Filter>
+    </ClCompile>
+    <ClCompile Include="ID3D11DeviceContextWrapper.cpp">
+      <Filter>Source Files\ID3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

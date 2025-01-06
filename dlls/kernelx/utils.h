@@ -1,5 +1,4 @@
-﻿// ReSharper disable CppInconsistentNaming
-#pragma once
+﻿#pragma once
 
 #include <Windows.h>
 
@@ -12,9 +11,9 @@
 
 #define GetXDKVersion() "10.0.19041.0"
 
-inline BOOL IsXboxModule(HMODULE Module)
+BOOL IsXboxModule(HMODULE module)
 {
-	return FALSE;
+	return module == GetModuleHandleW(nullptr);
 }
 
 inline BOOL IsXboxAddress(const PVOID Address)
