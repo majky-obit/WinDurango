@@ -90,6 +90,51 @@
     <ClCompile Include="Implementation\Windows.Xbox.Media.GameTransportControlsPropertyChangedEventArgs.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Media.GameTransportControls.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Storage.BlobInfoQueryResult.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Storage.ConnectedStorageContainer.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Storage.ConnectedStorageSpace.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Storage.ContainerInfoQueryResult.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.Development.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.ErrorMessages.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.MeasureQualityOfServiceResult.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.QualityOfService.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.QualityOfServiceMeasurement.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceAddress.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociation.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationIncomingEventArgs.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationStateChangedEventArgs.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationTemplate.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceSocketDescription.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -165,6 +210,51 @@
     <ClInclude Include="Implementation\Windows.Xbox.Media.GameTransportControlsButtonPressedEventArgs.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Media.GameTransportControlsPropertyChangedEventArgs.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Media.GameTransportControls.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Storage.BlobInfoQueryResult.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Storage.ConnectedStorageContainer.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Storage.ConnectedStorageSpace.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Storage.ContainerInfoQueryResult.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.Development.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.ErrorMessages.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.MeasureQualityOfServiceResult.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.QualityOfService.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.QualityOfServiceMeasurement.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceAddress.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociation.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationIncomingEventArgs.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationStateChangedEventArgs.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationTemplate.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceSocketDescription.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -189,7 +279,7 @@
     <Midl Include="External\Windows.Xbox.Media.GameTransportControls.idl">
       <Filter>External</Filter>
     </Midl>
-	<Midl Include="External\Windows.Xbox.Achievements.idl">
+    <Midl Include="External\Windows.Xbox.Achievements.idl">
       <Filter>External</Filter>
     </Midl>
     <Midl Include="External\Windows.Xbox.ApplicationModel.State.idl">
@@ -211,6 +301,12 @@
       <Filter>External</Filter>
     </Midl>
     <Midl Include="External\Windows.Xbox.Shell.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.Storage.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.Networking.idl">
       <Filter>External</Filter>
     </Midl>
   </ItemGroup>

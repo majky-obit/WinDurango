@@ -25,11 +25,11 @@ namespace winrt::Windows::Xbox::Input::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::IGamepad> Gamepad::Gamepads()
     {
-        throw hresult_not_implemented();
+        return winrt::single_threaded_vector<IGamepad>( ).GetView( );;
     }
     winrt::event_token Gamepad::GamepadAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadAddedEventArgs> const& handler)
     {
-        throw hresult_not_implemented();
+        return {};
     }
     void Gamepad::GamepadAdded(winrt::event_token const& token) noexcept
     {
@@ -37,7 +37,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::event_token Gamepad::GamepadRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadRemovedEventArgs> const& handler)
     {
-        throw hresult_not_implemented();
+        return {};
     }
     void Gamepad::GamepadRemoved(winrt::event_token const& token) noexcept
     {
