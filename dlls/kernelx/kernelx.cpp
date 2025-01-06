@@ -292,7 +292,6 @@ PVOID XMemAlloc_X(SIZE_T dwSize, uint64_t flags) {
 
 static decltype(&XMemAlloc_X) XMemAllocRoutine_X;
 static decltype(&XMemFree_X) XMemFreeRoutine_X;
-static CRITICAL_SECTION XMemSetAllocationHooksLock_X;
 
 void XMemSetAllocationHooks_X(decltype(&XMemAlloc_X) Alloc, decltype(&XMemFree_X) Free)
 {
@@ -525,3 +524,4 @@ NTSTATUS NlsProcessDestroy(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvR
     IsNlsProcessInitialized = 0;
     return result;
 }
+
