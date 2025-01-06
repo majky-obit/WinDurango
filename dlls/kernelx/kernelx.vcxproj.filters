@@ -20,9 +20,6 @@
     </ClInclude>
     <ClInclude Include="hooks.h" />
     <ClInclude Include="utils.h" />
-    <ClInclude Include="ICoreApplication.h">
-      <Filter>Windows.ApplicationModel.Core</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Exports.def" />
@@ -33,9 +30,6 @@
     </Filter>
     <Filter Include="Windows.UI.Core">
       <UniqueIdentifier>{bb53c96d-38a7-46b6-bfc9-84fc5b33678e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Windows.ApplicationModel.Core">
-      <UniqueIdentifier>{be9115da-80a5-4371-bae9-83b0f196044a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

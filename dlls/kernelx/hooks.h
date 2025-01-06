@@ -10,23 +10,6 @@
 // ReSharper disable CppZeroConstantCanBeReplacedWithNullptr
 #pragma once
 
-void debug_printf(const char* format, ...) {
-	char buffer[1024];  // Temporary buffer to hold the formatted string
-	va_list args;
-
-	// Start handling the variable argument list
-	va_start(args, format);
-
-	// Format the input string and store it in the buffer
-	vsnprintf(buffer, sizeof(buffer), format, args);
-
-	// End argument handling
-	va_end(args);
-
-	// Send the formatted string to the debugger
-	OutputDebugStringA(buffer);
-}
-
 inline bool IsClassName(HSTRING classId, const char* classIdName)
 {
 	const wchar_t* classIdString = WindowsGetStringRawBuffer(classId, nullptr);
@@ -88,10 +71,6 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 			*reinterpret_cast<void**>(&TrueGetForCurrentThread) = (*reinterpret_cast<void***>(coreWindowStatic.Get()))[6];
 
 			DetourAttach(&TrueGetForCurrentThread, GetForCurrentThread_Hook);
-			//return coreWindowStatic.CopyTo(iid, factory);
-		}
-		else if (IsClassName(classId, "Windows.ApplicationModel.Core.CoreApplication")) {
-			ComPtr<ICoreApplication>
 		}
 		else
 		{
