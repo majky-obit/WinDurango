@@ -15,7 +15,7 @@ namespace d3d11x
     {
         public: ID3D11Device* m_pDevice;
         public: void* m_pPrivateData;
-
+    public:
         virtual void STDMETHODCALLTYPE GetDevice(
             /* [annotation] */
             _Outptr_  ID3D11Device * *ppDevice) PURE;
@@ -76,6 +76,25 @@ namespace d3d11x
         virtual void STDMETHODCALLTYPE GetDesc(
             /* [annotation] */
             _Out_  D3D11_TEXTURE2D_DESC * pDesc) PURE;
+
+    };
+
+
+    struct ID3D11View_X : ID3D11DeviceChild_X
+    {
+    public:
+        virtual void STDMETHODCALLTYPE GetResource(
+            /* [annotation] */
+            _Outptr_  ID3D11Resource** ppResource) PURE;
+
+    };
+
+    struct ID3D11RenderTargetView_X : ID3D11View_X
+    {
+    public:
+        virtual void STDMETHODCALLTYPE GetDesc(
+            /* [annotation] */
+            _Out_  D3D11_RENDER_TARGET_VIEW_DESC* pDesc) PURE;
 
     };
 }

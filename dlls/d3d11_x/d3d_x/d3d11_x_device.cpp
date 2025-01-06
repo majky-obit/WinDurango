@@ -48,14 +48,24 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture2D(
     return hr;
 }
 
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateShaderResourceView(
+            ID3D11Resource* pResource,
+            const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
+            ID3D11ShaderResourceView** ppSRView)  {
+    return m_realDevice->CreateShaderResourceView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, ppSRView);
+}
+
 
 HRESULT d3d11x::D3D11DeviceXWrapperX::CreateRenderTargetView(
             ID3D11Resource* pResource,
             const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
-            ID3D11RenderTargetView** ppRTView) {
+            ID3D11RenderTargetView_X** ppRTView) {
 
-
-    return m_realDevice->CreateRenderTargetView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, ppRTView);
+    ::ID3D11RenderTargetView* target = nullptr;
+    HRESULT hr = m_realDevice->CreateRenderTargetView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, &target);
+    *ppRTView = reinterpret_cast<ID3D11RenderTargetView_X*>(new ID3D11RenderTargetViewWrapper(target));
+    
+    return hr;
 }
 
 HRESULT d3d11x::D3D11DeviceXWrapperX::CreateDepthStencilView(
