@@ -27,11 +27,19 @@ namespace winrt::Windows::Xbox::Networking::implementation
     {
         throw hresult_not_implemented();
     }
+    winrt::Windows::Xbox::Networking::SecureDeviceAssociation SecureDeviceAssociation::GetAssociationByHostNamesAndPorts(winrt::Windows::Networking::HostName const& remoteHostName, hstring const& remotePort, winrt::Windows::Networking::HostName const& localHostName, hstring const& localPort)
+    {
+        throw hresult_not_implemented();
+    }
     winrt::event_token SecureDeviceAssociation::StateChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Xbox::Networking::SecureDeviceAssociation, winrt::Windows::Xbox::Networking::SecureDeviceAssociationStateChangedEventArgs> const& handler)
     {
         throw hresult_not_implemented();
     }
     void SecureDeviceAssociation::StateChanged(winrt::event_token const& token) noexcept
+    {
+        throw hresult_not_implemented();
+    }
+    winrt::Windows::Foundation::IAsyncAction SecureDeviceAssociation::DestroyAsync()
     {
         throw hresult_not_implemented();
     }
@@ -55,7 +63,15 @@ namespace winrt::Windows::Xbox::Networking::implementation
     {
         throw hresult_not_implemented();
     }
+    winrt::Windows::Networking::HostName SecureDeviceAssociation::RemoteHostName()
+    {
+        throw hresult_not_implemented();
+    }
     hstring SecureDeviceAssociation::RemotePort()
+    {
+        throw hresult_not_implemented();
+    }
+    winrt::Windows::Networking::HostName SecureDeviceAssociation::LocalHostName()
     {
         throw hresult_not_implemented();
     }

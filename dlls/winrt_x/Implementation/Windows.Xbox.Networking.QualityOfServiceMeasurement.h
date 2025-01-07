@@ -28,6 +28,7 @@ namespace winrt::Windows::Xbox::Networking::implementation
 
         winrt::Windows::Xbox::Networking::QualityOfServiceMeasurementStatus Status();
         winrt::Windows::Xbox::Networking::QualityOfServiceMetric Metric();
+        winrt::Windows::Foundation::IPropertyValue MetricValue();
         winrt::Windows::Xbox::Networking::SecureDeviceAddress SecureDeviceAddress();
     };
 }

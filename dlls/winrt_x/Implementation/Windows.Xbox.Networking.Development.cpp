@@ -23,6 +23,10 @@
 
 namespace winrt::Windows::Xbox::Networking::implementation
 {
+    winrt::Windows::Xbox::Networking::SecureDeviceAddress Development::CreateSecureDeviceAddressFromHostNames(winrt::Windows::Xbox::Networking::SecureDeviceId const& secureDeviceId, winrt::Windows::Foundation::Collections::IIterable<winrt::Windows::Networking::HostName> const& hostNames)
+    {
+        throw hresult_not_implemented();
+    }
     winrt::Windows::Xbox::Networking::SecureDeviceSocketDescription Development::CreateSecureDeviceSocketDescription(hstring const& name, winrt::Windows::Xbox::Networking::SecureIpProtocol const& secureIpProtocol, uint16_t boundPortRangeLower, uint16_t boundPortRangeUpper, winrt::Windows::Xbox::Networking::SecureDeviceSocketUsage const& allowedUsages)
     {
         throw hresult_not_implemented();

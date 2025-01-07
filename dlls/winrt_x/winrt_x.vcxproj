@@ -122,6 +122,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.AccessibilitySettingsChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChannelUpdatedEventArgs.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatManager.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatManagerSettings.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatPacketEventArgs.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatPerformanceCounters.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatPerformanceTime.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatUser.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.DebugMessageEventArgs.h" />
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Achievements.AchievementNotifier.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Achievements.AchievementSource.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Achievements.AchievementUnlockedEventArgs.h" />
@@ -135,6 +145,15 @@
     <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.State.Internal.ProtocolQuery.h" />
     <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.Store.Configuration.h" />
     <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.Store.Product.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatChannel.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatDecoder.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatEncoder.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatMuteList.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatParticipant.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatSession.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatUserCorrelation.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.Format.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.UserMuteStateChangedEventArgs.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Input.BodyController.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Input.BodyHandPair.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Input.BrokeredInteractions.h" />
@@ -180,6 +199,16 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.AccessibilitySettingsChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChannelUpdatedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatManager.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatManagerSettings.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatPacketEventArgs.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatPerformanceCounters.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatPerformanceTime.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatUser.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.DebugMessageEventArgs.cpp" />
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Achievements.AchievementNotifier.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Achievements.AchievementSource.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Achievements.AchievementUnlockedEventArgs.cpp" />
@@ -193,6 +222,15 @@
     <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.State.Internal.ProtocolQuery.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.Store.Configuration.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.Store.Product.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatChannel.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatDecoder.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatEncoder.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatMuteList.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatParticipant.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatSession.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatUserCorrelation.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.Format.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.UserMuteStateChangedEventArgs.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Input.BodyController.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Input.BodyHandPair.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Input.BrokeredInteractions.cpp" />
@@ -248,9 +286,11 @@
     <None Include="PropertySheet.props" />
   </ItemGroup>
   <ItemGroup>
+    <Midl Include="External\Microsoft.Xbox.GameChat.idl" />
     <Midl Include="External\Windows.Xbox.ApplicationModel.State.idl" />
     <Midl Include="External\Windows.Xbox.ApplicationModel.State.Internal.idl" />
     <Midl Include="External\Windows.Xbox.ApplicationModel.Store.idl" />
+    <Midl Include="External\Windows.Xbox.Chat.idl" />
     <Midl Include="External\Windows.Xbox.idl" />
     <Midl Include="External\Windows.Xbox.Input.idl" />
     <Midl Include="External\Windows.Xbox.Management.Deployment.idl" />

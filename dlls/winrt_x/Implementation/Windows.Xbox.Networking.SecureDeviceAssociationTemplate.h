@@ -32,6 +32,8 @@ namespace winrt::Windows::Xbox::Networking::implementation
         void AssociationIncoming(winrt::event_token const& token) noexcept;
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Networking::SecureDeviceAssociation> CreateAssociationAsync(winrt::Windows::Xbox::Networking::SecureDeviceAddress secureDeviceAddress, winrt::Windows::Xbox::Networking::CreateSecureDeviceAssociationBehavior behavior);
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Networking::SecureDeviceAssociation> CreateAssociationForPortsAsync(winrt::Windows::Xbox::Networking::SecureDeviceAddress secureDeviceAddress, winrt::Windows::Xbox::Networking::CreateSecureDeviceAssociationBehavior behavior, hstring initiatorPort, hstring acceptorPort);
+        winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Storage::Streams::IBuffer> CreateCertificateRequestAsync(hstring subjectName);
+        winrt::Windows::Foundation::IAsyncAction InstallCertificateAsync(winrt::Windows::Storage::Streams::IBuffer certificateBuffer);
         hstring Name();
         winrt::Windows::Xbox::Networking::SecureDeviceSocketDescription InitiatorSocketDescription();
         winrt::Windows::Xbox::Networking::SecureDeviceSocketDescription AcceptorSocketDescription();

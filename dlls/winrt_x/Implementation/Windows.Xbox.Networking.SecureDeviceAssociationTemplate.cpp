@@ -47,6 +47,14 @@ namespace winrt::Windows::Xbox::Networking::implementation
     {
         throw hresult_not_implemented();
     }
+    winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Storage::Streams::IBuffer> SecureDeviceAssociationTemplate::CreateCertificateRequestAsync(hstring subjectName)
+    {
+        throw hresult_not_implemented();
+    }
+    winrt::Windows::Foundation::IAsyncAction SecureDeviceAssociationTemplate::InstallCertificateAsync(winrt::Windows::Storage::Streams::IBuffer certificateBuffer)
+    {
+        throw hresult_not_implemented();
+    }
     hstring SecureDeviceAssociationTemplate::Name()
     {
         throw hresult_not_implemented();

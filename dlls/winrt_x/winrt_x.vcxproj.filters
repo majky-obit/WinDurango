@@ -135,6 +135,63 @@
     <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceSocketDescription.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatChannel.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatDecoder.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatEncoder.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatMuteList.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatParticipant.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatSession.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.ChatUserCorrelation.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.Format.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Chat.UserMuteStateChangedEventArgs.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.AccessibilitySettingsChangedEventArgs.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChannelUpdatedEventArgs.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatManager.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatManagerSettings.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatPacketEventArgs.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatPerformanceCounters.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatPerformanceTime.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.ChatUser.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.DebugMessageEventArgs.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -255,6 +312,63 @@
     <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceSocketDescription.h">
       <Filter>Implementation</Filter>
     </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatChannel.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatDecoder.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatEncoder.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatMuteList.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatParticipant.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatSession.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.ChatUserCorrelation.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.Format.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Chat.UserMuteStateChangedEventArgs.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.AccessibilitySettingsChangedEventArgs.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChannelUpdatedEventArgs.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatManager.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatManagerSettings.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatPacketEventArgs.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatPerformanceCounters.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatPerformanceTime.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChatUser.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.DebugMessageEventArgs.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -307,6 +421,12 @@
       <Filter>External</Filter>
     </Midl>
     <Midl Include="External\Windows.Xbox.Networking.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.Chat.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Microsoft.Xbox.GameChat.idl">
       <Filter>External</Filter>
     </Midl>
   </ItemGroup>
