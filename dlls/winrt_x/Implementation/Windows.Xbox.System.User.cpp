@@ -87,7 +87,7 @@ namespace winrt::Windows::Xbox::System::implementation
     winrt::event_token User::AudioDeviceRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::AudioDeviceRemovedEventArgs> const& handler)
     {
         printf("!!!! Windows.Xbox.System.User AudioDeviceRemoved | NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+        return {};
     }
     void User::AudioDeviceRemoved(winrt::event_token const& token) noexcept
     {
@@ -97,7 +97,7 @@ namespace winrt::Windows::Xbox::System::implementation
     winrt::event_token User::AudioDeviceChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::AudioDeviceChangedEventArgs> const& handler)
     {
         printf("!!!! Windows.Xbox.System.User AudioDeviceChanged | NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+        return {};
     }
     void User::AudioDeviceChanged(winrt::event_token const& token) noexcept
     {

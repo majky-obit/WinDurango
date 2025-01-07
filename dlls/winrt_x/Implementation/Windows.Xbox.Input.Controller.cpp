@@ -45,7 +45,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::event_token Controller::ControllerPairingChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerPairingChangedEventArgs> const& handler)
     {
-        throw hresult_not_implemented();
+        return {};
     }
     void Controller::ControllerPairingChanged(winrt::event_token const& token) noexcept
     {

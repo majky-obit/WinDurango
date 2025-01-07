@@ -89,6 +89,12 @@
     <ClCompile Include="IDXGISwapChainWrapper.cpp">
       <Filter>Source Files\IDXGI</Filter>
     </ClCompile>
+    <ClCompile Include="ID3D11RenderTargetViewWrapper.cpp">
+      <Filter>Source Files\ID3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ID3DWrappers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ID3D11DeviceContextWrapper.cpp">
       <Filter>Source Files\ID3D</Filter>
     </ClCompile>
