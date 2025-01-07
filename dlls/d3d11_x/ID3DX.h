@@ -7,7 +7,15 @@
 namespace d3d11x
 {
 	
-
+    struct D3D11X_DESCRIPTOR_TEXTURE_VIEW
+    {
+        union
+        {
+            //__m128i Oword[ 2 ]; @Patoke todo: cannot be arsed
+            unsigned __int64 Qword[ 4 ];
+            unsigned int Dword[ 8 ];
+        };
+    };
 
 
 
@@ -70,6 +78,15 @@ namespace d3d11x
         virtual void STDMETHODCALLTYPE GetDescriptor(D3D11X_DESCRIPTOR_RESOURCE* descriptor) PURE;
     };
 
+    struct ID3D11Texture1D_X : public ID3D11Resource_X
+    {
+
+        virtual void STDMETHODCALLTYPE GetDesc(
+            /* [annotation] */
+            _Out_  D3D11_TEXTURE1D_DESC* pDesc) PURE;
+
+    };
+
     struct ID3D11Texture2D_X : public ID3D11Resource_X
     {
     
@@ -79,10 +96,21 @@ namespace d3d11x
 
     };
 
+    struct ID3D11Texture3D_X : public ID3D11Resource_X
+    {
+
+        virtual void STDMETHODCALLTYPE GetDesc(
+            /* [annotation] */
+            _Out_  D3D11_TEXTURE3D_DESC* pDesc) PURE;
+
+    };
 
     struct ID3D11View_X : ID3D11DeviceChild_X
     {
     public:
+        ID3D11Resource* m_pResource;
+        unsigned int m_Type;
+
         virtual void STDMETHODCALLTYPE GetResource(
             /* [annotation] */
             _Outptr_  ID3D11Resource** ppResource) PURE;
@@ -95,6 +123,36 @@ namespace d3d11x
         virtual void STDMETHODCALLTYPE GetDesc(
             /* [annotation] */
             _Out_  D3D11_RENDER_TARGET_VIEW_DESC* pDesc) PURE;
+
+    };
+
+    struct ID3D11DepthStencilView_X : ID3D11View_X
+    {
+    public:
+        virtual void STDMETHODCALLTYPE GetDesc(
+            /* [annotation] */
+            _Out_  D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc) PURE;
+
+    };
+
+    struct ID3D11ShaderResourceView_X : ID3D11View_X
+    {
+    public:
+        virtual void STDMETHODCALLTYPE GetDesc(
+            /* [annotation] */
+            _Out_  D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc) PURE;
+
+    };
+
+    struct ID3D11UnorderedAccessView_X : ID3D11View_X
+    {
+    public:
+        D3D11X_DESCRIPTOR_TEXTURE_VIEW m_Descriptor;
+        void* m_pAllocationStart;
+
+        virtual void STDMETHODCALLTYPE GetDesc(
+            /* [annotation] */
+            _Out_  D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc) PURE;
 
     };
 
