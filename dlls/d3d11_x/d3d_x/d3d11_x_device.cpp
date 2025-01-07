@@ -28,8 +28,7 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::QueryInterface(REFIID riid, void** ppvObje
     if (riid == __uuidof(IDXGIDevice) ||
         riid == __uuidof(IDXGIDevice1))
     {
-        void** giDevice = nullptr;
-        HRESULT hr = m_realDevice->QueryInterface(riid, ppvObject);
+        HRESULT hr = m_realDevice->QueryInterface(__uuidof(IDXGIDevice1), ppvObject);
         *ppvObject = new IDXGIDeviceWrapper(static_cast<IDXGIDevice1*>(*ppvObject));
         return S_OK;
     }
@@ -37,24 +36,105 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::QueryInterface(REFIID riid, void** ppvObje
     return m_realDevice->QueryInterface(riid, ppvObject);
 }
 
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture1D(
+            const D3D11_TEXTURE1D_DESC* pDesc,
+            const D3D11_SUBRESOURCE_DATA* pInitialData,
+            ID3D11Texture1D_X** ppTexture1D) {
+
+    ID3D11Texture1D* texture1d = nullptr;
+    HRESULT hr = m_realDevice->CreateTexture1D(pDesc, pInitialData, &texture1d);
+
+    if (SUCCEEDED(hr))
+    {
+        *ppTexture1D = new ID3D11Texture1DWrapper(texture1d);
+    }
+    else
+    {
+        *ppTexture1D = nullptr;
+    }
+
+    return hr;
+}
+
 HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture2D(
             const D3D11_TEXTURE2D_DESC* pDesc,
             const D3D11_SUBRESOURCE_DATA* pInitialData,
-            ID3D11Texture2D** ppTexture2D) {
+            ID3D11Texture2D_X** ppTexture2D) {
 
     ID3D11Texture2D* texture2d = nullptr;
     HRESULT hr = m_realDevice->CreateTexture2D(pDesc, pInitialData, &texture2d);
-    *reinterpret_cast<ID3D11Texture2D_X**>(ppTexture2D) = new ID3D11Texture2DWrapper(texture2d);
+
+    if (SUCCEEDED(hr))
+    {
+        *ppTexture2D = new ID3D11Texture2DWrapper(texture2d);
+    }
+    else
+    {
+        *ppTexture2D = nullptr;
+    }
+
+    return hr;
+}
+
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture3D(
+            const D3D11_TEXTURE3D_DESC* pDesc,
+            const D3D11_SUBRESOURCE_DATA* pInitialData,
+            ID3D11Texture3D_X** ppTexture3D) {
+
+    ID3D11Texture3D* texture3d = nullptr;
+    HRESULT hr = m_realDevice->CreateTexture3D(pDesc, pInitialData, &texture3d);
+
+    if (SUCCEEDED(hr))
+    {
+        *ppTexture3D = new ID3D11Texture3DWrapper(texture3d);
+    }
+    else
+    {
+        *ppTexture3D = nullptr;
+    }
+
     return hr;
 }
 
 HRESULT d3d11x::D3D11DeviceXWrapperX::CreateShaderResourceView(
             ID3D11Resource* pResource,
             const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
-            ID3D11ShaderResourceView** ppSRView)  {
-    return m_realDevice->CreateShaderResourceView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, ppSRView);
+            ID3D11ShaderResourceView_X** ppSRView)  {
+
+    ::ID3D11ShaderResourceView* target = nullptr;
+    HRESULT hr = m_realDevice->CreateShaderResourceView(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource, pDesc, &target);
+
+    if (SUCCEEDED(hr))
+    {
+        *ppSRView = reinterpret_cast<ID3D11ShaderResourceView_X*>(new ID3D11ShaderResourceViewWrapper(target));
+    }
+    else
+    {
+        *ppSRView = nullptr;
+    }
+
+    return hr;
 }
 
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateUnorderedAccessView(
+            ID3D11Resource* pResource,
+            const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc,
+            ID3D11UnorderedAccessView_X** ppUAView) {
+
+    ::ID3D11UnorderedAccessView* target = nullptr;
+    HRESULT hr = m_realDevice->CreateUnorderedAccessView(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource, pDesc, &target);
+
+    if (SUCCEEDED(hr))
+    {
+        *ppUAView = reinterpret_cast<ID3D11UnorderedAccessView_X*>(new ID3D11UnorderedAccessViewWrapper(target));
+    }
+    else
+    {
+        *ppUAView = nullptr;
+    }
+
+    return hr;
+}
 
 HRESULT d3d11x::D3D11DeviceXWrapperX::CreateRenderTargetView(
             ID3D11Resource* pResource,
@@ -62,32 +142,66 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateRenderTargetView(
             ID3D11RenderTargetView_X** ppRTView) {
 
     ::ID3D11RenderTargetView* target = nullptr;
-    HRESULT hr = m_realDevice->CreateRenderTargetView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, &target);
-    *ppRTView = reinterpret_cast<ID3D11RenderTargetView_X*>(new ID3D11RenderTargetViewWrapper(target));
-    
+    HRESULT hr = m_realDevice->CreateRenderTargetView(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource, pDesc, &target);
+
+    if (SUCCEEDED(hr))
+    {
+        *ppRTView = reinterpret_cast<ID3D11RenderTargetView_X*>(new ID3D11RenderTargetViewWrapper(target));
+    }
+    else
+    {
+        *ppRTView = nullptr;
+    }
+
     return hr;
 }
 
 HRESULT d3d11x::D3D11DeviceXWrapperX::CreateDepthStencilView(
             ID3D11Resource* pResource,
             const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
-            ID3D11DepthStencilView** ppDepthStencilView) {
-    return m_realDevice->CreateDepthStencilView(reinterpret_cast<ID3D11Texture2DWrapper*>(pResource)->m_realTexture, pDesc, ppDepthStencilView);
+            ID3D11DepthStencilView_X** ppDepthStencilView) {
+
+    ::ID3D11DepthStencilView* target = nullptr;
+    HRESULT hr = m_realDevice->CreateDepthStencilView(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource, pDesc, &target);
+
+    if (SUCCEEDED(hr))
+    {
+        *ppDepthStencilView = reinterpret_cast<ID3D11DepthStencilView_X*>(new ID3D11DepthStencilViewWrapper(target));
+    }
+    else
+    {
+        *ppDepthStencilView = nullptr;
+    }
+
+    return hr;
 }
 
 void d3d11x::D3D11DeviceXWrapperX::GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) 
 {
-    ::ID3D11DeviceContext2* ctx;
-    m_realDevice->GetImmediateContext(reinterpret_cast<::ID3D11DeviceContext**>(&ctx));
-    *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(ctx));
+    ::ID3D11DeviceContext* ctx{};
+    m_realDevice->GetImmediateContext(&ctx);
+
+    if(ctx)
+    {
+        ::ID3D11DeviceContext2* ctx2{};
+        ctx->QueryInterface(IID_PPV_ARGS(&ctx2));
+
+        *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(ctx2));
+    }
 }
 
 HRESULT d3d11x::D3D11DeviceXWrapperX::CreateDeferredContext(UINT ContextFlags, d3d11x::ID3D11DeviceContext** ppDeferredContext)
 {
-    ::ID3D11DeviceContext2* cxt2{};
-    HRESULT hr = m_realDevice->CreateDeferredContext(ContextFlags, (::ID3D11DeviceContext**) & cxt2);
-//    (*ppDeferredContext)->QueryInterface(IID_PPV_ARGS(&cxt2));
-     *ppDeferredContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(cxt2));
+    ::ID3D11DeviceContext* ctx{};
+    HRESULT hr = m_realDevice->CreateDeferredContext(ContextFlags, &ctx);
+
+    if(SUCCEEDED(hr))
+    {
+        ::ID3D11DeviceContext2* ctx2{};
+        ctx->QueryInterface(IID_PPV_ARGS(&ctx2));
+
+        *ppDeferredContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(ctx2));
+    }
 
     return hr;
 }
@@ -101,7 +215,16 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateBuffer(
 
     ID3D11Buffer* buffer = nullptr;
     HRESULT hr = m_realDevice->CreateBuffer(pDesc, pInitialData, &buffer);
-    *reinterpret_cast<ID3D11Buffer_X**>(ppBuffer) = new ID3D11BufferWrapper(buffer);
+    
+    if (SUCCEEDED(hr))
+    {
+        *ppBuffer = new ID3D11BufferWrapper(buffer);
+    }
+    else
+    {
+        *ppBuffer = nullptr;
+    }
+
     return hr;
 }
 

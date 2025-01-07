@@ -94,12 +94,21 @@ namespace d3d11x
 		IUnknown* m_pUnknown;
 	};
 
+	// Wrappers
 	class ID3D11Buffer_X;
 	class ID3D11BufferWrapper;
 	class ID3D11RenderTargetView_X;
+	class ID3D11UnorderedAccessView_X;
+	class ID3D11ShaderResourceView_X;
+	class ID3D11DepthStencilView_X;
 	class ID3D11RenderTargetViewWrapper;
 	class IDXGIDeviceWrapper;
 	class ID3D11Texture2DWrapper;
+	class ID3D11Texture1D_X;
+	class ID3D11Texture2D_X;
+	class ID3D11Texture3D_X;
+
+	// D3D11.X forward declarations
 	class IGraphicsUnknown;
 	class ID3D11DeviceContext;
 	class ID3D11DeviceContextX;
@@ -138,23 +147,23 @@ namespace d3d11x
 
 		virtual HRESULT CreateTexture1D(_In_ const D3D11_TEXTURE1D_DESC* pDesc,
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels* pDesc->ArraySize)) const D3D11_SUBRESOURCE_DATA* pInitialData,
-			_Out_opt_ ID3D11Texture1D** ppTexture1D) = 0;
+			_Out_opt_ ID3D11Texture1D_X** ppTexture1D) = 0;
 
 		virtual HRESULT CreateTexture2D(_In_ const D3D11_TEXTURE2D_DESC* pDesc,
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels* pDesc->ArraySize)) const D3D11_SUBRESOURCE_DATA* pInitialData,
-			_Out_opt_ ID3D11Texture2D** ppTexture2D) = 0;
+			_Out_opt_ ID3D11Texture2D_X** ppTexture2D) = 0;
 
 		virtual HRESULT CreateTexture3D(_In_ const D3D11_TEXTURE3D_DESC* pDesc,
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels)) const D3D11_SUBRESOURCE_DATA* pInitialData,
-			_Out_opt_ ID3D11Texture3D** ppTexture3D) = 0;
+			_Out_opt_ ID3D11Texture3D_X** ppTexture3D) = 0;
 
 		virtual HRESULT CreateShaderResourceView(_In_ ID3D11Resource* pResource,
 			_In_opt_ const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
-			_Out_opt_ ID3D11ShaderResourceView** ppSRView) = 0;
+			_Out_opt_ ID3D11ShaderResourceView_X** ppSRView) = 0;
 
 		virtual HRESULT CreateUnorderedAccessView(_In_ ID3D11Resource* pResource,
 			_In_opt_ const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc,
-			_Out_opt_ ID3D11UnorderedAccessView** ppUAView) = 0;
+			_Out_opt_ ID3D11UnorderedAccessView_X** ppUAView) = 0;
 
 		virtual HRESULT CreateRenderTargetView(_In_ ID3D11Resource* pResource,
 			_In_opt_ const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
@@ -163,7 +172,7 @@ namespace d3d11x
 		virtual HRESULT CreateDepthStencilView(
 			_In_ ID3D11Resource* pResource,
 			_In_opt_ const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
-			_Out_opt_ ID3D11DepthStencilView** ppDepthStencilView) = 0;
+			_Out_opt_ ID3D11DepthStencilView_X** ppDepthStencilView) = 0;
 
 		virtual HRESULT CreateInputLayout(
 			_In_reads_(NumElements) const D3D11_INPUT_ELEMENT_DESC * pInputElementDescs,
@@ -453,33 +462,27 @@ namespace d3d11x
 		HRESULT CreateTexture1D(
 			const D3D11_TEXTURE1D_DESC* pDesc,
 			const D3D11_SUBRESOURCE_DATA* pInitialData,
-			ID3D11Texture1D** ppTexture1D) override {
-			return m_realDevice->CreateTexture1D(pDesc, pInitialData, ppTexture1D);
-		}
+			ID3D11Texture1D_X** ppTexture1D) override;
 
 		HRESULT CreateTexture2D(
 			const D3D11_TEXTURE2D_DESC* pDesc,
 			const D3D11_SUBRESOURCE_DATA* pInitialData,
-			ID3D11Texture2D** ppTexture2D) override;
+			ID3D11Texture2D_X** ppTexture2D) override;
 
 		HRESULT CreateTexture3D(
 			const D3D11_TEXTURE3D_DESC* pDesc,
 			const D3D11_SUBRESOURCE_DATA* pInitialData,
-			ID3D11Texture3D** ppTexture3D) override {
-			return m_realDevice->CreateTexture3D(pDesc, pInitialData, ppTexture3D);
-		}
+			ID3D11Texture3D_X** ppTexture3D) override;
 
 		HRESULT CreateShaderResourceView(
 			ID3D11Resource* pResource,
 			const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
-			ID3D11ShaderResourceView** ppSRView) override;
+			ID3D11ShaderResourceView_X** ppSRView) override;
 
 		HRESULT CreateUnorderedAccessView(
 			ID3D11Resource* pResource,
 			const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc,
-			ID3D11UnorderedAccessView** ppUAView) override {
-			return m_realDevice->CreateUnorderedAccessView(pResource, pDesc, ppUAView);
-		}
+			ID3D11UnorderedAccessView_X** ppUAView) override;
 
 		HRESULT CreateRenderTargetView(ID3D11Resource* pResource,
 			const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
@@ -488,7 +491,7 @@ namespace d3d11x
 		HRESULT CreateDepthStencilView(
 			ID3D11Resource* pResource,
 			const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
-			ID3D11DepthStencilView** ppDepthStencilView) override;
+			ID3D11DepthStencilView_X** ppDepthStencilView) override;
 
 		HRESULT CreateInputLayout(
 			const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,

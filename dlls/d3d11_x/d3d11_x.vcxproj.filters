@@ -83,13 +83,13 @@
     <ClCompile Include="IDXGIAdapterWrapper.cpp">
       <Filter>Source Files\IDXGI</Filter>
     </ClCompile>
-    <ClCompile Include="ID3D11Texture2DWrapper.cpp">
+    <ClCompile Include="ID3D11TextureWrapper.cpp">
       <Filter>Source Files\ID3D</Filter>
     </ClCompile>
     <ClCompile Include="IDXGISwapChainWrapper.cpp">
       <Filter>Source Files\IDXGI</Filter>
     </ClCompile>
-    <ClCompile Include="ID3D11RenderTargetViewWrapper.cpp">
+    <ClCompile Include="ID3D11ViewWrapper.cpp">
       <Filter>Source Files\ID3D</Filter>
     </ClCompile>
     <ClCompile Include="ID3DWrappers.cpp">
