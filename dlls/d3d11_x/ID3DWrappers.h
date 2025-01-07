@@ -17,6 +17,40 @@ namespace d3d11x
     struct _D3D11X_MSAA_SAMPLE_PRIORITIES;
     struct _D3D11X_MSAA_SAMPLE_POSITIONS;
 
+
+    class ID3D11BufferWrapper : public ID3D11Buffer_X
+    {
+    public:
+        ID3D11Buffer* m_realBuffer;
+
+        ID3D11BufferWrapper(::ID3D11Buffer* buf) : m_realBuffer(buf)
+        {
+            m_RefCount = 1;
+        }
+
+
+        // IGraphicsUnknown
+        HRESULT QueryInterface(REFIID riid, void** ppvObject) override;
+        ULONG AddRef( ) override;
+        ULONG Release( ) override;
+
+        // ID3D11DeviceChild
+        void STDMETHODCALLTYPE GetDevice(_Outptr_  ID3D11Device** ppDevice) override;
+        HRESULT STDMETHODCALLTYPE GetPrivateData(_In_  REFGUID guid, _Inout_  UINT* pDataSize, _Out_writes_bytes_opt_(*pDataSize)  void* pData) override;
+        HRESULT STDMETHODCALLTYPE SetPrivateData(_In_  REFGUID guid, _In_  UINT DataSize, _In_reads_bytes_opt_(DataSize)  const void* pData) override;
+        HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(_In_  REFGUID guid, _In_opt_  const IUnknown* pData) override;
+        HRESULT STDMETHODCALLTYPE SetName(const wchar_t* name) override;
+
+        // ID3D11Resource
+        void STDMETHODCALLTYPE GetType(_Out_  D3D11_RESOURCE_DIMENSION* pResourceDimension) override;
+        void STDMETHODCALLTYPE SetEvictionPriority(_In_  UINT EvictionPriority) override;
+        UINT STDMETHODCALLTYPE GetEvictionPriority(void) override;
+        void STDMETHODCALLTYPE GetDescriptor(D3D11X_DESCRIPTOR_RESOURCE* descriptor) override;
+
+        // ID3D11Buffer
+        void STDMETHODCALLTYPE GetDesc(_Out_  D3D11_BUFFER_DESC* pDesc) override;
+    };
+
     
     class ID3D11Texture2DWrapper : public ID3D11Texture2D_X
     {
@@ -105,7 +139,21 @@ namespace d3d11x
             _In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot)  UINT NumBuffers,
             _In_reads_opt_(NumBuffers)  ID3D11Buffer* const* ppConstantBuffers)
         {
-            m_realDeviceCtx->VSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+           
+            if (ppConstantBuffers != NULL)
+            {
+                ID3D11Buffer** modifiedBuffers = new ID3D11Buffer * [ NumBuffers ];
+                for (UINT i = 0; i < NumBuffers; ++i)
+                {
+                    modifiedBuffers[ i ] = reinterpret_cast<ID3D11BufferWrapper*>(ppConstantBuffers[ i ])->m_realBuffer;
+                }
+                m_realDeviceCtx->VSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
+            }
+            else
+            {
+                m_realDeviceCtx->VSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+            }
+            
         }
         virtual void STDMETHODCALLTYPE PSSetShaderResources(
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
@@ -154,21 +202,35 @@ namespace d3d11x
             _In_  UINT Subresource,
             _In_  D3D11_MAP MapType,
             _In_  UINT MapFlags,
-            _Out_opt_  D3D11_MAPPED_SUBRESOURCE* pMappedResource) {
-            return m_realDeviceCtx->Map(pResource, Subresource, MapType, MapFlags, pMappedResource);
+            _Out_opt_  D3D11_MAPPED_SUBRESOURCE* pMappedResource) 
+        {
+            return m_realDeviceCtx->Map(reinterpret_cast<ID3D11BufferWrapper*>(pResource)->m_realBuffer, Subresource, MapType, MapFlags, pMappedResource);
         }
 
         virtual void STDMETHODCALLTYPE Unmap(
             _In_  ID3D11Resource* pResource,
             _In_  UINT Subresource) {
-            m_realDeviceCtx->Unmap(pResource, Subresource);
+            m_realDeviceCtx->Unmap(reinterpret_cast<ID3D11BufferWrapper*>(pResource)->m_realBuffer, Subresource);
         }
 
         virtual void STDMETHODCALLTYPE PSSetConstantBuffers(
             _In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot)  UINT NumBuffers,
-            _In_reads_opt_(NumBuffers)  ID3D11Buffer* const* ppConstantBuffers) {
-            m_realDeviceCtx->PSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+            _In_reads_opt_(NumBuffers)  ID3D11Buffer* const* ppConstantBuffers) 
+        {
+            if (ppConstantBuffers != NULL)
+            {
+                ID3D11Buffer** modifiedBuffers = new ID3D11Buffer * [ NumBuffers ];
+                for (UINT i = 0; i < NumBuffers; ++i)
+                {
+                    modifiedBuffers[ i ] = reinterpret_cast<ID3D11BufferWrapper*>(ppConstantBuffers[ i ])->m_realBuffer;
+                }
+                m_realDeviceCtx->PSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
+            }
+            else
+            {
+                m_realDeviceCtx->PSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+            }
         }
 
         virtual void STDMETHODCALLTYPE IASetInputLayout(
@@ -283,9 +345,23 @@ namespace d3d11x
         virtual void STDMETHODCALLTYPE OMSetRenderTargets(
             _In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT)  UINT NumViews,
             _In_reads_opt_(NumViews)  ID3D11RenderTargetView* const* ppRenderTargetViews,
-            _In_opt_  ID3D11DepthStencilView* pDepthStencilView) {
+            _In_opt_  ID3D11DepthStencilView* pDepthStencilView) 
+        {
+            if (ppRenderTargetViews != NULL)
+            {
+                ID3D11RenderTargetView** modifiedViews = new ID3D11RenderTargetView * [ NumViews ];
+                for (UINT i = 0; i < NumViews; ++i)
+                {
+                    modifiedViews[ i ] = reinterpret_cast<ID3D11RenderTargetViewWrapper*>(ppRenderTargetViews[ i ])->m_realTarget;
+                }
+                m_realDeviceCtx->OMSetRenderTargets(NumViews, modifiedViews, pDepthStencilView);
+            }
+            else
+            {
+                m_realDeviceCtx->OMSetRenderTargets(NumViews, ppRenderTargetViews, pDepthStencilView);
+            }
 
-            m_realDeviceCtx->OMSetRenderTargets(NumViews, &(reinterpret_cast<ID3D11RenderTargetViewWrapper*>(*ppRenderTargetViews))->m_realTarget, pDepthStencilView);
+            
         }
 
         virtual void STDMETHODCALLTYPE OMSetRenderTargetsAndUnorderedAccessViews(
@@ -1052,8 +1128,10 @@ namespace d3d11x
 
         virtual void STDMETHODCALLTYPE TiledResourceBarrier(
             _In_opt_  ID3D11DeviceChild* pTiledResourceOrViewAccessBeforeBarrier,
-            _In_opt_  ID3D11DeviceChild* pTiledResourceOrViewAccessAfterBarrier) {
-            m_realDeviceCtx->TiledResourceBarrier(pTiledResourceOrViewAccessBeforeBarrier, pTiledResourceOrViewAccessAfterBarrier);
+            _In_opt_  ID3D11DeviceChild* pTiledResourceOrViewAccessAfterBarrier) 
+        {      
+            m_realDeviceCtx->TiledResourceBarrier(reinterpret_cast<ID3D11RenderTargetViewWrapper*>(pTiledResourceOrViewAccessBeforeBarrier)->m_realTarget, 
+                reinterpret_cast<ID3D11RenderTargetViewWrapper*>(pTiledResourceOrViewAccessAfterBarrier)->m_realTarget);
         }
 
         virtual BOOL STDMETHODCALLTYPE IsAnnotationEnabled(void) {

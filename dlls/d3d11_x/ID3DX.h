@@ -97,4 +97,13 @@ namespace d3d11x
             _Out_  D3D11_RENDER_TARGET_VIEW_DESC* pDesc) PURE;
 
     };
+
+    struct ID3D11Buffer_X : ID3D11Resource_X
+    {
+    public:
+        virtual void STDMETHODCALLTYPE GetDesc(
+            /* [annotation] */
+            _Out_  D3D11_BUFFER_DESC* pDesc) = 0;
+
+    };
 }

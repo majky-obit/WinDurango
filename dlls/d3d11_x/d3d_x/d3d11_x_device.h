@@ -94,6 +94,8 @@ namespace d3d11x
 		IUnknown* m_pUnknown;
 	};
 
+	class ID3D11Buffer_X;
+	class ID3D11BufferWrapper;
 	class ID3D11RenderTargetView_X;
 	class ID3D11RenderTargetViewWrapper;
 	class IDXGIDeviceWrapper;
@@ -132,7 +134,7 @@ namespace d3d11x
 
 		virtual HRESULT CreateBuffer(_In_ const D3D11_BUFFER_DESC* pDesc,
 			_In_opt_ const D3D11_SUBRESOURCE_DATA* pInitialData,
-			_Out_opt_ ID3D11Buffer** ppBuffer) = 0;
+			_Out_opt_ d3d11x::ID3D11Buffer_X** ppBuffer) = 0;
 
 		virtual HRESULT CreateTexture1D(_In_ const D3D11_TEXTURE1D_DESC* pDesc,
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels* pDesc->ArraySize)) const D3D11_SUBRESOURCE_DATA* pInitialData,
@@ -248,7 +250,7 @@ namespace d3d11x
 			_In_ const D3D11_COUNTER_DESC* pCounterDesc,
 			_Out_opt_ ID3D11Counter** ppCounter) = 0;
 
-		virtual HRESULT CreateDeferredContext(UINT ContextFlags, _Out_opt_ ::ID3D11DeviceContext** ppDeferredContext) = 0;
+		virtual HRESULT CreateDeferredContext(UINT ContextFlags, _Out_opt_ d3d11x::ID3D11DeviceContext** ppDeferredContext) = 0;
 
 		virtual HRESULT OpenSharedResource(
 			_In_ HANDLE hResource,
@@ -446,9 +448,7 @@ namespace d3d11x
 		HRESULT CreateBuffer(
 			   const D3D11_BUFFER_DESC* pDesc,
 			   const D3D11_SUBRESOURCE_DATA* pInitialData,
-			   ID3D11Buffer** ppBuffer) override {
-			return m_realDevice->CreateBuffer(pDesc, pInitialData, ppBuffer);
-		}
+			   d3d11x::ID3D11Buffer_X** ppBuffer) override;
 
 		HRESULT CreateTexture1D(
 			const D3D11_TEXTURE1D_DESC* pDesc,
@@ -608,11 +608,9 @@ namespace d3d11x
 		}
 
 		// @Patoke todo: unwrap
+		// @Aleblbl done, check cpp file
 		HRESULT CreateDeferredContext(
-			UINT ContextFlags,
-				::ID3D11DeviceContext** ppDeferredContext) override {
-			return m_realDevice->CreateDeferredContext(ContextFlags, ppDeferredContext);
-		}
+			UINT ContextFlags, d3d11x::ID3D11DeviceContext** ppDeferredContext) override;
 
 		HRESULT OpenSharedResource(
 				HANDLE hResource,

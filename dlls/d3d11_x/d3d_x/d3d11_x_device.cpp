@@ -82,6 +82,29 @@ void d3d11x::D3D11DeviceXWrapperX::GetImmediateContext(ID3D11DeviceContext** ppI
     *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(ctx));
 }
 
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateDeferredContext(UINT ContextFlags, d3d11x::ID3D11DeviceContext** ppDeferredContext)
+{
+    ::ID3D11DeviceContext2* cxt2{};
+    HRESULT hr = m_realDevice->CreateDeferredContext(ContextFlags, (::ID3D11DeviceContext**) & cxt2);
+//    (*ppDeferredContext)->QueryInterface(IID_PPV_ARGS(&cxt2));
+     *ppDeferredContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(cxt2));
+
+    return hr;
+}
+
+HRESULT d3d11x::D3D11DeviceXWrapperX::CreateBuffer(
+               const D3D11_BUFFER_DESC* pDesc,
+               const D3D11_SUBRESOURCE_DATA* pInitialData,
+               d3d11x::ID3D11Buffer_X** ppBuffer) 
+{
+   // return m_realDevice->CreateBuffer(pDesc, pInitialData, ppBuffer);
+
+    ID3D11Buffer* buffer = nullptr;
+    HRESULT hr = m_realDevice->CreateBuffer(pDesc, pInitialData, &buffer);
+    *reinterpret_cast<ID3D11Buffer_X**>(ppBuffer) = new ID3D11BufferWrapper(buffer);
+    return hr;
+}
+
 
 void d3d11x::D3D11DeviceXWrapperX::GetImmediateContextX(
     _Out_ ID3D11DeviceContextX** ppImmediateContextX)

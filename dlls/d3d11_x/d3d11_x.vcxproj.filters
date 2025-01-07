@@ -95,7 +95,7 @@
     <ClCompile Include="ID3DWrappers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ID3D11DeviceContextWrapper.cpp">
+    <ClCompile Include="ID3D11BufferWrapper.cpp">
       <Filter>Source Files\ID3D</Filter>
     </ClCompile>
   </ItemGroup>
