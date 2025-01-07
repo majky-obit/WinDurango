@@ -135,6 +135,8 @@
     <ClInclude Include="Implementation\Windows.Xbox.Achievements.AchievementNotifier.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Achievements.AchievementSource.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Achievements.AchievementUnlockedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.Core.CoreApplicationContext.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.Core.UserContextLookup.h" />
     <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.State.Internal.AppInfo.h" />
     <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.State.Internal.AumidQuery.h" />
     <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.State.Internal.ContentCompatibility.h" />
@@ -212,6 +214,8 @@
     <ClCompile Include="Implementation\Windows.Xbox.Achievements.AchievementNotifier.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Achievements.AchievementSource.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Achievements.AchievementUnlockedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.Core.CoreApplicationContext.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.Core.UserContextLookup.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.State.Internal.AppInfo.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.State.Internal.AumidQuery.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.State.Internal.ContentCompatibility.cpp" />
@@ -287,6 +291,7 @@
   </ItemGroup>
   <ItemGroup>
     <Midl Include="External\Microsoft.Xbox.GameChat.idl" />
+    <Midl Include="External\Windows.Xbox.ApplicationModel.Core.idl" />
     <Midl Include="External\Windows.Xbox.ApplicationModel.State.idl" />
     <Midl Include="External\Windows.Xbox.ApplicationModel.State.Internal.idl" />
     <Midl Include="External\Windows.Xbox.ApplicationModel.Store.idl" />

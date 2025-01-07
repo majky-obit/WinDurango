@@ -192,6 +192,8 @@
     <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.Core.UserContextLookup.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.Core.CoreApplicationContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -369,6 +371,8 @@
     <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.h">
       <Filter>Implementation</Filter>
     </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.Core.UserContextLookup.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.Core.CoreApplicationContext.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -427,6 +431,9 @@
       <Filter>External</Filter>
     </Midl>
     <Midl Include="External\Microsoft.Xbox.GameChat.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.ApplicationModel.Core.idl">
       <Filter>External</Filter>
     </Midl>
   </ItemGroup>
