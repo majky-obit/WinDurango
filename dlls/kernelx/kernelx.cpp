@@ -83,6 +83,9 @@ BOOL TitleMemoryStatus_X(LPTITLEMEMORYSTATUS Buffer)
     //*(DWORD*)((uint8_t*)Buffer + 72) = ProcessInformation[8];
 
     // equivalent to the previous code
+    // TODO: Changes this code to not be pre-incremented before a deref.
+    //       i.e. Buffer++; Bufer->DwLength
+    //       Makes code look uglier but you won't get yelled at by 80 y/o
     (++Buffer)->dwLength = ProcessInformation[7];
     (++Buffer)->dwReserved = ProcessInformation[8];
 

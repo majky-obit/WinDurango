@@ -53,28 +53,24 @@ HRESULT __stdcall D3DAllocateGraphicsMemory_X(SIZE_T SizeBytes, SIZE_T Alignment
     if (AlignmentBytes <= 0x10000)
         AllocType = MEM_LARGE_PAGES | MEM_COMMIT | MEM_RESERVE;
 
-    if (Flags == D3D11_GRAPHICS_MEMORY_ACCESS_CPU_CACHE_COHERENT)
-    {
+    switch(Flags) {
+    case D3D11_GRAPHICS_MEMORY_ACCESS_CPU_CACHE_COHERENT:
         // @Patoke note: this also includes the PAGE_GPU_COHERENT flag in the XBOX
         Protect = PAGE_READWRITE;
-    }
-    else if (Flags == D3D11_GRAPHICS_MEMORY_ACCESS_CPU_WRITECOMBINE_NONCOHERENT)
-    {
+        break;
+    case D3D11_GRAPHICS_MEMORY_ACCESS_CPU_WRITECOMBINE_NONCOHERENT:
         Protect = PAGE_READWRITE | PAGE_WRITECOMBINE;
-    }
-    else if (Flags == D3D11_GRAPHICS_MEMORY_ACCESS_CPU_CACHE_NONCOHERENT_GPU_READONLY)
-    {
+        break;
+    case D3D11_GRAPHICS_MEMORY_ACCESS_CPU_CACHE_NONCOHERENT_GPU_READONLY:
         return E_INVALIDARG;
-    }
-    else
-    {
+    default:
         // @Patoke note: this also includes the PAGE_GPU_READONLY flag in the XBOX
         Protect = PAGE_READWRITE;
     }
 
-    LPVOID AllocBase = VirtualAlloc((LPVOID)DesiredGpuVirtualAddress, SizeBytes, AllocType, Protect);
-    *ppAddress = AllocBase;
-    return AllocBase == nullptr ? E_OUTOFMEMORY : S_OK;
+    *ppAddress = VirtualAlloc((LPVOID) DesiredGpuVirtualAddress, SizeBytes, AllocType, Protect);
+
+    return !*ppAddress ? E_OUTOFMEMORY : S_OK;
 }
 
 HRESULT __stdcall D3DConfigureVirtualMemory_X(_Inout_ D3D11X_VIRTUAL_MEMORY_CONFIGURATION* pVMConfiguration)
@@ -172,6 +168,7 @@ HRESULT __stdcall D3D11CreateDevice_X(
     if (SUCCEEDED(hr))
     {
         // get dx11.2 feature level, since that's what dx11.x inherits from
+        // MAYBE-TODO: VS doesn't like this line due to ppDevice not having a clear value. Maybe check if ppDevice is valid before deref.
         (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
         (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
 
