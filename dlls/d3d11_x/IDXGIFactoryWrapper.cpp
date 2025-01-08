@@ -17,15 +17,13 @@ namespace d3d11x
 				AddRef( );
 				return S_OK;
 			}
-			else
-			{
-				// DEBUG
-				char iidstr[ sizeof("{AAAAAAAA-BBBB-CCCC-DDEE-FFGGHHIIJJKK}") ];
-				OLECHAR iidwstr[ sizeof(iidstr) ];
-				StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
-				WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
-				printf("[IDXGIFactoryWrapper] QueryInterface: %s\n", iidstr);
-			}
+
+			// DEBUG
+			char iidstr[ sizeof("{AAAAAAAA-BBBB-CCCC-DDEE-FFGGHHIIJJKK}") ];
+			OLECHAR iidwstr[ sizeof(iidstr) ];
+			StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
+			WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
+			printf("[IDXGIFactoryWrapper] QueryInterface: %s\n", iidstr);
 
 			
 			return m_realFactory->QueryInterface(riid, ppvObject);
