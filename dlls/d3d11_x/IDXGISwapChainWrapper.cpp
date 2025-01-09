@@ -21,18 +21,21 @@ namespace d3d11x
         WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
         printf("[IDXGIDeviceWrapper] QueryInterface: %s\n", iidstr);
 
-        return m_realSwapchain->QueryInterface(riid, ppvObject);
+        *ppvObject = nullptr;
+        return E_NOINTERFACE;
     }
 
 
     ULONG IDXGISwapChainWrapper::AddRef( )
     {
-        return InterlockedIncrement(&m_refCount);
+        printf("[IDXGISwapChainWrapper] --> AddRef\n");
+        return InterlockedIncrement(&m_RefCount);
     }
 
     ULONG IDXGISwapChainWrapper::Release( )
     {
-        ULONG refCount = InterlockedDecrement(&m_refCount);
+        printf("[IDXGISwapChainWrapper] --> AddRef\n");
+        ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
         return refCount;

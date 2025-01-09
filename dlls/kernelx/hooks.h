@@ -28,6 +28,81 @@ DllGetActivationFactoryFunc pDllGetActivationFactory = nullptr;
 /* Function pointers for the WinRT RoGetActivationFactory function. */
 HRESULT(WINAPI* TrueRoGetActivationFactory)(HSTRING classId, REFIID iid, void** factory) = RoGetActivationFactory;
 
+/* Function pointers for filesystem APIs */
+HFILE(WINAPI* TrueOpenFile)(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle) = OpenFile;
+HANDLE(WINAPI* TrueCreateFileW)(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+	DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile) = CreateFileW;
+
+DWORD(WINAPI* TrueGetFileAttributesW)(LPCWSTR lpFileName) = GetFileAttributesW;
+BOOL(WINAPI* TrueGetFileAttributesExW)(LPCWSTR lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, LPVOID lpFileInformation) = GetFileAttributesExW;
+
+HANDLE(WINAPI* TrueFindFirstFileW)(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFindFileData) = FindFirstFileW;
+
+BOOL(WINAPI* TrueDeleteFileW)(LPCWSTR lpFileName) = DeleteFileW;
+
+
+// Hooks for filesystem APIs
+void FixRelativePath(LPCWSTR& lpFileName)
+{
+	static std::wstring convert{};
+	std::wstring_view fileName(lpFileName);
+
+	if (fileName.size() == 0)
+		return;
+
+	if (fileName[1] != ':')
+	{
+		convert = std::filesystem::current_path().c_str();
+		convert.append(L"\\");
+		convert.append(fileName);
+
+		lpFileName = convert.data();
+	}
+}
+
+HFILE WINAPI OpenFile_Hook(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle)
+{
+	//FixRelativePath(lpFileName);
+
+	return TrueOpenFile(lpFileName, lpReOpenBuff, uStyle);
+}
+
+HANDLE WINAPI CreateFileW_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+	DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+{
+	FixRelativePath(lpFileName);
+
+	return TrueCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+}
+
+DWORD WINAPI GetFileAttributesW_Hook(LPCWSTR lpFileName)
+{
+	FixRelativePath(lpFileName);
+
+	return TrueGetFileAttributesW(lpFileName);
+}
+
+BOOL WINAPI GetFileAttributesExW_Hook(LPCWSTR lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, LPVOID lpFileInformation)
+{
+	FixRelativePath(lpFileName);
+
+	return TrueGetFileAttributesExW(lpFileName, fInfoLevelId, lpFileInformation);
+}
+
+
+HANDLE WINAPI FindFirstFileW_Hook(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFindFileData)
+{
+	FixRelativePath(lpFileName);
+
+	return TrueFindFirstFileW(lpFileName, lpFindFileData);
+}
+
+BOOL WINAPI DeleteFileW_Hook(LPCWSTR lpFileName)
+{
+	FixRelativePath(lpFileName);
+
+	return TrueDeleteFileW(lpFileName);
+}
 
 // The hook function for GetForCurrentThread
 HRESULT STDMETHODCALLTYPE GetForCurrentThread_Hook(ICoreWindowStatic* pThis, CoreWindow** ppWindow)

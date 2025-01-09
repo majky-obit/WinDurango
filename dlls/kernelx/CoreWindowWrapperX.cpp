@@ -258,13 +258,13 @@ HRESULT CoreWindowWrapperX::QueryInterface(const IID& riid, void** ppvObject)
 ULONG CoreWindowWrapperX::AddRef()
 {
 	printf("[CoreWindowWrapperX] --> AddRef\n");
-	return InterlockedIncrement(&m_refCount);
+	return InterlockedIncrement(&m_RefCount);
 }
 
 ULONG CoreWindowWrapperX::Release()
 {
 	printf("[CoreWindowWrapperX] --> Release\n");
-	ULONG refCount = InterlockedDecrement(&m_refCount);
+	ULONG refCount = InterlockedDecrement(&m_RefCount);
 	if (refCount == 0) delete this;
 	return refCount;
 }

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Windows.h>
+#include <filesystem>
 
 #define FAILED(hr) (((HRESULT)(hr)) < 0)
 #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)

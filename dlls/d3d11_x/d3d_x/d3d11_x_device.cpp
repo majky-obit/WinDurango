@@ -8,6 +8,9 @@
 
 // QueryInterface need to be in the cpp file because of circular dependency for IDXGIDeviceWrapper :}
 
+#define ERROR_LOG_FUNC() if(FAILED(hr)) { printf("[%s] hresult fail 0x%X\n", __func__, hr); }
+#define ERROR_LOG_HRES(res) printf("[%s] hresult fail 0x%X\n", __func__, res);
+
 HRESULT d3d11x::D3D11DeviceXWrapperX::QueryInterface(REFIID riid, void** ppvObject) 
 {
     // note from unixian: for debugging purposes
@@ -44,7 +47,11 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture1D(
     ID3D11Texture1D* texture1d = nullptr;
     HRESULT hr = m_realDevice->CreateTexture1D(pDesc, pInitialData, &texture1d);
 
-    *ppTexture1D = SUCCEEDED(hr) ? new ID3D11Texture1DWrapper(texture1d) : nullptr;
+    ERROR_LOG_FUNC( );
+    if (ppTexture1D != nullptr)
+    {
+        *ppTexture1D = SUCCEEDED(hr) ? new ID3D11Texture1DWrapper(texture1d) : nullptr;
+    }
 
     return hr;
 }
@@ -57,8 +64,23 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture2D(
     ID3D11Texture2D* texture2d = nullptr;
     HRESULT hr = m_realDevice->CreateTexture2D(pDesc, pInitialData, &texture2d);
 
-    *ppTexture2D = SUCCEEDED(hr) ? new ID3D11Texture2DWrapper(texture2d) : nullptr;
+    printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
 
+    ERROR_LOG_FUNC( );
+    if (ppTexture2D != nullptr)
+    {
+        *ppTexture2D = SUCCEEDED(hr) ? new ID3D11Texture2DWrapper(texture2d) : nullptr;
+    }
+
+    // @Patoke todo: crashing on texture create with DXGI_ERROR_DEVICE_REMOVED and DXGI_ERROR_DRIVER_INTERNAL_ERROR
+    if (FAILED(hr))
+    {
+        HRESULT device_result = m_realDevice->GetDeviceRemovedReason( );
+        ERROR_LOG_HRES(device_result);
+        __debugbreak( );
+    
+        return S_OK;
+    }
 
     return hr;
 }
@@ -71,8 +93,11 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture3D(
     ID3D11Texture3D* texture3d = nullptr;
     HRESULT hr = m_realDevice->CreateTexture3D(pDesc, pInitialData, &texture3d);
 
-    *ppTexture3D = SUCCEEDED(hr) ? new ID3D11Texture3DWrapper(texture3d) : nullptr;
-
+    ERROR_LOG_FUNC( );
+    if (ppTexture3D != nullptr)
+    {
+        *ppTexture3D = SUCCEEDED(hr) ? new ID3D11Texture3DWrapper(texture3d) : nullptr;
+    }
 
     return hr;
 }
@@ -85,6 +110,7 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateShaderResourceView(
     ::ID3D11ShaderResourceView* target = nullptr;
     HRESULT hr = m_realDevice->CreateShaderResourceView(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource, pDesc, &target);
 
+    ERROR_LOG_FUNC( );
     *ppSRView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11ShaderResourceView_X*>(new ID3D11ShaderResourceViewWrapper(target))
                               : nullptr;
 
@@ -99,6 +125,7 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateUnorderedAccessView(
     ::ID3D11UnorderedAccessView* target = nullptr;
     HRESULT hr = m_realDevice->CreateUnorderedAccessView(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource, pDesc, &target);
 
+    ERROR_LOG_FUNC( );
     *ppUAView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11UnorderedAccessView_X*>(new ID3D11UnorderedAccessViewWrapper(target))
                               : nullptr;
 
@@ -113,6 +140,7 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateRenderTargetView(
     ::ID3D11RenderTargetView* target = nullptr;
     HRESULT hr = m_realDevice->CreateRenderTargetView(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource, pDesc, &target);
 
+    ERROR_LOG_FUNC( );
     *ppRTView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11RenderTargetView_X*>(new ID3D11RenderTargetViewWrapper(target))
                               : nullptr;
 
@@ -127,6 +155,7 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateDepthStencilView(
     ::ID3D11DepthStencilView* target = nullptr;
     HRESULT hr = m_realDevice->CreateDepthStencilView(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource, pDesc, &target);
 
+    ERROR_LOG_FUNC( );
     *ppDepthStencilView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11DepthStencilView_X*>(new ID3D11DepthStencilViewWrapper(target))
                                         : nullptr;
 
@@ -152,6 +181,7 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateDeferredContext(UINT ContextFlags, d
     ::ID3D11DeviceContext* ctx{};
     HRESULT hr = m_realDevice->CreateDeferredContext(ContextFlags, &ctx);
 
+    ERROR_LOG_FUNC( );
     if(SUCCEEDED(hr))
     {
         ::ID3D11DeviceContext2* ctx2{};
@@ -173,6 +203,7 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateBuffer(
     ID3D11Buffer* buffer = nullptr;
     HRESULT hr = m_realDevice->CreateBuffer(pDesc, pInitialData, &buffer);
     
+    ERROR_LOG_FUNC( );
     *ppBuffer = SUCCEEDED(hr) ? new ID3D11BufferWrapper(buffer) : nullptr;
 
     return hr;

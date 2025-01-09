@@ -92,7 +92,7 @@ namespace d3d11x
     
         virtual void STDMETHODCALLTYPE GetDesc(
             /* [annotation] */
-            _Out_  D3D11_TEXTURE2D_DESC * pDesc) PURE;
+            _Out_  D3D11_TEXTURE2D_DESC* pDesc) PURE;
 
     };
 

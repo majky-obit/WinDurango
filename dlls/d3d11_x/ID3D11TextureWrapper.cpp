@@ -20,16 +20,19 @@ namespace d3d11x
             return S_OK;
         }
 
-        return m_realTexture->QueryInterface(riid, ppvObject);
+        *ppvObject = nullptr;
+        return E_NOINTERFACE;
     }
 
     ULONG ID3D11Texture1DWrapper::AddRef( )
     {
+        printf("[ID3D11Texture1DWrapper] --> AddRef\n");
         return InterlockedIncrement(&m_RefCount);
     }
 
     ULONG ID3D11Texture1DWrapper::Release( )
     {
+        printf("[ID3D11Texture1DWrapper] --> AddRef\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -107,16 +110,19 @@ namespace d3d11x
             return S_OK;
         }
 
-        return m_realTexture->QueryInterface(riid, ppvObject);
+        *ppvObject = nullptr;
+        return E_NOINTERFACE;
     }
 
     ULONG ID3D11Texture2DWrapper::AddRef( )
     {
+        printf("[ID3D11Texture2DWrapper] --> AddRef\n");
         return InterlockedIncrement(&m_RefCount);
     }
 
     ULONG ID3D11Texture2DWrapper::Release( )
     {
+        printf("[ID3D11Texture2DWrapper] --> AddRef\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -194,16 +200,19 @@ namespace d3d11x
             return S_OK;
         }
 
-        return m_realTexture->QueryInterface(riid, ppvObject);
+        *ppvObject = nullptr;
+        return E_NOINTERFACE;
     }
 
     ULONG ID3D11Texture3DWrapper::AddRef( )
     {
+        printf("[ID3D11Texture3DWrapper] --> AddRef\n");
         return InterlockedIncrement(&m_RefCount);
     }
 
     ULONG ID3D11Texture3DWrapper::Release( )
     {
+        printf("[ID3D11Texture3DWrapper] --> AddRef\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;

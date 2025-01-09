@@ -3,32 +3,33 @@
 
 HRESULT d3d11x::ID3D11BufferWrapper::QueryInterface(REFIID riid, void** ppvObject)
 {
+    // DEBUG
+    char iidstr[ sizeof("{AAAAAAAA-BBBB-CCCC-DDEE-FFGGHHIIJJKK}") ];
+    OLECHAR iidwstr[ sizeof(iidstr) ];
+    StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
+    WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
+    printf("[ID3D11BufferWrapper] QueryInterface: %s\n", iidstr);
+    
     if (riid == __uuidof(::ID3D11Buffer))
     {
         *ppvObject = this;
         AddRef( );
         return S_OK;
     }
-    else
-    {
-        // DEBUG
-        char iidstr[ sizeof("{AAAAAAAA-BBBB-CCCC-DDEE-FFGGHHIIJJKK}") ];
-        OLECHAR iidwstr[ sizeof(iidstr) ];
-        StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
-        WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
-        printf("[IDXGIDeviceWrapper] QueryInterface: %s\n", iidstr);
-    }
 
-    return m_realBuffer->QueryInterface(riid, ppvObject);
+    *ppvObject = nullptr;
+    return E_NOINTERFACE;
 }
 
 ULONG d3d11x::ID3D11BufferWrapper::AddRef( )
 {
+    printf("[ID3D11BufferWrapper] --> AddRef\n");
     return InterlockedIncrement(&m_RefCount);
 }
 
 ULONG d3d11x::ID3D11BufferWrapper::Release( )
 {
+    printf("[ID3D11BufferWrapper] --> Release\n");
     ULONG refCount = InterlockedDecrement(&m_RefCount);
     if (refCount == 0)
         delete this;

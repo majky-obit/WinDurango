@@ -38,12 +38,12 @@ HRESULT FrameworkViewSourceWrapper::QueryInterface(const IID& riid, void** ppvOb
 
 ULONG FrameworkViewSourceWrapper::AddRef()
 {
-	return InterlockedIncrement(&m_refCount);
+	return InterlockedIncrement(&m_RefCount);
 }
 
 ULONG FrameworkViewSourceWrapper::Release()
 {
-	ULONG refCount = InterlockedDecrement(&m_refCount);
+	ULONG refCount = InterlockedDecrement(&m_RefCount);
 	if (refCount == 0)
 		delete this;
 	return refCount;

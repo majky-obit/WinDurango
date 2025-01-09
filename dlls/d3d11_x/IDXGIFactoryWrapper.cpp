@@ -26,19 +26,22 @@ namespace d3d11x
 			printf("[IDXGIFactoryWrapper] QueryInterface: %s\n", iidstr);
 
 			
-			return m_realFactory->QueryInterface(riid, ppvObject);
-		}
+			*ppvObject = nullptr;
+			return E_NOINTERFACE;
+	}
 
 	
 
 	ULONG IDXGIFactoryWrapper::AddRef( )
 	{
-		return InterlockedIncrement(&m_refCount);
+		printf("[IDXGIFactoryWrapper] --> AddRef\n");
+		return InterlockedIncrement(&m_RefCount);
 	}
 
 	ULONG IDXGIFactoryWrapper::Release( )
 	{
-		ULONG refCount = InterlockedDecrement(&m_refCount);
+		printf("[IDXGIFactoryWrapper] --> AddRef\n");
+		ULONG refCount = InterlockedDecrement(&m_RefCount);
 		if (refCount == 0)
 			delete this;
 		return refCount;

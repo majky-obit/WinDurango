@@ -6,7 +6,7 @@ class CoreWindowWrapperX : public ICoreWindowX
 {
 public:
 
-	long m_refCount = 1;
+	long m_RefCount = 1;
 	ICoreWindow* m_realWindow;
 
 	CoreWindowWrapperX(CoreWindow* realWind)
