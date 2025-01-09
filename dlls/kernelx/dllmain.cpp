@@ -101,6 +101,14 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		DetourTransactionBegin();
 		DetourUpdateThread(GetCurrentThread());
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueRoGetActivationFactory), RoGetActivationFactory_Hook);
+
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueOpenFile), OpenFile_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateFileW), CreateFileW_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesW), GetFileAttributesW_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesExW), GetFileAttributesExW_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueFindFirstFileW), FindFirstFileW_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueDeleteFileW), DeleteFileW_Hook);
+
 		DetourTransactionCommit();
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
@@ -108,6 +116,14 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		DetourTransactionBegin();
 		DetourUpdateThread(GetCurrentThread());
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueRoGetActivationFactory), RoGetActivationFactory_Hook);
+		
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueOpenFile), OpenFile_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateFileW), CreateFileW_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesW), GetFileAttributesW_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesExW), GetFileAttributesExW_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueFindFirstFileW), FindFirstFileW_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueDeleteFileW), DeleteFileW_Hook);
+
 		DetourTransactionCommit();
 	}
 

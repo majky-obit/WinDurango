@@ -10,7 +10,7 @@ namespace d3d11x
 
         IDXGIFactoryWrapper(IDXGIFactory2* factory) : m_realFactory(factory)
         {
-
+            m_RefCount = 1;
         }
 
 
@@ -97,7 +97,6 @@ namespace d3d11x
             IDXGISwapChain1** ppSwapChain) override;
 
     private:
-        long m_refCount = 1;
         ::IDXGIFactory2* m_realFactory;
     };
 
@@ -109,6 +108,7 @@ namespace d3d11x
 
         IDXGIAdapterWrapper(IDXGIAdapter* adapter) : m_realAdapter(adapter)
         {
+            m_RefCount = 1;
         }
 
 
@@ -136,7 +136,6 @@ namespace d3d11x
             LARGE_INTEGER* pUMDVersion) override;
 
     private:
-        long m_refCount = 1;
         ::IDXGIAdapter* m_realAdapter;
     };
 
@@ -146,7 +145,7 @@ namespace d3d11x
 
         IDXGIDeviceWrapper(IDXGIDevice1* device) : m_realDevice(device)
         {
-
+            m_RefCount = 1;
         }
 
         // IGraphicsUnknown
@@ -182,7 +181,6 @@ namespace d3d11x
             _Out_  INT* pPriority) override;
 
     private:
-        long m_refCount = 1;
         ::IDXGIDevice* m_realDevice;
     };
 
@@ -195,7 +193,7 @@ namespace d3d11x
 
         IDXGISwapChainWrapper(IDXGISwapChain1* swapchain) : m_realSwapchain(swapchain)
         {
-
+            m_RefCount = 1;
         }
 
         // IGraphicsUnknown
@@ -319,7 +317,6 @@ namespace d3d11x
 
 
     private:
-        long m_refCount = 1;
         IDXGISwapChain1* m_realSwapchain;
     };
 

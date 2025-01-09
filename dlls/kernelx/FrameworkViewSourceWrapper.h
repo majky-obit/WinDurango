@@ -23,6 +23,6 @@ public:
 	HRESULT GetTrustLevel(TrustLevel* trustLevel) override;
 
 private:
-	long m_refCount = 1;
+	long m_RefCount = 1;
 	IFrameworkViewSource* m_realViewSource;
 };

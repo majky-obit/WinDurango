@@ -134,12 +134,12 @@ HRESULT CoreApplicationWrapperX::QueryInterface(const IID& riid, void** ppvObjec
 
 ULONG CoreApplicationWrapperX::AddRef()
 {
-	return InterlockedIncrement(&m_refCount);
+	return InterlockedIncrement(&m_RefCount);
 }
 
 ULONG CoreApplicationWrapperX::Release()
 {
-	ULONG refCount = InterlockedDecrement(&m_refCount);
+	ULONG refCount = InterlockedDecrement(&m_RefCount);
 	if (refCount == 0)
 		delete this;
 	return refCount;

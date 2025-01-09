@@ -46,7 +46,7 @@ public:
 	HRESULT GetTrustLevel(TrustLevel* trustLevel) override;
 
 private:
-	long m_refCount = 1;
+	long m_RefCount = 1;
 	ComPtr<IActivationFactory> m_realFactory;
 	ComPtr<ICoreApplication> m_realCoreApplication; // ICoreApplication to forward the calls
 	

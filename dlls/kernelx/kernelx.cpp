@@ -83,11 +83,9 @@ BOOL TitleMemoryStatus_X(LPTITLEMEMORYSTATUS Buffer)
     //*(DWORD*)((uint8_t*)Buffer + 72) = ProcessInformation[8];
 
     // equivalent to the previous code
-    // TODO: Changes this code to not be pre-incremented before a deref.
-    //       i.e. Buffer++; Bufer->DwLength
-    //       Makes code look uglier but you won't get yelled at by 80 y/o
-    (++Buffer)->dwLength = ProcessInformation[7];
-    (++Buffer)->dwReserved = ProcessInformation[8];
+    auto* nextBuffer = Buffer++;
+    nextBuffer->dwLength = ProcessInformation[7];
+    nextBuffer->dwReserved = ProcessInformation[8];
 
     return TRUE;
 }
@@ -163,8 +161,9 @@ BOOL JobTitleMemoryStatus_X(void* pJob, LPTITLEMEMORYSTATUS Buffer)
     //*(DWORD*)((uint8_t*)Buffer + 72) = JobInformation[8];
 
     // equivalent to the previous code
-    (++Buffer)->dwLength = JobInformation[7];
-    (++Buffer)->dwReserved = JobInformation[8];
+    auto* nextBuffer = Buffer++;
+    nextBuffer->dwLength = JobInformation[7];
+    nextBuffer->dwReserved = JobInformation[8];
 
     return TRUE;
 }

@@ -28,12 +28,12 @@ namespace d3d11x
 
     ULONG IDXGIAdapterWrapper::AddRef( )
     {
-        return InterlockedIncrement(&m_refCount);
+        return InterlockedIncrement(&m_RefCount);
     }
 
     ULONG IDXGIAdapterWrapper::Release( )
     {
-        ULONG refCount = InterlockedDecrement(&m_refCount);
+        ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
         return refCount;
