@@ -62,7 +62,7 @@ void FixRelativePath(LPCWSTR& lpFileName)
 
 HFILE WINAPI OpenFile_Hook(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle)
 {
-	printf("[OpenFile] try read file %s\n", lpFileName);
+	//FixRelativePath(lpFileName);
 
 	return TrueOpenFile(lpFileName, lpReOpenBuff, uStyle);
 }
@@ -72,14 +72,7 @@ HANDLE WINAPI CreateFileW_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD 
 {
 	FixRelativePath(lpFileName);
 
-	HANDLE res = TrueCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-
-	if (res == INVALID_HANDLE_VALUE)
-	{
-		printf("[CreateFileW] failed to read file 0x%X | %ls\n", GetLastError(), lpFileName);
-	}
-
-	return res;
+	return TrueCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 }
 
 DWORD WINAPI GetFileAttributesW_Hook(LPCWSTR lpFileName)

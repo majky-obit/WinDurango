@@ -47,7 +47,11 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture1D(
     ID3D11Texture1D* texture1d = nullptr;
     HRESULT hr = m_realDevice->CreateTexture1D(pDesc, pInitialData, &texture1d);
 
-    *ppTexture1D = SUCCEEDED(hr) ? new ID3D11Texture1DWrapper(texture1d) : nullptr;
+    ERROR_LOG_FUNC( );
+    if (ppTexture1D != nullptr)
+    {
+        *ppTexture1D = SUCCEEDED(hr) ? new ID3D11Texture1DWrapper(texture1d) : nullptr;
+    }
 
     return hr;
 }
@@ -60,8 +64,13 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture2D(
     ID3D11Texture2D* texture2d = nullptr;
     HRESULT hr = m_realDevice->CreateTexture2D(pDesc, pInitialData, &texture2d);
 
+    printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
+
     ERROR_LOG_FUNC( );
-    *ppTexture2D = SUCCEEDED(hr) ? new ID3D11Texture2DWrapper(texture2d) : nullptr;
+    if (ppTexture2D != nullptr)
+    {
+        *ppTexture2D = SUCCEEDED(hr) ? new ID3D11Texture2DWrapper(texture2d) : nullptr;
+    }
 
     // @Patoke todo: crashing on texture create with DXGI_ERROR_DEVICE_REMOVED and DXGI_ERROR_DRIVER_INTERNAL_ERROR
     if (FAILED(hr))
@@ -69,6 +78,8 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture2D(
         HRESULT device_result = m_realDevice->GetDeviceRemovedReason( );
         ERROR_LOG_HRES(device_result);
         __debugbreak( );
+    
+        return S_OK;
     }
 
     return hr;
@@ -83,8 +94,10 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture3D(
     HRESULT hr = m_realDevice->CreateTexture3D(pDesc, pInitialData, &texture3d);
 
     ERROR_LOG_FUNC( );
-    *ppTexture3D = SUCCEEDED(hr) ? new ID3D11Texture3DWrapper(texture3d) : nullptr;
-
+    if (ppTexture3D != nullptr)
+    {
+        *ppTexture3D = SUCCEEDED(hr) ? new ID3D11Texture3DWrapper(texture3d) : nullptr;
+    }
 
     return hr;
 }

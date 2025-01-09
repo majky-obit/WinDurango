@@ -23,16 +23,19 @@ namespace d3d11x
         WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
         printf("[IDXGIDeviceWrapper] QueryInterface: %s\n", iidstr);
 
-        return m_realAdapter->QueryInterface(riid, ppvObject);
+        *ppvObject = nullptr;
+        return E_NOINTERFACE;
     }
 
     ULONG IDXGIAdapterWrapper::AddRef( )
     {
+        printf("[IDXGIAdapterWrapper] --> AddRef\n");
         return InterlockedIncrement(&m_RefCount);
     }
 
     ULONG IDXGIAdapterWrapper::Release( )
     {
+        printf("[IDXGIAdapterWrapper] --> AddRef\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;

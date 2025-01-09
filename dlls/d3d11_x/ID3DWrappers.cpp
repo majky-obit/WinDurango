@@ -11,16 +11,19 @@ namespace d3d11x {
 		WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
 		printf("[ID3D11ResourceWrapperX] QueryInterface: %s\n", iidstr);
 
-		return m_realResource->QueryInterface(riid, ppvObject);
-	}
+        *ppvObject = nullptr;
+        return E_NOINTERFACE;
+    }
 
     ULONG ID3D11ResourceWrapperX::AddRef( )
     {
+        printf("[ID3D11ResourceWrapperX] --> AddRef\n");
         return InterlockedIncrement(&m_RefCount);
     }
 
     ULONG ID3D11ResourceWrapperX::Release( )
     {
+        printf("[ID3D11ResourceWrapperX] --> AddRef\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
