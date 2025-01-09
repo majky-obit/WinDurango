@@ -749,25 +749,25 @@ namespace d3d11x
             _In_  ID3D11Buffer* pDstBuffer,
             _In_  UINT DstAlignedByteOffset,
             _In_  ID3D11UnorderedAccessView* pSrcView) {
-            m_realDeviceCtx->CopyStructureCount(reinterpret_cast<ID3D11BufferWrapper*>(pDstBuffer)->m_realBuffer, DstAlignedByteOffset, pSrcView);
+            m_realDeviceCtx->CopyStructureCount(reinterpret_cast<ID3D11BufferWrapper*>(pDstBuffer)->m_realBuffer, DstAlignedByteOffset, reinterpret_cast<ID3D11UnorderedAccessViewWrapper*>(pSrcView)->m_realTarget);
         }
 
         virtual void STDMETHODCALLTYPE ClearRenderTargetView(
             _In_  ID3D11RenderTargetView* pRenderTargetView,
             _In_  const FLOAT ColorRGBA[ 4 ]) {
-            m_realDeviceCtx->ClearRenderTargetView(pRenderTargetView, ColorRGBA);
+            m_realDeviceCtx->ClearRenderTargetView(reinterpret_cast<ID3D11RenderTargetViewWrapper*>(pRenderTargetView)->m_realTarget, ColorRGBA);
         }
 
         virtual void STDMETHODCALLTYPE ClearUnorderedAccessViewUint(
             _In_  ID3D11UnorderedAccessView* pUnorderedAccessView,
             _In_  const UINT Values[ 4 ]) {
-            m_realDeviceCtx->ClearUnorderedAccessViewUint(pUnorderedAccessView, Values);
+            m_realDeviceCtx->ClearUnorderedAccessViewUint(reinterpret_cast<ID3D11UnorderedAccessViewWrapper*>(pUnorderedAccessView)->m_realTarget, Values);
         }
 
         virtual void STDMETHODCALLTYPE ClearUnorderedAccessViewFloat(
             _In_  ID3D11UnorderedAccessView* pUnorderedAccessView,
             _In_  const FLOAT Values[ 4 ]) {
-            m_realDeviceCtx->ClearUnorderedAccessViewFloat(pUnorderedAccessView, Values);
+            m_realDeviceCtx->ClearUnorderedAccessViewFloat(reinterpret_cast<ID3D11UnorderedAccessViewWrapper*>(pUnorderedAccessView)->m_realTarget, Values);
         }
 
         virtual void STDMETHODCALLTYPE ClearDepthStencilView(
@@ -775,12 +775,12 @@ namespace d3d11x
             _In_  UINT ClearFlags,
             _In_  FLOAT Depth,
             _In_  UINT8 Stencil) {
-            m_realDeviceCtx->ClearDepthStencilView(pDepthStencilView, ClearFlags, Depth, Stencil);
+            m_realDeviceCtx->ClearDepthStencilView(reinterpret_cast<ID3D11DepthStencilViewWrapper*>(pDepthStencilView)->m_realTarget, ClearFlags, Depth, Stencil);
         }
 
         virtual void STDMETHODCALLTYPE GenerateMips(
             _In_  ID3D11ShaderResourceView* pShaderResourceView) {
-            m_realDeviceCtx->GenerateMips(pShaderResourceView);
+            m_realDeviceCtx->GenerateMips(reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(pShaderResourceView)->m_realTarget);
         }
 
         virtual void STDMETHODCALLTYPE SetResourceMinLOD(
@@ -1318,6 +1318,7 @@ namespace d3d11x
             m_realDeviceCtx->DiscardResource(reinterpret_cast<ID3D11ResourceWrapperX*>(pResource)->m_realResource);
         }
 
+        // @Patoke todo: unwrap?
         virtual void STDMETHODCALLTYPE DiscardView(
             _In_  ID3D11View* pResourceView) {
             m_realDeviceCtx->DiscardView(pResourceView);
@@ -1437,6 +1438,7 @@ namespace d3d11x
             m_realDeviceCtx->SwapDeviceContextState(pState, ppPreviousState);
         }
 
+        // @Patoke todo: unwrap?
         virtual void STDMETHODCALLTYPE ClearView(
             _In_  ID3D11View* pView,
             _In_  const FLOAT Color[ 4 ],
@@ -1445,6 +1447,7 @@ namespace d3d11x
             m_realDeviceCtx->ClearView(pView, Color, pRect, NumRects);
         }
 
+        // @Patoke todo: unwrap?
         virtual void STDMETHODCALLTYPE DiscardView1(
             _In_  ID3D11View* pResourceView,
             _In_reads_opt_(NumRects)  const D3D11_RECT* pRects,
