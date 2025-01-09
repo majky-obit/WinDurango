@@ -2,7 +2,7 @@
 #include "ID3DX.h"
 #include "ID3DDeviceContext.h"
 #include <array>
-
+#include <vcruntime_typeinfo.h>
 
 
 namespace d3d11x
@@ -335,6 +335,7 @@ namespace d3d11x
         }
 
 
+
         virtual void STDMETHODCALLTYPE VSSetConstantBuffers(
             _In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot)  UINT NumBuffers,
@@ -357,11 +358,11 @@ namespace d3d11x
             
         }
         virtual void STDMETHODCALLTYPE PSSetShaderResources(
-            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
-            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
-            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews)
+            ID3D11ShaderResourceView* const* ppShaderResourceViews,
+			_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,
+			_In_ UINT PacketHeader)
         {
-            m_realDeviceCtx->PSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+            m_realDeviceCtx->PSSetShaderResources(StartSlot, (PacketHeader >> 19) + 1, ppShaderResourceViews);
         }
 
         virtual void STDMETHODCALLTYPE PSSetShader(

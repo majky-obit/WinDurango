@@ -47,6 +47,9 @@ void FixRelativePath(LPCWSTR& lpFileName)
 	static std::wstring convert{};
 	std::wstring_view fileName(lpFileName);
 
+	if (fileName.size() == 0)
+		return;
+
 	if (fileName[1] != ':')
 	{
 		convert = std::filesystem::current_path().c_str();
