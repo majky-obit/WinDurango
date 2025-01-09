@@ -362,7 +362,33 @@ namespace d3d11x
 			_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,
 			_In_ UINT PacketHeader)
         {
-            m_realDeviceCtx->PSSetShaderResources(StartSlot, (PacketHeader >> 19) + 1, ppShaderResourceViews);
+            if (PacketHeader < 0)
+            {
+                return;
+            }
+
+            UINT slot = (PacketHeader - 0x6B40) >> 5;
+            UINT NumViews = (PacketHeader >> 19) + 1;
+
+            // @Patoke todo
+            //if (NumViews <= 1)
+            //{
+            //    return;
+            //}
+
+            if (ppShaderResourceViews != NULL)
+            {
+                ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [NumViews] {};
+                for (UINT i = 0; i < NumViews; ++i)
+                {
+                    modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
+                }
+                m_realDeviceCtx->PSSetShaderResources(slot, NumViews, modifiedViews);
+            }
+            else
+            {
+                m_realDeviceCtx->PSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+            }
         }
 
         virtual void STDMETHODCALLTYPE PSSetShader(
@@ -495,10 +521,31 @@ namespace d3d11x
 
 
         virtual void STDMETHODCALLTYPE VSSetShaderResources(
+            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews, 
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
-            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
-            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews) {
-            m_realDeviceCtx->VSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT PacketHeader)
+        {
+            if (PacketHeader < 0)
+            {
+                return;
+            }
+
+            UINT slot = (PacketHeader - 0x1D80) >> 5;
+            UINT NumViews = (PacketHeader >> 19) + 1;
+
+            if (ppShaderResourceViews != NULL)
+            {
+                ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [ NumViews ];
+                for (UINT i = 0; i < NumViews; ++i)
+                {
+                    modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
+                }
+                m_realDeviceCtx->VSSetShaderResources(slot, NumViews, modifiedViews);
+            }
+            else
+            {
+                m_realDeviceCtx->VSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+            }
         }
 
         virtual void STDMETHODCALLTYPE VSSetSamplers(
@@ -533,10 +580,31 @@ namespace d3d11x
         }
 
         virtual void STDMETHODCALLTYPE GSSetShaderResources(
+           _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
-            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
-            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews) {
-            m_realDeviceCtx->GSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT PacketHeader) 
+        {
+            if (PacketHeader < 0)
+            {
+                return;
+            }
+
+            UINT slot = (PacketHeader - 0x57D0) >> 5;
+            UINT NumViews = (PacketHeader >> 19) + 1;
+
+            if (ppShaderResourceViews != NULL)
+            {
+                ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [ NumViews ];
+                for (UINT i = 0; i < NumViews; ++i)
+                {
+                    modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
+                }
+                m_realDeviceCtx->GSSetShaderResources(slot, NumViews, modifiedViews);
+            }
+            else
+            {
+                m_realDeviceCtx->GSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+            }
         }
 
         virtual void STDMETHODCALLTYPE GSSetSamplers(
@@ -742,10 +810,31 @@ namespace d3d11x
         }
 
         virtual void STDMETHODCALLTYPE HSSetShaderResources(
+            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
-            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
-            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews) {
-            m_realDeviceCtx->HSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT PacketHeader) 
+        {
+            if (PacketHeader < 0)
+            {
+                return;
+            }
+
+            UINT slot = (PacketHeader - 0x30F0) >> 5;
+            UINT NumViews = (PacketHeader >> 19) + 1;
+
+            if (ppShaderResourceViews != NULL)
+            {
+                ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [ NumViews ];
+                for (UINT i = 0; i < NumViews; ++i)
+                {
+                    modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
+                }
+                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, modifiedViews);
+            }
+            else
+            {
+                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+            }
         }
 
         virtual void STDMETHODCALLTYPE HSSetShader(
@@ -782,10 +871,31 @@ namespace d3d11x
         }
 
         virtual void STDMETHODCALLTYPE DSSetShaderResources(
+            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
-            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
-            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews) {
-            m_realDeviceCtx->DSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT PacketHeader) 
+        {
+            if (PacketHeader < 0)
+            {
+                return;
+            }
+
+            UINT slot = (PacketHeader - 0x4460) >> 5;
+            UINT NumViews = (PacketHeader >> 19) + 1;
+
+            if (ppShaderResourceViews != NULL)
+            {
+                ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [ NumViews ];
+                for (UINT i = 0; i < NumViews; ++i)
+                {
+                    modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
+                }
+                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, modifiedViews);
+            }
+            else
+            {
+                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+            }
         }
 
         virtual void STDMETHODCALLTYPE DSSetShader(
@@ -822,10 +932,31 @@ namespace d3d11x
         }
 
         virtual void STDMETHODCALLTYPE CSSetShaderResources(
+            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
-            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
-            _In_reads_opt_(NumViews)  ID3D11ShaderResourceView* const* ppShaderResourceViews) {
-            m_realDeviceCtx->CSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+            _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT PacketHeader) 
+        {
+            if (PacketHeader < 0)
+            {
+                return;
+            }
+
+            UINT slot = (PacketHeader - 0x140) >> 5;
+            UINT NumViews = (PacketHeader >> 19) + 1;
+
+            if (ppShaderResourceViews != NULL)
+            {
+                ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [ NumViews ];
+                for (UINT i = 0; i < NumViews; ++i)
+                {
+                    modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
+                }
+                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, modifiedViews);
+            }
+            else
+            {
+                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+            }
         }
 
         virtual void STDMETHODCALLTYPE CSSetUnorderedAccessViews(
