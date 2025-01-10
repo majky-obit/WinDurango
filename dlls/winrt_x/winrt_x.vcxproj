@@ -407,6 +407,7 @@
     <ClInclude Include="Implementation\Windows.Xbox.Input.Controller.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Input.ControllerInputManager.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Input.Gamepad.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Input.GamepadReading.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Input.InputManager.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Input.InputManagerInternal.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Input.NavigationController.h" />
@@ -726,6 +727,7 @@
     <ClCompile Include="Implementation\Windows.Xbox.Input.Controller.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Input.ControllerInputManager.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Input.Gamepad.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Input.GamepadReading.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Input.InputManager.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Input.InputManagerInternal.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Input.NavigationController.cpp" />

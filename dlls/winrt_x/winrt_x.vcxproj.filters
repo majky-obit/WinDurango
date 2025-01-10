@@ -434,6 +434,9 @@
     <ClCompile Include="Implementation\Windows.Kinect.MultiSourceFrameReader.cpp" />
     <ClCompile Include="Implementation\Windows.Kinect.MultiSourceFrameReference.cpp" />
     <ClCompile Include="Implementation\Windows.Kinect.PropertyChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Input.GamepadReading.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -853,6 +856,9 @@
     <ClInclude Include="Implementation\Windows.Kinect.MultiSourceFrameReader.h" />
     <ClInclude Include="Implementation\Windows.Kinect.MultiSourceFrameReference.h" />
     <ClInclude Include="Implementation\Windows.Kinect.PropertyChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Input.GamepadReading.h">
+      <Filter>Implementation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
