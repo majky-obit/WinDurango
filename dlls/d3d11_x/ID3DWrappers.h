@@ -366,7 +366,6 @@ namespace d3d11x
                 return;
             }
 
-            UINT slot = ((PacketHeader & 0xFFFF) - 0x6B40) >> 5;
             UINT NumViews = (PacketHeader >> 19) + 1;
 
             if (ppShaderResourceViews != NULL)
@@ -380,11 +379,11 @@ namespace d3d11x
                     else
                         modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
                 }
-                m_realDeviceCtx->PSSetShaderResources(slot, NumViews, modifiedViews);
+                m_realDeviceCtx->PSSetShaderResources(StartSlot, NumViews, modifiedViews);
             }
             else
             {
-                m_realDeviceCtx->PSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+                m_realDeviceCtx->PSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
             }
         }
 
@@ -469,8 +468,25 @@ namespace d3d11x
             _In_range_(0, D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumBuffers,
             _In_reads_opt_(NumBuffers)  ID3D11Buffer* const* ppVertexBuffers,
             _In_reads_opt_(NumBuffers)  const UINT* pStrides,
-            _In_reads_opt_(NumBuffers)  const UINT* pOffsets) {
-            m_realDeviceCtx->IASetVertexBuffers(StartSlot, NumBuffers, ppVertexBuffers, pStrides, pOffsets);
+            _In_reads_opt_(NumBuffers)  const UINT* pOffsets) 
+        {
+            if (ppVertexBuffers != NULL)
+            {
+                ID3D11Buffer** modifiedBuffers = new ID3D11Buffer * [NumBuffers] {0};
+                for (UINT i = 0; i < NumBuffers; i++)
+                {
+                    if (ppVertexBuffers[ i ] == nullptr)
+                        modifiedBuffers[ i ] = nullptr;
+                    else
+                        modifiedBuffers[ i ] = reinterpret_cast<ID3D11BufferWrapper*>(ppVertexBuffers[ i ])->m_realBuffer;
+                }
+
+                m_realDeviceCtx->IASetVertexBuffers(StartSlot, NumBuffers, modifiedBuffers, pStrides, pOffsets);
+            }
+            else
+            {
+                m_realDeviceCtx->IASetVertexBuffers(StartSlot, NumBuffers, ppVertexBuffers, pStrides, pOffsets);
+            }
         }
 
         virtual void STDMETHODCALLTYPE IASetIndexBuffer(
@@ -540,7 +556,6 @@ namespace d3d11x
                 return;
             }
 
-            UINT slot = ((PacketHeader & 0xFFFF) - 0x1D80) >> 5;
             UINT NumViews = (PacketHeader >> 19) + 1;
 
             if (ppShaderResourceViews != NULL)
@@ -554,11 +569,11 @@ namespace d3d11x
                     else
                         modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
                 }
-                m_realDeviceCtx->VSSetShaderResources(slot, NumViews, modifiedViews);
+                m_realDeviceCtx->VSSetShaderResources(StartSlot, NumViews, modifiedViews);
             }
             else
             {
-                m_realDeviceCtx->VSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+                m_realDeviceCtx->VSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
             }
         }
 
@@ -603,7 +618,6 @@ namespace d3d11x
                 return;
             }
 
-            UINT slot = ((PacketHeader & 0xFFFF) - 0x57D0) >> 5;
             UINT NumViews = (PacketHeader >> 19) + 1;
 
             if (ppShaderResourceViews != NULL)
@@ -617,11 +631,11 @@ namespace d3d11x
                     else
                         modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
                 }
-                m_realDeviceCtx->GSSetShaderResources(slot, NumViews, modifiedViews);
+                m_realDeviceCtx->GSSetShaderResources(StartSlot, NumViews, modifiedViews);
             }
             else
             {
-                m_realDeviceCtx->GSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+                m_realDeviceCtx->GSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
             }
         }
 
@@ -644,14 +658,12 @@ namespace d3d11x
             if (ppRenderTargetViews != NULL)
             {
                 ID3D11RenderTargetView** modifiedViews = new ID3D11RenderTargetView * [NumViews] {0};
-
-                UINT i = 0;
-                for (ID3D11RenderTargetView* view = *ppRenderTargetViews; view; view++, i++)
+                for (UINT i = 0; i < NumViews; i++)
                 {
-                    if (i >= NumViews)
-                        break;
-
-                    modifiedViews[ i ] = reinterpret_cast<ID3D11RenderTargetViewWrapper*>(view)->m_realTarget;
+                    if (ppRenderTargetViews[ i ] == nullptr)
+                        modifiedViews[ i ] = nullptr;
+                    else
+                        modifiedViews[ i ] = reinterpret_cast<ID3D11RenderTargetViewWrapper*>(ppRenderTargetViews[ i ])->m_realTarget;
                 }
                 m_realDeviceCtx->OMSetRenderTargets(NumViews, modifiedViews, depthStencilView);
             }
@@ -840,7 +852,6 @@ namespace d3d11x
                 return;
             }
 
-            UINT slot = ((PacketHeader & 0xFFFF) - 0x30F0) >> 5;
             UINT NumViews = (PacketHeader >> 19) + 1;
 
             if (ppShaderResourceViews != NULL)
@@ -854,11 +865,11 @@ namespace d3d11x
                     else
                         modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
                 }
-                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, modifiedViews);
+                m_realDeviceCtx->HSSetShaderResources(StartSlot, NumViews, modifiedViews);
             }
             else
             {
-                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+                m_realDeviceCtx->HSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
             }
         }
 
@@ -906,7 +917,6 @@ namespace d3d11x
                 return;
             }
 
-            UINT slot = ((PacketHeader & 0xFFFF) - 0x4460) >> 5;
             UINT NumViews = (PacketHeader >> 19) + 1;
 
             if (ppShaderResourceViews != NULL)
@@ -920,11 +930,11 @@ namespace d3d11x
                     else
                         modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
                 }
-                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, modifiedViews);
+                m_realDeviceCtx->HSSetShaderResources(StartSlot, NumViews, modifiedViews);
             }
             else
             {
-                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+                m_realDeviceCtx->HSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
             }
         }
 
@@ -972,7 +982,6 @@ namespace d3d11x
                 return;
             }
 
-            UINT slot = ((PacketHeader & 0xFFFF) - 0x140) >> 5;
             UINT NumViews = (PacketHeader >> 19) + 1;
 
             if (ppShaderResourceViews != NULL)
@@ -986,14 +995,15 @@ namespace d3d11x
                     else
                         modifiedViews[ i ] = reinterpret_cast<ID3D11ShaderResourceViewWrapper*>(ppShaderResourceViews[ i ])->m_realTarget;
                 }
-                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, modifiedViews);
+                m_realDeviceCtx->HSSetShaderResources(StartSlot, NumViews, modifiedViews);
             }
             else
             {
-                m_realDeviceCtx->HSSetShaderResources(slot, NumViews, ppShaderResourceViews);
+                m_realDeviceCtx->HSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
             }
         }
 
+        // @Patoke todo: unwrap
         virtual void STDMETHODCALLTYPE CSSetUnorderedAccessViews(
             _In_range_(0, D3D11_1_UAV_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_1_UAV_SLOT_COUNT - StartSlot)  UINT NumUAVs,
@@ -1058,6 +1068,7 @@ namespace d3d11x
             }
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE PSGetShaderResources(
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
@@ -1117,8 +1128,23 @@ namespace d3d11x
             _In_range_(0, D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumBuffers,
             _Out_writes_opt_(NumBuffers)  ID3D11Buffer** ppVertexBuffers,
             _Out_writes_opt_(NumBuffers)  UINT* pStrides,
-            _Out_writes_opt_(NumBuffers)  UINT* pOffsets) {
-            m_realDeviceCtx->IAGetVertexBuffers(StartSlot, NumBuffers, ppVertexBuffers, pStrides, pOffsets);
+            _Out_writes_opt_(NumBuffers)  UINT* pOffsets) 
+        {
+            if (ppVertexBuffers != NULL)
+            {
+                ID3D11Buffer** unwrappedBuffers = new ID3D11Buffer * [NumBuffers] {0};
+
+                m_realDeviceCtx->IAGetVertexBuffers(StartSlot, NumBuffers, unwrappedBuffers, pStrides, pOffsets);
+
+                for (UINT i = 0; i < NumBuffers; ++i)
+                {
+                    ppVertexBuffers[ i ] = reinterpret_cast<ID3D11Buffer*>(new ID3D11BufferWrapper(unwrappedBuffers[ i ]));
+                }
+            }
+            else
+            {
+                m_realDeviceCtx->IAGetVertexBuffers(StartSlot, NumBuffers, ppVertexBuffers, pStrides, pOffsets);
+            }
         }
 
         virtual void STDMETHODCALLTYPE IAGetIndexBuffer(
@@ -1126,6 +1152,7 @@ namespace d3d11x
             _Out_opt_  DXGI_FORMAT* Format,
             _Out_opt_  UINT* Offset) {
             m_realDeviceCtx->IAGetIndexBuffer(pIndexBuffer, Format, Offset);
+            *pIndexBuffer = pIndexBuffer ? reinterpret_cast<ID3D11Buffer*>(new ID3D11BufferWrapper(*pIndexBuffer)) : nullptr;
         }
 
         virtual void STDMETHODCALLTYPE GSGetConstantBuffers(
@@ -1162,6 +1189,7 @@ namespace d3d11x
             m_realDeviceCtx->IAGetPrimitiveTopology(pTopology);
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE VSGetShaderResources(
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
@@ -1182,6 +1210,7 @@ namespace d3d11x
             m_realDeviceCtx->GetPredication(ppPredicate, pPredicateValue);
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE GSGetShaderResources(
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
@@ -1199,16 +1228,16 @@ namespace d3d11x
         virtual void STDMETHODCALLTYPE OMGetRenderTargets(
             _In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT)  UINT NumViews,
             _Out_writes_opt_(NumViews)  ID3D11RenderTargetView_X** ppRenderTargetViews,
-            _Outptr_opt_result_maybenull_  ID3D11DepthStencilView** ppDepthStencilView) 
+            _Outptr_opt_result_maybenull_  ID3D11DepthStencilView_X** ppDepthStencilView) 
         {
-
-            
             ::ID3D11RenderTargetView* target = nullptr;
-            m_realDeviceCtx->OMGetRenderTargets(NumViews, &target, ppDepthStencilView);
+            ::ID3D11DepthStencilView* depth = nullptr;
+            m_realDeviceCtx->OMGetRenderTargets(NumViews, &target, &depth);
             *ppRenderTargetViews = ppRenderTargetViews ? reinterpret_cast<ID3D11RenderTargetView_X*>(new ID3D11RenderTargetViewWrapper(target)) : nullptr;
-
+            *ppDepthStencilView = ppDepthStencilView ? reinterpret_cast<ID3D11DepthStencilView_X*>(new ID3D11DepthStencilViewWrapper(depth)) : nullptr;
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE OMGetRenderTargetsAndUnorderedAccessViews(
             _In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT)  UINT NumRTVs,
             _Out_writes_opt_(NumRTVs)  ID3D11RenderTargetView** ppRenderTargetViews,
@@ -1232,6 +1261,7 @@ namespace d3d11x
             m_realDeviceCtx->OMGetDepthStencilState(ppDepthStencilState, pStencilRef);
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE SOGetTargets(
             _In_range_(0, D3D11_SO_BUFFER_SLOT_COUNT)  UINT NumBuffers,
             _Out_writes_opt_(NumBuffers)  ID3D11Buffer** ppSOTargets) {
@@ -1255,6 +1285,7 @@ namespace d3d11x
             m_realDeviceCtx->RSGetScissorRects(pNumRects, pRects);
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE HSGetShaderResources(
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
@@ -1298,6 +1329,7 @@ namespace d3d11x
             }
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE DSGetShaderResources(
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
@@ -1341,6 +1373,7 @@ namespace d3d11x
             }
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE CSGetShaderResources(
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot)  UINT NumViews,
@@ -1348,6 +1381,7 @@ namespace d3d11x
             m_realDeviceCtx->CSGetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
         }
 
+        // @Patoke todo: wrap
         virtual void STDMETHODCALLTYPE CSGetUnorderedAccessViews(
             _In_range_(0, D3D11_1_UAV_SLOT_COUNT - 1)  UINT StartSlot,
             _In_range_(0, D3D11_1_UAV_SLOT_COUNT - StartSlot)  UINT NumUAVs,
