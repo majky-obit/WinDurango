@@ -47,6 +47,8 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture1D(
     ID3D11Texture1D* texture1d = nullptr;
     HRESULT hr = m_realDevice->CreateTexture1D(pDesc, pInitialData, &texture1d);
 
+    printf("[CreateTexture1D] created texture at 0x%llX\n", texture1d);
+
     ERROR_LOG_FUNC( );
     if (ppTexture1D != nullptr)
     {
@@ -92,6 +94,8 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture3D(
 
     ID3D11Texture3D* texture3d = nullptr;
     HRESULT hr = m_realDevice->CreateTexture3D(pDesc, pInitialData, &texture3d);
+
+    printf("[CreateTexture3D] created texture at 0x%llX\n", texture3d);
 
     ERROR_LOG_FUNC( );
     if (ppTexture3D != nullptr)

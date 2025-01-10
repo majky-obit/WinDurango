@@ -27,7 +27,7 @@ INT32 CoreWindowWrapperX::_abi_get_Bounds(Rect* rect)
 
 INT32 CoreWindowWrapperX::_abi_get_Dispatcher(ICoreDispatcher** dispatcher)
 {
-	printf("[CoreWindowWrapperX] --> _abi_get_Dispatcher\n");
+	//printf("[CoreWindowWrapperX] --> _abi_get_Dispatcher\n");
 	return m_realWindow->get_Dispatcher(dispatcher);
 }
 
@@ -257,13 +257,13 @@ HRESULT CoreWindowWrapperX::QueryInterface(const IID& riid, void** ppvObject)
 
 ULONG CoreWindowWrapperX::AddRef()
 {
-	printf("[CoreWindowWrapperX] --> AddRef\n");
+	//printf("[CoreWindowWrapperX] --> AddRef\n");
 	return InterlockedIncrement(&m_RefCount);
 }
 
 ULONG CoreWindowWrapperX::Release()
 {
-	printf("[CoreWindowWrapperX] --> Release\n");
+	//printf("[CoreWindowWrapperX] --> Release\n");
 	ULONG refCount = InterlockedDecrement(&m_RefCount);
 	if (refCount == 0) delete this;
 	return refCount;

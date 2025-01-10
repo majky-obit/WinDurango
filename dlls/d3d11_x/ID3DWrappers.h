@@ -3,7 +3,27 @@
 #include "ID3DDeviceContext.h"
 #include <array>
 #include <vcruntime_typeinfo.h>
+#include <map>
 
+static std::map<UINT64, int> D3D11X_HARDWARE_TO_TOPOLOGY_MAP = {
+    {0x000001ffc0009e00, 0}, {0x000003ffc0009e00, 1}, {0x000005ffc0009e00, 2}, {0x000007ffc0009e00, 3},
+    {0x000009ffc0009e00, 4}, {0x00000dffc0009e00, 5}, {0x00000bffc0009e00, 6}, {0x000001ffc0009e00, 7},
+    {0x000001ffc0009e00, 8}, {0x000001ffc0009e00, 9}, {0x0000157fc0009e00, 10}, {0x0000177fc0009e00, 11},
+    {0x0000197fc0009e00, 12}, {0x00001b7fc0009e00, 13}, {0x00001dffc0009e00, 14}, {0x00001fffc0009e00, 15},
+    {0x000021ffc0009e00, 16}, {0x000023ffc0009e00, 17}, {0x000025ffc0009e00, 18}, {0x000027ffc0009e00, 19},
+    {0x000029ffc0009e00, 20}, {0x00002bffc0009e00, 21}, {0x00002dffc0009e00, 22}, {0x00002fffc0009e00, 23},
+    {0x000031ffc0009e00, 24}, {0x000033ffc0009e00, 25}, {0x000035ffc0009e00, 26}, {0x000037ffc0009e00, 27},
+    {0x000039ffc0009e00, 28}, {0x000001ffc0009e00, 29}, {0x000001ffc0009e00, 30}, {0x000001ffc0009e00, 31},
+    {0x000001ffc0009e00, 32}, {0x001013ffc0009e00, 33}, {0x0020137fc0009e00, 34}, {0x00301354c0009e00, 35},
+    {0x0040133fc0009e00, 36}, {0x00501332c0009e00, 37}, {0x00601329c0009e00, 38}, {0x00701323c0009e00, 39},
+    {0x0080131fc0009e00, 40}, {0x0090131bc0009e00, 41}, {0x00a01318c0009e00, 42}, {0x00b01316c0009e00, 43},
+    {0x00c01314c0009e00, 44}, {0x00d01312c0009e00, 45}, {0x00e01311c0009e00, 46}, {0x00f01310c0009e00, 47},
+    {0x0100130fc0009e00, 48}, {0x0110130ec0009e00, 49}, {0x0120130dc0009e00, 50}, {0x0130130cc0009e00, 51},
+    {0x0140130bc0009e00, 52}, {0x0150130bc0009e00, 53}, {0x0160130ac0009e00, 54}, {0x0170130ac0009e00, 55},
+    {0x01801309c0009e00, 56}, {0x01901309c0009e00, 57}, {0x01a01308c0009e00, 58}, {0x01b01308c0009e00, 59},
+    {0x01c01308c0009e00, 60}, {0x01d01307c0009e00, 61}, {0x01e01307c0009e00, 62}, {0x01f01307c0009e00, 63},
+    {0x02001307c0009e00, 64}
+};
 
 namespace d3d11x
 {
@@ -418,6 +438,41 @@ namespace d3d11x
         virtual void STDMETHODCALLTYPE Draw(
             _In_  UINT VertexCount,
             _In_  UINT StartVertexLocation) {
+
+			// @unixian todo: define the dirty flags in an enum for better readability
+
+            // 0x46 = topology dirty flag
+			if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x46)
+			{
+				m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x46;
+                int topology = D3D11X_HARDWARE_TO_TOPOLOGY_MAP.at(m_ShaderUserDataManagerDraw.m_Topology);
+                if (topology == 6 || topology == 17 || topology == 18 || topology == 19 || topology == 20)
+                    printf( "[ID3D11DeviceContextXWrapper::Draw] Xbox-One specific topology passed through, IASetPrimitiveTopology may fail!\n" );
+
+                m_realDeviceCtx->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
+			}
+
+			// 0x89 = input layout dirty flag
+            if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x89)
+            {
+                m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x89;
+				m_realDeviceCtx->IASetInputLayout(m_ShaderUserDataManagerDraw.m_pInputLayout);
+            }
+
+			// 0x91 = vertex shader dirty flag
+            if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x91)
+            {
+				m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x91;
+                m_realDeviceCtx->VSSetShader(m_ShaderUserDataManagerDraw.m_pVs, nullptr, 0);
+            }
+
+            // 0x121 = pixel shader dirty flag
+            if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x121)
+            {
+                m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x121;
+                m_realDeviceCtx->PSSetShader(m_ShaderUserDataManagerDraw.m_pPs, nullptr, 0);
+            }
+
             m_realDeviceCtx->Draw(VertexCount, StartVertexLocation);
         }
 

@@ -151,7 +151,8 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 		
 		return wrappedFactory.CopyTo(iid, factory);
 	}
-	else if (IsClassName(classId, "Windows.UI.Core.CoreWindow"))
+
+	if (IsClassName(classId, "Windows.UI.Core.CoreWindow"))
 	{
 		//
 		// for now we just hook GetForCurrentThread to get the CoreWindow but i'll change it later to
