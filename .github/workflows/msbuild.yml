@@ -39,7 +39,7 @@ jobs:
       run: |
         curl -L -o External.zip "$EXTERNALS_LINK"
       env:
-        ONEDRIVE_LINK: ${{ secrets.EXTERNALS_LINK }}
+        EXTERNALS_LINK: ${{ secrets.EXTERNALS_LINK }}
 
     - name: Unzip proprietary files
       run: 7z x External.zip -odlls/winrt_x/External
