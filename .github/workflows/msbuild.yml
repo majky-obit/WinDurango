@@ -37,7 +37,7 @@ jobs:
 
     - name: Download proprietary files
       run: |
-        curl -L -o External.zip "$EXTERNALS_LINK"
+        curl -L -o External.zip ${{ secrets.EXTERNALS_LINK }}
       env:
         EXTERNALS_LINK: ${{ secrets.EXTERNALS_LINK }}
 
