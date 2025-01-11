@@ -33,7 +33,7 @@ namespace d3d11x
 
     ULONG ID3D11RenderTargetViewWrapper::Release( )
     {
-        printf("[ID3D11RenderTargetViewWrapper] --> AddRef\n");
+        printf("[ID3D11RenderTargetViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -114,7 +114,7 @@ namespace d3d11x
 
     ULONG ID3D11DepthStencilViewWrapper::Release( )
     {
-        printf("[ID3D11DepthStencilViewWrapper] --> AddRef\n");
+        printf("[ID3D11DepthStencilViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -194,7 +194,7 @@ namespace d3d11x
 
     ULONG ID3D11ShaderResourceViewWrapper::Release( )
     {
-        printf("[ID3D11ShaderResourceViewWrapper] --> AddRef\n");
+        printf("[ID3D11ShaderResourceViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -274,7 +274,7 @@ namespace d3d11x
 
     ULONG ID3D11UnorderedAccessViewWrapper::Release( )
     {
-        printf("[ID3D11UnorderedAccessViewWrapper] --> AddRef\n");
+        printf("[ID3D11UnorderedAccessViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;

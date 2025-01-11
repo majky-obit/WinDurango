@@ -553,7 +553,9 @@ namespace d3d11x
 			DXGI_FORMAT Format = HardwareIndexFormat == 1 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
 
             if (pIndexBuffer == nullptr)
+            {
                 return m_realDeviceCtx->IASetIndexBuffer(pIndexBuffer, Format, Offset);
+            }
 
             m_realDeviceCtx->IASetIndexBuffer(reinterpret_cast<ID3D11BufferWrapper*>(pIndexBuffer)->m_realBuffer, Format, Offset);
         }
@@ -1218,7 +1220,11 @@ namespace d3d11x
             _Out_opt_  DXGI_FORMAT* Format,
             _Out_opt_  UINT* Offset) {
             m_realDeviceCtx->IAGetIndexBuffer(pIndexBuffer, Format, Offset);
-            *pIndexBuffer = pIndexBuffer ? reinterpret_cast<ID3D11Buffer*>(new ID3D11BufferWrapper(*pIndexBuffer)) : nullptr;
+            
+            if (pIndexBuffer != nullptr)
+            {
+                *pIndexBuffer = pIndexBuffer ? reinterpret_cast<ID3D11Buffer*>(new ID3D11BufferWrapper(*pIndexBuffer)) : nullptr;
+            }
         }
 
         virtual void STDMETHODCALLTYPE GSGetConstantBuffers(
@@ -1298,9 +1304,17 @@ namespace d3d11x
         {
             ::ID3D11RenderTargetView* target = nullptr;
             ::ID3D11DepthStencilView* depth = nullptr;
-            m_realDeviceCtx->OMGetRenderTargets(NumViews, &target, &depth);
-            *ppRenderTargetViews = ppRenderTargetViews ? reinterpret_cast<ID3D11RenderTargetView_X*>(new ID3D11RenderTargetViewWrapper(target)) : nullptr;
-            *ppDepthStencilView = ppDepthStencilView ? reinterpret_cast<ID3D11DepthStencilView_X*>(new ID3D11DepthStencilViewWrapper(depth)) : nullptr;
+			m_realDeviceCtx->OMGetRenderTargets(NumViews, &target, &depth);
+
+			if (ppRenderTargetViews != nullptr)
+			{
+				*ppRenderTargetViews = ppRenderTargetViews ? reinterpret_cast<ID3D11RenderTargetView_X*>(new ID3D11RenderTargetViewWrapper(target)) : nullptr;
+			}
+
+			if (ppDepthStencilView != nullptr)
+			{
+				*ppDepthStencilView = ppDepthStencilView ? reinterpret_cast<ID3D11DepthStencilView_X*>(new ID3D11DepthStencilViewWrapper(depth)) : nullptr;
+			}
         }
 
         // @Patoke todo: wrap

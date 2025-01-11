@@ -34,7 +34,7 @@ namespace d3d11x
 
     ULONG IDXGISwapChainWrapper::Release( )
     {
-        printf("[IDXGISwapChainWrapper] --> AddRef\n");
+        printf("[IDXGISwapChainWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;

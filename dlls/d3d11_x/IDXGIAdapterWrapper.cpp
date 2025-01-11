@@ -35,7 +35,7 @@ namespace d3d11x
 
     ULONG IDXGIAdapterWrapper::Release( )
     {
-        printf("[IDXGIAdapterWrapper] --> AddRef\n");
+        printf("[IDXGIAdapterWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
