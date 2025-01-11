@@ -137,7 +137,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 		wprintf(L"%ls\n", rawString);
 	}
 	auto hr = 0;
-	
+
 	if (IsClassName(classId, "Windows.ApplicationModel.Core.CoreApplication"))
 	{
 		ComPtr<IActivationFactory> realFactory;
@@ -148,7 +148,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 			return hr;
 
 		ComPtr<CoreApplicationWrapperX> wrappedFactory = Make<CoreApplicationWrapperX>(realFactory);
-		
+
 		return wrappedFactory.CopyTo(iid, factory);
 	}
 
@@ -180,35 +180,30 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	// After WinDurango overrides try to load the rest
 
-	hr = TrueRoGetActivationFactory(classId, iid, factory);
-
-	if (FAILED(hr))
+	if (!pDllGetActivationFactory)
 	{
+		auto library = LoadPackagedLibrary(L"winrt_x.dll", 0);
+
+		if (!library) library = LoadLibraryW(L"winrt_x.dll");
+
+		if (!library) return hr;
+
+		pDllGetActivationFactory = reinterpret_cast<DllGetActivationFactoryFunc>
+			(GetProcAddress(library, "DllGetActivationFactory"));
+
 		if (!pDllGetActivationFactory)
-		{
-			auto library = LoadPackagedLibrary(L"winrt_x.dll", 0);
-
-			if (!library) library = LoadLibraryW(L"winrt_x.dll");
-
-			if (!library) return hr;
-
-			pDllGetActivationFactory = reinterpret_cast<DllGetActivationFactoryFunc>
-				(GetProcAddress(library, "DllGetActivationFactory"));
-
-			if (!pDllGetActivationFactory)
-				return hr;
-		}
-
-
-		// fallback
-		ComPtr<IActivationFactory> fallbackFactory;
-		hr = pDllGetActivationFactory(classId, fallbackFactory.GetAddressOf());
-
-		if (FAILED(hr))
 			return hr;
-
-		return fallbackFactory.CopyTo(iid, factory);
 	}
+
+
+	// fallback
+	ComPtr<IActivationFactory> fallbackFactory;
+	hr = pDllGetActivationFactory(classId, fallbackFactory.GetAddressOf());
+
+	if (SUCCEEDED(hr))
+		return fallbackFactory.CopyTo(iid, factory);
+
+	return TrueRoGetActivationFactory(classId, iid, factory);
 
 	return hr;
 }
