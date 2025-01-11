@@ -463,7 +463,7 @@ namespace d3d11x
 			_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,
 			UINT NumClassInstances)
 		{
-			m_realDeviceCtx->PSSetShader(pPixelShader, ppClassInstances, NumClassInstances);
+			m_realDeviceCtx->PSSetShader(pPixelShader, nullptr, 0);
 		}
 
 		virtual void STDMETHODCALLTYPE PSSetSamplers(
@@ -479,7 +479,7 @@ namespace d3d11x
 			_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,
 			UINT NumClassInstances)
 		{
-			m_realDeviceCtx->VSSetShader(pVertexShader, ppClassInstances, NumClassInstances);
+			m_realDeviceCtx->VSSetShader(pVertexShader, nullptr, 0);
 		}
 
 		virtual void STDMETHODCALLTYPE DrawIndexed(
@@ -681,7 +681,7 @@ namespace d3d11x
 			_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,
 			UINT NumClassInstances)
 		{
-			m_realDeviceCtx->GSSetShader(pShader, ppClassInstances, NumClassInstances);
+			m_realDeviceCtx->GSSetShader(pShader, nullptr, 0);
 		}
 
 
@@ -1075,7 +1075,7 @@ namespace d3d11x
 			_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,
 			UINT NumClassInstances)
 		{
-			m_realDeviceCtx->HSSetShader(pHullShader, ppClassInstances, NumClassInstances);
+			m_realDeviceCtx->HSSetShader(pHullShader, nullptr, 0);
 		}
 
 		virtual void STDMETHODCALLTYPE HSSetSamplers(
@@ -1143,7 +1143,7 @@ namespace d3d11x
 			_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,
 			UINT NumClassInstances)
 		{
-			m_realDeviceCtx->DSSetShader(pDomainShader, ppClassInstances, NumClassInstances);
+			m_realDeviceCtx->DSSetShader(pDomainShader, nullptr, 0);
 		}
 
 		virtual void STDMETHODCALLTYPE DSSetSamplers(
@@ -1221,7 +1221,7 @@ namespace d3d11x
 			_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,
 			UINT NumClassInstances)
 		{
-			m_realDeviceCtx->CSSetShader(pComputeShader, ppClassInstances, NumClassInstances);
+			m_realDeviceCtx->CSSetShader(pComputeShader, nullptr, 0);
 		}
 
 		virtual void STDMETHODCALLTYPE CSSetSamplers(
@@ -2102,7 +2102,7 @@ namespace d3d11x
 		virtual void (InsertWaitUntilIdle)(
 			_In_ UINT Flags)
 		{
-			printf("[ID3D11DeviceContextX] InsertWaitUntilIdle NOT IMPLEMENTED\n");
+			//printf("[ID3D11DeviceContextX] InsertWaitUntilIdle NOT IMPLEMENTED\n");
 		}
 
 		virtual UINT64 (InsertFence)(

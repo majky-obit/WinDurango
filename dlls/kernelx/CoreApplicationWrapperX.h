@@ -19,7 +19,6 @@ public:
 	{
 		return m_realFactory->ActivateInstance(instance);
 	}
-public:
 	
 	// ICoreApplicationX
 	INT32 _abi_get_Id(HSTRING* value) override;

@@ -16,6 +16,9 @@
     <ClCompile Include="FrameworkViewSourceWrapper.cpp">
       <Filter>Windows.ApplicationModel.Core\FrameworkViewSource</Filter>
     </ClCompile>
+    <ClCompile Include="CurrentAppWrapper.cpp">
+      <Filter>Windows.ApplicationModel.Store\CurrentApp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -44,6 +47,9 @@
     <ClInclude Include="FrameworkViewSourceWrapper.h">
       <Filter>Windows.ApplicationModel.Core\FrameworkViewSource</Filter>
     </ClInclude>
+    <ClInclude Include="CurrentAppWrapper.hpp">
+      <Filter>Windows.ApplicationModel.Store\CurrentApp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Exports.def" />
@@ -68,6 +74,12 @@
     </Filter>
     <Filter Include="Windows.ApplicationModel.Core\FrameworkViewSource">
       <UniqueIdentifier>{c767c192-a92b-4536-b8a9-51f27fa78800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Store">
+      <UniqueIdentifier>{0ea04282-48ba-45bf-a20f-e7d51e2651c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows.ApplicationModel.Store\CurrentApp">
+      <UniqueIdentifier>{19e1cefa-5dbe-43ed-a9ad-b22278e05c1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
