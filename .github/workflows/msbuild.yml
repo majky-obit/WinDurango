@@ -32,6 +32,19 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Install 7zip
+      run: choco install 7zip --no-progress
+
+    - name: Download proprietary files
+      run: |
+        curl -L -o External.zip "$ONEDRIVE_LINK"
+      env:
+        ONEDRIVE_LINK: ${{ secrets.ONEDRIVE_LINK }}
+        ONEDRIVE_ACCESS_TOKEN: ${{ secrets.ONEDRIVE_ACCESS_TOKEN }}
+
+    - name: Unzip proprietary files
+      run: 7z x External.zip -odlls/winrt_x/External
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
