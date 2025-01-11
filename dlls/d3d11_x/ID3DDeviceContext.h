@@ -212,8 +212,8 @@ namespace d3d11x
             _In_reads_opt_(NumClassInstances)  ID3D11ClassInstance* const* ppClassInstances,
             UINT NumClassInstances) = 0;
 
-        virtual void STDMETHODCALLTYPE IASetPrimitiveTopology(
-            _In_  D3D11_PRIMITIVE_TOPOLOGY Topology) = 0;
+        //virtual void STDMETHODCALLTYPE IASetPrimitiveTopology(
+        //    _In_  D3D11_PRIMITIVE_TOPOLOGY Topology) = 0;
 
         virtual void STDMETHODCALLTYPE VSSetShaderResources(
             _In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1)  UINT StartSlot,

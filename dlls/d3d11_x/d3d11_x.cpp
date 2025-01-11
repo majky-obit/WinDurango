@@ -167,7 +167,8 @@ HRESULT __stdcall D3D11CreateDevice_X(
 
 	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, (ID3D11Device**)ppDevice, pFeatureLevel, (ID3D11DeviceContext**)ppImmediateContext);
     
-    if (SUCCEEDED(hr))
+
+	if (SUCCEEDED(hr))
     {
         // get dx11.2 feature level, since that's what dx11.x inherits from
         // MAYBE-TODO: VS doesn't like this line due to ppDevice not having a clear value. Maybe check if ppDevice is valid before deref.
@@ -187,12 +188,41 @@ HRESULT __stdcall D3D11CreateDevice_X(
 
 HRESULT __stdcall D3D11XCreateDeviceX_X(
     _In_ const D3D11X_CREATE_DEVICE_PARAMETERS* pParameters,
-    _Out_opt_ ID3D11Device** ppDevice,
-    _Out_opt_ ID3D11DeviceContext** ppImmediateContext)
+    _Out_opt_ d3d11x::ID3D11Device** ppDevice,
+    _Out_opt_ d3d11x::ID3D11DeviceContext** ppImmediateContext)
 {
     printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
     printf("SDK Version: %d\n", pParameters->Version);
-    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
+
+    D3D_FEATURE_LEVEL featurelevels[] = {
+		D3D_FEATURE_LEVEL_11_1,
+		D3D_FEATURE_LEVEL_11_0,
+    };
+    ID3D11Device2* device2{};
+    ID3D11DeviceContext2* device_context2{};
+
+    auto flags = pParameters->Flags & CREATE_DEVICE_FLAG_MASK;
+#ifdef _DEBUG
+    flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    HRESULT hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, flags, featurelevels, _ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, reinterpret_cast<ID3D11Device**>(ppDevice), NULL, reinterpret_cast<ID3D11DeviceContext**>(ppImmediateContext));
+    if (SUCCEEDED(hr))
+    {
+        // get dx11.2 feature level, since that's what dx11.x inherits from
+        // MAYBE-TODO: VS doesn't like this line due to ppDevice not having a clear value. Maybe check if ppDevice is valid before deref.
+        (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
+        (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
+
+        *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
+        *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(device_context2));
+    }
+    else
+    {
+        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError( ));
+    }
+
+    return hr;
 }
 
 HRESULT __stdcall D3D11CreateDeviceAndSwapChain_X(

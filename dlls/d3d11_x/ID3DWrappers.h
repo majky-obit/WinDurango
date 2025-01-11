@@ -2,6 +2,7 @@
 #include "ID3DX.h"
 #include "ID3DDeviceContext.h"
 #include <array>
+#include <assert.h>
 #include <vcruntime_typeinfo.h>
 #include <map>
 
@@ -381,12 +382,7 @@ namespace d3d11x
 			_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,
 			_In_ UINT PacketHeader)
         {
-            if (PacketHeader < 0)
-            {
-                return;
-            }
-
-            UINT NumViews = (PacketHeader >> 19) + 1;
+	        UINT NumViews = (PacketHeader >> 19) + 1;
 
             if (ppShaderResourceViews != NULL)
             {
@@ -429,40 +425,40 @@ namespace d3d11x
         }
 
         virtual void STDMETHODCALLTYPE DrawIndexed(
-            _In_  UINT IndexCount,
-            _In_  UINT StartIndexLocation,
-            _In_  INT BaseVertexLocation) {
+			_In_ UINT64 StartIndexLocationAndIndexCount,
+			_In_ INT BaseVertexLocation) {
+
+            UINT StartIndexLocation = static_cast<UINT>(StartIndexLocationAndIndexCount & 0xFFFFFFFF);
+            UINT IndexCount = static_cast<UINT>((StartIndexLocationAndIndexCount >> 32) & 0xFFFFFFFF);
+
+            ProcessDirtyFlags( );
             m_realDeviceCtx->DrawIndexed(IndexCount, StartIndexLocation, BaseVertexLocation);
         }
 
-        virtual void STDMETHODCALLTYPE Draw(
-            _In_  UINT VertexCount,
-            _In_  UINT StartVertexLocation) {
-
-			// @unixian todo: define the dirty flags in an enum for better readability
-
+        void ProcessDirtyFlags()
+        {
             // 0x46 = topology dirty flag
-			if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x46)
-			{
-				m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x46;
+            if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x46)
+            {
+                m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x46;
                 int topology = D3D11X_HARDWARE_TO_TOPOLOGY_MAP.at(m_ShaderUserDataManagerDraw.m_Topology);
-                if (topology == 6 || topology == 17 || topology == 18 || topology == 19 || topology == 20)
-                    printf( "[ID3D11DeviceContextXWrapper::Draw] Xbox-One specific topology passed through, IASetPrimitiveTopology may fail!\n" );
+                // assert for xbox-one specific topology
+                assert(!(topology == 6 || topology == 17 || topology == 18 || topology == 19 || topology == 20));
 
                 m_realDeviceCtx->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
-			}
+            }
 
-			// 0x89 = input layout dirty flag
+            // 0x89 = input layout dirty flag
             if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x89)
             {
                 m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x89;
-				m_realDeviceCtx->IASetInputLayout(m_ShaderUserDataManagerDraw.m_pInputLayout);
+                m_realDeviceCtx->IASetInputLayout(m_ShaderUserDataManagerDraw.m_pInputLayout);
             }
 
-			// 0x91 = vertex shader dirty flag
+            // 0x91 = vertex shader dirty flag
             if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x91)
             {
-				m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x91;
+                m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x91;
                 m_realDeviceCtx->VSSetShader(m_ShaderUserDataManagerDraw.m_pVs, nullptr, 0);
             }
 
@@ -472,7 +468,12 @@ namespace d3d11x
                 m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x121;
                 m_realDeviceCtx->PSSetShader(m_ShaderUserDataManagerDraw.m_pPs, nullptr, 0);
             }
+        }
 
+        virtual void STDMETHODCALLTYPE Draw(
+            _In_  UINT VertexCount,
+            _In_  UINT StartVertexLocation) {
+            ProcessDirtyFlags( );
             m_realDeviceCtx->Draw(VertexCount, StartVertexLocation);
         }
 
@@ -546,10 +547,11 @@ namespace d3d11x
 
         virtual void STDMETHODCALLTYPE IASetIndexBuffer(
             // @Patoke note: this one changes prototype
-            _In_  DXGI_FORMAT Format,
+            _In_  UINT HardwareIndexFormat,
             _In_opt_  ID3D11Buffer* pIndexBuffer,
             _In_  UINT Offset) {
-            // @Patoke note: remember pIndexBuffer is optional
+			DXGI_FORMAT Format = HardwareIndexFormat == 1 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
+
             if (pIndexBuffer == nullptr)
                 return m_realDeviceCtx->IASetIndexBuffer(pIndexBuffer, Format, Offset);
 
@@ -557,19 +559,28 @@ namespace d3d11x
         }
 
         virtual void STDMETHODCALLTYPE DrawIndexedInstanced(
-            _In_  UINT IndexCountPerInstance,
-            _In_  UINT InstanceCount,
-            _In_  UINT StartIndexLocation,
-            _In_  INT BaseVertexLocation,
-            _In_  UINT StartInstanceLocation) {
+			_In_ UINT64 StartIndexLocationAndIndexCountPerInstance,
+			_In_ UINT64 BaseVertexLocationAndStartInstanceLocation,
+			_In_ UINT InstanceCount) {
+
+            UINT StartIndexLocation = static_cast<UINT>(StartIndexLocationAndIndexCountPerInstance & 0xFFFFFFFF);
+            UINT IndexCountPerInstance = static_cast<UINT>((StartIndexLocationAndIndexCountPerInstance >> 32) & 0xFFFFFFFF);
+
+            UINT BaseVertexLocation = static_cast<UINT>(BaseVertexLocationAndStartInstanceLocation & 0xFFFFFFFF);
+            UINT StartInstanceLocation = static_cast<UINT>((BaseVertexLocationAndStartInstanceLocation >> 32) & 0xFFFFFFFF);
+
+            ProcessDirtyFlags( );
             m_realDeviceCtx->DrawIndexedInstanced(IndexCountPerInstance, InstanceCount, StartIndexLocation, BaseVertexLocation, StartInstanceLocation);
         }
 
         virtual void STDMETHODCALLTYPE DrawInstanced(
-            _In_  UINT VertexCountPerInstance,
-            _In_  UINT InstanceCount,
-            _In_  UINT StartVertexLocation,
-            _In_  UINT StartInstanceLocation) {
+            _In_ UINT VertexCountPerInstance,
+            _In_ UINT64 StartVertexLocationAndStartInstanceLocation,
+            _In_ UINT InstanceCount) {
+            UINT StartVertexLocation = static_cast<UINT>(StartVertexLocationAndStartInstanceLocation & 0xFFFFFFFF);
+            UINT StartInstanceLocation = static_cast<UINT>((StartVertexLocationAndStartInstanceLocation >> 32) & 0xFFFFFFFF);
+
+            ProcessDirtyFlags( );
             m_realDeviceCtx->DrawInstanced(VertexCountPerInstance, InstanceCount, StartVertexLocation, StartInstanceLocation);
         }
 
