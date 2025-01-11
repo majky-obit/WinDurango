@@ -155,13 +155,10 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     bool User::IsGuest()
     {
-        printf("User.IsGuest -> true\n");
         return false;
     }
     bool User::IsSignedIn()
     {
-        //m_onlineStateChangedEvent( );
-        printf("User.IsSignedIn -> true\n");
         return true;
     }
     winrt::Windows::Xbox::System::UserLocation User::Location()

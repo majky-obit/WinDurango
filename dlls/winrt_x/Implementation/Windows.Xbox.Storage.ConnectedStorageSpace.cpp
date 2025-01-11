@@ -112,9 +112,9 @@ namespace winrt::Windows::Xbox::Storage::implementation
 			assert("s_userStorage is null");
 
         if (staticContainer == Storage::ConnectedStorageContainer(nullptr))
-            staticContainer = winrt::make<ConnectedStorageContainer>( );
+            staticContainer = winrt::make<ConnectedStorageContainer>( containerName );
 
-		WinDurango::impl::s_userStorage->CreateContainer(containerName.c_str( ));
+    	WinDurango::impl::s_userStorage->CreateContainer(containerName.c_str( ));
 		return staticContainer;
     }
 
