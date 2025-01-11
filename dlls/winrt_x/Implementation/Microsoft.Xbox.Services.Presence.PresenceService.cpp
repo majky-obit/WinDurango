@@ -45,7 +45,8 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
     }
     winrt::Windows::Foundation::IAsyncAction PresenceService::SetPresenceAsync(bool isUserActiveInTitle, winrt::Microsoft::Xbox::Services::Presence::PresenceData presenceData)
     {
-        throw hresult_not_implemented();
+        printf("[PresenceService] SetPresenceAsync called\n");
+        co_return;
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Microsoft::Xbox::Services::Presence::PresenceRecord> PresenceService::GetPresenceAsync(hstring xboxUserId)
     {

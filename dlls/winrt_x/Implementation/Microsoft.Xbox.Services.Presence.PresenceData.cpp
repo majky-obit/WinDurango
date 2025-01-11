@@ -25,7 +25,7 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId)
     {
-        throw hresult_not_implemented();
+		printf("[PresenceData] PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId) called\n");
     }
     PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId, winrt::Windows::Foundation::Collections::IVectorView<hstring> const& presenceTokenIds)
     {

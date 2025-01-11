@@ -6,9 +6,9 @@
 namespace winrt::Windows::Xbox::System::implementation
 {
     //winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserAddedEventArgs>> m_userAddedEvent;
-    winrt::Windows::Xbox::System::UserOnlineState User::OnlineState()
+    UserOnlineState User::OnlineState()
     {
-        return winrt::Windows::Xbox::System::UserOnlineState::Unknown;
+        return UserOnlineState::Offline;
     }
     winrt::event_token User::OnlineStateChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::OnlineStateChangedEventArgs> const& handler)
     {
@@ -20,10 +20,16 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::User> User::Users()
     {
-        //System::User dummyUser = winrt::make<System::User>( );
-        //auto vector = winrt::single_threaded_vector<System::User>( );
-        //vector.Append(dummyUser);
-        return winrt::single_threaded_vector<System::User>( ).GetView();
+        if (staticUser == System::User(nullptr))
+			staticUser = winrt::make<User>( );
+
+        if (staticUsers == Foundation::Collections::IVector<winrt::Windows::Xbox::System::User>(nullptr) || staticUsers.Size() == 0)
+        {
+            staticUsers = winrt::single_threaded_vector<System::User>( );
+            staticUsers.Append(staticUser);
+        }
+			
+        return staticUsers.GetView();
     }
     winrt::event_token User::UserAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserAddedEventArgs> const& handler)
     {
@@ -35,7 +41,7 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::UserRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserRemovedEventArgs> const& handler)
     {
-        return {};
+		return m_userRemovedEvent.add(handler);
     }
     void User::UserRemoved(winrt::event_token const& token) noexcept
     {
@@ -149,10 +155,13 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     bool User::IsGuest()
     {
+        printf("User.IsGuest -> true\n");
         return false;
     }
     bool User::IsSignedIn()
     {
+        //m_onlineStateChangedEvent( );
+        printf("User.IsSignedIn -> true\n");
         return true;
     }
     winrt::Windows::Xbox::System::UserLocation User::Location()
@@ -162,8 +171,8 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Xbox::System::User User::Sponsor()
     {
-        printf("!!!! Windows.Xbox.System.User Sponsor | NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+		printf("!!!! Windows.Xbox.System.User Sponsor | NOT IMPLEMENTED !!!!\n");
+        return nullptr;
     }
     hstring User::XboxUserHash()
     {

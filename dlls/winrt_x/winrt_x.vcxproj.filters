@@ -437,6 +437,8 @@
     <ClCompile Include="Implementation\Windows.Xbox.Input.GamepadReading.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.Store.ProductPurchasedEventArgs.cpp" />
+    <ClCompile Include="ConnectedStorage\ConnectedStorage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -859,6 +861,8 @@
     <ClInclude Include="Implementation\Windows.Xbox.Input.GamepadReading.h">
       <Filter>Implementation</Filter>
     </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.ApplicationModel.Store.ProductPurchasedEventArgs.h" />
+    <ClInclude Include="ConnectedStorage\ConnectedStorage.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -42,7 +42,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::Windows::Xbox::System::User Gamepad::User()
     {
-        return winrt::make<winrt::Windows::Xbox::System::implementation::User>( );
+		return System::implementation::User::Users( ).GetAt(0);
     }
     winrt::Windows::Xbox::Input::INavigationReading Gamepad::GetNavigationReading()
     {
@@ -117,10 +117,10 @@ namespace winrt::Windows::Xbox::Input::implementation
                 reading.RightThumbstickX = xiState.Gamepad.sThumbRX / 32768.f;
                 reading.RightThumbstickY = xiState.Gamepad.sThumbRY / 32768.f;
             }
-            else {
-                printf("Controller input failure: %x\n", XInputGetState(0, &xiState));
-            }
-    }
+            //else {
+            //    printf("Controller input failure: %x\n", XInputGetState(0, &xiState));
+            //}
+		}
 
         if (GetAsyncKeyState('A'))
             reading.Buttons |= GamepadButtons::A;
@@ -151,7 +151,7 @@ namespace winrt::Windows::Xbox::Input::implementation
 		if (GetAsyncKeyState(VK_RCONTROL))
             reading.Buttons |= GamepadButtons::RightShoulder;
 
-		printf("Reading: %d\n", reading.Buttons);
+		//printf("Reading: %d\n", reading.Buttons);
         return reading;
     }
     winrt::event_token Gamepad::ReadingChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Xbox::Input::Gamepad, winrt::Windows::Xbox::Input::IGamepadReadingChangedEventArgs> const& handler)
