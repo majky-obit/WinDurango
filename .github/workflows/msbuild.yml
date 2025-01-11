@@ -37,10 +37,9 @@ jobs:
 
     - name: Download proprietary files
       run: |
-        curl -L -o External.zip "$ONEDRIVE_LINK"
+        curl -L -o External.zip "$EXTERNALS_LINK"
       env:
-        ONEDRIVE_LINK: ${{ secrets.ONEDRIVE_LINK }}
-        ONEDRIVE_ACCESS_TOKEN: ${{ secrets.ONEDRIVE_ACCESS_TOKEN }}
+        ONEDRIVE_LINK: ${{ secrets.EXTERNALS_LINK }}
 
     - name: Unzip proprietary files
       run: 7z x External.zip -odlls/winrt_x/External
