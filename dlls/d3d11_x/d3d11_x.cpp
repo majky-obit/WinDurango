@@ -171,12 +171,17 @@ HRESULT __stdcall D3D11CreateDevice_X(
 	if (SUCCEEDED(hr))
     {
         // get dx11.2 feature level, since that's what dx11.x inherits from
-        // MAYBE-TODO: VS doesn't like this line due to ppDevice not having a clear value. Maybe check if ppDevice is valid before deref.
-        (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
-        (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
+		if (ppDevice != nullptr)
+        {
+            (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
+            *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
+        }
 
-        *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
-        *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(device_context2));
+        if (ppImmediateContext != nullptr)
+        {
+            (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
+            *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(device_context2));
+        }
     }
     else
     {

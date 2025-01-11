@@ -40,7 +40,7 @@ namespace d3d11x
 
 	ULONG IDXGIFactoryWrapper::Release( )
 	{
-		printf("[IDXGIFactoryWrapper] --> AddRef\n");
+		printf("[IDXGIFactoryWrapper] --> Release\n");
 		ULONG refCount = InterlockedDecrement(&m_RefCount);
 		if (refCount == 0)
 			delete this;
