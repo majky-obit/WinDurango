@@ -1,8 +1,8 @@
-LIBRARY XAudio2_9
+LIBRARY XAudio2_9_x
 EXPORTS
-	CreateAudioReverb      = XAudio2_9.CreateAudioReverb			@1
-	CreateAudioVolumeMeter = XAudio2_9.CreateAudioVolumeMeter		@2
-	CreateFX			   = XAudio2_9.CreateFX					    @3
-	CreateXAudio2Object    = XAudio2_9.XAudio2Create    		    @4
-	X3DAudioCalculate	   = XAudio2_9.X3DAudioCalculate			@5
-	X3DAudioInitialize	   = XAudio2_9.X3DAudioInitialize			@6
+	CreateAudioReverb      = CreateAudioReverb_X					@1
+	CreateAudioVolumeMeter = CreateAudioVolumeMeter_X				@2
+	CreateFX			   = CreateFX_X							    @3
+	CreateXAudio2Object												@4
+	X3DAudioCalculate	   = X3DAudioCalculate_X					@5
+	X3DAudioInitialize	   = X3DAudioInitialize_X					@6
