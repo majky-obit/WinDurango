@@ -52,8 +52,8 @@ INT32 CoreWindowWrapperX::_abi_get_Visible(boolean* value)
 INT32 CoreWindowWrapperX::_abi_Activate()
 {
 	auto view = winrt::Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
-	view.TryEnterFullScreenMode();
-	view.PreferredLaunchWindowingMode(winrt::Windows::UI::ViewManagement::ApplicationViewWindowingMode::FullScreen);
+	//view.TryEnterFullScreenMode();
+	view.PreferredLaunchWindowingMode(winrt::Windows::UI::ViewManagement::ApplicationViewWindowingMode::PreferredLaunchViewSize);
 
 	printf("[CoreWindowWrapperX] --> _abi_Activate\n");
 	return m_realWindow->Activate();
