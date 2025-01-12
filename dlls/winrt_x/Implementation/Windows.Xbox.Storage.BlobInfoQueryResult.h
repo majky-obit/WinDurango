@@ -25,9 +25,15 @@ namespace winrt::Windows::Xbox::Storage::implementation
     struct BlobInfoQueryResult : BlobInfoQueryResultT<BlobInfoQueryResult>
     {
         BlobInfoQueryResult() = default;
+        BlobInfoQueryResult(hstring name){
+            this->parentName = name;
+        }
 
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::BlobInfo>> GetBlobInfoAsync(uint32_t startIndex, uint32_t maxNumberOfItems);
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::BlobInfo>> GetBlobInfoAsync();
         winrt::Windows::Foundation::IAsyncOperation<uint32_t> GetItemCountAsync();
+
+    private:
+        hstring parentName;
     };
 }
