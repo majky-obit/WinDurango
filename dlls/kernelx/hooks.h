@@ -40,6 +40,44 @@ HANDLE(WINAPI* TrueFindFirstFileW)(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFind
 
 BOOL(WINAPI* TrueDeleteFileW)(LPCWSTR lpFileName) = DeleteFileW;
 
+HMODULE(WINAPI* TrueLoadLibraryExW)(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD dwFlags) = LoadLibraryExW;
+
+HMODULE WINAPI LoadLibraryExW_Hook(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dwFlags)
+{
+
+	if (wcscmp(lpLibFileName, L"xaudio2_9.dll") == 0 ||
+		wcscmp(lpLibFileName, L"xaudio2_9d.dll") == 0)
+	{
+		void* returnAddress = _ReturnAddress();
+
+		HMODULE hModule = NULL;
+		GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, static_cast<LPCWSTR>(returnAddress), &hModule);
+
+		// get caller path without file name and extension
+		wchar_t callerPath[MAX_PATH];
+		GetModuleFileNameW(hModule, callerPath, MAX_PATH);
+		wchar_t* callerfileName = PathFindFileNameW(callerPath);
+		PathRemoveFileSpecW(callerPath);
+
+		// get the current module path without file name and extension
+		wchar_t currentPath[MAX_PATH];
+		GetModuleFileNameW(NULL, currentPath, MAX_PATH);
+		PathRemoveFileSpecW(currentPath);
+
+
+
+		if (wcscmp(currentPath, callerPath) == 0 &&
+			!(wcscmp(callerfileName, L"xaudio2_9_x.dll") == 0))
+		{
+			LPCWSTR proxyXAudioModule = L"xaudio2_9_x.dll";
+			return TrueLoadLibraryExW(proxyXAudioModule, hFile, dwFlags);
+		}
+	}
+
+
+	return TrueLoadLibraryExW(lpLibFileName, hFile, dwFlags);
+}
+
 
 // Hooks for filesystem APIs
 void FixRelativePath(LPCWSTR& lpFileName)

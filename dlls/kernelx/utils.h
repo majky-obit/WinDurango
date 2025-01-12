@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <filesystem>
+#include <shlwapi.h>
 
 #define FAILED(hr) (((HRESULT)(hr)) < 0)
 #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
