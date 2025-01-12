@@ -42,7 +42,9 @@ jobs:
         EXTERNALS_LINK: ${{ secrets.EXTERNALS_LINK }}
 
     - name: Unzip proprietary files
-      run: 7z x External.zip -odlls/winrt_x/External
+      run: |
+        7z x External.zip -odlls/winrt_x/External
+        ls dlls/winrt_x/External
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
