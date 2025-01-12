@@ -6,7 +6,7 @@
 
 // thanks to Zombie for the idea
 #define DX_MAJOR 2
-#define DX_MINOR 12
+#define DX_MINOR 18
 
 #define MAKEINTVERSION(major, minor) (((0LL + (major)) << 48) | ((0LL + (minor)) << 32))
 #define DX_VERSION (((0LL + (DX_MAJOR)) << 48) | ((0LL + (DX_MINOR)) << 32))

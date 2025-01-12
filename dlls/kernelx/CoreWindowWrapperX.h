@@ -1,5 +1,7 @@
 #pragma once
+#include <cstdio>
 #include "ICoreWindowX.h"
+#include <winrt/Windows.UI.ViewManagement.h>
 
 
 class CoreWindowWrapperX : public ICoreWindowX

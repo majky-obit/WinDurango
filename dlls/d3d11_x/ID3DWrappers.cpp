@@ -23,7 +23,7 @@ namespace d3d11x {
 
     ULONG ID3D11ResourceWrapperX::Release( )
     {
-        printf("[ID3D11ResourceWrapperX] --> AddRef\n");
+        printf("[ID3D11ResourceWrapperX] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;

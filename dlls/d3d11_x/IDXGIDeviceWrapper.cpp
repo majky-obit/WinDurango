@@ -35,7 +35,7 @@ namespace d3d11x
 
     ULONG IDXGIDeviceWrapper::Release( )
     {
-        printf("[IDXGIDeviceWrapper] --> AddRef\n");
+        printf("[IDXGIDeviceWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;

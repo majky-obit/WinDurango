@@ -32,7 +32,7 @@ namespace d3d11x
 
     ULONG ID3D11Texture1DWrapper::Release( )
     {
-        printf("[ID3D11Texture1DWrapper] --> AddRef\n");
+        printf("[ID3D11Texture1DWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -122,7 +122,7 @@ namespace d3d11x
 
     ULONG ID3D11Texture2DWrapper::Release( )
     {
-        printf("[ID3D11Texture2DWrapper] --> AddRef\n");
+        printf("[ID3D11Texture2DWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -212,7 +212,7 @@ namespace d3d11x
 
     ULONG ID3D11Texture3DWrapper::Release( )
     {
-        printf("[ID3D11Texture3DWrapper] --> AddRef\n");
+        printf("[ID3D11Texture3DWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;

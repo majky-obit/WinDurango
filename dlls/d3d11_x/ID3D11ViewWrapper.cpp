@@ -33,7 +33,7 @@ namespace d3d11x
 
     ULONG ID3D11RenderTargetViewWrapper::Release( )
     {
-        printf("[ID3D11RenderTargetViewWrapper] --> AddRef\n");
+        printf("[ID3D11RenderTargetViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -71,6 +71,11 @@ namespace d3d11x
 
     void __stdcall ID3D11RenderTargetViewWrapper::GetResource(ID3D11Resource** ppResource)
     {
+        D3D11_RENDER_TARGET_VIEW_DESC desc;
+		m_realTarget->GetDesc(&desc);
+
+        printf("RenderTargetView GetResource Dimension: %i\n", desc.ViewDimension);
+
         ::ID3D11Texture2D* texture2d = nullptr;
         m_realTarget->GetResource(reinterpret_cast<::ID3D11Resource**>(&texture2d));
         *reinterpret_cast<ID3D11Texture2D_X**>(ppResource) = new ID3D11Texture2DWrapper(texture2d);
@@ -109,7 +114,7 @@ namespace d3d11x
 
     ULONG ID3D11DepthStencilViewWrapper::Release( )
     {
-        printf("[ID3D11DepthStencilViewWrapper] --> AddRef\n");
+        printf("[ID3D11DepthStencilViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -147,6 +152,10 @@ namespace d3d11x
 
     void __stdcall ID3D11DepthStencilViewWrapper::GetResource(ID3D11Resource** ppResource)
     {
+        D3D11_DEPTH_STENCIL_VIEW_DESC desc;
+        m_realTarget->GetDesc(&desc);
+        printf("DepthStencilView GetResource Dimension: %i\n", desc.ViewDimension);
+
         ::ID3D11Texture2D* texture2d = nullptr;
         m_realTarget->GetResource(reinterpret_cast<::ID3D11Resource**>(&texture2d));
         *reinterpret_cast<ID3D11Texture2D_X**>(ppResource) = new ID3D11Texture2DWrapper(texture2d);
@@ -185,7 +194,7 @@ namespace d3d11x
 
     ULONG ID3D11ShaderResourceViewWrapper::Release( )
     {
-        printf("[ID3D11ShaderResourceViewWrapper] --> AddRef\n");
+        printf("[ID3D11ShaderResourceViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -223,6 +232,10 @@ namespace d3d11x
 
     void __stdcall ID3D11ShaderResourceViewWrapper::GetResource(ID3D11Resource** ppResource)
     {
+        D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+        m_realTarget->GetDesc(&desc);
+        printf("ShaderResourceView GetResource Dimension: %i\n", desc.ViewDimension);
+
         ::ID3D11Texture2D* texture2d = nullptr;
         m_realTarget->GetResource(reinterpret_cast<::ID3D11Resource**>(&texture2d));
         *reinterpret_cast<ID3D11Texture2D_X**>(ppResource) = new ID3D11Texture2DWrapper(texture2d);
@@ -261,7 +274,7 @@ namespace d3d11x
 
     ULONG ID3D11UnorderedAccessViewWrapper::Release( )
     {
-        printf("[ID3D11UnorderedAccessViewWrapper] --> AddRef\n");
+        printf("[ID3D11UnorderedAccessViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
             delete this;
@@ -299,6 +312,10 @@ namespace d3d11x
 
     void __stdcall ID3D11UnorderedAccessViewWrapper::GetResource(ID3D11Resource** ppResource)
     {
+        D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
+        m_realTarget->GetDesc(&desc);
+        printf("UnorderedAccessView GetResource Dimension: %i\n", desc.ViewDimension);
+
         ::ID3D11Texture2D* texture2d = nullptr;
         m_realTarget->GetResource(reinterpret_cast<::ID3D11Resource**>(&texture2d));
         *reinterpret_cast<ID3D11Texture2D_X**>(ppResource) = new ID3D11Texture2DWrapper(texture2d);

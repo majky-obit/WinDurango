@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClInclude Include="CoreApplicationWrapperX.h" />
     <ClInclude Include="CoreWindowWrapperX.h" />
+    <ClInclude Include="CurrentAppWrapper.hpp" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="FrameworkViewSourceWrapper.h" />
     <ClInclude Include="FrameworkViewWrapper.h" />
@@ -109,6 +110,7 @@
   <ItemGroup>
     <ClCompile Include="CoreApplicationWrapperX.cpp" />
     <ClCompile Include="CoreWindowWrapperX.cpp" />
+    <ClCompile Include="CurrentAppWrapper.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FrameworkViewSourceWrapper.cpp" />
     <ClCompile Include="FrameworkViewWrapper.cpp" />

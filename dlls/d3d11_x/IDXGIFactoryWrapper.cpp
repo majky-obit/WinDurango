@@ -40,7 +40,7 @@ namespace d3d11x
 
 	ULONG IDXGIFactoryWrapper::Release( )
 	{
-		printf("[IDXGIFactoryWrapper] --> AddRef\n");
+		printf("[IDXGIFactoryWrapper] --> Release\n");
 		ULONG refCount = InterlockedDecrement(&m_RefCount);
 		if (refCount == 0)
 			delete this;
@@ -116,7 +116,6 @@ namespace d3d11x
 
 	HRESULT __stdcall IDXGIFactoryWrapper::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice, IUnknown* pWindow, const DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1_X** ppSwapChain)
 	{
-
 		IDXGISwapChain1* swap = nullptr;
 		HRESULT hr = m_realFactory->CreateSwapChainForCoreWindow(reinterpret_cast<IUnknown*>(pDevice), reinterpret_cast<CoreWindowWrapperX*>(pWindow)->m_realWindow, pDesc, pRestrictToOutput, &swap);
 
