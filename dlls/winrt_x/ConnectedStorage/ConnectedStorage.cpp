@@ -106,7 +106,7 @@ winrt::Windows::Foundation::IAsyncOperation<bool> WinDurango::impl::ConnectedSto
 	}
 }
 
-winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::CreateDirectories(const wchar_t* storageType)
+winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::CreateDirectories(const wchar_t* storageType, winrt::hstring& storagePath)
 {
     co_await winrt::resume_background( );
 
@@ -135,7 +135,7 @@ winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::Cre
 
 winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::InitializeStorage()
 {
-	co_await CreateDirectories(L"UserStorage");
+	co_await CreateDirectories(L"UserStorage", storagePath);
 
     printf("[ConnectedStorage] User storage initialized at %S\n", storagePath.c_str());
 }
