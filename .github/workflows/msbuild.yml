@@ -32,6 +32,18 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Install 7zip
+      run: choco install 7zip --no-progress
+
+    - name: Download proprietary files
+      run: |
+        curl -L -o External.zip ${{ secrets.EXTERNALS_LINK }}
+      env:
+        EXTERNALS_LINK: ${{ secrets.EXTERNALS_LINK }}
+
+    - name: Unzip proprietary files
+      run: 7z x External.zip -odlls/winrt_x/External
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
