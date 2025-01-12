@@ -8,6 +8,13 @@
 
 // QueryInterface need to be in the cpp file because of circular dependency for IDXGIDeviceWrapper :}
 
+#define TEXTURE_MISCFLAGS_MASK (D3D11_RESOURCE_MISC_GENERATE_MIPS | D3D11_RESOURCE_MISC_SHARED | D3D11_RESOURCE_MISC_TEXTURECUBE | \
+								D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS | D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS | D3D11_RESOURCE_MISC_BUFFER_STRUCTURED | \
+								D3D11_RESOURCE_MISC_RESOURCE_CLAMP | D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX | D3D11_RESOURCE_MISC_GDI_COMPATIBLE | \
+								D3D11_RESOURCE_MISC_SHARED_NTHANDLE | D3D11_RESOURCE_MISC_RESTRICTED_CONTENT | D3D11_RESOURCE_MISC_RESTRICT_SHARED_RESOURCE | \
+								D3D11_RESOURCE_MISC_RESTRICT_SHARED_RESOURCE_DRIVER | D3D11_RESOURCE_MISC_GUARDED | \
+								D3D11_RESOURCE_MISC_TILED | D3D11_RESOURCE_MISC_HW_PROTECTED | D3D11_RESOURCE_MISC_SHARED_DISPLAYABLE | D3D11_RESOURCE_MISC_SHARED_EXCLUSIVE_WRITER)
+
 #define ERROR_LOG_FUNC() if(FAILED(hr)) { printf("[%s] hresult fail 0x%X\n", __func__, hr); }
 #define ERROR_LOG_HRES(res) printf("[%s] hresult fail 0x%X\n", __func__, res);
 
@@ -59,11 +66,13 @@ HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture1D(
 }
 
 HRESULT d3d11x::D3D11DeviceXWrapperX::CreateTexture2D(
-            const D3D11_TEXTURE2D_DESC* pDesc,
+			D3D11_TEXTURE2D_DESC* pDesc,
             const D3D11_SUBRESOURCE_DATA* pInitialData,
             ID3D11Texture2D_X** ppTexture2D) {
 
     ID3D11Texture2D* texture2d = nullptr;
+	pDesc->MiscFlags &= TEXTURE_MISCFLAGS_MASK; // remove all flags that are xbox-one only flags
+
     HRESULT hr = m_realDevice->CreateTexture2D(pDesc, pInitialData, &texture2d);
 
     printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);

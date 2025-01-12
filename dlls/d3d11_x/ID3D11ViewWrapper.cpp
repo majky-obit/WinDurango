@@ -197,7 +197,11 @@ namespace d3d11x
         printf("[ID3D11ShaderResourceViewWrapper] --> Release\n");
         ULONG refCount = InterlockedDecrement(&m_RefCount);
         if (refCount == 0)
+        {
+			m_realTarget->Release( );
             delete this;
+        }
+            
         return refCount;
     }
 

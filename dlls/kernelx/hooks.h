@@ -5,6 +5,8 @@
 #include "CoreApplicationWrapperX.h"
 #include <windows.applicationmodel.core.h>
 
+#include "CurrentAppWrapper.hpp"
+
 /* This function is used to compare the class name of the classId with the classIdName. */
 inline bool IsClassName(HSTRING classId, const char* classIdName)
 {
@@ -27,6 +29,9 @@ typedef HRESULT(*DllGetActivationFactoryFunc) (HSTRING, IActivationFactory**);
 DllGetActivationFactoryFunc pDllGetActivationFactory = nullptr;
 /* Function pointers for the WinRT RoGetActivationFactory function. */
 HRESULT(WINAPI* TrueRoGetActivationFactory)(HSTRING classId, REFIID iid, void** factory) = RoGetActivationFactory;
+
+HRESULT(WINAPI* TrueActivateInstance)(IActivationFactory* thisptr, IInspectable** instance) = nullptr;
+
 
 /* Function pointers for filesystem APIs */
 HFILE(WINAPI* TrueOpenFile)(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle) = OpenFile;
@@ -163,6 +168,17 @@ HRESULT STDMETHODCALLTYPE GetForCurrentThread_Hook(ICoreWindowStatic* pThis, Cor
 	return hr;
 }
 
+template <typename T>
+inline T get_method(void* table_base, std::uintptr_t index) {
+	return (T)((*reinterpret_cast<std::uintptr_t**>(table_base))[index]);
+}
+
+HRESULT STDMETHODCALLTYPE CurrentAppActivateInstance_Hook(IActivationFactory* thisptr, IInspectable** instance)
+{
+	HRESULT hr = TrueActivateInstance(thisptr, instance);
+	*instance = reinterpret_cast<IInspectable*>(new CurrentAppWrapperX(reinterpret_cast<Store::ICurrentApp*>(*instance)));
+	return hr;
+}
 
 /* Hook for the WinRT RoGetActivationFactory function. */
 inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, void** factory)
@@ -170,13 +186,24 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 	// Get the raw buffer from the HSTRING
 	const wchar_t* rawString = WindowsGetStringRawBuffer(classId, nullptr);
 
-	if (rawString) {
-		// Print the string using wprintf
-		if (!wcscmp(rawString, L"Windows.ApplicationModel.Core.CoreApplication")) {
-			wprintf(L"%ls\n", rawString);
-		}
-	}
+	//wprintf(L"%ls\n", rawString);
 	auto hr = 0;
+
+	if (IsClassName(classId, "Windows.ApplicationModel.Store.CurrentApp"))
+	{
+		hr = TrueRoGetActivationFactory(classId, iid, factory);
+		if (FAILED(hr))
+			return hr;
+
+		//TrueActivateInstance = get_method<decltype(TrueActivateInstance)>(*factory, 6);
+
+		//DetourTransactionBegin();
+		//DetourUpdateThread(GetCurrentThread());
+		//DetourAttach(&TrueActivateInstance, CurrentAppActivateInstance_Hook);
+		//DetourTransactionCommit();
+
+		return hr;
+	}
 
 	if (IsClassName(classId, "Windows.ApplicationModel.Core.CoreApplication"))
 	{
@@ -234,7 +261,6 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 		if (!pDllGetActivationFactory)
 			return hr;
 	}
-
 
 	// fallback
 	ComPtr<IActivationFactory> fallbackFactory;

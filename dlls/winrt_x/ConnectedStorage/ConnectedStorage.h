@@ -7,17 +7,21 @@ namespace WinDurango::impl
 	class ConnectedStorage
 	{
 	public:
-		void InitializeStorage( );
-		void CreateContainer(const wchar_t* name);
-		winrt::Windows::Foundation::IAsyncAction Read(winrt::hstring containerName, winrt::Windows::Foundation::Collections::IMapView<winrt::hstring, winrt::Windows::Storage::Streams::IBuffer> data);
-		winrt::Windows::Foundation::IAsyncAction Upload(winrt::hstring containerName, winrt::Windows::Foundation::Collections::IMapView<winrt::hstring, winrt::Windows::Storage::Streams::IBuffer> blobsToWrite, winrt::Windows::Foundation::Collections::IIterable<winrt::hstring> blobsToDelete);
+		winrt::Windows::Foundation::IAsyncAction InitializeStorage( );
+		winrt::Windows::Foundation::IAsyncAction CreateContainer(winrt::hstring name) const;
+		winrt::Windows::Foundation::IAsyncAction Read(winrt::hstring containerName, winrt::Windows::Foundation::Collections::IMapView<winrt::hstring, winrt::Windows::Storage::Streams::IBuffer> data) const;
+		winrt::Windows::Foundation::IAsyncAction Upload(winrt::hstring containerName, winrt::Windows::Foundation::Collections::IMapView<winrt::hstring, winrt::Windows::Storage::Streams::IBuffer> blobsToWrite, winrt::Windows::Foundation::Collections::IIterable<winrt::hstring> blobsToDelete) const;
 		
 	private:
 		static winrt::hstring ObtainPackageName( );
+		static winrt::Windows::Foundation::IAsyncOperation<bool> DoesFolderExist(winrt::hstring path);
+		static winrt::Windows::Foundation::IAsyncOperation<bool> DoesFileExist(winrt::Windows::Storage::StorageFolder folder, winrt::hstring path);
 		winrt::Windows::Foundation::IAsyncAction CreateDirectories(const wchar_t* storageType);
 
 		winrt::hstring storagePath;
 	};
 
 	inline ConnectedStorage* s_userStorage;
+	inline HANDLE h_ContainerWriteEvent;
+	inline winrt::hstring h_DesiredContainerName;
 }

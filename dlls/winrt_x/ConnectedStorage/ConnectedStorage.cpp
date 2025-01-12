@@ -6,28 +6,29 @@
 #include <winrt/Windows.ApplicationModel.h>
 #include <robuffer.h>
 
-void WinDurango::impl::ConnectedStorage::CreateContainer(const wchar_t* name)
+winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::CreateContainer(winrt::hstring name) const
 {
-    printf("[ConnectedStorage] Container %S requested creation\n", name);
-    const wchar_t* folderName = _wcsdup(name);
+    printf("[ConnectedStorage] Container %S requested creation\n", name.c_str());
 
-	try
-	{
-		auto folder = winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(storagePath + L"\\" + name).get();
-	}
-	catch (...)
-	{
-		auto folder = winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(storagePath).get( );
-		folder.CreateFolderAsync(folderName).get( );
-	}
+    if (!co_await DoesFolderExist(storagePath + L"\\" + name))
+    {
+        auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(storagePath);
+        co_await folder.CreateFolderAsync(name);
+    }
 
-	printf("[ConnectedStorage] Container %S created\n", folderName);
+	printf("[ConnectedStorage] Container %S created\n", name.c_str());
 }
 
 winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::Read(
-    winrt::hstring containerName, winrt::Windows::Foundation::Collections::IMapView<winrt::hstring, winrt::Windows::Storage::Streams::IBuffer> data)
+    winrt::hstring containerName, winrt::Windows::Foundation::Collections::IMapView<winrt::hstring, winrt::Windows::Storage::Streams::IBuffer> data) const
 {
+    if (!co_await DoesFolderExist(storagePath + L"\\" + containerName)) {
+        co_await CreateContainer(containerName);
+        //printf("[ConnectedStorage] Container %S created\n", containerName.c_str( ));
+    }
+
     auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(storagePath + L"\\" + containerName);
+
     for (auto const& pair : data)
     {
         auto fileName = pair.Key();
@@ -47,8 +48,13 @@ winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::Rea
 winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::Upload(
     winrt::hstring containerName,
     winrt::Windows::Foundation::Collections::IMapView<winrt::hstring, winrt::Windows::Storage::Streams::IBuffer> blobsToWrite,
-    winrt::Windows::Foundation::Collections::IIterable<winrt::hstring> blobsToDelete)
+    winrt::Windows::Foundation::Collections::IIterable<winrt::hstring> blobsToDelete) const
 {
+    if (!co_await DoesFolderExist(storagePath + L"\\" + containerName)) {
+        co_await CreateContainer(containerName);
+        //printf("[ConnectedStorage] Container %S created\n", containerName.c_str( ));
+    }
+
     auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(storagePath + L"\\" + containerName);
     
     for (auto const& pair : blobsToWrite)
@@ -71,45 +77,65 @@ winrt::hstring WinDurango::impl::ConnectedStorage::ObtainPackageName()
     return winrt::Windows::ApplicationModel::Package::Current( ).Id( ).FamilyName( );
 }
 
+winrt::Windows::Foundation::IAsyncOperation<bool> WinDurango::impl::ConnectedStorage::DoesFolderExist(
+	winrt::hstring path)
+{
+    try
+    {
+        co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(path);
+    }
+    catch (...)
+    {
+        co_return false;
+    }
+
+    co_return true;
+}
+
+winrt::Windows::Foundation::IAsyncOperation<bool> WinDurango::impl::ConnectedStorage::DoesFileExist(
+	winrt::Windows::Storage::StorageFolder folder, winrt::hstring path)
+{
+	try
+	{
+		co_await folder.GetFileAsync(path);
+		co_return true;
+	}
+	catch (...)
+	{
+		co_return false;
+	}
+}
+
 winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::CreateDirectories(const wchar_t* storageType)
 {
     co_await winrt::resume_background( );
 
     winrt::hstring packageName = ObtainPackageName( );
-    if (packageName.empty( ))
-    {
+    if (packageName.empty( )) {
         co_return;
     }
 
     winrt::hstring folderPath = winrt::Windows::Storage::ApplicationData::Current( ).LocalFolder( ).Path( ) + L"\\WinDurango";
 
-    try
-    {
-        auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(folderPath);
-    }
-    catch (...)
-    {
-        auto folder = winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(winrt::Windows::Storage::ApplicationData::Current( ).LocalFolder( ).Path( )).get();
-    	folder.CreateFolderAsync(L"WinDurango").get();
+    if (!co_await DoesFolderExist(folderPath)) {
+        auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(winrt::Windows::Storage::ApplicationData::Current( ).LocalFolder( ).Path( ));
+        co_await folder.CreateFolderAsync(L"WinDurango");
     }
 
     folderPath = folderPath + L"\\" + storageType;
 
-    try
+    if (!co_await DoesFolderExist(folderPath))
     {
-        auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(folderPath);
-    }
-    catch (...)
-    {
-        auto folder = winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(winrt::Windows::Storage::ApplicationData::Current( ).LocalFolder( ).Path( ) + L"\\WinDurango").get( );
-    	folder.CreateFolderAsync(storageType).get();
+        auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(winrt::Windows::Storage::ApplicationData::Current( ).LocalFolder( ).Path( ) + L"\\WinDurango");
+        co_await folder.CreateFolderAsync(storageType);
     }
 
 	storagePath = folderPath;
 }
 
-void WinDurango::impl::ConnectedStorage::InitializeStorage()
+winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::InitializeStorage()
 {
-    CreateDirectories(L"UserStorage").get();
+	co_await CreateDirectories(L"UserStorage");
+
     printf("[ConnectedStorage] User storage initialized at %S\n", storagePath.c_str());
 }

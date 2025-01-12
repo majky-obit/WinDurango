@@ -2,7 +2,7 @@
 #include <windows.applicationmodel.store.h>
 
 MIDL_INTERFACE("d52dc065-da3f-4685-995e-9b482eb5e603")
-	ICurrentAppX : public IInspectable
+	ICurrentAppX : IInspectable
 {
 public:
 	virtual HRESULT STDMETHODCALLTYPE get_LicenseInformation(
@@ -36,7 +36,7 @@ public:
 };
 
 MIDL_INTERFACE("8eb7dc30-f170-4ed5-8e21-1516da3fd367")
-ILicenseInformationX : public IInspectable
+ILicenseInformationX : IInspectable
 {
 public:
 	virtual HRESULT STDMETHODCALLTYPE get_ProductLicenses(
@@ -97,21 +97,13 @@ public:
 //	) override;
 //};
 
-class CurrentAppWrapperX : public RuntimeClass<IActivationFactory, ICurrentAppX>
+class CurrentAppWrapperX : ICurrentAppX
 {
 public:
-	CurrentAppWrapperX(ComPtr<IActivationFactory> realFactory)
-		: m_realFactory(realFactory)
+	CurrentAppWrapperX(ABI::Windows::ApplicationModel::Store::ICurrentApp* realApp)
+		: m_realCurrentApp(realApp)
 	{
-		HRESULT hr = m_realFactory.As(&m_realCurrentApp);
-		if (FAILED(hr)) {
-			return;
-		}
-	}
-
-	HRESULT STDMETHODCALLTYPE ActivateInstance(__RPC__deref_out_opt IInspectable** instance) override
-	{
-		return m_realFactory->ActivateInstance(instance);
+		m_RefCount++;
 	}
 	
 	HRESULT QueryInterface(REFIID riid, void** ppvObject) override;
@@ -160,6 +152,5 @@ public:
 
 private:
 	long m_RefCount = 1;
-	ComPtr<IActivationFactory> m_realFactory;
-	ComPtr<ABI::Windows::ApplicationModel::Store::ICurrentApp> m_realCurrentApp;
+	ABI::Windows::ApplicationModel::Store::ICurrentApp* m_realCurrentApp;
 };

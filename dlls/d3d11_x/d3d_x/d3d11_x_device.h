@@ -149,7 +149,7 @@ namespace d3d11x
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels* pDesc->ArraySize)) const D3D11_SUBRESOURCE_DATA* pInitialData,
 			_Out_opt_ ID3D11Texture1D_X** ppTexture1D) = 0;
 
-		virtual HRESULT CreateTexture2D(_In_ const D3D11_TEXTURE2D_DESC* pDesc,
+		virtual HRESULT CreateTexture2D(_In_ D3D11_TEXTURE2D_DESC* pDesc,
 			_In_reads_opt_(_Inexpressible_(pDesc->MipLevels* pDesc->ArraySize)) const D3D11_SUBRESOURCE_DATA* pInitialData,
 			_Out_opt_ ID3D11Texture2D_X** ppTexture2D) = 0;
 
@@ -465,7 +465,7 @@ namespace d3d11x
 			ID3D11Texture1D_X** ppTexture1D) override;
 
 		HRESULT CreateTexture2D(
-			const D3D11_TEXTURE2D_DESC* pDesc,
+			D3D11_TEXTURE2D_DESC* pDesc,
 			const D3D11_SUBRESOURCE_DATA* pInitialData,
 			ID3D11Texture2D_X** ppTexture2D) override;
 

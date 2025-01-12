@@ -416,9 +416,9 @@ namespace d3d11x
 			_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,
 			_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers)
 		{
-			if (ppConstantBuffers != NULL)
+			if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
 			{
-				ID3D11Buffer** modifiedBuffers = new ID3D11Buffer*[NumBuffers];
+				ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
 				for (UINT i = 0; i < NumBuffers; ++i)
 				{
 					modifiedBuffers[i] = reinterpret_cast<ID3D11BufferWrapper*>(ppConstantBuffers[i])->m_realBuffer;
@@ -440,7 +440,7 @@ namespace d3d11x
 
 			if (ppShaderResourceViews != NULL)
 			{
-				ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView*[NumViews]{0};
+				ID3D11ShaderResourceView* modifiedViews[ D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT ];
 
 				for (UINT i = 0; i < NumViews; i++)
 				{
@@ -559,7 +559,7 @@ namespace d3d11x
 			_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,
 			_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers)
 		{
-			if (ppConstantBuffers != NULL)
+			if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
 			{
 				ID3D11Buffer** modifiedBuffers = new ID3D11Buffer*[NumBuffers];
 				for (UINT i = 0; i < NumBuffers; ++i)
@@ -588,9 +588,12 @@ namespace d3d11x
 			_In_reads_opt_(NumBuffers) const UINT* pStrides,
 			_In_reads_opt_(NumBuffers) const UINT* pOffsets)
 		{
+			if (NumBuffers > D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - StartSlot)
+				assert("Too many vertex buffers");
+
 			if (ppVertexBuffers != NULL)
 			{
-				ID3D11Buffer** modifiedBuffers = new ID3D11Buffer*[NumBuffers]{0};
+				ID3D11Buffer* modifiedBuffers[ D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT ];
 				for (UINT i = 0; i < NumBuffers; i++)
 				{
 					if (ppVertexBuffers[i] == nullptr)
@@ -661,7 +664,7 @@ namespace d3d11x
 			_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,
 			_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers)
 		{
-			if (ppConstantBuffers != NULL)
+			if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
 			{
 				ID3D11Buffer** modifiedBuffers = new ID3D11Buffer*[NumBuffers];
 				for (UINT i = 0; i < NumBuffers; ++i)
@@ -1091,7 +1094,7 @@ namespace d3d11x
 			_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,
 			_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers)
 		{
-			if (ppConstantBuffers != NULL)
+			if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
 			{
 				ID3D11Buffer** modifiedBuffers = new ID3D11Buffer*[NumBuffers];
 				for (UINT i = 0; i < NumBuffers; ++i)
@@ -1159,7 +1162,7 @@ namespace d3d11x
 			_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,
 			_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers)
 		{
-			if (ppConstantBuffers != NULL)
+			if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
 			{
 				ID3D11Buffer** modifiedBuffers = new ID3D11Buffer*[NumBuffers];
 				for (UINT i = 0; i < NumBuffers; ++i)
@@ -1237,7 +1240,7 @@ namespace d3d11x
 			_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,
 			_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers)
 		{
-			if (ppConstantBuffers != NULL)
+			if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
 			{
 				ID3D11Buffer** modifiedBuffers = new ID3D11Buffer*[NumBuffers];
 				for (UINT i = 0; i < NumBuffers; ++i)

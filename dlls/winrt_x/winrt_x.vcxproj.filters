@@ -439,6 +439,7 @@
     </ClCompile>
     <ClCompile Include="Implementation\Windows.Xbox.ApplicationModel.Store.ProductPurchasedEventArgs.cpp" />
     <ClCompile Include="ConnectedStorage\ConnectedStorage.cpp" />
+    <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

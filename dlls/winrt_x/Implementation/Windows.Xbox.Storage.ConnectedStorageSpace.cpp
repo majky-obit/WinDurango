@@ -30,66 +30,48 @@ namespace winrt::Windows::Xbox::Storage::implementation
 {
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForUserAsync(winrt::Windows::Xbox::System::User user)
     {
-        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr))
-        {
+        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             auto storageClass = winrt::make<implementation::ConnectedStorageSpace>( );
-            WinDurango::impl::s_userStorage = new WinDurango::impl::ConnectedStorage( );
-			WinDurango::impl::s_userStorage->InitializeStorage( );
         }
 
 		co_return userStorageSpace;
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForUserAsync(winrt::Windows::Xbox::System::User user, hstring serviceConfigurationId)
     {
-        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr))
-        {
+        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( );
-            WinDurango::impl::s_userStorage = new WinDurango::impl::ConnectedStorage( );
-            WinDurango::impl::s_userStorage->InitializeStorage( );
         }
 
         co_return userStorageSpace;
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForMachineAsync()
     {
-        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr))
-        {
+        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( );
-            WinDurango::impl::s_userStorage = new WinDurango::impl::ConnectedStorage( );
-            WinDurango::impl::s_userStorage->InitializeStorage( );
         }
 
         co_return userStorageSpace;
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForMachineAsync(hstring serviceConfigurationId)
     {
-        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr))
-        {
+        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( );
-            WinDurango::impl::s_userStorage = new WinDurango::impl::ConnectedStorage( );
-            WinDurango::impl::s_userStorage->InitializeStorage( );
         }
 
         co_return userStorageSpace;
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetSyncOnDemandForUserAsync(winrt::Windows::Xbox::System::User user)
     {
-        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr))
-        {
+        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( );
-            WinDurango::impl::s_userStorage = new WinDurango::impl::ConnectedStorage( );
-            WinDurango::impl::s_userStorage->InitializeStorage( );
         }
 
         co_return userStorageSpace;
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetSyncOnDemandForUserAsync(winrt::Windows::Xbox::System::User user, hstring serviceConfigurationId)
     {
-        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr))
-        {
+        if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( );
-            WinDurango::impl::s_userStorage = new WinDurango::impl::ConnectedStorage( );
-            WinDurango::impl::s_userStorage->InitializeStorage( );
         }
 
         co_return userStorageSpace;
@@ -114,7 +96,8 @@ namespace winrt::Windows::Xbox::Storage::implementation
         if (staticContainer == Storage::ConnectedStorageContainer(nullptr))
             staticContainer = winrt::make<ConnectedStorageContainer>( containerName );
 
-    	WinDurango::impl::s_userStorage->CreateContainer(containerName.c_str( ));
+		WinDurango::impl::h_DesiredContainerName = containerName;
+		SetEvent(WinDurango::impl::h_ContainerWriteEvent);
 		return staticContainer;
     }
 
