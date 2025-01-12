@@ -25,11 +25,17 @@ namespace winrt::Windows::Xbox::Storage::implementation
     struct ContainerInfoQueryResult : ContainerInfoQueryResultT<ContainerInfoQueryResult>
     {
         ContainerInfoQueryResult() = default;
+        ContainerInfoQueryResult(hstring containerNamePrefix) {
+            this->containerNamePrefix = containerNamePrefix;
+        }
+
 
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo>> GetContainerInfoAsync(uint32_t startIndex, uint32_t maxNumberOfItems);
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo>> GetContainerInfoAsync();
         winrt::Windows::Foundation::IAsyncOperation<uint32_t> GetItemCountAsync();
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo2>> GetContainerInfo2Async(uint32_t startIndex, uint32_t maxNumberOfItems);
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo2>> GetContainerInfo2Async();
+    private:
+        hstring containerNamePrefix;
     };
 }
