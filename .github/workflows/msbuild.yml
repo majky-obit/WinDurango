@@ -60,11 +60,11 @@ jobs:
       run: msbuild /m /p:Configuration=Debug /property:Platform=x64 ${{env.SOLUTION_FILE_PATH}}
       
     - name: Create zip of build artifacts
-      run: ls
+      run: 7z a -tzip WinDurango-DEBUG.zip /x64/Debug/*.dll /x64/Debug/*.pdb
       # run: 7z a -tzip ${{env.GITHUB_WORKSPACE}}/x64/Debug/WinDurango-DEBUG.zip ${{env.GITHUB_WORKSPACE}}/x64/Debug/*.dll ${{env.GITHUB_WORKSPACE}}/x64/Debug/*.pdb
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: BuildArtifacts
-        path: ${{env.GITHUB_WORKSPACE}}/x64/Debug/WinDurango-DEBUG.zip
+        path: WinDurango-DEBUG.zip
