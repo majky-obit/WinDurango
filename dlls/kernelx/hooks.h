@@ -170,12 +170,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 	// Get the raw buffer from the HSTRING
 	const wchar_t* rawString = WindowsGetStringRawBuffer(classId, nullptr);
 
-	if (rawString) {
-		// Print the string using wprintf
-		if (!wcscmp(rawString, L"Windows.ApplicationModel.Core.CoreApplication")) {
-			wprintf(L"%ls\n", rawString);
-		}
-	}
+	wprintf(L"%ls\n", rawString);
 	auto hr = 0;
 
 	if (IsClassName(classId, "Windows.ApplicationModel.Core.CoreApplication"))
