@@ -29,7 +29,7 @@ ULONG d3d11x::ID3D11BufferWrapper::AddRef( )
 
 ULONG d3d11x::ID3D11BufferWrapper::Release( )
 {
-    printf("[ID3D11BufferWrapper] --> Release\n");
+    //printf("[ID3D11BufferWrapper] --> Release\n");
     ULONG refCount = InterlockedDecrement(&m_RefCount);
     if (refCount == 0)
         delete this;

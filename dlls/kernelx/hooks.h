@@ -134,7 +134,9 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	if (rawString) {
 		// Print the string using wprintf
-		wprintf(L"%ls\n", rawString);
+		if (!wcscmp(rawString, L"Windows.ApplicationModel.Core.CoreApplication")) {
+			wprintf(L"%ls\n", rawString);
+		}
 	}
 	auto hr = 0;
 
