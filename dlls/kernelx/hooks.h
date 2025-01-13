@@ -235,17 +235,6 @@ inline T GetVTableMethod(void* table_base, std::uintptr_t index) {
 	return (T)((*reinterpret_cast<std::uintptr_t**>(table_base))[index]);
 }
 
-HRESULT STDMETHODCALLTYPE GetLicenseInformation_Hook(
-	ABI::Windows::ApplicationModel::Store::ILicenseInformation** value
-)
-{
-	HRESULT hr = TrueGetLicenseInformation(value);
-	if (FAILED(hr))
-		return hr;
-	*value = reinterpret_cast<Store::ILicenseInformation*>(new LicenseInformationWrapperX(*value));
-	return hr;
-}
-
 HRESULT STDMETHODCALLTYPE CurrentAppActivateInstance_Hook(IActivationFactory* thisptr, IInspectable** instance)
 {
 	HRESULT hr = TrueActivateInstance(thisptr, instance);
