@@ -36,6 +36,8 @@ namespace winrt::Windows::Xbox::Storage::implementation
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::BlobInfo>> BlobInfoQueryResult::GetBlobInfoAsync()
     {
         winrt::Windows::Foundation::Collections::IVector<winrt::Windows::Xbox::Storage::BlobInfo> blobInfoVector = winrt::single_threaded_vector<winrt::Windows::Xbox::Storage::BlobInfo>( );
+        hstring s_prefix = prefix;
+
         hstring storagePath = winrt::Windows::Storage::ApplicationData::Current( ).LocalFolder( ).Path( ) + L"\\WinDurango\\UserStorage\\" + parentName;
         auto storageFolder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(storagePath);
         auto files = co_await storageFolder.GetFilesAsync( );
@@ -44,11 +46,9 @@ namespace winrt::Windows::Xbox::Storage::implementation
 
         for (auto file : files) {
             // @Bagieta: if you know better way of checking this feel free to change this
-            if (wcscmp(prefix.c_str( ), L"prefixIsEmpty")) {
-                std::wstring_view str_view{ file.Name( ).c_str( ) };
-                if (!str_view._Starts_with(prefix.c_str( )))
-                    continue;
-            }
+            std::wstring_view str_view{ file.Name( ) };
+            if (!str_view._Starts_with(s_prefix))
+                continue;
 
             auto folderProperties = co_await file.GetBasicPropertiesAsync( );
 
