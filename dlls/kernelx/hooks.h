@@ -46,12 +46,13 @@ HANDLE(WINAPI* TrueFindFirstFileW)(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFind
 BOOL(WINAPI* TrueDeleteFileW)(LPCWSTR lpFileName) = DeleteFileW;
 
 HMODULE(WINAPI* TrueLoadLibraryExW)(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD dwFlags) = LoadLibraryExW;
-HMODULE(WINAPI* TrueLoadLibraryExA)(_In_ LPCSTR lpLibFileName, _Reserved_ HANDLE hFile, _In_ DWORD dwFlags) = LoadLibraryExA;
+HRESULT(STDMETHODCALLTYPE* TrueGetLicenseInformation)(
+	ABI::Windows::ApplicationModel::Store::ILicenseInformation** value
+) = nullptr;
 
-HMODULE(WINAPI* TrueLoadLibraryW)(_In_ LPCWSTR lpLibFileName) = LoadLibraryW;
-HMODULE WINAPI LoadLibraryExW_Hook(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dwFlags)
+HMODULE WINAPI LoadLibraryExW_X(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dwFlags)
 {
-
+	printf("LoadLibraryExW_X: %S\n", lpLibFileName);
 	if (wcscmp(lpLibFileName, L"xaudio2_9.dll") == 0 ||
 		wcscmp(lpLibFileName, L"xaudio2_9d.dll") == 0)
 	{
@@ -77,12 +78,12 @@ HMODULE WINAPI LoadLibraryExW_Hook(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD  
 			!(wcscmp(callerfileName, L"xaudio2_9_x.dll") == 0))
 		{
 			LPCWSTR proxyXAudioModule = L"xaudio2_9_x.dll";
-			return TrueLoadLibraryExW(proxyXAudioModule, hFile, dwFlags);
+			return LoadLibraryExW(proxyXAudioModule, hFile, dwFlags);
 		}
 	}
 
 
-	return TrueLoadLibraryExW(lpLibFileName, hFile, dwFlags);
+	return LoadLibraryExW(lpLibFileName, hFile, dwFlags);
 }
 
 
@@ -223,24 +224,24 @@ HRESULT STDMETHODCALLTYPE GetForCurrentThread_Hook(ICoreWindowStatic* pThis, Cor
 	if (*ppWindow == NULL)
 		return hr;
 
-
-
 	if (IsXboxCallee())
 		*reinterpret_cast<ICoreWindowX**>(ppWindow) = new CoreWindowWrapperX(*ppWindow);
-
 
 	return hr;
 }
 
 template <typename T>
-inline T get_method(void* table_base, std::uintptr_t index) {
+inline T GetVTableMethod(void* table_base, std::uintptr_t index) {
 	return (T)((*reinterpret_cast<std::uintptr_t**>(table_base))[index]);
 }
 
 HRESULT STDMETHODCALLTYPE CurrentAppActivateInstance_Hook(IActivationFactory* thisptr, IInspectable** instance)
 {
 	HRESULT hr = TrueActivateInstance(thisptr, instance);
-	*instance = reinterpret_cast<IInspectable*>(new CurrentAppWrapperX(reinterpret_cast<Store::ICurrentApp*>(*instance)));
+	if (FAILED(hr))
+		return hr;
+
+	*instance = reinterpret_cast<Store::ILicenseInformation*>(new LicenseInformationWrapperX(reinterpret_cast<Store::ILicenseInformation*>(*instance)));
 	return hr;
 }
 
@@ -253,21 +254,21 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 	//wprintf(L"%ls\n", rawString);
 		auto hr = 0;
 
-		if (IsClassName(classId, "Windows.ApplicationModel.Store.CurrentApp"))
-		{
-			hr = TrueRoGetActivationFactory(classId, iid, factory);
-			if (FAILED(hr))
-				return hr;
+	if (IsClassName(classId, "Windows.ApplicationModel.Store.CurrentApp"))
+	{
+		hr = TrueRoGetActivationFactory(classId, iid, factory);
 
-			//TrueActivateInstance = get_method<decltype(TrueActivateInstance)>(*factory, 6);
-
-			//DetourTransactionBegin();
-			//DetourUpdateThread(GetCurrentThread());
-			//DetourAttach(&TrueActivateInstance, CurrentAppActivateInstance_Hook);
-			//DetourTransactionCommit();
-
+		if (FAILED(hr))
 			return hr;
-		}
+
+		// @unixian: is there a better way to do this? it works, but we never know if the vtable will change (microsoft please don't make breaking ABI changes)
+		TrueActivateInstance = GetVTableMethod<decltype(TrueActivateInstance)>(*factory, 6);
+
+		DetourTransactionBegin();
+		DetourUpdateThread(GetCurrentThread());
+		DetourAttach(&TrueActivateInstance, CurrentAppActivateInstance_Hook);
+		DetourTransactionCommit();
+	}
 
 		if (IsClassName(classId, "Windows.ApplicationModel.Core.CoreApplication"))
 		{
@@ -333,7 +334,5 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 		if (SUCCEEDED(hr))
 			return fallbackFactory.CopyTo(iid, factory);
 
-		return TrueRoGetActivationFactory(classId, iid, factory);
-
-		return hr;
-	}
+	return TrueRoGetActivationFactory(classId, iid, factory);
+}

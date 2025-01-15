@@ -1,9 +1,35 @@
 #include "pch.h"
+
+#include <chrono>
+#include <thread>
+
 #include "IDXGIWrappers.h"
 #include "ID3DWrappers.h"
+#include "overlay/overlay.h"
 
 namespace d3d11x
 {
+	// s/o to stackoverflow
+    template<std::intmax_t FPS>
+    class frame_rater {
+    public:
+        frame_rater( ) :
+            time_between_frames{ 1 },
+            tp{ std::chrono::steady_clock::now( ) }
+        {
+        }
+
+        void sleep( ) {
+            tp += time_between_frames;
+            std::this_thread::sleep_until(tp);
+        }
+
+    private:
+        std::chrono::duration<double, std::ratio<1, FPS>> time_between_frames;
+        std::chrono::time_point<std::chrono::steady_clock, decltype(time_between_frames)> tp;
+    };
+
+	inline frame_rater<60> fps60 = {};
 
     HRESULT IDXGISwapChainWrapper::QueryInterface(REFIID riid, void** ppvObject)
     {
@@ -68,6 +94,7 @@ namespace d3d11x
 
     HRESULT __stdcall IDXGISwapChainWrapper::Present(UINT SyncInterval, UINT Flags)
     {
+        WinDurango::g_Overlay->Present( );
         return m_realSwapchain->Present(SyncInterval, Flags);
     }
 
@@ -148,6 +175,13 @@ namespace d3d11x
 
     HRESULT __stdcall IDXGISwapChainWrapper::Present1(UINT SyncInterval, UINT PresentFlags, const DXGI_PRESENT_PARAMETERS* pPresentParameters)
     {
+		WinDurango::g_Overlay->Present( );
+
+        if (pPresentParameters == nullptr) {
+            //fps60.sleep( );
+            return m_realSwapchain->Present(SyncInterval, PresentFlags);
+        }
+
         return m_realSwapchain->Present1(SyncInterval, PresentFlags, pPresentParameters);
     }
 

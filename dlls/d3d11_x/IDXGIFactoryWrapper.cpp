@@ -3,6 +3,13 @@
 #include "ID3DWrappers.h"
 #include <windows.ui.core.h>
 #include "../kernelx/CoreWindowWrapperX.h"
+#include "overlay/overlay.h"
+
+#define DXGI_SWAPCHAIN_FLAG_MASK DXGI_SWAP_CHAIN_FLAG_NONPREROTATED | DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE \
+		| DXGI_SWAP_CHAIN_FLAG_RESTRICTED_CONTENT | DXGI_SWAP_CHAIN_FLAG_RESTRICT_SHARED_RESOURCE_DRIVER | DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY | DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT \
+		| DXGI_SWAP_CHAIN_FLAG_FOREGROUND_LAYER | DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO | DXGI_SWAP_CHAIN_FLAG_YUV_VIDEO \
+		| DXGI_SWAP_CHAIN_FLAG_HW_PROTECTED | DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING \
+		| DXGI_SWAP_CHAIN_FLAG_RESTRICTED_TO_ALL_HOLOGRAPHIC_DISPLAYS 
 
 namespace d3d11x
 {
@@ -114,12 +121,46 @@ namespace d3d11x
 		return m_realFactory->CreateSwapChainForHwnd(reinterpret_cast<IUnknown*>(pDevice), hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
 	}
 
-	HRESULT __stdcall IDXGIFactoryWrapper::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice, IUnknown* pWindow, const DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1_X** ppSwapChain)
+	HRESULT __stdcall IDXGIFactoryWrapper::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice, IUnknown* pWindow, DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1_X** ppSwapChain)
 	{
 		IDXGISwapChain1* swap = nullptr;
-		HRESULT hr = m_realFactory->CreateSwapChainForCoreWindow(reinterpret_cast<IUnknown*>(pDevice), reinterpret_cast<CoreWindowWrapperX*>(pWindow)->m_realWindow, pDesc, pRestrictToOutput, &swap);
+		HRESULT hr;
+		pDesc->Flags &= DXGI_SWAPCHAIN_FLAG_MASK;
+		pDesc->Scaling = DXGI_SCALING_ASPECT_RATIO_STRETCH;
 
-		*ppSwapChain = new IDXGISwapChainWrapper(swap);
+		if (pWindow == nullptr)
+		{
+			ComPtr<ICoreWindowStatic> coreWindowStatic;
+			RoGetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get( ), IID_PPV_ARGS(&coreWindowStatic));
+
+			ComPtr<ICoreWindow> coreWindow;
+			coreWindowStatic->GetForCurrentThread(&coreWindow);
+
+			pWindow = coreWindow.Get( );
+
+			hr = m_realFactory->CreateSwapChainForCoreWindow(reinterpret_cast<IUnknown*>(pDevice), pWindow, pDesc, pRestrictToOutput, &swap);
+
+			*ppSwapChain = new IDXGISwapChainWrapper(swap);
+		}
+		else
+		{
+			hr = m_realFactory->CreateSwapChainForCoreWindow(reinterpret_cast<IUnknown*>(pDevice), reinterpret_cast<CoreWindowWrapperX*>(pWindow)->m_realWindow, pDesc, pRestrictToOutput, &swap);
+			*ppSwapChain = new IDXGISwapChainWrapper(swap);
+		}
+
+		if (WinDurango::g_Overlay == nullptr)
+		{
+			::ID3D11Device2* device;
+			pDevice->QueryInterface(__uuidof(ID3D11Device), reinterpret_cast<void**>(&device));
+			device = reinterpret_cast<d3d11x::D3D11DeviceXWrapperX*>(device)->m_realDevice;
+
+			::ID3D11DeviceContext* ctx{};
+			device->GetImmediateContext(&ctx);
+
+			WinDurango::g_Overlay = new WinDurango::Overlay(device, ctx, reinterpret_cast<IDXGISwapChainWrapper*>(*ppSwapChain)->m_realSwapchain);
+			WinDurango::g_Overlay->Initialize( );
+		}
+
 		return hr;
 	}
 

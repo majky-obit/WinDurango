@@ -23,12 +23,12 @@
 
 namespace winrt::Windows::Xbox::Input::implementation
 {
-    winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::IController> Controller::Controllers()
+    winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::IController> Controller::Controllers( )
     {
-        IController dummyController = winrt::make<Controller>();
-        auto vector = winrt::single_threaded_vector<IController>();
+        IController dummyController = winrt::make<Controller>( );
+        auto vector = winrt::single_threaded_vector<IController>( );
         vector.Append(dummyController);
-        return vector.GetView();
+        return vector.GetView( );
     }
     winrt::event_token Controller::ControllerAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerAddedEventArgs> const& handler)
     {
@@ -37,7 +37,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     void Controller::ControllerAdded(winrt::event_token const& token) noexcept
     {
         printf("[ControllerAdded] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
     winrt::event_token Controller::ControllerRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerRemovedEventArgs> const& handler)
     {
@@ -46,7 +46,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     void Controller::ControllerRemoved(winrt::event_token const& token) noexcept
     {
         printf("[ControllerRemoved] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
     winrt::event_token Controller::ControllerPairingChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerPairingChangedEventArgs> const& handler)
     {
@@ -55,69 +55,69 @@ namespace winrt::Windows::Xbox::Input::implementation
     void Controller::ControllerPairingChanged(winrt::event_token const& token) noexcept
     {
         printf("[ControllerPairingChanged] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
     winrt::event_token Controller::ControllerOrderChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerOrderChangedEventArgs> const& handler)
     {
         printf("[ControllerOrderChanged] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
     void Controller::ControllerOrderChanged(winrt::event_token const& token) noexcept
     {
         printf("[ControllerOrderChanged] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
     winrt::Windows::Xbox::Input::IController Controller::GetControllerById(uint64_t controllerId)
     {
         printf("[GetControllerById] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
     void Controller::GetControllerMetadata(uint64_t controllerId, winrt::Windows::Xbox::Input::MetadataVersion const& metadataVersion, com_array<uint8_t>& ppMetadata)
     {
         printf("[GetControllerMetadata] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::IController> Controller::GetControllersOrderedLeftToRight(winrt::Windows::Xbox::Input::ControllerOrderFilter const& orderFilter)
     {
         printf("[GetControllersOrderedLeftToRight] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
-    uint64_t Controller::Id()
+    uint64_t Controller::Id( )
     {
         return 1;
     }
-    hstring Controller::Type()
+    hstring Controller::Type( )
     {
         return L"Windows.Xbox.Input.Controller";
     }
-    winrt::Windows::Xbox::System::User Controller::User()
+    winrt::Windows::Xbox::System::User Controller::User( )
     {
         printf("[User] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
-    winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::IAudioDeviceInfo> Controller::AudioDevices()
+    winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::IAudioDeviceInfo> Controller::AudioDevices( )
     {
         printf("[AudioDevices] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
-    winrt::Windows::Xbox::Input::GameControllerVersionInfo Controller::FirmwareVersionInfo()
+    winrt::Windows::Xbox::Input::GameControllerVersionInfo Controller::FirmwareVersionInfo( )
     {
         printf("[FirmwareVersionInfo] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
-    winrt::Windows::Xbox::Input::GameControllerVersionInfo Controller::HardwareVersionInfo()
+    winrt::Windows::Xbox::Input::GameControllerVersionInfo Controller::HardwareVersionInfo( )
     {
         printf("[HardwareVersionInfo] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
-    uint16_t Controller::HardwareProductId()
+    uint16_t Controller::HardwareProductId( )
     {
         printf("[HardwareProductId] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
-    uint16_t Controller::HardwareVendorId()
+    uint16_t Controller::HardwareVendorId( )
     {
         printf("[HardwareVendorId] STUBBED\n");
-        throw hresult_not_implemented();
+        throw hresult_not_implemented( );
     }
 }
