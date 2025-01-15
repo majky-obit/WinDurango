@@ -34,11 +34,6 @@ namespace winrt::Windows::Xbox::Services::implementation
         printf("TODO: XboxLiveConfiguration::PrimaryServiceConfigId\n");
         return L"000013";
     }
-    hstring XboxLiveConfiguration::PrimaryServiceConfigId()
-    {
-        printf("TODO: XboxLiveConfiguration::PrimaryServiceConfigId\n");
-        return L"0";
-    }
     hstring XboxLiveConfiguration::SandboxId()
     {
         printf("TODO: XboxLiveConfiguration::SandboxId\n");
