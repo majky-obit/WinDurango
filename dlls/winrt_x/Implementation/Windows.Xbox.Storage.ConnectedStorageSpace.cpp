@@ -31,7 +31,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForUserAsync(winrt::Windows::Xbox::System::User user)
     {
         if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
-            auto storageClass = winrt::make<implementation::ConnectedStorageSpace>( WinDurango::impl::s_userStorage );
+            userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( WinDurango::impl::s_userStorage );
         }
 
 		co_return userStorageSpace;
@@ -63,7 +63,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetSyncOnDemandForUserAsync(winrt::Windows::Xbox::System::User user)
     {
         if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
-            auto storageClass = winrt::make<implementation::ConnectedStorageSpace>(WinDurango::impl::s_userStorage);
+            userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>(WinDurango::impl::s_userStorage);
         }
 
         co_return userStorageSpace;
@@ -71,7 +71,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetSyncOnDemandForUserAsync(winrt::Windows::Xbox::System::User user, hstring serviceConfigurationId)
     {
         if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
-            auto storageClass = winrt::make<implementation::ConnectedStorageSpace>(WinDurango::impl::s_userStorage);
+            userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>(WinDurango::impl::s_userStorage);
         }
 
         co_return userStorageSpace;

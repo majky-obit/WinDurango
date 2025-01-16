@@ -26,7 +26,7 @@ namespace winrt::Windows::Xbox::Services::implementation
 {
     hstring XboxLiveConfiguration::TitleId()
     {
-		    printf("TODO: XboxLiveConfiguration::TitleId\n");
+		printf("TODO: XboxLiveConfiguration::TitleId\n");
         return L"0";
     }
     hstring XboxLiveConfiguration::PrimaryServiceConfigId()
