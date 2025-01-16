@@ -26,6 +26,7 @@ namespace winrt::Windows::Xbox::UI::implementation
     {
         AccountPickerResult() = default;
 
+		uint64_t signedInUsersCount = 1;
         winrt::Windows::Xbox::System::IUser User();
     };
 }

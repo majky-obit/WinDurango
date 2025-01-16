@@ -25,6 +25,7 @@ namespace winrt::Windows::Xbox::UI::implementation
 {
     winrt::Windows::Xbox::System::IUser AccountPickerResult::User()
     {
-		return System::User::Users( ).GetAt(0);
+        uint64_t count = signedInUsersCount + 1;
+		return System::User::Users( ).GetAt(count);
     }
 }

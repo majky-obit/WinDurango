@@ -20,13 +20,17 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::User> User::Users()
     {
-        if (staticUser == System::User(nullptr))
-			staticUser = winrt::make<User>( );
-
-        if (staticUsers == Foundation::Collections::IVector<winrt::Windows::Xbox::System::User>(nullptr) || staticUsers.Size() == 0)
-        {
+		wprintf(L"User || Users Queried!\n");
+        if (staticUsers == Foundation::Collections::IVector<winrt::Windows::Xbox::System::User>(nullptr) || staticUsers.Size( ) == 0) {
             staticUsers = winrt::single_threaded_vector<System::User>( );
-            staticUsers.Append(staticUser);
+
+            for (int i = 0; i < 4; i++)
+            {
+                wprintf(L"User || User %d Created!\n", i);
+                staticUser = winrt::make<User>(i);
+                staticUsers.Append(staticUser);
+                continue;
+            }
         }
 
         return staticUsers.GetView();
@@ -137,7 +141,7 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     uint32_t User::Id()
     {
-        return 1;
+        return m_id;
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::IAudioDeviceInfo> User::AudioDevices()
     {
@@ -151,7 +155,8 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Xbox::System::UserDisplayInfo User::DisplayInfo()
     {
-        return winrt::make<implementation::UserDisplayInfo>( );
+        hstring gamertag = to_hstring(m_id);
+        return winrt::make<implementation::UserDisplayInfo>(gamertag);
     }
     bool User::IsGuest()
     {
