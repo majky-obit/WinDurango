@@ -26,7 +26,8 @@ namespace winrt::Windows::Xbox::System::implementation
     hstring UserDisplayInfo::Gamertag()
     {
         printf("!!!!! Windows.Xbox.System.UserDisplayInfo [Gamertag] NOT IMPLEMENTED !!!!\n");
-        return winrt::to_hstring("durangler");
+		hstring gamertag = L"durangler" + m_gamertag;
+        return gamertag;
     }
     uint32_t UserDisplayInfo::GamerScore()
     {
@@ -41,7 +42,8 @@ namespace winrt::Windows::Xbox::System::implementation
     hstring UserDisplayInfo::GameDisplayName()
     {
         printf("!!!!! Windows.Xbox.System.UserDisplayInfo [GameDisplayName] NOT IMPLEMENTED !!!!\n");
-        return winrt::to_hstring("durangler");
+        hstring gamertag = L"durangler" + m_gamertag;
+        return gamertag;
     }
     int32_t UserDisplayInfo::Reputation()
     {
@@ -54,7 +56,7 @@ namespace winrt::Windows::Xbox::System::implementation
         return UserAgeGroup::Unknown;
     }
     winrt::Windows::Foundation::Collections::IVectorView<uint32_t> UserDisplayInfo::Privileges()
-    {
+    {   
         printf("!!!!! Windows.Xbox.System.UserDisplayInfo [Privileges] NOT IMPLEMENTED !!!!\n");
 
         auto vector = winrt::single_threaded_vector<uint32_t>();

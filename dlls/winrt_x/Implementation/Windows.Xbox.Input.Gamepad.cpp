@@ -11,30 +11,50 @@ namespace winrt::Windows::Xbox::Input::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::IGamepad> Gamepad::Gamepads()
     {
-        IGamepad dummyGamepad = winrt::make<Gamepad>( );
-        auto vector = winrt::single_threaded_vector<IGamepad>( );
-        vector.Append(dummyGamepad);
-        return vector.GetView( );
+        wprintf(L"Gamepad || Gamepads Queried!\n");
+
+        if (staticGamepads == Foundation::Collections::IVector<winrt::Windows::Xbox::Input::IGamepad>(nullptr) || staticGamepads.Size( ) == 0) {
+            staticGamepads = winrt::single_threaded_vector<Input::IGamepad>( );
+            
+            for (DWORD gamepad = 0; gamepad < XUSER_MAX_COUNT; gamepad++)
+            {
+                XINPUT_CAPABILITIES capabilities;
+                if (XInputGetCapabilities(gamepad, XINPUT_FLAG_GAMEPAD, &capabilities) == ERROR_SUCCESS)
+                {
+                    wprintf(L"Gamepad || Gamepad %d Created!\n", gamepad);
+                    IGamepad newGamepad = winrt::make<Gamepad>(gamepad);
+                    staticGamepads.Append(newGamepad);
+                    continue;
+                }
+            }
+        }
+
+        return staticGamepads.GetView( );
     }
     winrt::event_token Gamepad::GamepadAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadAddedEventArgs> const& handler)
     {
+		wprintf(L"Gamepad || Gamepad Added!\n");
         return {};
     }
     void Gamepad::GamepadAdded(winrt::event_token const& token) noexcept
     {
+        wprintf(L"Gamepad || Gamepad Added!\n");
         throw hresult_not_implemented();
     }
     winrt::event_token Gamepad::GamepadRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadRemovedEventArgs> const& handler)
     {
+		wprintf(L"Gamepad || Gamepad Removed!\n");
         return {};
     }
     void Gamepad::GamepadRemoved(winrt::event_token const& token) noexcept
     {
+        wprintf(L"Gamepad || Gamepad Removed!\n");
         throw hresult_not_implemented();
     }
     uint64_t Gamepad::Id()
     {
-        return 1;
+		wprintf(L"Gamepad || Gamepad ID ( %d ) Queried!\n", m_id);
+        return m_id;
     }
     hstring Gamepad::Type()
     {
@@ -42,7 +62,8 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::Windows::Xbox::System::User Gamepad::User()
     {
-		return System::implementation::User::Users( ).GetAt(0);
+		wprintf(L"Gamepad || User Queried!\n");
+		return System::implementation::User::Users( ).GetAt(Id());
     }
     winrt::Windows::Xbox::Input::INavigationReading Gamepad::GetNavigationReading()
     {
@@ -69,7 +90,7 @@ namespace winrt::Windows::Xbox::Input::implementation
         ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
         vibration.wLeftMotorSpeed = value.LeftMotorLevel * 65535;
         vibration.wRightMotorSpeed = value.RightMotorLevel * 65535;
-        XInputSetState(0, &vibration);
+        XInputSetState(m_id, &vibration);
     }
     winrt::Windows::Xbox::Input::IGamepadReading Gamepad::GetCurrentReading()
     {
@@ -99,28 +120,26 @@ namespace winrt::Windows::Xbox::Input::implementation
             { XINPUT_GAMEPAD_Y, GamepadButtons::Y },
         };
 
-        for (DWORD user = 0; user < XUSER_MAX_COUNT; user++) {
-            if (XInputGetState(user, &xiState) == ERROR_SUCCESS)
+        if (XInputGetState(m_id, &xiState) == ERROR_SUCCESS)
+        {
+            for (int i = 0; i < ARRAYSIZE(buttons); i++)
             {
-                for (int i = 0; i < ARRAYSIZE(buttons); i++)
+                if (xiState.Gamepad.wButtons & buttons[ i ].first)
                 {
-                    if (xiState.Gamepad.wButtons & buttons[ i ].first)
-                    {
-                        reading.Buttons |= buttons[ i ].second;
-                    }
+                    reading.Buttons |= buttons[ i ].second;
                 }
-
-                reading.LeftTrigger = xiState.Gamepad.bLeftTrigger / 255.f;
-                reading.RightTrigger = xiState.Gamepad.bRightTrigger / 255.f;
-                reading.LeftThumbstickX = xiState.Gamepad.sThumbLX / 32768.f;
-                reading.LeftThumbstickY = xiState.Gamepad.sThumbLY / 32768.f;
-                reading.RightThumbstickX = xiState.Gamepad.sThumbRX / 32768.f;
-                reading.RightThumbstickY = xiState.Gamepad.sThumbRY / 32768.f;
             }
-            //else {
-            //    printf("Controller input failure: %x\n", XInputGetState(0, &xiState));
-            //}
-		}
+
+            reading.LeftTrigger = xiState.Gamepad.bLeftTrigger / 255.f;
+            reading.RightTrigger = xiState.Gamepad.bRightTrigger / 255.f;
+            reading.LeftThumbstickX = xiState.Gamepad.sThumbLX / 32768.f;
+            reading.LeftThumbstickY = xiState.Gamepad.sThumbLY / 32768.f;
+            reading.RightThumbstickX = xiState.Gamepad.sThumbRX / 32768.f;
+            reading.RightThumbstickY = xiState.Gamepad.sThumbRY / 32768.f;
+        }
+        //else {
+        //    printf("Gamepad input failure: %x\n", XInputGetState(0, &xiState));
+        //}
 
         if (GetAsyncKeyState('A'))
             reading.Buttons |= GamepadButtons::A;

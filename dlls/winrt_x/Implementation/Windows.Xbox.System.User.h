@@ -25,6 +25,7 @@ namespace winrt::Windows::Xbox::System::implementation
     struct User : UserT<User>
     {
         User() = default;
+        User(uint64_t id) : m_id(id) {}
 
         static winrt::Windows::Xbox::System::UserOnlineState OnlineState();
         static winrt::event_token OnlineStateChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::OnlineStateChangedEventArgs> const& handler);
@@ -66,6 +67,7 @@ namespace winrt::Windows::Xbox::System::implementation
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers);
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers, array_view<uint8_t const> body);
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers, hstring body);
+        uint64_t m_id {0};
     private:
         inline static winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserAddedEventArgs>> m_userAddedEvent;
         inline static winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserRemovedEventArgs>> m_userRemovedEvent;
