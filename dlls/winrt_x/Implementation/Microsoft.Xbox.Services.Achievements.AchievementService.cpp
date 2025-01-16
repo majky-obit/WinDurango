@@ -33,10 +33,12 @@ namespace winrt::Microsoft::Xbox::Services::Achievements::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<int32_t> AchievementService::TryUpdateAchievementAsync(hstring xboxUserId, hstring achievementId, uint32_t percentComplete)
     {
+		printf("[AchievementService] TryUpdateAchievementAsync NOT IMPLEMENTED\n");
         throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<int32_t> AchievementService::TryUpdateAchievementAsync(hstring xboxUserId, uint32_t titleId, hstring serviceConfigurationId, hstring achievementId, uint32_t percentComplete)
     {
+		printf("[AchievementService] TryUpdateAchievementAsync NOT IMPLEMENTED\n");
         throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Microsoft::Xbox::Services::Achievements::AchievementsResult> AchievementService::GetAchievementsForTitleIdAsync(hstring xboxUserId, uint32_t titleId, winrt::Microsoft::Xbox::Services::Achievements::AchievementType type, bool unlockedOnly, winrt::Microsoft::Xbox::Services::Achievements::AchievementOrderBy orderBy, uint32_t skipItems, uint32_t maxItems)
