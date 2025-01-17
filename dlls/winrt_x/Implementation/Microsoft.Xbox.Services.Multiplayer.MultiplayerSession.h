@@ -101,6 +101,9 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
         void SetSessionCustomPropertyJson(hstring const& name, hstring const& valueJson);
         void DeleteSessionCustomPropertyJson(hstring const& name);
         void _Init(winrt::Microsoft::Xbox::Services::XboxLiveContext const& xboxLiveContext, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionReference const& multiplayerSessionReference, uint32_t maxMembersInSession, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionVisibility const& multiplayerSessionVisibility, winrt::Windows::Foundation::Collections::IVectorView<hstring> const& initiatorXboxUserIds, hstring const& sessionCustomConstantsJson);
+    
+		winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionMemberStatus m_currentUserStatus;
+		hstring m_userSecureDeviceAddress64;
     };
 }
 namespace winrt::Microsoft::Xbox::Services::Multiplayer::factory_implementation

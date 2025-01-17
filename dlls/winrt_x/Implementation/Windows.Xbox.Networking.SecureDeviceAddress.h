@@ -40,6 +40,8 @@ namespace winrt::Windows::Xbox::Networking::implementation
         hstring GetBase64String();
         bool IsLocal();
         winrt::Windows::Xbox::Networking::NetworkAccessType NetworkAccessType();
+
+        winrt::Windows::Storage::Streams::IBuffer m_addrBuf = {nullptr};
     };
 }
 namespace winrt::Windows::Xbox::Networking::factory_implementation
