@@ -116,19 +116,22 @@ HRESULT CoreApplicationWrapperX::QueryInterface(const IID& riid, void** ppvObjec
 		AddRef();
 		return S_OK;
 	}
-	else if (riid == __uuidof(ICoreApplicationX))
+
+	if (riid == __uuidof(ICoreApplicationX))
 	{
 		*ppvObject = static_cast<ICoreApplicationX*>(this);
 		AddRef();
 		return S_OK;
 	}
-	else if (riid == __uuidof(ICoreApplicationResourceAvailabilityX)) // allow ICoreApplicationResourceAvailabilityX interface
+
+	if (riid == __uuidof(ICoreApplicationResourceAvailabilityX)) // allow ICoreApplicationResourceAvailabilityX interface
 	{
 		*ppvObject = static_cast<ICoreApplicationResourceAvailabilityX*>(this);
 		AddRef();
 		return S_OK;
 	}
-	else if (riid == __uuidof(ICoreApplicationGpuPolicy)) // allow ICoreApplicationResourceAvailabilityX interface
+
+	if (riid == __uuidof(ICoreApplicationGpuPolicy)) // allow ICoreApplicationResourceAvailabilityX interface
 	{
 		*ppvObject = static_cast<ICoreApplicationGpuPolicy*>(this);
 		AddRef();
