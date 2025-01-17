@@ -1,27 +1,29 @@
 #include "pch.h"
 #include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSession.h"
 #include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSession.g.cpp"
+#include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionProperties.h"
+#include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionMember.h"
 
 namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
     MultiplayerSession::MultiplayerSession(winrt::Microsoft::Xbox::Services::XboxLiveContext const& xboxLiveContext)
     {
-		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Constructor called\n");
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Constructor called 1 \n");
         return;
     }
     MultiplayerSession::MultiplayerSession(winrt::Microsoft::Xbox::Services::XboxLiveContext const& xboxLiveContext, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionReference const& multiplayerSessionReference, uint32_t maxMembersInSession, bool reserved, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionVisibility const& multiplayerSessionVisibility, winrt::Windows::Foundation::Collections::IVectorView<hstring> const& initiatorXboxUserIds, hstring const& sessionCustomConstantsJson)
     {
-        printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Constructor called\n");
+        printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Constructor called 2 \n");
         return;
     }
     MultiplayerSession::MultiplayerSession(winrt::Microsoft::Xbox::Services::XboxLiveContext const& xboxLiveContext, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionReference const& multiplayerSessionReference, uint32_t maxMembersInSession, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionVisibility const& multiplayerSessionVisibility, winrt::Windows::Foundation::Collections::IVectorView<hstring> const& initiatorXboxUserIds, hstring const& sessionCustomConstantsJson)
     {
-        printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Constructor called\n");
+        printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Constructor called 3 \n");
         return;
     }
     MultiplayerSession::MultiplayerSession(winrt::Microsoft::Xbox::Services::XboxLiveContext const& xboxLiveContext, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionReference const& multiplayerSessionReference)
     {
-        printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Constructor called\n");
+        printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Constructor called 4 \n");
         return;
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionChangeTypes MultiplayerSession::CompareMultiplayerSessions(winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSession const& currentSession, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSession const& oldSession)
@@ -86,7 +88,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionProperties MultiplayerSession::SessionProperties()
     {
-        throw hresult_not_implemented();
+        return winrt::make<winrt::Microsoft::Xbox::Services::Multiplayer::implementation::MultiplayerSessionProperties>( );
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionRoleTypes MultiplayerSession::SessionRoleTypes()
     {
@@ -150,7 +152,8 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionMember MultiplayerSession::Join()
     {
-        throw hresult_not_implemented();
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Join 1 called\n");
+		return winrt::make<winrt::Microsoft::Xbox::Services::Multiplayer::implementation::MultiplayerSessionMember>( );
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionMember MultiplayerSession::Join(hstring const& memberCustomConstantsJson)
     {
@@ -162,7 +165,9 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionMember MultiplayerSession::Join(hstring const& memberCustomConstantsJson, bool initializeRequested, bool joinWithActiveStatus)
     {
-        throw hresult_not_implemented();
+        printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Join 4 called\n");
+        return winrt::make<winrt::Microsoft::Xbox::Services::Multiplayer::implementation::MultiplayerSessionMember>( );
+        
     }
     void MultiplayerSession::SetVisibility(winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionVisibility const& visibility)
     {
@@ -258,10 +263,13 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     void MultiplayerSession::SetCurrentUserStatus(winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionMemberStatus const& status)
     {
-        throw hresult_not_implemented();
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] SetCurrentUserStatus called\n");
+		m_currentUserStatus = status;
     }
     void MultiplayerSession::SetCurrentUserSecureDeviceAddressBase64(hstring const& value)
     {
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] SetCurrentUserSecureDeviceAddressBase64 called\n");
+		//m_userSecureDeviceAddress64 = value;
         throw hresult_not_implemented();
     }
     void MultiplayerSession::SetCurrentUserRoleInfo(winrt::Windows::Foundation::Collections::IMapView<hstring, hstring> const& roles)
@@ -300,7 +308,8 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     {
         wprintf(L"Value of name: %ls\n", name.c_str());
         wprintf(L"Value of valueJson: %ls\n", valueJson.c_str());
-        throw hresult_not_implemented();
+        //throw hresult_not_implemented();
+        return;
     }
     void MultiplayerSession::DeleteSessionCustomPropertyJson(hstring const& name)
     {

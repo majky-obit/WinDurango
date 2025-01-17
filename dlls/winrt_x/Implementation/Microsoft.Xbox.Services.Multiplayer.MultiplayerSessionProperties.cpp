@@ -37,7 +37,8 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     void MultiplayerSessionProperties::JoinRestriction(winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionRestriction const& value)
     {
-        throw hresult_not_implemented();
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionProperties] JoinRestriction called\n");
+		m_joinRestriction = value;
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionRestriction MultiplayerSessionProperties::ReadRestriction()
     {

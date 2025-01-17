@@ -43,5 +43,8 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
         bool Closed();
         bool Locked();
         bool AllocateCloudCompute();
+
+
+		winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionRestriction m_joinRestriction;
     };
 }
