@@ -3,6 +3,7 @@
 #include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSession.g.cpp"
 #include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionProperties.h"
 #include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionMember.h"
+#include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionRoleTypes.h"
 
 namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
@@ -88,15 +89,18 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionProperties MultiplayerSession::SessionProperties()
     {
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] SessionProperties called\n");
         return winrt::make<winrt::Microsoft::Xbox::Services::Multiplayer::implementation::MultiplayerSessionProperties>( );
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionRoleTypes MultiplayerSession::SessionRoleTypes()
     {
-        throw hresult_not_implemented();
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] SessionRoleTypes called\n");
+        return winrt::make<winrt::Microsoft::Xbox::Services::Multiplayer::implementation::MultiplayerSessionRoleTypes>( );
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionMember> MultiplayerSession::Members()
     {
-        throw hresult_not_implemented();
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] Members called\n");
+		return winrt::single_threaded_vector<Multiplayer::MultiplayerSessionMember>().GetView();
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionMatchmakingServer MultiplayerSession::MatchmakingServer()
     {
@@ -255,7 +259,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     void MultiplayerSession::SetSessionChangeSubscription(winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionChangeTypes const& changeTypes)
     {
-        throw hresult_not_implemented();
+		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] SetSessionChangeSubscription called\n");
     }
     void MultiplayerSession::Leave()
     {
@@ -270,7 +274,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     {
 		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSession] SetCurrentUserSecureDeviceAddressBase64 called\n");
 		//m_userSecureDeviceAddress64 = value;
-        throw hresult_not_implemented();
+        //throw hresult_not_implemented();
     }
     void MultiplayerSession::SetCurrentUserRoleInfo(winrt::Windows::Foundation::Collections::IMapView<hstring, hstring> const& roles)
     {

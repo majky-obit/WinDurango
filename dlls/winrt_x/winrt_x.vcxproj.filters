@@ -446,6 +446,7 @@
     <ClCompile Include="Implementation\Windows.Xbox.UI.KeyboardOptions.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.UI.SystemUI.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.UI.WebAuthenticationResult.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.System.GetTokenAndSignatureResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -876,6 +877,7 @@
     <ClInclude Include="Implementation\Windows.Xbox.UI.KeyboardOptions.h" />
     <ClInclude Include="Implementation\Windows.Xbox.UI.SystemUI.h" />
     <ClInclude Include="Implementation\Windows.Xbox.UI.WebAuthenticationResult.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.System.GetTokenAndSignatureResult.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

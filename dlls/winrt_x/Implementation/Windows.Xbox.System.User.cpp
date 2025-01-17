@@ -2,6 +2,7 @@
 #include "Windows.Xbox.System.User.h"
 #include "Windows.Xbox.System.User.g.cpp"
 #include "Windows.Xbox.System.UserDisplayInfo.h"
+#include "Windows.Xbox.System.GetTokenAndSignatureResult.h"
 
 namespace winrt::Windows::Xbox::System::implementation
 {
@@ -188,17 +189,14 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> User::GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers)
     {
-        printf("!!!! Windows.Xbox.System.User GetTokenAndSignatureAsync | NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+		co_return  winrt::make<GetTokenAndSignatureResult>( );
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> User::GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers, array_view<uint8_t const> body)
     {
-        printf("!!!! Windows.Xbox.System.User GetTokenAndSignatureAsync | NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+		co_return winrt::make<GetTokenAndSignatureResult>( );
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> User::GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers, hstring body)
     {
-        printf("!!!! Windows.Xbox.System.User GetTokenAndSignatureAsync | NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+		co_return winrt::make<GetTokenAndSignatureResult>( );
     }
 }

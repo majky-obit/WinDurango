@@ -15,14 +15,17 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     hstring MultiplayerSessionReference::ServiceConfigurationId()
     {
+		printf("!!!! Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference::ServiceConfigurationId Called! !!!!\n");
 		return m_multiplayerSessionReference.ServiceConfigurationId( );
     }
     hstring MultiplayerSessionReference::SessionTemplateName()
     {
+		printf("!!!! Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference::SessionTemplateName Called! !!!!\n");
         return m_multiplayerSessionReference.SessionTemplateName( );
     }
     hstring MultiplayerSessionReference::SessionName()
     {
+		printf("!!!! Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference::SessionName Called! !!!!\n");
         return m_multiplayerSessionReference.SessionName( );
     }
     hstring MultiplayerSessionReference::ToUriPath()
