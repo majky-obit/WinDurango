@@ -1,7 +1,3 @@
-// ReSharper disable CppInconsistentNaming
-// ReSharper disable CppClangTidyClangDiagnosticUnusedFunction
-#include "pch.h"
-
 #include <cstdio>
 #include <mutex>
 
