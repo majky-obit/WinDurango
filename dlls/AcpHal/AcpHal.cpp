@@ -16,8 +16,19 @@ HRESULT AcpHalReleaseShapeContexts_X() {
     return 0;
 }
 
-HRESULT ApuAlloc_X(void* ptr, void* a2, size_t size, UINT32 alignment) {
-    ptr = malloc(size);
+HRESULT ApuAlloc_X(
+         void** virtualAddress,
+         UINT32* physicalAddress,
+         UINT32 sizeInBytes,
+         UINT32 alignmentInBytes,
+         UINT32 flags
+)
+{
+    *virtualAddress = malloc(sizeInBytes);
+
+    if (physicalAddress != nullptr)
+		*physicalAddress = 0;
+
     return 0;
 }
 

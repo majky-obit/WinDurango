@@ -94,8 +94,8 @@ namespace d3d11x
 
     HRESULT __stdcall IDXGISwapChainWrapper::Present(UINT SyncInterval, UINT Flags)
     {
-        WinDurango::g_Overlay->Present( );
-        return m_realSwapchain->Present(SyncInterval, Flags);
+        //WinDurango::g_Overlay->Present( );
+        return m_realSwapchain->Present(0, Flags);
     }
 
     HRESULT __stdcall IDXGISwapChainWrapper::GetBuffer(UINT Buffer, REFIID riid, void** ppSurface)
@@ -175,14 +175,14 @@ namespace d3d11x
 
     HRESULT __stdcall IDXGISwapChainWrapper::Present1(UINT SyncInterval, UINT PresentFlags, const DXGI_PRESENT_PARAMETERS* pPresentParameters)
     {
-		WinDurango::g_Overlay->Present( );
+		//WinDurango::g_Overlay->Present( );
 
         if (pPresentParameters == nullptr) {
             //fps60.sleep( );
-            return m_realSwapchain->Present(SyncInterval, PresentFlags);
+            return m_realSwapchain->Present(0, PresentFlags);
         }
 
-        return m_realSwapchain->Present1(SyncInterval, PresentFlags, pPresentParameters);
+        return m_realSwapchain->Present1(0, PresentFlags, pPresentParameters);
     }
 
     BOOL __stdcall IDXGISwapChainWrapper::IsTemporaryMonoSupported(void)

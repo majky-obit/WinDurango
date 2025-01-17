@@ -134,6 +134,12 @@ namespace d3d11x
 		pDesc->Flags &= DXGI_SWAPCHAIN_FLAG_MASK;
 		pDesc->Scaling = DXGI_SCALING_ASPECT_RATIO_STRETCH;
 
+		::ID3D11Device2* device;
+		pDevice->QueryInterface(__uuidof(ID3D11Device), reinterpret_cast<void**>(&device));
+		device = reinterpret_cast<d3d11x::D3D11DeviceXWrapperX*>(device)->m_realDevice;
+
+		device->CheckMultisampleQualityLevels(pDesc->Format, pDesc->SampleDesc.Count, &pDesc->SampleDesc.Quality);
+
 		if (pWindow == nullptr)
 		{
 			ComPtr<ICoreWindowStatic> coreWindowStatic;
@@ -154,18 +160,18 @@ namespace d3d11x
 			*ppSwapChain = new IDXGISwapChainWrapper(swap);
 		}
 
-		if (WinDurango::g_Overlay == nullptr)
-		{
-			::ID3D11Device2* device;
-			pDevice->QueryInterface(__uuidof(ID3D11Device), reinterpret_cast<void**>(&device));
-			device = reinterpret_cast<d3d11x::D3D11DeviceXWrapperX*>(device)->m_realDevice;
+		//if (WinDurango::g_Overlay == nullptr)
+		//{
+		//	::ID3D11Device2* device;
+		//	pDevice->QueryInterface(__uuidof(ID3D11Device), reinterpret_cast<void**>(&device));
+		//	device = reinterpret_cast<d3d11x::D3D11DeviceXWrapperX*>(device)->m_realDevice;
 
-			::ID3D11DeviceContext* ctx{};
-			device->GetImmediateContext(&ctx);
+		//	::ID3D11DeviceContext* ctx{};
+		//	device->GetImmediateContext(&ctx);
 
-			WinDurango::g_Overlay = new WinDurango::Overlay(device, ctx, reinterpret_cast<IDXGISwapChainWrapper*>(*ppSwapChain)->m_realSwapchain);
-			WinDurango::g_Overlay->Initialize( );
-		}
+		//	WinDurango::g_Overlay = new WinDurango::Overlay(device, ctx, reinterpret_cast<IDXGISwapChainWrapper*>(*ppSwapChain)->m_realSwapchain);
+		//	WinDurango::g_Overlay->Initialize( );
+		//}
 
 		return hr;
 	}
