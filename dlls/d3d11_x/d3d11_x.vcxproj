@@ -104,6 +104,7 @@
     <ClCompile Include="..\..\thirdparty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\thirdparty\imgui_impl_uwp.cpp" />
     <ClCompile Include="d3d11_x.cpp" />
+    <ClCompile Include="device_child_x.cpp" />
     <ClCompile Include="device_context_x.cpp" />
     <ClCompile Include="device_x.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\..\thirdparty\imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\thirdparty\imgui_impl_uwp.h" />
     <ClInclude Include="d3d11_x.h" />
+    <ClInclude Include="device_child_x.h" />
     <ClInclude Include="device_context_x.h" />
     <ClInclude Include="device_x.h" />
     <ClInclude Include="dxgi_adapter.h" />

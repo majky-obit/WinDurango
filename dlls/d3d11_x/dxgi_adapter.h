@@ -1,5 +1,10 @@
 #pragma once
-class dxgi_adapter
+
+namespace wd
 {
-};
+	class dxgi_adapter
+	{
+	};
+}
+
 

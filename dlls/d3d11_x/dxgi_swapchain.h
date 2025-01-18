@@ -1,5 +1,11 @@
 #pragma once
-class dxgi_swapchain
+
+namespace wd
 {
-};
+	class dxgi_swapchain
+	{
+
+	};
+}
+
 

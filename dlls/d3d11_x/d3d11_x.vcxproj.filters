@@ -46,7 +46,12 @@
     <ClCompile Include="dxgi_adapter.cpp">
       <Filter>wrappers\dxgi_adapter</Filter>
     </ClCompile>
-    <ClCompile Include="dxgi_device.cpp" />
+    <ClCompile Include="dxgi_device.cpp">
+      <Filter>wrappers\dxgi_device</Filter>
+    </ClCompile>
+    <ClCompile Include="device_child_x.cpp">
+      <Filter>wrappers\device_child_x</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d11_x.h" />
@@ -92,7 +97,12 @@
     <ClInclude Include="dxgi_adapter.h">
       <Filter>wrappers\dxgi_adapter</Filter>
     </ClInclude>
-    <ClInclude Include="dxgi_device.h" />
+    <ClInclude Include="dxgi_device.h">
+      <Filter>wrappers\dxgi_device</Filter>
+    </ClInclude>
+    <ClInclude Include="device_child_x.h">
+      <Filter>wrappers\device_child_x</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
@@ -124,6 +134,9 @@
     </Filter>
     <Filter Include="wrappers\graphics_unknown">
       <UniqueIdentifier>{2afc72a9-22d2-49a6-a611-f539527d3e1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\device_child_x">
+      <UniqueIdentifier>{e284d976-b304-4e1e-98ef-7a22d8eeaa8d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

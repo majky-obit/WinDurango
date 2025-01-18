@@ -1,5 +1,9 @@
 #pragma once
-class dxgi_factory
-{
-};
+
+namespace wd {
+	class dxgi_factory
+	{
+
+	};
+}
 

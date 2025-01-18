@@ -7,9 +7,8 @@ namespace wdi
 
 namespace wd
 {
-	class device_context_x
+	class device_child
 	{
-		
 	};
 }
 
