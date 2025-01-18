@@ -20,6 +20,8 @@ namespace WinDurango::impl
 		winrt::Windows::Foundation::IAsyncAction Upload(winrt::hstring containerName, winrt::Windows::Foundation::Collections::IMapView<winrt::hstring, winrt::Windows::Storage::Streams::IBuffer> blobsToWrite, winrt::Windows::Foundation::Collections::IIterable<winrt::hstring> blobsToDelete, winrt::hstring displayName = {}) const;
 		winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::BlobInfo>> GetBlobInfoAsync(winrt::hstring parentContainerName, winrt::hstring blobNamePrefix);
 		winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo2>> GetContainerInfo2Async( );
+		winrt::Windows::Foundation::IAsyncAction DeleteContainer(winrt::hstring containerName);
+
 
 		static winrt::Windows::Foundation::IAsyncAction CreateDirectories(const wchar_t* storageType, winrt::hstring &storagePath);
 		static winrt::Windows::Foundation::IAsyncOperation<bool> DoesFolderExist(winrt::hstring path);
