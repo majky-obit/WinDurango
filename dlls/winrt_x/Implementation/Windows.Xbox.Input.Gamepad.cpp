@@ -29,6 +29,12 @@ namespace winrt::Windows::Xbox::Input::implementation
             }
         }
 
+        if (staticGamepads.Size( ) == 0) {
+            wprintf(L"Gamepad || No Gamepads Found!\n");
+            IGamepad dummyGamepad = winrt::make<Gamepad>(0);
+            staticGamepads.Append(dummyGamepad);
+        }
+
         return staticGamepads.GetView( );
     }
     winrt::event_token Gamepad::GamepadAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadAddedEventArgs> const& handler)
@@ -102,31 +108,13 @@ namespace winrt::Windows::Xbox::Input::implementation
 		ZeroMemory(&xiState, sizeof(XINPUT_STATE));
         RawGamepadReading reading = {};
 
-        static std::pair<WORD, GamepadButtons> const buttons[] =
-        {
-            { XINPUT_GAMEPAD_DPAD_UP, GamepadButtons::DPadUp },
-            { XINPUT_GAMEPAD_DPAD_DOWN, GamepadButtons::DPadDown },
-            { XINPUT_GAMEPAD_DPAD_LEFT, GamepadButtons::DPadLeft },
-            { XINPUT_GAMEPAD_DPAD_RIGHT, GamepadButtons::DPadRight },
-            { XINPUT_GAMEPAD_START, GamepadButtons::Menu },
-            { XINPUT_GAMEPAD_BACK, GamepadButtons::View },
-            { XINPUT_GAMEPAD_LEFT_THUMB, GamepadButtons::LeftThumbstick },
-            { XINPUT_GAMEPAD_RIGHT_THUMB, GamepadButtons::RightThumbstick },
-            { XINPUT_GAMEPAD_LEFT_SHOULDER, GamepadButtons::LeftShoulder },
-            { XINPUT_GAMEPAD_RIGHT_SHOULDER, GamepadButtons::RightShoulder },
-            { XINPUT_GAMEPAD_A, GamepadButtons::A },
-            { XINPUT_GAMEPAD_B, GamepadButtons::B },
-            { XINPUT_GAMEPAD_X, GamepadButtons::X },
-            { XINPUT_GAMEPAD_Y, GamepadButtons::Y },
-        };
-
         if (XInputGetState(m_id, &xiState) == ERROR_SUCCESS)
         {
-            for (int i = 0; i < ARRAYSIZE(buttons); i++)
+            for (int i = 0; i < ARRAYSIZE(gamepadButtons); i++)
             {
-                if (xiState.Gamepad.wButtons & buttons[ i ].first)
+                if (xiState.Gamepad.wButtons & gamepadButtons[ i ].first)
                 {
-                    reading.Buttons |= buttons[ i ].second;
+                    reading.Buttons |= gamepadButtons[ i ].second;
                 }
             }
 
@@ -137,40 +125,15 @@ namespace winrt::Windows::Xbox::Input::implementation
             reading.RightThumbstickX = xiState.Gamepad.sThumbRX / 32768.f;
             reading.RightThumbstickY = xiState.Gamepad.sThumbRY / 32768.f;
         }
-        //else {
-        //    printf("Gamepad input failure: %x\n", XInputGetState(0, &xiState));
-        //}
 
-        if (GetAsyncKeyState('A'))
-            reading.Buttons |= GamepadButtons::A;
-		if (GetAsyncKeyState('B'))
-			reading.Buttons |= GamepadButtons::B;
-		if (GetAsyncKeyState('X'))
-			reading.Buttons |= GamepadButtons::X;
-		if (GetAsyncKeyState('Y'))
-			reading.Buttons |= GamepadButtons::Y;
-		if (GetAsyncKeyState(VK_UP))
-			reading.Buttons |= GamepadButtons::DPadUp;
-		if (GetAsyncKeyState(VK_DOWN))
-			reading.Buttons |= GamepadButtons::DPadDown;
-		if (GetAsyncKeyState(VK_LEFT))
-			reading.Buttons |= GamepadButtons::DPadLeft;    
-		if (GetAsyncKeyState(VK_RIGHT))
-			reading.Buttons |= GamepadButtons::DPadRight;
-		if (GetAsyncKeyState(VK_RETURN))
-			reading.Buttons |= GamepadButtons::Menu;
-		if (GetAsyncKeyState(VK_ESCAPE))
-			reading.Buttons |= GamepadButtons::View;
-		if (GetAsyncKeyState(VK_LSHIFT))
-			reading.Buttons |= GamepadButtons::LeftThumbstick;
-		if (GetAsyncKeyState(VK_RSHIFT))
-			reading.Buttons |= GamepadButtons::RightThumbstick;
-		if (GetAsyncKeyState(VK_LCONTROL))
-			reading.Buttons |= GamepadButtons::LeftShoulder;
-		if (GetAsyncKeyState(VK_RCONTROL))
-            reading.Buttons |= GamepadButtons::RightShoulder;
+        for (int i = 0; i < ARRAYSIZE(keyboardButtons); i++)
+        {
+			if (GetAsyncKeyState(keyboardButtons[ i ].first))
+			{
+				reading.Buttons |= keyboardButtons[ i ].second;
+			}
+        }
 
-		//printf("Reading: %d\n", reading.Buttons);
         return reading;
     }
     winrt::event_token Gamepad::ReadingChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Xbox::Input::Gamepad, winrt::Windows::Xbox::Input::IGamepadReadingChangedEventArgs> const& handler)
