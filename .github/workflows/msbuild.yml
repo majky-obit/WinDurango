@@ -46,6 +46,7 @@ jobs:
       run: |
         ls IDLs
         cp -r IDLs\ External\
+        ls External
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
