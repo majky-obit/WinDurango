@@ -45,7 +45,7 @@ jobs:
     - name: Copying IDLs
       run: |
         ls IDLs
-        Copy-Item -Path "IDLs\*" -Destination "External\" -Recurse -NoClobber 
+        Copy-Item -Path "IDLs\*" -Destination "External\" -Recurse
         ls External
 
     - name: Add MSBuild to PATH
