@@ -38,10 +38,7 @@ jobs:
     - uses: actions/checkout@master
       with:
         name: WinDurango/WinDurango-IDLs
-        ref: refs/heads/main
         path: IDLs/
-      env:
-        EXTERNALS_LINK: ${{ secrets.EXTERNALS_LINK }}
         
     - name: Copying IDLs
       run: |
