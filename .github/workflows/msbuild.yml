@@ -35,16 +35,13 @@ jobs:
     - name: Install 7zip
       run: choco install 7zip --no-progress
 
-    - name: Download external files
+    - name: Grabbing IDLs
       run: |
-        curl -L -o External.zip "${{ secrets.EXTERNALS_LINK }}"
+        git clone "${{ secrets.EXTERNALS_LINK }}" IDLs
+        cp -r IDLs/* External/
+        rm -rf IDLs/
       env:
         EXTERNALS_LINK: ${{ secrets.EXTERNALS_LINK }}
-
-    - name: Unzip external files
-      run: |
-        7z x External.zip -odlls/winrt_x/External
-        ls dlls/winrt_x/External
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
