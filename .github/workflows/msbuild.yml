@@ -43,7 +43,7 @@ jobs:
       run: |
         ls .
         ls .\IDLs
-        Copy-Item -Path .\IDLs\* -Destination .\External\ -Recurse
+        Copy-Item -Path .\IDLs\* -Destination .\dlls\winrt_x\External\ -Recurse
         ls External
 
     - name: Add MSBuild to PATH
