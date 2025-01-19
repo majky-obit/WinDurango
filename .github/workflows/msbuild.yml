@@ -35,11 +35,13 @@ jobs:
     - name: Install 7zip
       run: choco install 7zip --no-progress
 
-    - uses: actions/checkout@master
+    - name: Clone GuillaumeFalourd/formulas-training PRIVATE repository
+      uses: GuillaumeFalourd/clone-github-repo-action@v2.3
       with:
-        name: WinDurango/WinDurango-IDLs
-        path: IDLs/
-        
+        owner: 'WinDurango'
+        repository: 'WinDurango-IDLs'
+        access-token: ${{ secrets.ACCESS_TOKEN }}
+      
     - name: Copying IDLs
       run: |
         ls IDLs
