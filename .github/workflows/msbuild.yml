@@ -35,13 +35,18 @@ jobs:
     - name: Install 7zip
       run: choco install 7zip --no-progress
 
-    - name: Grabbing IDLs
-      run: |
-        git clone "${{ secrets.EXTERNALS_LINK }}" IDLs
-        cp -r IDLs/* External/
-        rm -rf IDLs/
+    - uses: actions/checkout@master
+      with:
+        name: WinDurango/WinDurango-IDLs
+        ref: refs/heads/main
+        path: IDLs/
       env:
         EXTERNALS_LINK: ${{ secrets.EXTERNALS_LINK }}
+        
+    - name: Copying IDLs
+      run: |
+        cp -r IDLs/* External/
+        rm -r IDLs/
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
