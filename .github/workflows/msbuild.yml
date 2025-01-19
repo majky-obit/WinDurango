@@ -45,8 +45,7 @@ jobs:
         
     - name: Copying IDLs
       run: |
-        cp -r IDLs/* External/
-        rm -r IDLs/
+        cp -r .\IDLs\* .\External\
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
