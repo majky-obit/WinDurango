@@ -113,6 +113,7 @@
     <ClCompile Include="dxgi_factory.cpp" />
     <ClCompile Include="dxgi_swapchain.cpp" />
     <ClCompile Include="graphics_unknown.cpp" />
+    <ClCompile Include="overlay\overlay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\thirdparty\imgui\backends\imgui_impl_dx11.h" />
@@ -132,6 +133,9 @@
     <ClInclude Include="dxgi_factory.h" />
     <ClInclude Include="dxgi_swapchain.h" />
     <ClInclude Include="graphics_unknown.h" />
+    <ClInclude Include="overlay\overlay.h" />
+    <ClInclude Include="resource.hpp" />
+    <ClInclude Include="view.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

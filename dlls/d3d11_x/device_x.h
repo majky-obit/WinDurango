@@ -1,10 +1,12 @@
 #pragma once
-#include "graphics_unknown.h"
 #include <d3d11_1.h>
 #include <d3d11_2.h>
+#include "graphics_unknown.h"
+#include <exception>
 
 namespace wdi
 {
+	class ID3D11DeviceContextX;
 	struct D3D11X_COUNTER_SET_DESC;
 	struct D3D11X_DESCRIPTOR_RESOURCE;
 	struct D3D11_DMA_ENGINE_CONTEXT_DESC;
@@ -246,7 +248,7 @@ namespace wd
 	class device_x : wdi::ID3D11DeviceX
 	{
 	public:
-		device_x(ID3D11Device2* device) : wrapped_interface(device) { wrapped_interface->AddRef(); }
+		device_x(::ID3D11Device2* device) : wrapped_interface(device) { wrapped_interface->AddRef(); }
 
 		virtual HRESULT CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Buffer** ppBuffer) override
 		{
@@ -420,7 +422,8 @@ namespace wd
 
 		virtual HRESULT SetPrivateDataInterfaceGraphics(REFGUID guid, const IGraphicsUnknown* pData) override
 		{
-			return wrapped_interface->SetPrivateDataInterfaceGraphics(guid, pData);
+			throw std::exception("Not implemented");
+			//return wrapped_interface->SetPrivateDataInterfaceGraphics(guid, pData);
 		}
 
 		virtual D3D_FEATURE_LEVEL GetFeatureLevel( ) override
@@ -510,6 +513,6 @@ namespace wd
 			return wrapped_interface->CheckMultisampleQualityLevels1(Format, SampleCount, Flags, pNumQualityLevels);
 		}
 	private:
-		ID3D11Device2* wrapped_interface;
+		::ID3D11Device2* wrapped_interface;
 	};
 }

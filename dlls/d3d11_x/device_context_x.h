@@ -585,7 +585,7 @@ namespace wd
 	public:
 		device_context_x(::ID3D11DeviceContext2* wrapped_interface) : wrapped_interface(wrapped_interface)
 		{
-			InitFunctionsTables( );
+			populate_function_tables( );
 			wrapped_interface->AddRef( );
 		}
 
@@ -602,14 +602,12 @@ namespace wd
 
 		std::array<FARPROC, 270> function_table;
 
-		void InitFunctionsTables( )
+		void populate_function_tables( )
 		{
-			auto virtualPTR = *reinterpret_cast<FARPROC**>(this);
+			auto v_ptr = *reinterpret_cast<FARPROC**>(this);
 
-			for (size_t I = 0; I < function_table.size( ); I++)
-			{
-				function_table[ I ] = virtualPTR[ I ];
-			}
+			for (size_t i = 0; i < function_table.size( ); i++)
+				function_table[ i ] = v_ptr[ i ];
 		}
 
 		void GetDevice(ID3D11Device** ppDevice) override;

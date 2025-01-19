@@ -1,9 +1,11 @@
+#include "d3d11_x.h"
 #include <cstdio>
 #include <mutex>
-
-#include "d3d_x/d3d_x.hpp"
-#include "ID3DWrappers.h"
 #include "overlay/overlay.h"
+#include <d3d11.h>
+
+#include "device_context_x.h"
+#include "device_x.h"
 
 HRESULT _stdcall D3DQuerySEQCounters_X(D3D_SEQ_COUNTER_DATA* pData)
 {
@@ -138,9 +140,9 @@ HRESULT __stdcall D3D11CreateDevice_X(
     _In_reads_opt_(FeatureLevels) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
     UINT FeatureLevels,
     UINT SDKVersion,
-    _Out_opt_ d3d11x::ID3D11Device** ppDevice,
+    _Out_opt_ wdi::ID3D11Device** ppDevice,
     _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
-    _Out_opt_ d3d11x::ID3D11DeviceContext** ppImmediateContext)
+    _Out_opt_ wdi::ID3D11DeviceContext** ppImmediateContext)
 {
     printf("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!\n");
     printf("SDK Version: %d\n", SDKVersion);
@@ -172,13 +174,13 @@ HRESULT __stdcall D3D11CreateDevice_X(
 		if (ppDevice != nullptr)
         {
             (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
-            *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
+            *ppDevice = reinterpret_cast<wdi::ID3D11Device*>(new wd::device_x(device2));
         }
 
         if (ppImmediateContext != nullptr)
         {
             (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
-            *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(device_context2));
+            *ppImmediateContext = reinterpret_cast<wdi::ID3D11DeviceContext*>(new wd::device_context_x(device_context2));
         }
     }
     else
@@ -191,8 +193,8 @@ HRESULT __stdcall D3D11CreateDevice_X(
 
 HRESULT __stdcall D3D11XCreateDeviceX_X(
     _In_ const D3D11X_CREATE_DEVICE_PARAMETERS* pParameters,
-    _Out_opt_ d3d11x::ID3D11Device** ppDevice,
-    _Out_opt_ d3d11x::ID3D11DeviceContext** ppImmediateContext)
+    _Out_opt_ wdi::ID3D11Device** ppDevice,
+    _Out_opt_ wdi::ID3D11DeviceContext** ppImmediateContext)
 {
     printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
     printf("SDK Version: %d\n", pParameters->Version);
@@ -213,12 +215,17 @@ HRESULT __stdcall D3D11XCreateDeviceX_X(
     if (SUCCEEDED(hr))
     {
         // get dx11.2 feature level, since that's what dx11.x inherits from
-        // MAYBE-TODO: VS doesn't like this line due to ppDevice not having a clear value. Maybe check if ppDevice is valid before deref.
-        (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
-        (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
+        if (ppDevice != nullptr)
+        {
+            (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
+            *ppDevice = reinterpret_cast<wdi::ID3D11Device*>(new wd::device_x(device2));
+        }
 
-        *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
-        *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(device_context2));
+        if (ppImmediateContext != nullptr)
+        {
+            (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
+            *ppImmediateContext = reinterpret_cast<wdi::ID3D11DeviceContext*>(new wd::device_context_x(device_context2));
+        }
     }
     else
     {

@@ -1,5 +1,6 @@
+#include <d3d11_1.h>
+#include <d3d11_2.h>
 #include "device_context_x.h"
-
 #include <stdexcept>
 
 void wd::device_context_x::GetDevice(ID3D11Device** ppDevice)
@@ -206,7 +207,8 @@ void wd::device_context_x::SOSetTargets(UINT NumBuffers, ID3D11Buffer* const* pp
 
 void wd::device_context_x::DrawAuto(ID3D11DeviceContext* pDeviceContext)
 {
-	wrapped_interface->DrawAuto(pDeviceContext);
+	throw std::logic_error("Not implemented");
+	//wrapped_interface->DrawAuto(pDeviceContext);
 }
 
 void wd::device_context_x::DrawIndexedInstancedIndirect(ID3D11Buffer* pBufferForArgs, UINT AlignedByteOffsetForArgs)
@@ -793,8 +795,9 @@ HRESULT wd::device_context_x::ResizeTilePool(ID3D11Buffer* pTilePool, UINT64 New
 void wd::device_context_x::TiledResourceBarrier(ID3D11DeviceChild* pTiledResourceOrViewAccessBeforeBarrier,
 	ID3D11DeviceChild* pTiledResourceOrViewAccessAfterBarrier)
 {
-	wrapped_interface->TiledResourceBarrier(pTiledResourceOrViewAccessBeforeBarrier,
-	                                           pTiledResourceOrViewAccessAfterBarrier);
+	throw std::logic_error("Not implemented");
+	//wrapped_interface->TiledResourceBarrier(pTiledResourceOrViewAccessBeforeBarrier,
+	//                                           pTiledResourceOrViewAccessAfterBarrier);
 }
 
 INT wd::device_context_x::PIXBeginEvent(LPCWSTR Name)

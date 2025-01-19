@@ -24,7 +24,7 @@ namespace wdi
 
 namespace wd
 {
-	class graphics_unknown : wdi::IGraphicsUnknown
+	class graphics_unknown : public wdi::IGraphicsUnknown
 	{
 	public:
 		graphics_unknown( ) {

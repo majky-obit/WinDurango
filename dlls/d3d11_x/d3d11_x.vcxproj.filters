@@ -52,6 +52,9 @@
     <ClCompile Include="device_child_x.cpp">
       <Filter>wrappers\device_child_x</Filter>
     </ClCompile>
+    <ClCompile Include="overlay\overlay.cpp">
+      <Filter>overlay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d11_x.h" />
@@ -103,6 +106,15 @@
     <ClInclude Include="device_context_x.h">
       <Filter>wrappers\device_context_x</Filter>
     </ClInclude>
+    <ClInclude Include="view.hpp">
+      <Filter>wrappers\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.hpp">
+      <Filter>wrappers\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="overlay\overlay.h">
+      <Filter>overlay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
@@ -137,6 +149,9 @@
     </Filter>
     <Filter Include="wrappers\dxgi_factory">
       <UniqueIdentifier>{a326eddd-f6a8-4e01-bd0b-6c5b91adf983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="overlay">
+      <UniqueIdentifier>{c54987f8-e8bd-47e3-8940-2740f44a8f49}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
