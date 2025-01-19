@@ -32,9 +32,6 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Install 7zip
-      run: choco install 7zip --no-progress
-
     - name: Checkout private tools
       uses: actions/checkout@v4
       with:
