@@ -42,7 +42,7 @@ jobs:
     - name: Copying IDLs
       run: |
         ls IDLs
-        Copy-Item -Path IDLs\* -Destination External\ -Recurse
+        Copy-Item -Path D:\a\WinDurango\WinDurango\IDLs\* -Destination D:\a\WinDurango\WinDurango\External\ -Recurse
         ls External
 
     - name: Add MSBuild to PATH
