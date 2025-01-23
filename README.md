@@ -33,7 +33,7 @@ Discussing illegal activities, such as piracy, (illegal) hacking, doxxing/cyberb
 [![View stargazers](https://img.shields.io/github/stars/WinDurango/WinDurango)](https://github.com/WinDurango/WinDurango/stargazers)
 
 Currently on Minecraft: Xbox One Edition runs with WinDurango.
-See the [Game compatibility list](https://github.com/WinDurango/WinDurango-game-compatibility/issues)
+See the [Game compatibility list](https://windurango.github.io/Documentation/playable-games.html)
 for currently tracked games, and feel free to contribute your own updates,
 screenshots, and information there following the [existing conventions](https://github.com/WinDurango/WinDurango-game-compatibility/blob/main/README.md).
 
