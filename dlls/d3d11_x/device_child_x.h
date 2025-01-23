@@ -10,7 +10,8 @@ namespace wdi
 		ID3D11Device* m_pDevice;
 		void* m_pPrivateData;
 
-		virtual void STDMETHODCALLTYPE GetDevice(ID3D11Device** ppDevice) = 0;
+		// @Patoke todo: make this access wdi::ID3D11Device instead, this is a temporary fix
+		virtual void STDMETHODCALLTYPE GetDevice(::ID3D11Device** ppDevice) = 0;
 		virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID guid, UINT* pDataSize, void* pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID guid, UINT DataSize, const void* pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(REFGUID guid, const IUnknown* pData) = 0;
