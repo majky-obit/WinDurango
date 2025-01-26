@@ -610,6 +610,29 @@ namespace wd
 				function_table[ i ] = v_ptr[ i ];
 		}
 
+		IGU_DEFINE_REF
+
+		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+		{
+			if (riid == __uuidof(wdi::ID3D11DeviceContext) || riid == __uuidof(wdi::ID3D11DeviceContext1) ||
+				riid == __uuidof(wdi::ID3D11DeviceContext2) || riid == __uuidof(wdi::ID3D11DeviceContextX))
+			{
+				*ppvObject = this;
+				AddRef( );
+				return S_OK;
+			}
+
+			if (riid == __uuidof(wdi::IGraphicsUnwrap))
+			{
+				*ppvObject = wrapped_interface;
+				return S_OK;
+			}
+
+			TRACE_INTERFACE_NOT_HANDLED("device_context_x");
+			*ppvObject = nullptr;
+			return E_NOINTERFACE;
+		}
+
 		void GetDevice(ID3D11Device** ppDevice) override;
 		HRESULT GetPrivateData(const GUID& guid, UINT* pDataSize, void* pData) override;
 		HRESULT SetPrivateData(const GUID& guid, UINT DataSize, const void* pData) override;

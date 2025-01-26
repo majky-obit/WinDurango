@@ -20,6 +20,11 @@ namespace wdi
 		virtual ULONG AddRef( ) = 0;
 		virtual ULONG Release( ) = 0;
 	};
+
+	D3DINTERFACE(IGraphicsUnwrap, bcfaae29, e1a2, 4b9a, aa, fc, 55, b9, ff, 21, fa, 54)
+	{
+
+	};
 }
 
 namespace wd
@@ -31,12 +36,12 @@ namespace wd
 			m_RefCount = 1;
 		}
 
-		ULONG STDMETHODCALLTYPE AddRef( ) override
+		ULONG AddRef( ) override
 		{
 			return InterlockedIncrement(&m_RefCount);
 		}
 
-		ULONG STDMETHODCALLTYPE Release( ) override
+		ULONG Release( ) override
 		{
 			ULONG refCount = InterlockedDecrement(&m_RefCount);
 			if (refCount == 0) {
@@ -45,7 +50,7 @@ namespace wd
 			return refCount;
 		}
 
-		HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override
+		HRESULT QueryInterface(REFIID riid, void** ppvObject) override
 		{
 			if (ppvObject == nullptr)
 			{

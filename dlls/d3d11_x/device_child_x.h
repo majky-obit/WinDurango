@@ -1,4 +1,5 @@
 #pragma once
+#include <cassert>
 #include <exception>
 
 #include "d3d11_x.h"
@@ -49,7 +50,7 @@ namespace wd
 
 		HRESULT STDMETHODCALLTYPE SetPrivateDataInterfaceGraphics(REFGUID guid, const IGraphicsUnknown* pData) override
 		{
-			throw std::exception(__func__);
+			assert( false && "Not implemented" );
 		}
 
 	private:

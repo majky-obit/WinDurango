@@ -1,8 +1,10 @@
 #pragma once
+#include <cstdio>
 #include <d3d11_1.h>
 #include <d3d11_2.h>
 #include "graphics_unknown.h"
 #include <exception>
+#include <format>
 
 namespace wdi
 {
@@ -251,270 +253,296 @@ namespace wdi
 
 namespace wd
 {
-	class device_x : wdi::ID3D11DeviceX
+	class device_x : public wdi::ID3D11DeviceX
 	{
 	public:
 		device_x(::ID3D11Device2* device) : wrapped_interface(device) { wrapped_interface->AddRef(); }
 
-		virtual HRESULT CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Buffer** ppBuffer) override
+		IGU_DEFINE_REF
+
+		HRESULT QueryInterface(REFIID riid, void** ppvObject) override
+		{
+			if (ppvObject == nullptr) {
+				return E_POINTER;
+			}
+
+			if (riid == __uuidof(wdi::ID3D11DeviceX) || riid == __uuidof(wdi::ID3D11Device) || riid == __uuidof(wdi::ID3D11Device1) || riid == __uuidof(wdi::ID3D11Device2))
+			{
+				*ppvObject = static_cast<wdi::ID3D11DeviceX*>(this);
+				AddRef( );
+				return S_OK;
+			}
+
+			if (riid == __uuidof(wdi::IGraphicsUnwrap))
+			{
+				*ppvObject = wrapped_interface;
+				return S_OK;
+			}
+
+			TRACE_INTERFACE_NOT_HANDLED("device_x");
+			*ppvObject = nullptr;
+			return E_NOINTERFACE;
+		}
+
+		HRESULT CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Buffer** ppBuffer) override
 		{
 			return wrapped_interface->CreateBuffer(pDesc, pInitialData, ppBuffer);
 		}
 
-		virtual HRESULT CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture1D** ppTexture1D) override
+		HRESULT CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture1D** ppTexture1D) override
 		{
 			return wrapped_interface->CreateTexture1D(pDesc, pInitialData, ppTexture1D);
 		}
 
-		virtual HRESULT CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture2D** ppTexture2D) override
+		HRESULT CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture2D** ppTexture2D) override
 		{
 			return wrapped_interface->CreateTexture2D(pDesc, pInitialData, ppTexture2D);
 		}
 
-		virtual HRESULT CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture3D** ppTexture3D) override
+		HRESULT CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture3D** ppTexture3D) override
 		{
 			return wrapped_interface->CreateTexture3D(pDesc, pInitialData, ppTexture3D);
 		}
 
-		virtual HRESULT CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc, ID3D11ShaderResourceView** ppSRView) override
+		HRESULT CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc, ID3D11ShaderResourceView** ppSRView) override
 		{
 			return wrapped_interface->CreateShaderResourceView(pResource, pDesc, ppSRView);
 		}
 
-		virtual HRESULT CreateUnorderedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView) override
+		HRESULT CreateUnorderedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView) override
 		{
 			return wrapped_interface->CreateUnorderedAccessView(pResource, pDesc, ppUAView);
 		}
 
-		virtual HRESULT CreateRenderTargetView(ID3D11Resource* pResource, const D3D11_RENDER_TARGET_VIEW_DESC* pDesc, ID3D11RenderTargetView** ppRTView) override
+		HRESULT CreateRenderTargetView(ID3D11Resource* pResource, const D3D11_RENDER_TARGET_VIEW_DESC* pDesc, ID3D11RenderTargetView** ppRTView) override
 		{
 			return wrapped_interface->CreateRenderTargetView(pResource, pDesc, ppRTView);
 		}
 
-		virtual HRESULT CreateDepthStencilView(ID3D11Resource* pResource, const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc, ID3D11DepthStencilView** ppDepthStencilView) override
+		HRESULT CreateDepthStencilView(ID3D11Resource* pResource, const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc, ID3D11DepthStencilView** ppDepthStencilView) override
 		{
 			return wrapped_interface->CreateDepthStencilView(pResource, pDesc, ppDepthStencilView);
 		}
 
-		virtual HRESULT CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs, UINT NumElements, const void* pShaderBytecodeWithInputSignature, SIZE_T BytecodeLength, ID3D11InputLayout** ppInputLayout) override
+		HRESULT CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs, UINT NumElements, const void* pShaderBytecodeWithInputSignature, SIZE_T BytecodeLength, ID3D11InputLayout** ppInputLayout) override
 		{
 			return wrapped_interface->CreateInputLayout(pInputElementDescs, NumElements, pShaderBytecodeWithInputSignature, BytecodeLength, ppInputLayout);
 		}
 
-		virtual HRESULT CreateVertexShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11VertexShader** ppVertexShader) override
+		HRESULT CreateVertexShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11VertexShader** ppVertexShader) override
 		{
 			return wrapped_interface->CreateVertexShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppVertexShader);
 		}
 
-		virtual HRESULT CreateGeometryShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11GeometryShader** ppGeometryShader) override
+		HRESULT CreateGeometryShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11GeometryShader** ppGeometryShader) override
 		{
 			return wrapped_interface->CreateGeometryShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppGeometryShader);
 		}
 
-		virtual HRESULT CreateGeometryShaderWithStreamOutput(const void* pShaderBytecode, SIZE_T BytecodeLength, const D3D11_SO_DECLARATION_ENTRY* pSODeclaration, UINT NumEntries, const UINT* pBufferStrides, UINT NumStrides, UINT RasterizedStream, ID3D11ClassLinkage* pClassLinkage, ID3D11GeometryShader** ppGeometryShader) override
+		HRESULT CreateGeometryShaderWithStreamOutput(const void* pShaderBytecode, SIZE_T BytecodeLength, const D3D11_SO_DECLARATION_ENTRY* pSODeclaration, UINT NumEntries, const UINT* pBufferStrides, UINT NumStrides, UINT RasterizedStream, ID3D11ClassLinkage* pClassLinkage, ID3D11GeometryShader** ppGeometryShader) override
 		{
 			return wrapped_interface->CreateGeometryShaderWithStreamOutput(pShaderBytecode, BytecodeLength, pSODeclaration, NumEntries, pBufferStrides, NumStrides, RasterizedStream, pClassLinkage, ppGeometryShader);
 		}
 
-		virtual HRESULT CreatePixelShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11PixelShader** ppPixelShader) override
+		HRESULT CreatePixelShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11PixelShader** ppPixelShader) override
 		{
 			return wrapped_interface->CreatePixelShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppPixelShader);
 		}
 
-		virtual HRESULT CreateHullShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11HullShader** ppHullShader) override
+		HRESULT CreateHullShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11HullShader** ppHullShader) override
 		{
 			return wrapped_interface->CreateHullShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppHullShader);
 		}
 
-		virtual HRESULT CreateDomainShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11DomainShader** ppDomainShader) override
+		HRESULT CreateDomainShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11DomainShader** ppDomainShader) override
 		{
 			return wrapped_interface->CreateDomainShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppDomainShader);
 		}
 
-		virtual HRESULT CreateComputeShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11ComputeShader** ppComputeShader) override
+		HRESULT CreateComputeShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ClassLinkage* pClassLinkage, ID3D11ComputeShader** ppComputeShader) override
 		{
 			return wrapped_interface->CreateComputeShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppComputeShader);
 		}
 
-		virtual HRESULT CreateClassLinkage(ID3D11ClassLinkage** ppLinkage) override
+		HRESULT CreateClassLinkage(ID3D11ClassLinkage** ppLinkage) override
 		{
 			return wrapped_interface->CreateClassLinkage(ppLinkage);
 		}
 
-		virtual HRESULT CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, ID3D11BlendState** ppBlendState) override
+		HRESULT CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, ID3D11BlendState** ppBlendState) override
 		{
 			return wrapped_interface->CreateBlendState(pBlendStateDesc, ppBlendState);
 		}
 
-		virtual HRESULT CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc, ID3D11DepthStencilState** ppDepthStencilState) override
+		HRESULT CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc, ID3D11DepthStencilState** ppDepthStencilState) override
 		{
 			return wrapped_interface->CreateDepthStencilState(pDepthStencilDesc, ppDepthStencilState);
 		}
 
-		virtual HRESULT CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc, ID3D11RasterizerState** ppRasterizerState) override
+		HRESULT CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc, ID3D11RasterizerState** ppRasterizerState) override
 		{
 			return wrapped_interface->CreateRasterizerState(pRasterizerDesc, ppRasterizerState);
 		}
 
-		virtual HRESULT CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc, ID3D11SamplerState** ppSamplerState) override
+		HRESULT CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc, ID3D11SamplerState** ppSamplerState) override
 		{
 			return wrapped_interface->CreateSamplerState(pSamplerDesc, ppSamplerState);
 		}
 
-		virtual HRESULT CreateQuery(const D3D11_QUERY_DESC* pQueryDesc, ID3D11Query** ppQuery) override
+		HRESULT CreateQuery(const D3D11_QUERY_DESC* pQueryDesc, ID3D11Query** ppQuery) override
 		{
 			return wrapped_interface->CreateQuery(pQueryDesc, ppQuery);
 		}
 
-		virtual HRESULT CreatePredicate(const D3D11_QUERY_DESC* pPredicateDesc, ID3D11Predicate** ppPredicate) override
+		HRESULT CreatePredicate(const D3D11_QUERY_DESC* pPredicateDesc, ID3D11Predicate** ppPredicate) override
 		{
 			return wrapped_interface->CreatePredicate(pPredicateDesc, ppPredicate);
 		}
 
-		virtual HRESULT CreateCounter(const D3D11_COUNTER_DESC* pCounterDesc, ID3D11Counter** ppCounter) override
+		HRESULT CreateCounter(const D3D11_COUNTER_DESC* pCounterDesc, ID3D11Counter** ppCounter) override
 		{
 			return wrapped_interface->CreateCounter(pCounterDesc, ppCounter);
 		}
 
-		virtual HRESULT CreateDeferredContext(UINT ContextFlags, ID3D11DeviceContext** ppDeferredContext) override
+		HRESULT CreateDeferredContext(UINT ContextFlags, ID3D11DeviceContext** ppDeferredContext) override
 		{
 			return wrapped_interface->CreateDeferredContext(ContextFlags, ppDeferredContext);
 		}
 
-		virtual HRESULT OpenSharedResource(HANDLE hResource, REFIID ReturnedInterface, void** ppResource) override
+		HRESULT OpenSharedResource(HANDLE hResource, REFIID ReturnedInterface, void** ppResource) override
 		{
 			return wrapped_interface->OpenSharedResource(hResource, ReturnedInterface, ppResource);
 		}
 
-		virtual HRESULT CheckFormatSupport(DXGI_FORMAT Format, UINT* pFormatSupport) override
+		HRESULT CheckFormatSupport(DXGI_FORMAT Format, UINT* pFormatSupport) override
 		{
 			return wrapped_interface->CheckFormatSupport(Format, pFormatSupport);
 		}
 
-		virtual HRESULT CheckMultisampleQualityLevels(DXGI_FORMAT Format, UINT SampleCount, UINT* pNumQualityLevels) override
+		HRESULT CheckMultisampleQualityLevels(DXGI_FORMAT Format, UINT SampleCount, UINT* pNumQualityLevels) override
 		{
 			return wrapped_interface->CheckMultisampleQualityLevels(Format, SampleCount, pNumQualityLevels);
 		}
 
-		virtual void CheckCounterInfo(D3D11_COUNTER_INFO* pCounterInfo) override
+		void CheckCounterInfo(D3D11_COUNTER_INFO* pCounterInfo) override
 		{
 			wrapped_interface->CheckCounterInfo(pCounterInfo);
 		}
 
-		virtual HRESULT CheckCounter(const D3D11_COUNTER_DESC* pDesc, D3D11_COUNTER_TYPE* pType, UINT* pActiveCounters, LPSTR szName, UINT* pNameLength, LPSTR szUnits, UINT* pUnitsLength, LPSTR szDescription, UINT* pDescriptionLength) override
+		HRESULT CheckCounter(const D3D11_COUNTER_DESC* pDesc, D3D11_COUNTER_TYPE* pType, UINT* pActiveCounters, LPSTR szName, UINT* pNameLength, LPSTR szUnits, UINT* pUnitsLength, LPSTR szDescription, UINT* pDescriptionLength) override
 		{
 			return wrapped_interface->CheckCounter(pDesc, pType, pActiveCounters, szName, pNameLength, szUnits, pUnitsLength, szDescription, pDescriptionLength);
 		}
 
-		virtual HRESULT CheckFeatureSupport(D3D11_FEATURE Feature, void* pFeatureSupportData, UINT FeatureSupportDataSize) override
+		HRESULT CheckFeatureSupport(D3D11_FEATURE Feature, void* pFeatureSupportData, UINT FeatureSupportDataSize) override
 		{
 			return wrapped_interface->CheckFeatureSupport(Feature, pFeatureSupportData, FeatureSupportDataSize);
 		}
 
-		virtual HRESULT GetPrivateData(REFGUID guid, UINT* pDataSize, void* pData) override
+		HRESULT GetPrivateData(REFGUID guid, UINT* pDataSize, void* pData) override
 		{
 			return wrapped_interface->GetPrivateData(guid, pDataSize, pData);
 		}
 
-		virtual HRESULT SetPrivateData(REFGUID guid, UINT DataSize, const void* pData) override
+		HRESULT SetPrivateData(REFGUID guid, UINT DataSize, const void* pData) override
 		{
 			return wrapped_interface->SetPrivateData(guid, DataSize, pData);
 		}
 
-		virtual HRESULT SetPrivateDataInterface(REFGUID guid, const IUnknown* pData) override
+		HRESULT SetPrivateDataInterface(REFGUID guid, const IUnknown* pData) override
 		{
 			return wrapped_interface->SetPrivateDataInterface(guid, pData);
 		}
 
-		virtual HRESULT SetPrivateDataInterfaceGraphics(REFGUID guid, const IGraphicsUnknown* pData) override
+		HRESULT SetPrivateDataInterfaceGraphics(REFGUID guid, const IGraphicsUnknown* pData) override
 		{
 			throw std::exception("Not implemented");
 			//return wrapped_interface->SetPrivateDataInterfaceGraphics(guid, pData);
 		}
 
-		virtual D3D_FEATURE_LEVEL GetFeatureLevel( ) override
+		D3D_FEATURE_LEVEL GetFeatureLevel( ) override
 		{
 			return wrapped_interface->GetFeatureLevel( );
 		}
 
-		virtual UINT GetCreationFlags( ) override
+		UINT GetCreationFlags( ) override
 		{
 			return wrapped_interface->GetCreationFlags( );
 		}
 
-		virtual HRESULT GetDeviceRemovedReason( ) override
+		HRESULT GetDeviceRemovedReason( ) override
 		{
 			return wrapped_interface->GetDeviceRemovedReason( );
 		}
 
-		virtual void GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) override
+		void GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) override
 		{
 			wrapped_interface->GetImmediateContext(ppImmediateContext);
 		}
 
-		virtual HRESULT SetExceptionMode(UINT RaiseFlags) override
+		HRESULT SetExceptionMode(UINT RaiseFlags) override
 		{
 			return wrapped_interface->SetExceptionMode(RaiseFlags);
 		}
 
-		virtual UINT GetExceptionMode( ) override
+		UINT GetExceptionMode( ) override
 		{
 			return wrapped_interface->GetExceptionMode( );
 		}
 
 		// ID3D11Device1 methods
-		virtual void GetImmediateContext1(ID3D11DeviceContext1** ppImmediateContext) override
+		void GetImmediateContext1(ID3D11DeviceContext1** ppImmediateContext) override
 		{
 			wrapped_interface->GetImmediateContext1(ppImmediateContext);
 		}
 
-		virtual HRESULT CreateDeferredContext1(UINT ContextFlags, ID3D11DeviceContext1** ppDeferredContext) override
+		HRESULT CreateDeferredContext1(UINT ContextFlags, ID3D11DeviceContext1** ppDeferredContext) override
 		{
 			return wrapped_interface->CreateDeferredContext1(ContextFlags, ppDeferredContext);
 		}
 
-		virtual HRESULT CreateBlendState1(const D3D11_BLEND_DESC1* pBlendStateDesc, ID3D11BlendState1** ppBlendState) override
+		HRESULT CreateBlendState1(const D3D11_BLEND_DESC1* pBlendStateDesc, ID3D11BlendState1** ppBlendState) override
 		{
 			return wrapped_interface->CreateBlendState1(pBlendStateDesc, ppBlendState);
 		}
 
-		virtual HRESULT CreateRasterizerState1(const D3D11_RASTERIZER_DESC1* pRasterizerDesc, ID3D11RasterizerState1** ppRasterizerState) override
+		HRESULT CreateRasterizerState1(const D3D11_RASTERIZER_DESC1* pRasterizerDesc, ID3D11RasterizerState1** ppRasterizerState) override
 		{
 			return wrapped_interface->CreateRasterizerState1(pRasterizerDesc, ppRasterizerState);
 		}
 
-		virtual HRESULT CreateDeviceContextState(UINT Flags, const D3D_FEATURE_LEVEL* pFeatureLevels, UINT FeatureLevels, UINT SDKVersion, REFIID EmulatedInterface, D3D_FEATURE_LEVEL* pChosenFeatureLevel, ID3DDeviceContextState** ppContextState) override
+		HRESULT CreateDeviceContextState(UINT Flags, const D3D_FEATURE_LEVEL* pFeatureLevels, UINT FeatureLevels, UINT SDKVersion, REFIID EmulatedInterface, D3D_FEATURE_LEVEL* pChosenFeatureLevel, ID3DDeviceContextState** ppContextState) override
 		{
 			return wrapped_interface->CreateDeviceContextState(Flags, pFeatureLevels, FeatureLevels, SDKVersion, EmulatedInterface, pChosenFeatureLevel, ppContextState);
 		}
 
-		virtual HRESULT OpenSharedResource1(HANDLE hResource, REFIID ReturnedInterface, void** ppResource) override
+		HRESULT OpenSharedResource1(HANDLE hResource, REFIID ReturnedInterface, void** ppResource) override
 		{
 			return wrapped_interface->OpenSharedResource1(hResource, ReturnedInterface, ppResource);
 		}
 
-		virtual HRESULT OpenSharedResourceByName(LPCWSTR lpName, DWORD dwDesiredAccess, REFIID ReturnedInterface, void** ppResource) override
+		HRESULT OpenSharedResourceByName(LPCWSTR lpName, DWORD dwDesiredAccess, REFIID ReturnedInterface, void** ppResource) override
 		{
 			return wrapped_interface->OpenSharedResourceByName(lpName, dwDesiredAccess, ReturnedInterface, ppResource);
 		}
 
 		// ID3D11Device2 methods
-		virtual void GetImmediateContext2(ID3D11DeviceContext2** ppImmediateContext) override
+		void GetImmediateContext2(ID3D11DeviceContext2** ppImmediateContext) override
 		{
 			wrapped_interface->GetImmediateContext2(ppImmediateContext);
 		}
 
-		virtual HRESULT CreateDeferredContext2(UINT ContextFlags, ID3D11DeviceContext2** ppDeferredContext) override
+		HRESULT CreateDeferredContext2(UINT ContextFlags, ID3D11DeviceContext2** ppDeferredContext) override
 		{
 			return wrapped_interface->CreateDeferredContext2(ContextFlags, ppDeferredContext);
 		}
 
-		virtual void GetResourceTiling(ID3D11Resource* pTiledResource, UINT* pNumTilesForEntireResource, D3D11_PACKED_MIP_DESC* pPackedMipDesc, D3D11_TILE_SHAPE* pStandardTileShapeForNonPackedMips, UINT* pNumSubresourceTilings, UINT FirstSubresourceTilingToGet, D3D11_SUBRESOURCE_TILING* pSubresourceTilingsForNonPackedMips) override
+		void GetResourceTiling(ID3D11Resource* pTiledResource, UINT* pNumTilesForEntireResource, D3D11_PACKED_MIP_DESC* pPackedMipDesc, D3D11_TILE_SHAPE* pStandardTileShapeForNonPackedMips, UINT* pNumSubresourceTilings, UINT FirstSubresourceTilingToGet, D3D11_SUBRESOURCE_TILING* pSubresourceTilingsForNonPackedMips) override
 		{
 			wrapped_interface->GetResourceTiling(pTiledResource, pNumTilesForEntireResource, pPackedMipDesc, pStandardTileShapeForNonPackedMips, pNumSubresourceTilings, FirstSubresourceTilingToGet, pSubresourceTilingsForNonPackedMips);
 		}
 
-		virtual HRESULT CheckMultisampleQualityLevels1(DXGI_FORMAT Format, UINT SampleCount, UINT Flags, UINT* pNumQualityLevels) override
+		HRESULT CheckMultisampleQualityLevels1(DXGI_FORMAT Format, UINT SampleCount, UINT Flags, UINT* pNumQualityLevels) override
 		{
 			return wrapped_interface->CheckMultisampleQualityLevels1(Format, SampleCount, Flags, pNumQualityLevels);
 		}

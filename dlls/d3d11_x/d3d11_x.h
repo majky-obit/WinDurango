@@ -131,19 +131,32 @@ DEFINE_GUID(DXGI_DEBUG_D3D11, 0x4b99317b, 0xac39, 0x4aa6, 0xbb, 0xb, 0xba, 0xa0,
             Guid5, Guid6, Guid7, Guid8, Guid9, Guid10) \
             class D3DDECL_UUID(Guid0-Guid1-Guid2-Guid3##Guid4-Guid5##Guid6##Guid7##Guid8##Guid9##Guid10) Name
 
-#define WD_WRAP(func_name, ...) \
-    virtual auto func_name(__VA_ARGS__) -> decltype(wrapped_interface->func_name(__VA_ARGS__)) override { \
-        return wrapped_interface->func_name(__VA_ARGS__); \
-    }
+#define TRACE_INTERFACE_NOT_HANDLED(class_name) \
+    char iidstr[ sizeof("{AAAAAAAA-BBBB-CCCC-DDEE-FFGGHHIIJJKK}") ]; \
+	OLECHAR iidwstr[ sizeof(iidstr) ]; \
+	StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr)); \
+	WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr); \
+    MessageBoxA(NULL, std::format("[{}] INTERFACE NOT HANDLED: {}", class_name, iidstr).c_str(), "WD - d3d11_x", MB_OK) \
 
-#define WD_STUB(return_type, func_name, args) \
-    return_type func_name args override { \
-        return return_type(); \
-    }
+#define IGU_DEFINE_REF \
+    ULONG AddRef( ) override {                                \
+		wrapped_interface->AddRef( );                         \
+		return InterlockedIncrement(&m_RefCount);             \
+	}                                                         \
+                                                              \
+	ULONG Release( ) override {                               \
+	    ULONG refCount = InterlockedDecrement(&m_RefCount);   \
+		wrapped_interface->Release( );                        \
+                                                              \
+        if (refCount == 0)                                    \
+        {                                                     \
+            wrapped_interface->Release( );                    \
+            delete this;                                      \
+        }                                                     \
+                                                              \
+		return refCount;                                      \
+	}                                                         \
 
-#define WD_STUB_VOID(func_name, args, arg_names) \
-    void func_name args override { \
-        return; \
-    }
+#define assertm(exp, msg) assert((void(msg), exp))
 
 #endif

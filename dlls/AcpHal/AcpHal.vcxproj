@@ -146,7 +146,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AcpHal.h" />
+    <ClInclude Include="contexts.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="messages.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
