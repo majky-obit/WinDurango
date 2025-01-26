@@ -136,7 +136,7 @@ void wd::device_context_x::VSSetShaderResources(ID3D11ShaderResourceView* const*
 
 	if (ppShaderResourceViews != NULL)
 	{
-		ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [NumViews] {0};
+		ID3D11ShaderResourceView* modifiedViews[ D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT ];
 
 		for (UINT i = 0; i < NumViews; i++)
 		{
@@ -159,7 +159,7 @@ void wd::device_context_x::GSSetShaderResources(ID3D11ShaderResourceView* const*
 
 	if (ppShaderResourceViews != NULL)
 	{
-		ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [NumViews] {0};
+		ID3D11ShaderResourceView* modifiedViews[ D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT ];
 
 		for (UINT i = 0; i < NumViews; i++)
 		{
@@ -188,7 +188,7 @@ void wd::device_context_x::HSSetShaderResources(ID3D11ShaderResourceView* const*
 
 	if (ppShaderResourceViews != NULL)
 	{
-		ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [NumViews] {0};
+		ID3D11ShaderResourceView* modifiedViews[ D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT ];
 
 		for (UINT i = 0; i < NumViews; i++)
 		{
@@ -217,7 +217,7 @@ void wd::device_context_x::DSSetShaderResources(ID3D11ShaderResourceView* const*
 
 	if (ppShaderResourceViews != NULL)
 	{
-		ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [NumViews] {0};
+		ID3D11ShaderResourceView* modifiedViews[ D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT ];
 
 		for (UINT i = 0; i < NumViews; i++)
 		{
@@ -226,11 +226,11 @@ void wd::device_context_x::DSSetShaderResources(ID3D11ShaderResourceView* const*
 			else
 				modifiedViews[ i ] = reinterpret_cast<shader_resource_view*>(ppShaderResourceViews[ i ])->wrapped_interface;
 		}
-		wrapped_interface->HSSetShaderResources(StartSlot, NumViews, modifiedViews);
+		wrapped_interface->DSSetShaderResources(StartSlot, NumViews, modifiedViews);
 	}
 	else
 	{
-		wrapped_interface->HSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+		wrapped_interface->DSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
 	}
 }
 
@@ -247,7 +247,7 @@ void wd::device_context_x::CSSetShaderResources(ID3D11ShaderResourceView* const*
 
 	if (ppShaderResourceViews != NULL)
 	{
-		ID3D11ShaderResourceView** modifiedViews = new ID3D11ShaderResourceView * [NumViews] {0};
+		ID3D11ShaderResourceView* modifiedViews[ D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT ];
 
 		for (UINT i = 0; i < NumViews; i++)
 		{
@@ -256,11 +256,11 @@ void wd::device_context_x::CSSetShaderResources(ID3D11ShaderResourceView* const*
 			else
 				modifiedViews[ i ] = reinterpret_cast<shader_resource_view*>(ppShaderResourceViews[ i ])->wrapped_interface;
 		}
-		wrapped_interface->HSSetShaderResources(StartSlot, NumViews, modifiedViews);
+		wrapped_interface->CSSetShaderResources(StartSlot, NumViews, modifiedViews);
 	}
 	else
 	{
-		wrapped_interface->HSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+		wrapped_interface->CSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
 	}
 }
 
@@ -302,13 +302,13 @@ void wd::device_context_x::GSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D1
 void wd::device_context_x::OMSetRenderTargets(UINT NumViews, ID3D11RenderTargetView* const* ppRenderTargetViews,
 	ID3D11DepthStencilView* pDepthStencilView)
 {
-	auto* depthStencilView = reinterpret_cast<ID3D11DepthStencilView*>(pDepthStencilView);
+	auto* depthStencilView = pDepthStencilView;
 	if (depthStencilView != nullptr)
 		depthStencilView = reinterpret_cast<depth_stencil_view*>(pDepthStencilView)->wrapped_interface;
 
 	if (ppRenderTargetViews != NULL)
 	{
-		ID3D11RenderTargetView** modifiedViews = new ID3D11RenderTargetView * [NumViews] {0};
+		ID3D11RenderTargetView* modifiedViews[ D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT ];
 		for (UINT i = 0; i < NumViews; i++)
 		{
 			if (ppRenderTargetViews[ i ] == nullptr)
@@ -597,7 +597,7 @@ void wd::device_context_x::IAGetVertexBuffers(UINT StartSlot, UINT NumBuffers, I
 {
 	if (ppVertexBuffers != NULL)
 	{
-		ID3D11Buffer* unwrappedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+		ID3D11Buffer* unwrappedBuffers[ D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT ];
 
 		wrapped_interface->IAGetVertexBuffers(StartSlot, NumBuffers, unwrappedBuffers, pStrides, pOffsets);
 
