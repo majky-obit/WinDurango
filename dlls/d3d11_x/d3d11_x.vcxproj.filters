@@ -55,6 +55,7 @@
     <ClCompile Include="overlay\overlay.cpp">
       <Filter>overlay</Filter>
     </ClCompile>
+    <ClCompile Include="dxgi_object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d11_x.h" />
@@ -114,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="overlay\overlay.h">
       <Filter>overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="dxgi_object.hpp">
+      <Filter>wrappers\shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

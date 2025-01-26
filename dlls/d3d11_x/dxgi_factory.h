@@ -1,9 +1,125 @@
 #pragma once
+#include "dxgi_object.hpp"
+
+namespace wdi
+{
+	D3DINTERFACE(IDXGIFactory, 7b7166ec, 21c7, 44ae, b2, 1a, c9, ae, 32, 1a, e3, 69) : public wd::dxgi_object
+	{
+	public:
+		IDXGIAdapter2 * m_pAdapter;
+
+		virtual HRESULT STDMETHODCALLTYPE EnumAdapters(
+			UINT Adapter,
+			IDXGIAdapter** ppAdapter) PURE;
+
+		virtual HRESULT STDMETHODCALLTYPE MakeWindowAssociation(
+			HWND WindowHandle,
+			UINT Flags) PURE;
+
+		virtual HRESULT STDMETHODCALLTYPE GetWindowAssociation(
+			HWND* pWindowHandle) PURE;
+
+		virtual HRESULT STDMETHODCALLTYPE CreateSwapChain(
+			IGraphicsUnknown* pDevice,
+			DXGI_SWAP_CHAIN_DESC* pDesc,
+			IDXGISwapChain** ppSwapChain) PURE;
+
+		virtual HRESULT STDMETHODCALLTYPE CreateSoftwareAdapter(
+			HMODULE Module,
+			IDXGIAdapter** ppAdapter) PURE;
+	};
+
+	D3DINTERFACE(IDXGIFactory1, 770aae78, f26f, 4dba, a8, 29, 25, 3c, 83, d1, b3, 87) : public wd::dxgi_object
+	{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE EnumAdapters1(
+			UINT Adapter,
+			IDXGIAdapter1** ppAdapter) PURE;
+
+		virtual BOOL STDMETHODCALLTYPE IsCurrent( ) PURE;
+	};
+
+	D3DINTERFACE(IDXGIFactory2, 50c83a1c, e072, 4c48, 87, b0, 36, 30, fa, 36, a6, d0) : public IDXGIFactory1
+	{
+	public:
+		virtual BOOL STDMETHODCALLTYPE IsWindowedStereoEnabled(void) PURE;
+
+        virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForHwnd(IGraphicsUnknown* pDevice,
+            HWND hWnd, const DXGI_SWAP_CHAIN_DESC1* pDesc,
+            const DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pFullscreenDesc,
+            IDXGIOutput* pRestrictToOutput,
+            IDXGISwapChain1** ppSwapChain) PURE;
+
+        virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForCoreWindow(
+           IGraphicsUnknown* pDevice,
+           IUnknown* pWindow,
+           DXGI_SWAP_CHAIN_DESC1* pDesc,
+           IDXGIOutput* pRestrictToOutput,
+           IDXGISwapChain1** ppSwapChain) PURE;
+
+        virtual HRESULT STDMETHODCALLTYPE GetSharedResourceAdapterLuid(
+            HANDLE hResource,
+            LUID* pLuid) PURE;
+
+        virtual HRESULT STDMETHODCALLTYPE RegisterStereoStatusWindow(
+            HWND WindowHandle,
+            UINT wMsg,
+            DWORD* pdwCookie) PURE;
+
+        virtual HRESULT STDMETHODCALLTYPE RegisterStereoStatusEvent(
+            HANDLE hEvent,
+            DWORD* pdwCookie) PURE;
+
+        virtual void STDMETHODCALLTYPE UnregisterStereoStatus(
+            DWORD dwCookie) PURE;
+
+        virtual HRESULT STDMETHODCALLTYPE RegisterOcclusionStatusWindow(
+            HWND WindowHandle,
+            UINT wMsg,
+            DWORD* pdwCookie) PURE;
+
+        virtual HRESULT STDMETHODCALLTYPE RegisterOcclusionStatusEvent(
+            HANDLE hEvent,
+            DWORD* pdwCookie) PURE;
+
+        virtual void STDMETHODCALLTYPE UnregisterOcclusionStatus(
+            DWORD dwCookie) PURE;
+
+        virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForComposition(
+            IGraphicsUnknown* pDevice,
+            const DXGI_SWAP_CHAIN_DESC1* pDesc,
+            IDXGIOutput* pRestrictToOutput,
+            IDXGISwapChain1** ppSwapChain) PURE;
+	};
+}
 
 namespace wd {
-	class dxgi_factory
+	class dxgi_factory : public wdi::IDXGIFactory2
 	{
+	public:
+        dxgi_factory(::IDXGIFactory2* factory) : wrapped_interface(factory) { wrapped_interface->AddRef( ); }
 
+        IGU_DEFINE_REF
+
+        HRESULT GetParent(const IID& riid, void** ppParent) override;
+        HRESULT EnumAdapters1(UINT Adapter, IDXGIAdapter1** ppAdapter) override;
+        HRESULT CreateSwapChainForComposition(IGraphicsUnknown* pDevice, const DXGI_SWAP_CHAIN_DESC1* pDesc,
+	        IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain) override;
+        HRESULT CreateSwapChainForHwnd(IGraphicsUnknown* pDevice, HWND hWnd, const DXGI_SWAP_CHAIN_DESC1* pDesc,
+	        const DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pFullscreenDesc, IDXGIOutput* pRestrictToOutput,
+	        IDXGISwapChain1** ppSwapChain) override;
+        HRESULT CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice, IUnknown* pWindow, DXGI_SWAP_CHAIN_DESC1* pDesc,
+	        IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain) override;
+        HRESULT GetSharedResourceAdapterLuid(HANDLE hResource, LUID* pLuid) override;
+        HRESULT RegisterStereoStatusWindow(HWND WindowHandle, UINT wMsg, DWORD* pdwCookie) override;
+        HRESULT RegisterStereoStatusEvent(HANDLE hEvent, DWORD* pdwCookie) override;
+        void UnregisterStereoStatus(DWORD dwCookie) override;
+        HRESULT RegisterOcclusionStatusWindow(HWND WindowHandle, UINT wMsg, DWORD* pdwCookie) override;
+        HRESULT RegisterOcclusionStatusEvent(HANDLE hEvent, DWORD* pdwCookie) override;
+        void UnregisterOcclusionStatus(DWORD dwCookie) override;
+
+private:
+        ::IDXGIFactory2* wrapped_interface;
 	};
 }
 

@@ -111,6 +111,7 @@
     <ClCompile Include="dxgi_adapter.cpp" />
     <ClCompile Include="dxgi_device.cpp" />
     <ClCompile Include="dxgi_factory.cpp" />
+    <ClCompile Include="dxgi_object.cpp" />
     <ClCompile Include="dxgi_swapchain.cpp" />
     <ClCompile Include="graphics_unknown.cpp" />
     <ClCompile Include="overlay\overlay.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="dxgi_adapter.h" />
     <ClInclude Include="dxgi_device.h" />
     <ClInclude Include="dxgi_factory.h" />
+    <ClInclude Include="dxgi_object.hpp" />
     <ClInclude Include="dxgi_swapchain.h" />
     <ClInclude Include="graphics_unknown.h" />
     <ClInclude Include="overlay\overlay.h" />

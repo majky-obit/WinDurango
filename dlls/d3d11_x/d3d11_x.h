@@ -3,6 +3,7 @@
 #define D3D11_X
 
 #include <d3d11.h>
+#include <format>
 
 #include "dxgi1_5.h"
 
@@ -157,6 +158,7 @@ DEFINE_GUID(DXGI_DEBUG_D3D11, 0x4b99317b, 0xac39, 0x4aa6, 0xbb, 0xb, 0xba, 0xa0,
 		return refCount;                                      \
 	}                                                         \
 
-#define assertm(exp, msg) assert((void(msg), exp))
+#define TRACE_NOT_IMPLEMENTED(class_name) \
+    MessageBoxA(NULL, std::format("[{}] NOT IMPLEMENTED\n{} - line {}", class_name, __FILE__, __LINE__).c_str(), "WD - d3d11_x", MB_OK) \
 
 #endif
