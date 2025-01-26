@@ -3,8 +3,22 @@
 #include "resource.hpp"
 #include "view.hpp"
 
+HRESULT wd::device_x::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
+	ID3D11Buffer** ppBuffer)
+{
+	ID3D11Buffer* buffer = nullptr;
+	HRESULT hr = wrapped_interface->CreateBuffer(pDesc, pInitialData, &buffer);
+
+	if (ppBuffer != nullptr)
+	{
+		*ppBuffer = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Buffer*>(new wd::buffer(buffer)) : nullptr;
+	}
+
+	return hr;
+}
+
 HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
-	ID3D11Texture1D** ppTexture1D)
+                                      ID3D11Texture1D** ppTexture1D)
 {
 	ID3D11Texture1D* texture1d = nullptr;
 	HRESULT hr = wrapped_interface->CreateTexture1D(pDesc, pInitialData, &texture1d);

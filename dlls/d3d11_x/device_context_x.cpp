@@ -37,7 +37,19 @@ HRESULT wd::device_context_x::SetName(LPCWSTR pName)
 
 void wd::device_context_x::VSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
-	wrapped_interface->VSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
+	{
+		ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+		for (UINT i = 0; i < NumBuffers; ++i)
+		{
+			modifiedBuffers[ i ] = reinterpret_cast<wd::buffer*>(ppConstantBuffers[ i ])->wrapped_interface;
+		}
+		wrapped_interface->VSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
+	}
+	else
+	{
+		wrapped_interface->VSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	}
 }
 
 void wd::device_context_x::Draw(UINT VertexCount, UINT StartVertexLocation)
@@ -49,17 +61,29 @@ void wd::device_context_x::Draw(UINT VertexCount, UINT StartVertexLocation)
 HRESULT wd::device_context_x::Map(ID3D11Resource* pResource, UINT Subresource, D3D11_MAP MapType, UINT MapFlags,
 	D3D11_MAPPED_SUBRESOURCE* pMappedResource)
 {
-	return wrapped_interface->Map(pResource, Subresource, MapType, MapFlags, pMappedResource);
+	return wrapped_interface->Map(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, Subresource, MapType, MapFlags, pMappedResource);
 }
 
 void wd::device_context_x::Unmap(ID3D11Resource* pResource, UINT Subresource)
 {
-	wrapped_interface->Unmap(pResource, Subresource);
+	wrapped_interface->Unmap(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, Subresource);
 }
 
 void wd::device_context_x::PSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
-	wrapped_interface->PSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
+	{
+		ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+		for (UINT i = 0; i < NumBuffers; ++i)
+		{
+			modifiedBuffers[ i ] = reinterpret_cast<wd::buffer*>(ppConstantBuffers[ i ])->wrapped_interface;
+		}
+		wrapped_interface->PSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
+	}
+	else
+	{
+		wrapped_interface->PSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	}
 }
 
 void wd::device_context_x::IASetInputLayout(ID3D11InputLayout* pInputLayout)
@@ -70,7 +94,29 @@ void wd::device_context_x::IASetInputLayout(ID3D11InputLayout* pInputLayout)
 void wd::device_context_x::IASetVertexBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppVertexBuffers,
 	const UINT* pStrides, const UINT* pOffsets)
 {
-	wrapped_interface->IASetVertexBuffers(StartSlot, NumBuffers, ppVertexBuffers, pStrides, pOffsets);
+	if (NumBuffers > D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - StartSlot)
+	{
+		printf("WARN: device_context_x::IASetVertexBuffers: NumBuffers > D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - StartSlot\n");
+		return;
+	}
+
+	if (ppVertexBuffers != NULL)
+	{
+		ID3D11Buffer* modifiedBuffers[ D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT ];
+		for (UINT i = 0; i < NumBuffers; i++)
+		{
+			if (ppVertexBuffers[ i ] == nullptr)
+				modifiedBuffers[ i ] = nullptr;
+			else
+				modifiedBuffers[ i ] = reinterpret_cast<wd::buffer*>(ppVertexBuffers[ i ])->wrapped_interface;
+		}
+
+		wrapped_interface->IASetVertexBuffers(StartSlot, NumBuffers, modifiedBuffers, pStrides, pOffsets);
+	}
+	else
+	{
+		wrapped_interface->IASetVertexBuffers(StartSlot, NumBuffers, ppVertexBuffers, pStrides, pOffsets);
+	}
 }
 
 void wd::device_context_x::GSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
@@ -418,7 +464,19 @@ void wd::device_context_x::HSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D1
 
 void wd::device_context_x::HSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
-	wrapped_interface->HSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
+	{
+		ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+		for (UINT i = 0; i < NumBuffers; ++i)
+		{
+			modifiedBuffers[ i ] = reinterpret_cast<wd::buffer*>(ppConstantBuffers[ i ])->wrapped_interface;
+		}
+		wrapped_interface->HSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
+	}
+	else
+	{
+		wrapped_interface->HSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	}
 }
 
 void wd::device_context_x::DSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers)
@@ -428,7 +486,18 @@ void wd::device_context_x::DSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D1
 
 void wd::device_context_x::DSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
-	wrapped_interface->DSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
+	{
+		ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+		for (UINT i = 0; i < NumBuffers; ++i)
+		{
+			modifiedBuffers[ i ] = reinterpret_cast<wd::buffer*>(ppConstantBuffers[ i ])->wrapped_interface;
+		}
+		wrapped_interface->DSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
+	}
+	else {
+		wrapped_interface->DSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	}
 }
 
 void wd::device_context_x::CSSetUnorderedAccessViews(UINT StartSlot, UINT NumUAVs,
@@ -444,12 +513,36 @@ void wd::device_context_x::CSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D1
 
 void wd::device_context_x::CSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
-	wrapped_interface->CSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
+	{
+		ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+		for (UINT i = 0; i < NumBuffers; ++i) {
+			modifiedBuffers[ i ] = reinterpret_cast<wd::buffer*>(ppConstantBuffers[ i ])->wrapped_interface;
+		}
+		wrapped_interface->CSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
+	}
+	else
+	{
+		wrapped_interface->CSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	}
 }
 
 void wd::device_context_x::VSGetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer** ppConstantBuffers)
 {
-	wrapped_interface->VSGetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	if (ppConstantBuffers != NULL)
+	{
+		ID3D11Buffer* unwrappedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+
+		wrapped_interface->VSGetConstantBuffers(StartSlot, NumBuffers, unwrappedBuffers);
+
+		for (UINT i = 0; i < NumBuffers; ++i) {
+			ppConstantBuffers[ i ] = reinterpret_cast<ID3D11Buffer*>(new wd::buffer(unwrappedBuffers[ i ]));
+		}
+	}
+	else
+	{
+		wrapped_interface->VSGetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	}
 }
 
 void wd::device_context_x::PSGetShaderResources(UINT StartSlot, UINT NumViews,
@@ -477,7 +570,21 @@ void wd::device_context_x::VSGetShader(ID3D11VertexShader** ppVertexShader, ID3D
 
 void wd::device_context_x::PSGetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer** ppConstantBuffers)
 {
-	wrapped_interface->PSGetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	if (ppConstantBuffers != NULL)
+	{
+		ID3D11Buffer* unwrappedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+
+		wrapped_interface->PSGetConstantBuffers(StartSlot, NumBuffers, unwrappedBuffers);
+
+		for (UINT i = 0; i < NumBuffers; ++i)
+		{
+			ppConstantBuffers[ i ] = reinterpret_cast<ID3D11Buffer*>(new wd::buffer(unwrappedBuffers[ i ]));
+		}
+	}
+	else
+	{
+		wrapped_interface->PSGetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	}
 }
 
 void wd::device_context_x::IAGetInputLayout(ID3D11InputLayout** ppInputLayout)
@@ -488,17 +595,52 @@ void wd::device_context_x::IAGetInputLayout(ID3D11InputLayout** ppInputLayout)
 void wd::device_context_x::IAGetVertexBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer** ppVertexBuffers,
 	UINT* pStrides, UINT* pOffsets)
 {
-	wrapped_interface->IAGetVertexBuffers(StartSlot, NumBuffers, ppVertexBuffers, pStrides, pOffsets);
+	if (ppVertexBuffers != NULL)
+	{
+		ID3D11Buffer* unwrappedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+
+		wrapped_interface->IAGetVertexBuffers(StartSlot, NumBuffers, unwrappedBuffers, pStrides, pOffsets);
+
+		for (UINT i = 0; i < NumBuffers; ++i)
+		{
+			ppVertexBuffers[ i ] = reinterpret_cast<ID3D11Buffer*>(new wd::buffer(unwrappedBuffers[ i ]));
+		}
+	}
+	else
+	{
+		wrapped_interface->IAGetVertexBuffers(StartSlot, NumBuffers, ppVertexBuffers, pStrides, pOffsets);
+	}
 }
 
 void wd::device_context_x::IAGetIndexBuffer(ID3D11Buffer** pIndexBuffer, DXGI_FORMAT* Format, UINT* Offset)
 {
 	wrapped_interface->IAGetIndexBuffer(pIndexBuffer, Format, Offset);
+
+	if (pIndexBuffer != nullptr)
+	{
+		*pIndexBuffer = pIndexBuffer
+			? reinterpret_cast<ID3D11Buffer*>(new wd::buffer(*pIndexBuffer))
+			: nullptr;
+	}
 }
 
 void wd::device_context_x::GSGetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer** ppConstantBuffers)
 {
-	wrapped_interface->GSGetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	if (ppConstantBuffers != NULL)
+	{
+		ID3D11Buffer* unwrappedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
+
+		wrapped_interface->GSGetConstantBuffers(StartSlot, NumBuffers, unwrappedBuffers);
+
+		for (UINT i = 0; i < NumBuffers; ++i)
+		{
+			ppConstantBuffers[ i ] = reinterpret_cast<ID3D11Buffer*>(new wd::buffer(unwrappedBuffers[ i ]));
+		}
+	}
+	else
+	{
+		wrapped_interface->GSGetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
+	}
 }
 
 void wd::device_context_x::GSGetShader(ID3D11GeometryShader** ppGeometryShader, ID3D11ClassInstance** ppClassInstances,
@@ -950,7 +1092,7 @@ void wd::device_context_x::FlushGpuCacheRange(UINT Flags, void* pBaseAddress, SI
 
 void wd::device_context_x::InsertWaitUntilIdle(UINT Flags)
 {
-	throw std::logic_error("Not implemented");
+	// FIXME: implement, stubbing this seems to be fine for now
 }
 
 UINT64 wd::device_context_x::InsertFence(UINT Flags)
@@ -960,7 +1102,7 @@ UINT64 wd::device_context_x::InsertFence(UINT Flags)
 
 void wd::device_context_x::InsertWaitOnFence(UINT Flags, UINT64 Fence)
 {
-	throw std::logic_error("Not implemented");
+	// FIXME: implement, stubbing this seems to be fine for now
 }
 
 void wd::device_context_x::RemapConstantBufferInheritance(wdi::D3D11_STAGE Stage, UINT Slot,
@@ -1473,7 +1615,7 @@ void wd::device_context_x::CSSetShaderUserData(UINT StartSlot, UINT NumRegisters
 void wd::device_context_x::InsertWaitOnMemory(const void* pAddress, UINT Flags,
 	D3D11_COMPARISON_FUNC ComparisonFunction, UINT ReferenceValue, UINT Mask)
 {
-	throw std::logic_error("Not implemented");
+	// FIXME: implement, stubbing this seems to be fine for now
 }
 
 void wd::device_context_x::WriteTimestampToMemory(void* pDstAddress)
@@ -1544,7 +1686,7 @@ void wd::device_context_x::WriteValueEndOfPipe64(void* pDestination, UINT64 Valu
 void wd::device_context_x::InsertWaitOnMemory64(const void* pAddress, UINT Flags,
 	D3D11_COMPARISON_FUNC ComparisonFunction, UINT64 ReferenceValue)
 {
-	throw std::logic_error("Not implemented");
+	// FIXME: implement, stubbing this seems to be fine for now
 }
 
 void wd::device_context_x::LoadConstantRamImmediate(UINT Flags, const void* pBuffer, UINT CeRamOffsetInBytes,
@@ -1632,7 +1774,7 @@ void wd::device_context_x::IASetIndexBuffer(UINT HardwareIndexFormat, ID3D11Buff
 		return wrapped_interface->IASetIndexBuffer(pIndexBuffer, Format, Offset);
 	}
 
-	wrapped_interface->IASetIndexBuffer(pIndexBuffer, Format, Offset);
+	wrapped_interface->IASetIndexBuffer(reinterpret_cast<wd::buffer*>(pIndexBuffer)->wrapped_interface, Format, Offset);
 }
 
 void wd::device_context_x::DrawIndexedInstanced(UINT64 StartIndexLocationAndIndexCountPerInstance,

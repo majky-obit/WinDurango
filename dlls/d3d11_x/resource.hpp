@@ -39,6 +39,13 @@ namespace wdi
 			/* [annotation] */
 			_Out_  D3D11_TEXTURE3D_DESC* pDesc) PURE;
     };
+
+	D3DINTERFACE(ID3D11Buffer, 48570b85, d1ee, 4fcd, a2, 50, eb, 35, 07, 22, b0, 37) : public ID3D11Resource {
+		public:
+		virtual void STDMETHODCALLTYPE GetDesc(
+			/* [annotation] */
+			_Out_  D3D11_BUFFER_DESC* pDesc) PURE;
+	};
 }
 
 // @unixian: does this even need to be wrapped? seems like the only thing it does in the pre-rewrite code is handle GetDevice
@@ -343,5 +350,86 @@ namespace wd
 		}
 
 		::ID3D11Texture3D* wrapped_interface;
+	};
+
+	class buffer : public wdi::ID3D11Buffer
+	{
+	public:
+		buffer(::ID3D11Buffer* buffer) : wrapped_interface(buffer) { wrapped_interface->AddRef( ); }\
+
+		IGU_DEFINE_REF
+
+		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+		{
+			if (riid == __uuidof(wdi::ID3D11Buffer))
+			{
+				*ppvObject = this;
+				AddRef( );
+				return S_OK;
+			}
+			TRACE_INTERFACE_NOT_HANDLED("buffer");
+			*ppvObject = nullptr;
+			return E_NOINTERFACE;
+		}
+
+		void STDMETHODCALLTYPE GetDesc(D3D11_BUFFER_DESC* pDesc) override
+		{
+			wrapped_interface->GetDesc(pDesc);
+		}
+
+		void GetDevice(ID3D11Device** ppDevice) override
+		{
+			printf("WARN: buffer::GetDevice returns a PC device!!\n");
+			wrapped_interface->GetDevice(ppDevice);
+		}
+
+		HRESULT GetPrivateData(const GUID& guid, UINT* pDataSize, void* pData) override
+		{
+			return wrapped_interface->GetPrivateData(guid, pDataSize, pData);
+		}
+
+		HRESULT SetPrivateData(const GUID& guid, UINT DataSize, const void* pData) override
+		{
+			return wrapped_interface->SetPrivateData(guid, DataSize, pData);
+		}
+
+		HRESULT SetPrivateDataInterface(const GUID& guid, const IUnknown* pData) override
+		{
+			return wrapped_interface->SetPrivateDataInterface(guid, pData);
+		}
+
+		HRESULT SetPrivateDataInterfaceGraphics(const GUID& guid, const IGraphicsUnknown* pData) override
+		{
+			TRACE_NOT_IMPLEMENTED("buffer");
+			return E_NOTIMPL;
+		}
+
+		HRESULT SetName(LPCWSTR pName) override
+		{
+			TRACE_NOT_IMPLEMENTED("buffer");
+			return E_NOTIMPL;
+		}
+
+		void GetType(D3D11_RESOURCE_DIMENSION* pResourceDimension) override
+		{
+			wrapped_interface->GetType(pResourceDimension);
+		}
+
+		void SetEvictionPriority(UINT EvictionPriority) override
+		{
+			wrapped_interface->SetEvictionPriority(EvictionPriority);
+		}
+
+		UINT GetEvictionPriority( ) override
+		{
+			return wrapped_interface->GetEvictionPriority( );
+		}
+
+		void GetDescriptor(wdi::D3D11X_DESCRIPTOR_RESOURCE* descriptor) override
+		{
+			TRACE_NOT_IMPLEMENTED("buffer");
+		}
+
+		::ID3D11Buffer* wrapped_interface;
 	};
 }
