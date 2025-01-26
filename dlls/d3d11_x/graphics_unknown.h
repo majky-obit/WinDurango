@@ -52,6 +52,8 @@ namespace wd
 
 		HRESULT QueryInterface(REFIID riid, void** ppvObject) override
 		{
+			TRACE_NOT_IMPLEMENTED("graphics_unknown");
+
 			if (ppvObject == nullptr)
 			{
 				return E_POINTER;

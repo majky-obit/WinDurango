@@ -20,6 +20,26 @@ namespace wd
 
 		IGU_DEFINE_REF
 
+		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+		{
+			if (riid == __uuidof(wdi::IDXGIAdapter))
+			{
+				*ppvObject = this;
+				AddRef( );
+				return S_OK;
+			}
+\
+			if (riid == __uuidof(wdi::IGraphicsUnwrap))
+			{
+				*ppvObject = wrapped_interface;
+				return S_OK;
+			}
+
+			TRACE_INTERFACE_NOT_HANDLED("dxgi_adapter");
+			*ppvObject = nullptr;
+			return E_NOINTERFACE;
+		}
+
 		HRESULT GetParent(const IID& riid, void** ppParent) override;
 		HRESULT EnumOutputs(UINT Output, IDXGIOutput** ppOutput) override;
 		HRESULT GetDesc(DXGI_ADAPTER_DESC* pDesc) override;

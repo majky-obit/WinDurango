@@ -1,8 +1,160 @@
 #include "device_x.h"
 #include <stdexcept>
+#include "resource.hpp"
+#include "view.hpp"
+
+HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
+	ID3D11Texture1D** ppTexture1D)
+{
+	ID3D11Texture1D* texture1d = nullptr;
+	HRESULT hr = wrapped_interface->CreateTexture1D(pDesc, pInitialData, &texture1d);
+
+	printf("[CreateTexture1D] created texture at 0x%llX\n", texture1d);
+
+	if (ppTexture1D != nullptr)
+	{
+		*ppTexture1D = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Texture1D*>(new texture_1d(texture1d)) : nullptr;
+	}
+
+	return hr;
+}
+
+HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
+	ID3D11Texture2D** ppTexture2D)
+{
+	ID3D11Texture2D* texture2d = nullptr;
+	HRESULT hr = wrapped_interface->CreateTexture2D(pDesc, pInitialData, &texture2d);
+
+	printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
+
+	if (ppTexture2D != nullptr)
+	{
+		*ppTexture2D = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Texture2D*>(new texture_2d(texture2d)) : nullptr;
+	}
+
+	return hr;
+}
+
+HRESULT wd::device_x::CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
+	ID3D11Texture3D** ppTexture3D)
+{
+	ID3D11Texture3D* texture3d = nullptr;
+	HRESULT hr = wrapped_interface->CreateTexture3D(pDesc, pInitialData, &texture3d);
+
+	printf("[CreateTexture3D] created texture at 0x%llX\n", texture3d);
+
+	if (ppTexture3D != nullptr)
+	{
+		*ppTexture3D = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Texture3D*>(new texture_3d(texture3d)) : nullptr;
+	}
+
+	return hr;
+}
+
+HRESULT wd::device_x::CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
+                                               ID3D11ShaderResourceView** ppSRView)
+{
+	::ID3D11ShaderResourceView* target = nullptr;
+	HRESULT hr = wrapped_interface->CreateShaderResourceView(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
+
+	if (ppSRView != nullptr)
+	{
+		*ppSRView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11ShaderResourceView*>(new shader_resource_view(target))
+			: nullptr;
+	}
+
+	return hr;
+}
+
+HRESULT wd::device_x::CreateUnorderedAccessView(ID3D11Resource* pResource,
+                                                const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView)
+{
+	::ID3D11UnorderedAccessView* target = nullptr;
+	HRESULT hr = wrapped_interface->CreateUnorderedAccessView(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
+
+	if (ppUAView != nullptr)
+	{
+		*ppUAView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11UnorderedAccessView*>(new unordered_access_view(target))
+			: nullptr;
+	}
+
+	return hr;
+}
+
+HRESULT wd::device_x::CreateRenderTargetView(ID3D11Resource* pResource, const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
+                                             ID3D11RenderTargetView** ppRTView)
+{
+	::ID3D11RenderTargetView* target = nullptr;
+	HRESULT hr = wrapped_interface->CreateRenderTargetView(reinterpret_cast<wd::d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
+
+	if (ppRTView != nullptr)
+	{
+		*ppRTView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11RenderTargetView*>(new wd::render_target_view(target))
+			: nullptr;
+	}
+
+	return hr;
+}
+
+HRESULT wd::device_x::CreateDepthStencilView(ID3D11Resource* pResource, const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
+	ID3D11DepthStencilView** ppDepthStencilView)
+{
+	::ID3D11DepthStencilView* target = nullptr;
+	HRESULT hr = wrapped_interface->CreateDepthStencilView(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
+
+	if (ppDepthStencilView != nullptr)
+	{
+		*ppDepthStencilView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11DepthStencilView*>(new depth_stencil_view(target))
+			: nullptr;
+	}
+
+	return hr;
+}
+
+HRESULT wd::device_x::CreateDeferredContext(UINT ContextFlags, ID3D11DeviceContext** ppDeferredContext)
+{
+	::ID3D11DeviceContext* ctx{};
+	HRESULT hr = wrapped_interface->CreateDeferredContext(ContextFlags, &ctx);
+
+	if (ppDeferredContext != nullptr && SUCCEEDED(hr))
+	{
+		::ID3D11DeviceContext2* ctx2{};
+		ctx->QueryInterface(IID_PPV_ARGS(&ctx2));
+
+		*ppDeferredContext = reinterpret_cast<ID3D11DeviceContext*>(new device_context_x(ctx2));
+	}
+
+	return hr;
+}
+
+void wd::device_x::GetImmediateContext(ID3D11DeviceContext** ppImmediateContext)
+{
+	::ID3D11DeviceContext* ctx{};
+	wrapped_interface->GetImmediateContext(&ctx);
+
+	if (!ctx) return;
+
+	::ID3D11DeviceContext2* ctx2{};
+	ctx->QueryInterface(IID_PPV_ARGS(&ctx2));
+
+	*ppImmediateContext = reinterpret_cast<ID3D11DeviceContext*>(new device_context_x(ctx2));
+}
+
+HRESULT wd::device_x::CreateDeferredContext1(UINT ContextFlags, ID3D11DeviceContext1** ppDeferredContext)
+{
+	printf("WARN: CreateDeferredContext1 is not implemented\n");
+	return wrapped_interface->CreateDeferredContext1(ContextFlags, ppDeferredContext);
+}
+
+HRESULT wd::device_x::CreateDeferredContext2(UINT ContextFlags, ID3D11DeviceContext2** ppDeferredContext)
+{
+	printf("WARN: CreateDeferredContext2 is not implemented\n");
+	return wrapped_interface->CreateDeferredContext2(ContextFlags, ppDeferredContext);
+}
 
 void wd::device_x::GetImmediateContextX(wdi::ID3D11DeviceContextX** ppImmediateContextX)
 {
+	printf("WARN: GetImmediateContextX is not implemented\n");
 	throw std::logic_error("Not implemented");
 }
 

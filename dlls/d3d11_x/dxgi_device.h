@@ -3,6 +3,7 @@
 
 namespace wdi
 {
+	class IDXGIAdapter;
 	D3DINTERFACE(IDXGIDevice, 54ec77fa, 1377, 44e6, 8c, 32, 88, fd, 5f, 44, c8, 4c) : public wd::dxgi_object {
 	public:
 		virtual HRESULT STDMETHODCALLTYPE GetAdapter(IDXGIAdapter** pAdapter) PURE;
@@ -29,7 +30,42 @@ namespace wd
 {
 	class dxgi_device : public wdi::IDXGIDevice
 	{
+	public:
+		dxgi_device(::IDXGIDevice* device) : wrapped_interface(device) { wrapped_interface->AddRef( ); }
 
+		IGU_DEFINE_REF
+
+		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+		{
+			if (riid == __uuidof(wdi::IDXGIDevice))
+			{
+				*ppvObject = this;
+				AddRef( );
+				return S_OK;
+			}
+
+			if (riid == __uuidof(wdi::IGraphicsUnwrap))
+			{
+				*ppvObject = wrapped_interface;
+				return S_OK;
+			}
+
+			TRACE_INTERFACE_NOT_HANDLED("dxgi_device");
+			*ppvObject = nullptr;
+			return E_NOINTERFACE;
+		}
+
+		HRESULT GetParent(const IID& riid, void** ppParent) override;
+		HRESULT SetPrivateData(const GUID& Name, UINT DataSize, const void* pData) override;
+		HRESULT GetAdapter(wdi::IDXGIAdapter** pAdapter) override;
+		HRESULT CreateSurface(const DXGI_SURFACE_DESC* pDesc, UINT NumSurfaces, DXGI_USAGE Usage,
+			const DXGI_SHARED_RESOURCE* pSharedResource, IDXGISurface** ppSurface) override;
+		HRESULT QueryResourceResidency(IGraphicsUnknown** ppResources, DXGI_RESIDENCY* pResidencyStatus,
+			UINT NumResources) override;
+		HRESULT SetGPUThreadPriority(INT Priority) override;
+		HRESULT GetGPUThreadPriority(INT* pPriority) override;
+
+		::IDXGIDevice* wrapped_interface;
 	};
 }
 

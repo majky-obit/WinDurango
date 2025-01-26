@@ -3,6 +3,7 @@
 
 namespace wdi
 {
+	class IDXGIAdapter;
 	D3DINTERFACE(IDXGIFactory, 7b7166ec, 21c7, 44ae, b2, 1a, c9, ae, 32, 1a, e3, 69) : public wd::dxgi_object
 	{
 	public:
@@ -29,7 +30,7 @@ namespace wdi
 			IDXGIAdapter** ppAdapter) PURE;
 	};
 
-	D3DINTERFACE(IDXGIFactory1, 770aae78, f26f, 4dba, a8, 29, 25, 3c, 83, d1, b3, 87) : public wd::dxgi_object
+	D3DINTERFACE(IDXGIFactory1, 770aae78, f26f, 4dba, a8, 29, 25, 3c, 83, d1, b3, 87) : public IDXGIFactory
 	{
 	public:
 		virtual HRESULT STDMETHODCALLTYPE EnumAdapters1(
@@ -101,6 +102,27 @@ namespace wd {
 
         IGU_DEFINE_REF
 
+        HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+        {
+			if (riid == __uuidof(wdi::IDXGIFactory) || riid == __uuidof(wdi::IDXGIFactory1) ||
+				riid == __uuidof(wdi::IDXGIFactory2))
+			{
+				*ppvObject = this;
+				AddRef( );
+				return S_OK;
+			}
+
+			if (riid == __uuidof(wdi::IGraphicsUnwrap))
+			{
+				*ppvObject = wrapped_interface;
+				return S_OK;
+			}
+
+			TRACE_INTERFACE_NOT_HANDLED("dxgi_factory");
+			*ppvObject = nullptr;
+			return E_NOINTERFACE;
+        }
+
         HRESULT GetParent(const IID& riid, void** ppParent) override;
         HRESULT EnumAdapters1(UINT Adapter, IDXGIAdapter1** ppAdapter) override;
         HRESULT CreateSwapChainForComposition(IGraphicsUnknown* pDevice, const DXGI_SWAP_CHAIN_DESC1* pDesc,
@@ -117,6 +139,14 @@ namespace wd {
         HRESULT RegisterOcclusionStatusWindow(HWND WindowHandle, UINT wMsg, DWORD* pdwCookie) override;
         HRESULT RegisterOcclusionStatusEvent(HANDLE hEvent, DWORD* pdwCookie) override;
         void UnregisterOcclusionStatus(DWORD dwCookie) override;
+        BOOL IsCurrent() override;
+        BOOL IsWindowedStereoEnabled() override;
+        HRESULT EnumAdapters(UINT Adapter, wdi::IDXGIAdapter** ppAdapter) override;
+        HRESULT MakeWindowAssociation(HWND WindowHandle, UINT Flags) override;
+        HRESULT GetWindowAssociation(HWND* pWindowHandle) override;
+        HRESULT CreateSwapChain(IGraphicsUnknown* pDevice, DXGI_SWAP_CHAIN_DESC* pDesc,
+	        IDXGISwapChain** ppSwapChain) override;
+        HRESULT CreateSoftwareAdapter(HMODULE Module, wdi::IDXGIAdapter** ppAdapter) override;
 
 private:
         ::IDXGIFactory2* wrapped_interface;

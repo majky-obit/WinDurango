@@ -109,7 +109,39 @@ namespace wd
 {
 	class dxgi_swapchain : public wdi::IDXGISwapChain1
 	{
+	public:
+		dxgi_swapchain(::IDXGISwapChain1* swapchain) : wrapped_interface(swapchain) { wrapped_interface->AddRef( ); }
 
+        IGU_DEFINE_REF
+
+		HRESULT QueryInterface(const IID& riid, void** ppvObject) override;
+		HRESULT GetParent(const IID& riid, void** ppParent) override;
+		HRESULT GetDevice(const IID& riid, void** ppDevice) override;
+		HRESULT Present(UINT SyncInterval, UINT Flags) override;
+		HRESULT GetBuffer(UINT Buffer, const IID& riid, void** ppSurface) override;
+		HRESULT SetFullscreenState(BOOL Fullscreen, IDXGIOutput* pTarget) override;
+		HRESULT GetFullscreenState(BOOL* pFullscreen, IDXGIOutput** ppTarget) override;
+		HRESULT GetDesc(DXGI_SWAP_CHAIN_DESC* pDesc) override;
+		HRESULT ResizeBuffers(UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat,
+			UINT SwapChainFlags) override;
+		HRESULT ResizeTarget(const DXGI_MODE_DESC* pNewTargetParameters) override;
+		HRESULT GetContainingOutput(IDXGIOutput** ppOutput) override;
+		HRESULT GetFrameStatistics(DXGI_FRAME_STATISTICS* pStats) override;
+		HRESULT GetLastPresentCount(UINT* pLastPresentCount) override;
+		HRESULT GetDesc1(DXGI_SWAP_CHAIN_DESC1* pDesc) override;
+		HRESULT GetFullscreenDesc(DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pDesc) override;
+		HRESULT GetHwnd(HWND* pHwnd) override;
+		HRESULT GetCoreWindow(const IID& refiid, void** ppUnk) override;
+		HRESULT Present1(UINT SyncInterval, UINT PresentFlags,
+			const DXGI_PRESENT_PARAMETERS* pPresentParameters) override;
+		BOOL IsTemporaryMonoSupported() override;
+		HRESULT GetRestrictToOutput(IDXGIOutput** ppRestrictToOutput) override;
+		HRESULT SetBackgroundColor(const DXGI_RGBA* pColor) override;
+		HRESULT GetBackgroundColor(DXGI_RGBA* pColor) override;
+		HRESULT SetRotation(DXGI_MODE_ROTATION Rotation) override;
+		HRESULT GetRotation(DXGI_MODE_ROTATION* pRotation) override;
+
+		::IDXGISwapChain1* wrapped_interface;
 	};
 }
 

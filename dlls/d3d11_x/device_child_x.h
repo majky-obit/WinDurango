@@ -7,7 +7,7 @@
 
 namespace wdi
 {
-	D3DINTERFACE(ID3D11DeviceChild, 1841e5c8, 16b0, 489b, bc, c8, 44, cf, b0, d5, de, ae) : public wd::graphics_unknown{
+	D3DINTERFACE(ID3D11DeviceChild, 1841e5c8, 16b0, 489b, bc, c8, 44, cf, b0, d5, de, ae) : public wd::graphics_unknown {
 		ID3D11Device* m_pDevice;
 		void* m_pPrivateData;
 
@@ -30,6 +30,7 @@ namespace wd
 
 		void STDMETHODCALLTYPE GetDevice(ID3D11Device** ppDevice) override
 		{
+			printf("WARN: device_child_x::GetDevice returns a PC device!!\n");
 			wrapped_interface->GetDevice(ppDevice);
 		}
 
@@ -50,7 +51,8 @@ namespace wd
 
 		HRESULT STDMETHODCALLTYPE SetPrivateDataInterfaceGraphics(REFGUID guid, const IGraphicsUnknown* pData) override
 		{
-			assert( false && "Not implemented" );
+			TRACE_NOT_IMPLEMENTED("device_child_x");
+			return E_NOTIMPL;
 		}
 
 	private:

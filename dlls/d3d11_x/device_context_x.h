@@ -1,8 +1,29 @@
 #pragma once
 #include <array>
+#include <map>
 
 #include "device_child_x.h"
 #include "device_x.h"
+
+static std::map<UINT64, int> D3D11X_HARDWARE_TO_TOPOLOGY_MAP = {
+	{0x000001ffc0009e00, 0}, {0x000003ffc0009e00, 1}, {0x000005ffc0009e00, 2}, {0x000007ffc0009e00, 3},
+	{0x000009ffc0009e00, 4}, {0x00000dffc0009e00, 5}, {0x00000bffc0009e00, 6}, {0x000001ffc0009e00, 7},
+	{0x000001ffc0009e00, 8}, {0x000001ffc0009e00, 9}, {0x0000157fc0009e00, 10}, {0x0000177fc0009e00, 11},
+	{0x0000197fc0009e00, 12}, {0x00001b7fc0009e00, 13}, {0x00001dffc0009e00, 14}, {0x00001fffc0009e00, 15},
+	{0x000021ffc0009e00, 16}, {0x000023ffc0009e00, 17}, {0x000025ffc0009e00, 18}, {0x000027ffc0009e00, 19},
+	{0x000029ffc0009e00, 20}, {0x00002bffc0009e00, 21}, {0x00002dffc0009e00, 22}, {0x00002fffc0009e00, 23},
+	{0x000031ffc0009e00, 24}, {0x000033ffc0009e00, 25}, {0x000035ffc0009e00, 26}, {0x000037ffc0009e00, 27},
+	{0x000039ffc0009e00, 28}, {0x000001ffc0009e00, 29}, {0x000001ffc0009e00, 30}, {0x000001ffc0009e00, 31},
+	{0x000001ffc0009e00, 32}, {0x001013ffc0009e00, 33}, {0x0020137fc0009e00, 34}, {0x00301354c0009e00, 35},
+	{0x0040133fc0009e00, 36}, {0x00501332c0009e00, 37}, {0x00601329c0009e00, 38}, {0x00701323c0009e00, 39},
+	{0x0080131fc0009e00, 40}, {0x0090131bc0009e00, 41}, {0x00a01318c0009e00, 42}, {0x00b01316c0009e00, 43},
+	{0x00c01314c0009e00, 44}, {0x00d01312c0009e00, 45}, {0x00e01311c0009e00, 46}, {0x00f01310c0009e00, 47},
+	{0x0100130fc0009e00, 48}, {0x0110130ec0009e00, 49}, {0x0120130dc0009e00, 50}, {0x0130130cc0009e00, 51},
+	{0x0140130bc0009e00, 52}, {0x0150130bc0009e00, 53}, {0x0160130ac0009e00, 54}, {0x0170130ac0009e00, 55},
+	{0x01801309c0009e00, 56}, {0x01901309c0009e00, 57}, {0x01a01308c0009e00, 58}, {0x01b01308c0009e00, 59},
+	{0x01c01308c0009e00, 60}, {0x01d01307c0009e00, 61}, {0x01e01307c0009e00, 62}, {0x01f01307c0009e00, 63},
+	{0x02001307c0009e00, 64}
+};
 
 namespace wdi
 {
@@ -239,37 +260,36 @@ namespace wdi
 	D3DINTERFACE(ID3D11DeviceContext, c0bfa96c, e089, 44fb, 8e, af, 26, f8, 79, 61, 90, da) : public ID3D11DeviceChild {
 	public:
 		virtual void (VSSetConstantBuffers)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers) = 0;
-		virtual void (PSSetShaderResources)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot) UINT NumViews,_In_reads_opt_(NumViews) ID3D11ShaderResourceView* const* ppShaderResourceViews) = 0;
-		virtual void (PSSetShader)(_In_opt_ ID3D11PixelShader* pPixelShader,_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,UINT NumClassInstances) = 0;
+		virtual void (PSSetShaderResources)(ID3D11ShaderResourceView* const* ppShaderResourceViews,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_ UINT PacketHeader) = 0;
+		virtual void (PSSetShader)(_In_opt_ ID3D11PixelShader* pPixelShader) = 0;
 		virtual void (PSSetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_In_reads_opt_(NumSamplers) ID3D11SamplerState* const* ppSamplers) = 0;
-		virtual void (VSSetShader)(_In_opt_ ID3D11VertexShader* pVertexShader,_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,UINT NumClassInstances) = 0;
-		virtual void (DrawIndexed)(_In_ UINT IndexCount,_In_ UINT StartIndexLocation,_In_ INT BaseVertexLocation) = 0;
+		virtual void (VSSetShader)(_In_opt_ ID3D11VertexShader* pVertexShader) = 0;
+		virtual void (DrawIndexed)(_In_ UINT64 StartIndexLocationAndIndexCount,_In_ INT BaseVertexLocation) = 0;
 		virtual void (Draw)(_In_ UINT VertexCount,_In_ UINT StartVertexLocation) = 0;
 		virtual HRESULT(Map)(_In_ ID3D11Resource* pResource,_In_ UINT Subresource,_In_ D3D11_MAP MapType,_In_ UINT MapFlags,_Out_ D3D11_MAPPED_SUBRESOURCE* pMappedResource) = 0;
 		virtual void (Unmap)(_In_ ID3D11Resource* pResource,_In_ UINT Subresource) = 0;
 		virtual void (PSSetConstantBuffers)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers) = 0;
 		virtual void (IASetInputLayout)(_In_opt_ ID3D11InputLayout* pInputLayout) = 0;
 		virtual void (IASetVertexBuffers)(_In_range_(0, D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - StartSlot) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppVertexBuffers,_In_reads_opt_(NumBuffers) const UINT* pStrides,_In_reads_opt_(NumBuffers) const UINT* pOffsets) = 0;
-		virtual void (IASetIndexBuffer)(_In_opt_ ID3D11Buffer* pIndexBuffer,_In_ DXGI_FORMAT Format,_In_ UINT Offset) = 0;
-		virtual void (DrawIndexedInstanced)(_In_ UINT IndexCountPerInstance,_In_ UINT InstanceCount,_In_ UINT StartIndexLocation,_In_ INT BaseVertexLocation,_In_ UINT StartInstanceLocation) = 0;
-		virtual void (DrawInstanced)(_In_ UINT VertexCountPerInstance,_In_ UINT InstanceCount,_In_ UINT StartVertexLocation,_In_ UINT StartInstanceLocation) = 0;
+		virtual void (IASetIndexBuffer)(_In_ UINT HardwareIndexFormat,_In_opt_ ID3D11Buffer* pIndexBuffer,_In_ UINT Offset) = 0;
+		virtual void (DrawIndexedInstanced)(_In_ UINT64 StartIndexLocationAndIndexCountPerInstance,_In_ UINT64 BaseVertexLocationAndStartInstanceLocation,_In_ UINT InstanceCount) = 0;
+		virtual void (DrawInstanced)(_In_ UINT VertexCountPerInstance,_In_ UINT64 StartVertexLocationAndStartInstanceLocation,_In_ UINT InstanceCount) = 0;
 		virtual void (GSSetConstantBuffers)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers) = 0;
-		virtual void (GSSetShader)(_In_opt_ ID3D11GeometryShader* pShader,_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,UINT NumClassInstances) = 0;
-		virtual void (IASetPrimitiveTopology)(_In_ D3D11_PRIMITIVE_TOPOLOGY Topology) = 0;
-		virtual void (VSSetShaderResources)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot) UINT NumViews,_In_reads_opt_(NumViews) ID3D11ShaderResourceView* const* ppShaderResourceViews) = 0;
+		virtual void (GSSetShader)(_In_opt_ ID3D11GeometryShader* pShader) = 0;
+		virtual void (VSSetShaderResources)(ID3D11ShaderResourceView* const* ppShaderResourceViews,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_ UINT PacketHeader) = 0;
 		virtual void (VSSetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_In_reads_opt_(NumSamplers) ID3D11SamplerState* const* ppSamplers) = 0;
 		virtual void (Begin)(_In_ ID3D11Asynchronous* pAsync) = 0;
 		virtual void (End)(_In_ ID3D11Asynchronous* pAsync) = 0;
 		virtual HRESULT(GetData)(_In_ ID3D11Asynchronous* pAsync,_Out_writes_bytes_opt_(DataSize) void* pData,_In_ UINT DataSize,_In_ UINT GetDataFlags) = 0;
 		virtual void (SetPredication)(_In_opt_ ID3D11Predicate* pPredicate,_In_ BOOL PredicateValue) = 0;
-		virtual void (GSSetShaderResources)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot) UINT NumViews,_In_reads_opt_(NumViews) ID3D11ShaderResourceView* const* ppShaderResourceViews) = 0;
+		virtual void (GSSetShaderResources)(ID3D11ShaderResourceView* const* ppShaderResourceViews,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_ UINT PacketHeader) = 0;
 		virtual void (GSSetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_In_reads_opt_(NumSamplers) ID3D11SamplerState* const* ppSamplers) = 0;
 		virtual void (OMSetRenderTargets)(_In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) UINT NumViews,_In_reads_opt_(NumViews) ID3D11RenderTargetView* const* ppRenderTargetViews,_In_opt_ ID3D11DepthStencilView* pDepthStencilView) = 0;
 		virtual void (OMSetRenderTargetsAndUnorderedAccessViews)(_In_ UINT NumRTVs,_In_reads_opt_(NumRTVs) ID3D11RenderTargetView* const* ppRenderTargetViews,_In_opt_ ID3D11DepthStencilView* pDepthStencilView,_In_range_(0, D3D11_1_UAV_SLOT_COUNT - 1) UINT UAVStartSlot,_In_ UINT NumUAVs,_In_reads_opt_(NumUAVs) ID3D11UnorderedAccessView* const* ppUnorderedAccessViews,_In_reads_opt_(NumUAVs) const UINT* pUAVInitialCounts) = 0;
 		virtual void (OMSetBlendState)(_In_opt_ ID3D11BlendState* pBlendState,_In_opt_ const FLOAT BlendFactor[ 4 ],_In_ UINT SampleMask) = 0;
 		virtual void (OMSetDepthStencilState)(_In_opt_ ID3D11DepthStencilState* pDepthStencilState,_In_ UINT StencilRef) = 0;
 		virtual void (SOSetTargets)(_In_range_(0, D3D11_SO_BUFFER_SLOT_COUNT) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppSOTargets,_In_reads_opt_(NumBuffers) const UINT* pOffsets) = 0;
-		virtual void (DrawAuto)(_Inout_ ID3D11DeviceContext* pDeviceContext) = 0;
+		virtual void (DrawAuto)( ) = 0;
 		virtual void (DrawIndexedInstancedIndirect)(_In_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs) = 0;
 		virtual void (DrawInstancedIndirect)(_In_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs) = 0;
 		virtual void (Dispatch)(_In_ UINT ThreadGroupCountX,_In_ UINT ThreadGroupCountY,_In_ UINT ThreadGroupCountZ) = 0;
@@ -290,17 +310,17 @@ namespace wdi
 		virtual FLOAT(GetResourceMinLOD)(_In_ ID3D11Resource* pResource) = 0;
 		virtual void (ResolveSubresource)(_In_ ID3D11Resource* pDstResource,_In_ UINT DstSubresource,_In_ ID3D11Resource* pSrcResource,_In_ UINT SrcSubresource,_In_ DXGI_FORMAT Format) = 0;
 		virtual void (ExecuteCommandList)(_In_ ID3D11CommandList* pCommandList,BOOL RestoreContextState) = 0;
-		virtual void (HSSetShaderResources)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot) UINT NumViews,_In_reads_opt_(NumViews) ID3D11ShaderResourceView* const* ppShaderResourceViews) = 0;
-		virtual void (HSSetShader)(_In_opt_ ID3D11HullShader* pHullShader,_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,UINT NumClassInstances) = 0;
+		virtual void (HSSetShaderResources)(ID3D11ShaderResourceView* const* ppShaderResourceViews,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_ UINT PacketHeader) = 0;
+		virtual void (HSSetShader)(_In_opt_ ID3D11HullShader* pHullShader) = 0;
 		virtual void (HSSetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_In_reads_opt_(NumSamplers) ID3D11SamplerState* const* ppSamplers) = 0;
 		virtual void (HSSetConstantBuffers)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers) = 0;
-		virtual void (DSSetShaderResources)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot) UINT NumViews,_In_reads_opt_(NumViews) ID3D11ShaderResourceView* const* ppShaderResourceViews) = 0;
-		virtual void (DSSetShader)(_In_opt_ ID3D11DomainShader* pDomainShader,_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,UINT NumClassInstances) = 0;
+		virtual void (DSSetShaderResources)(ID3D11ShaderResourceView* const* ppShaderResourceViews,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_ UINT PacketHeader) = 0;
+		virtual void (DSSetShader)(_In_opt_ ID3D11DomainShader* pDomainShader) = 0;
 		virtual void (DSSetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_In_reads_opt_(NumSamplers) ID3D11SamplerState* const* ppSamplers) = 0;
 		virtual void (DSSetConstantBuffers)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers) = 0;
-		virtual void (CSSetShaderResources)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot) UINT NumViews,_In_reads_opt_(NumViews) ID3D11ShaderResourceView* const* ppShaderResourceViews) = 0;
+		virtual void (CSSetShaderResources)(ID3D11ShaderResourceView* const* ppShaderResourceViews,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_ UINT PacketHeader) = 0;
 		virtual void (CSSetUnorderedAccessViews)(_In_range_(0, D3D11_1_UAV_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_1_UAV_SLOT_COUNT - StartSlot) UINT NumUAVs,_In_reads_opt_(NumUAVs) ID3D11UnorderedAccessView* const* ppUnorderedAccessViews,_In_reads_opt_(NumUAVs) const UINT* pUAVInitialCounts) = 0;
-		virtual void (CSSetShader)(_In_opt_ ID3D11ComputeShader* pComputeShader,_In_reads_opt_(NumClassInstances) ID3D11ClassInstance* const* ppClassInstances,UINT NumClassInstances) = 0;
+		virtual void (CSSetShader)(_In_opt_ ID3D11ComputeShader* pComputeShader) = 0;
 		virtual void (CSSetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_In_reads_opt_(NumSamplers) ID3D11SamplerState* const* ppSamplers) = 0;
 		virtual void (CSSetConstantBuffers)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppConstantBuffers) = 0;
 		virtual void (VSGetConstantBuffers)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,_Out_writes_opt_(NumBuffers) ID3D11Buffer** ppConstantBuffers) = 0;
@@ -322,7 +342,7 @@ namespace wdi
 		virtual void (GSGetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_Out_writes_opt_(NumSamplers) ID3D11SamplerState** ppSamplers) = 0;
 		virtual void (OMGetRenderTargets)(_In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) UINT NumViews,_Out_writes_opt_(NumViews) ID3D11RenderTargetView** ppRenderTargetViews,_Out_opt_ ID3D11DepthStencilView** ppDepthStencilView) = 0;
 		virtual void (OMGetRenderTargetsAndUnorderedAccessViews)(_In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) UINT NumRTVs,_Out_writes_opt_(NumRTVs) ID3D11RenderTargetView** ppRenderTargetViews,_Out_opt_ ID3D11DepthStencilView** ppDepthStencilView,_In_range_(0, D3D11_PS_CS_UAV_REGISTER_COUNT - 1) UINT UAVStartSlot,_In_range_(0, D3D11_PS_CS_UAV_REGISTER_COUNT - UAVStartSlot) UINT NumUAVs,_Out_writes_opt_(NumUAVs) ID3D11UnorderedAccessView** ppUnorderedAccessViews) = 0;
-		virtual void (OMGetBlendState)(_Out_opt_ ID3D11BlendState** ppBlendState,_Out_opt_ FLOAT BlendFactor[ 4 ],_Out_opt_ UINT* pSampleMask) = 0;
+		virtual void (OMGetBlendState)(_Out_opt_ ID3D11BlendState** ppBlendState,_Out_writes_all_opt_(4) FLOAT BlendFactor[ 4 ],_Out_opt_ UINT* pSampleMask) = 0;
 		virtual void (OMGetDepthStencilState)(_Out_opt_ ID3D11DepthStencilState** ppDepthStencilState,_Out_opt_ UINT* pStencilRef) = 0;
 		virtual void (SOGetTargets)(_In_range_(0, D3D11_SO_BUFFER_SLOT_COUNT) UINT NumBuffers,_Out_writes_opt_(NumBuffers) ID3D11Buffer** ppSOTargets) = 0;
 		virtual void (RSGetState)(_Out_ ID3D11RasterizerState** ppRasterizerState) = 0;
@@ -374,148 +394,153 @@ namespace wdi
 
 	D3DINTERFACE(ID3D11DeviceContext2, 420d5b32, b90c, 4da4, be, f0, 35, 9f, 6a, 24, a8, 3a) : public ID3D11DeviceContext1 {
 	public:
-		virtual HRESULT(UpdateTileMappings)(_In_  ID3D11Resource* pTiledResource,_In_  UINT NumTiledResourceRegions,_In_reads_opt_(NumTiledResourceRegions)  const D3D11_TILED_RESOURCE_COORDINATE* pTiledResourceRegionStartCoordinates,_In_reads_opt_(NumTiledResourceRegions)  const D3D11_TILE_REGION_SIZE* pTiledResourceRegionSizes,_In_opt_  ID3D11Buffer* pTilePool,_In_  UINT NumRanges,_In_reads_opt_(NumRanges)  const UINT* pRangeFlags,_In_reads_opt_(NumRanges)  const UINT* pTilePoolStartOffsets,_In_reads_opt_(NumRanges)  const UINT* pRangeTileCounts,_In_  UINT Flags) = 0;
-		virtual HRESULT(CopyTileMappings)(_In_  ID3D11Resource* pDestTiledResource,_In_  const D3D11_TILED_RESOURCE_COORDINATE* pDestRegionStartCoordinate,_In_  ID3D11Resource* pSourceTiledResource,_In_  const D3D11_TILED_RESOURCE_COORDINATE* pSourceRegionStartCoordinate,_In_  const D3D11_TILE_REGION_SIZE* pTileRegionSize,_In_  UINT Flags) = 0;
-		virtual void (CopyTiles)(_In_  ID3D11Resource* pTiledResource,_In_  const D3D11_TILED_RESOURCE_COORDINATE* pTileRegionStartCoordinate,_In_  const D3D11_TILE_REGION_SIZE* pTileRegionSize,_In_  ID3D11Buffer* pBuffer,_In_  UINT64 BufferStartOffsetInBytes,_In_  UINT Flags) = 0;
-		virtual void (UpdateTiles)(_In_  ID3D11Resource* pDestTiledResource,_In_  const D3D11_TILED_RESOURCE_COORDINATE* pDestTileRegionStartCoordinate,_In_  const D3D11_TILE_REGION_SIZE* pDestTileRegionSize,_In_  const void* pSourceTileData,_In_  UINT Flags) = 0;
-		virtual HRESULT(ResizeTilePool)(_In_  ID3D11Buffer* pTilePool,_In_  UINT64 NewSizeInBytes) = 0;
-		virtual void (TiledResourceBarrier)(_In_opt_  ID3D11DeviceChild* pTiledResourceOrViewAccessBeforeBarrier,_In_opt_  ID3D11DeviceChild* pTiledResourceOrViewAccessAfterBarrier) = 0;
+			virtual HRESULT(UpdateTileMappings)(_In_  ID3D11Resource* pTiledResource,_In_  UINT NumTiledResourceRegions,_In_reads_opt_(NumTiledResourceRegions)  const D3D11_TILED_RESOURCE_COORDINATE* pTiledResourceRegionStartCoordinates,_In_reads_opt_(NumTiledResourceRegions)  const D3D11_TILE_REGION_SIZE* pTiledResourceRegionSizes,_In_opt_  ID3D11Buffer* pTilePool,_In_  UINT NumRanges,_In_reads_opt_(NumRanges)  const UINT* pRangeFlags,_In_reads_opt_(NumRanges)  const UINT* pTilePoolStartOffsets,_In_reads_opt_(NumRanges)  const UINT* pRangeTileCounts,_In_  UINT Flags) = 0;
+	virtual HRESULT(CopyTileMappings)(_In_  ID3D11Resource* pDestTiledResource,_In_  const D3D11_TILED_RESOURCE_COORDINATE* pDestRegionStartCoordinate,_In_  ID3D11Resource* pSourceTiledResource,_In_  const D3D11_TILED_RESOURCE_COORDINATE* pSourceRegionStartCoordinate,_In_  const D3D11_TILE_REGION_SIZE* pTileRegionSize,_In_  UINT Flags) = 0;
+	virtual void (CopyTiles)(_In_  ID3D11Resource* pTiledResource,_In_  const D3D11_TILED_RESOURCE_COORDINATE* pTileRegionStartCoordinate,_In_  const D3D11_TILE_REGION_SIZE* pTileRegionSize,_In_  ID3D11Buffer* pBuffer,_In_  UINT64 BufferStartOffsetInBytes,_In_  UINT Flags) = 0;
+	virtual void (UpdateTiles)(_In_  ID3D11Resource* pDestTiledResource,_In_  const D3D11_TILED_RESOURCE_COORDINATE* pDestTileRegionStartCoordinate,_In_  const D3D11_TILE_REGION_SIZE* pDestTileRegionSize,_In_  const void* pSourceTileData,_In_  UINT Flags) = 0;
+	virtual HRESULT(ResizeTilePool)(_In_  ID3D11Buffer* pTilePool,_In_  UINT64 NewSizeInBytes) = 0;
+	virtual void (TiledResourceBarrier)(_In_opt_  ID3D11DeviceChild* pTiledResourceOrViewAccessBeforeBarrier,_In_opt_  ID3D11DeviceChild* pTiledResourceOrViewAccessAfterBarrier) = 0;
 	};
 
+	// FIXME: handle different versions of the SDK for this class
 	D3DINTERFACE(ID3D11DeviceContextX, 48800095, 7134, 4be7, 91, 86, b8, 6b, ec, b2, 64, 77) : public ID3D11DeviceContext2 {
 	public:
-		virtual INT(PIXBeginEvent)(_In_ LPCWSTR Name) = 0;
-		virtual INT(PIXBeginEventEx)(_In_reads_bytes_(DataSize) const void* pData,_In_ UINT DataSize) = 0;
-		virtual INT(PIXEndEvent)() = 0;
-		virtual void (PIXSetMarker)(_In_ LPCWSTR Name) = 0;
-		virtual void (PIXSetMarkerEx)(_In_reads_bytes_(DataSize) const void* pData,_In_ UINT DataSize) = 0;
-		virtual BOOL(PIXGetStatus)() = 0;
-		virtual HRESULT(PIXGpuCaptureNextFrame)(_In_ UINT Flags,_In_z_ LPCWSTR lpOutputFileName) = 0;
-		virtual HRESULT(PIXGpuBeginCapture)(_In_ UINT Flags,_In_z_ LPCWSTR lpOutputFileName) = 0;
-		virtual HRESULT(PIXGpuEndCapture)() = 0;
-		virtual void (StartCounters)(_In_ ID3D11CounterSetX* pCounterSet) = 0;
-		virtual void (SampleCounters)(_In_ ID3D11CounterSampleX* pCounterSample) = 0;
-		virtual void (StopCounters)( ) = 0;
-		virtual HRESULT(GetCounterData)(_In_ ID3D11CounterSampleX* pCounterSample,_Out_ D3D11X_COUNTER_DATA* pData,_In_ UINT GetCounterDataFlags) = 0;
-		virtual void (FlushGpuCaches)(_In_ ID3D11Resource* pResource) = 0;
-		virtual void (FlushGpuCacheRange)(_In_ UINT Flags,_In_ void* pBaseAddress,_In_ SIZE_T SizeInBytes) = 0;
-		virtual void (InsertWaitUntilIdle)(_In_ UINT Flags) = 0;
-		virtual UINT64(InsertFence)(_In_ UINT Flags) = 0;
-		virtual void (InsertWaitOnFence)(_In_ UINT Flags,_In_ UINT64 Fence) = 0;
-		virtual void (RemapConstantBufferInheritance)(_In_ D3D11_STAGE Stage,_In_ UINT Slot,_In_ D3D11_STAGE InheritStage,_In_ UINT InheritSlot) = 0;
-		virtual void (RemapShaderResourceInheritance)(_In_ D3D11_STAGE Stage,_In_ UINT Slot,_In_ D3D11_STAGE InheritStage,_In_ UINT InheritSlot) = 0;
-		virtual void (RemapSamplerInheritance)(_In_ D3D11_STAGE Stage,_In_ UINT Slot,_In_ D3D11_STAGE InheritStage,_In_ UINT InheritSlot) = 0;
-		virtual void (RemapVertexBufferInheritance)(_In_ UINT Slot,_In_ UINT InheritSlot) = 0;
-		virtual void (PSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
-		virtual void (PSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
-		virtual void (PSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
-		virtual void (VSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
-		virtual void (VSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
-		virtual void (VSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
-		virtual void (GSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
-		virtual void (GSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
-		virtual void (GSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
-		virtual void (CSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
-		virtual void (CSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
-		virtual void (CSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
-		virtual void (HSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
-		virtual void (HSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
-		virtual void (HSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
-		virtual void (DSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
-		virtual void (DSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
-		virtual void (DSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
-		virtual void (IASetFastVertexBuffer)(_In_range_(0, D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pVertexBuffer,_In_ UINT Stride) = 0;
-		virtual void (IASetFastIndexBuffer)(_In_ UINT HardwareIndexFormat,_In_ ID3D11Buffer* pIndexBuffer) = 0;
-		virtual void (PSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
-		virtual void (PSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
-		virtual void (VSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
-		virtual void (VSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
-		virtual void (GSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
-		virtual void (GSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
-		virtual void (CSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
-		virtual void (CSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
-		virtual void (HSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
-		virtual void (HSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
-		virtual void (DSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
-		virtual void (DSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
-		virtual void (IASetPlacementVertexBuffer)(_In_range_(0, D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pVertexBuffer,_In_ void* pBaseAddress,_In_ UINT Stride) = 0;
-		virtual void (IASetPlacementIndexBuffer)(_In_ UINT HardwareIndexFormat,_In_ ID3D11Buffer* pIndexBuffer,_In_ void* pBaseAddress) = 0;
-		virtual void (HSSetTessellationParameters)(_In_opt_ const D3D11X_TESSELLATION_PARAMETERS* pTessellationParameters) = 0;
-		virtual void (HSGetLastUsedTessellationParameters)(_Inout_ D3D11X_TESSELLATION_PARAMETERS* pTessellationParameters) = 0;
-		virtual void (CSEnableAutomaticGpuFlush)(_In_ BOOL Enable) = 0;
-		virtual void (GpuSendPipelinedEvent)(_In_ D3D11X_GPU_PIPELINED_EVENT Event) = 0;
-		virtual HRESULT(Suspend)(_In_ UINT Flags) = 0;
-		virtual HRESULT(Resume)() = 0;
-		virtual void (BeginCommandListExecution)(_In_ UINT Flags) = 0;
-		virtual void (EndCommandListExecution)( ) = 0;
-		virtual void (SetGraphicsShaderLimits)(_In_opt_ const D3D11X_GRAPHICS_SHADER_LIMITS* pShaderLimits) = 0;
-		virtual void (SetComputeShaderLimits)(_In_opt_ const D3D11X_COMPUTE_SHADER_LIMITS* pShaderLimits) = 0;
-		virtual void (SetPredicationBuffer)(_In_opt_ ID3D11Buffer* pBuffer,_In_ UINT Offset,_In_ UINT Flags) = 0;
-		virtual void (OMSetDepthBounds)(_In_ FLOAT min,_In_ FLOAT max) = 0;
-		virtual void (OMSetDepthStencilStateX)(_In_opt_ ID3D11DepthStencilState* pDepthStencilState) = 0;
-		virtual void (OMSetSampleMask)(_In_ UINT64 QuadSampleMask) = 0;
-		virtual UINT32* (MakeCeSpace) () = 0;
-		virtual void (SetFastResources_Debug)(_In_ UINT* pTableStart,_In_ UINT* pTableEnd) = 0;
-		virtual void (BeginResourceBatch)(_Out_ void* pBuffer,_In_ UINT BufferSize) = 0;
-		virtual UINT(EndResourceBatch)(_Out_opt_ UINT* pSizeNeeded) = 0;
-		virtual void (SetFastResourcesFromBatch_Debug)(_In_ void* pBatch,_In_ UINT Size) = 0;
-		virtual void (CSPlaceUnorderedAccessView)(_In_range_(0, D3D11_1_UAV_SLOT_COUNT - 1) UINT Slot,_In_ D3D11X_DESCRIPTOR_UNORDERED_ACCESS_VIEW* const pDescriptor,_In_ UINT64 Offset) = 0;
-		virtual void (WriteValueEndOfPipe)(_In_ void* pDestination,_In_ UINT Value,_In_ UINT Flags) = 0;
-		virtual void (CopyMemoryToMemory)(_In_ void* pDstAddress,_In_ void* pSrcAddress,_In_ SIZE_T SizeBytes) = 0;
-		virtual void (FillMemoryWithValue)(_In_ void* pDstAddress,_In_ SIZE_T SizeBytes,_In_ UINT FillValue) = 0;
-		virtual void (BeginProcessVideoResource)(_In_ ID3D11Resource* pResource,_In_ UINT SubResource) = 0;
-		virtual void (EndProcessVideoResource)(_In_ ID3D11Resource* pResource,_In_ UINT SubResource) = 0;
-		virtual HRESULT(StartThreadTrace)(_In_ const D3D11X_THREAD_TRACE_DESC* pDesc,_In_ void* pDstAddressShaderEngine0,_In_ void* pDstAddressShaderEngine1,_In_ SIZE_T BufferSizeBytes) = 0;
-		virtual void (StopThreadTrace)(_In_ void* pDstAddressTraceSize) = 0;
-		virtual void (InsertThreadTraceMarker)(_In_ UINT Marker) = 0;
-		virtual void (IASetPrimitiveResetIndex)(_In_ UINT ResetIndex) = 0;
-		virtual void (SetShaderResourceViewMinLOD)(_In_ ID3D11ShaderResourceView* pShaderResourceView,FLOAT MinLOD) = 0;
-		virtual void (InsertWaitOnPresent)(_In_ UINT Flags,_In_ ID3D11Resource* pBackBuffer) = 0;
-		virtual void (ClearRenderTargetViewX)(_In_ ID3D11RenderTargetView* pRenderTargetView,_In_ UINT Flags,_In_ const FLOAT ColorRGBA[ 4 ]) = 0;
-		virtual UINT(GetResourceCompression)(_In_ ID3D11Resource* pResource) = 0;
-		virtual UINT(GetResourceCompressionX)(_In_ const D3D11X_DESCRIPTOR_RESOURCE* pResource) = 0;
-		virtual void (DecompressResource)(_In_ ID3D11Resource* pDstResource,_In_ UINT DstSubresource,_In_opt_ const D3D11X_POINT* pDstPoint,_In_ ID3D11Resource* pSrcResource,_In_ UINT SrcSubresource,_In_opt_ const D3D11X_RECT* pSrcRect,_In_ DXGI_FORMAT DecompressFormat,_In_ UINT DecompressFlags) = 0;
-		virtual void (DecompressResourceX)(_In_ D3D11X_DESCRIPTOR_RESOURCE* pDstResource,_In_ UINT DstSubresource,_In_opt_ const D3D11X_POINT* pDstPoint,_In_ D3D11X_DESCRIPTOR_RESOURCE* pSrcResource,_In_ UINT SrcSubresource,_In_opt_ const D3D11X_RECT* pSrcRect,_In_ D3D11X_FORMAT DecompressFormat,_In_ UINT DecompressFlags) = 0;
-		virtual void (GSSetParameters)(_In_opt_ const D3D11X_GS_PARAMETERS* pGsParameters) = 0;
-		virtual void (GSGetLastUsedParameters)(_Inout_ D3D11X_GS_PARAMETERS* pGsParameters) = 0;
-		virtual void (MultiDrawIndexedInstancedIndirect)(_In_ UINT PrimitiveCount,_Inout_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs,_In_ UINT StrideByteOffsetForArgs,_In_ UINT Flags) = 0;
-		virtual void (MultiDrawInstancedIndirect)(_In_ UINT PrimitiveCount,_Inout_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs,_In_ UINT StrideByteOffsetForArgs,_In_ UINT Flags) = 0;
-		virtual void (MultiDrawIndexedInstancedIndirectAuto)(_Inout_ ID3D11Buffer* pBufferForPrimitiveCount,_In_ UINT AlignedByteOffsetForPrimitiveCount,_Inout_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs,_In_ UINT StrideByteOffsetForArgs,_In_ UINT Flags) = 0;
-		virtual void (MultiDrawInstancedIndirectAuto)(_Inout_ ID3D11Buffer* pBufferForPrimitiveCount,_In_ UINT AlignedByteOffsetForPrimitiveCount,_Inout_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs,_In_ UINT StrideByteOffsetForArgs,_In_ UINT Flags) = 0;
-		virtual HRESULT(RSGetMSAASettingsForQuality)(_Inout_opt_ D3D11X_MSAA_SCAN_CONVERTER_SETTINGS* pMSAASCSettings,_Inout_opt_ D3D11X_MSAA_EQAA_SETTINGS* pEQAASettings,_Inout_opt_ D3D11X_MSAA_SAMPLE_PRIORITIES* pCentroidPriorities,_Inout_opt_ D3D11X_MSAA_SAMPLE_POSITIONS* pSamplePositions,_In_ UINT LogSampleCount,_In_ UINT SampleQuality) = 0;
-		virtual void (RSSetScanConverterMSAASettings)(_In_ const D3D11X_MSAA_SCAN_CONVERTER_SETTINGS* pMSAASCSettings) = 0;
-		virtual void (RSSetEQAASettings)(_In_ const D3D11X_MSAA_EQAA_SETTINGS* pEQAASettings) = 0;
-		virtual void (RSSetSamplePositions)(_In_opt_ const D3D11X_MSAA_SAMPLE_PRIORITIES* pSamplesPriorities,_In_opt_ const D3D11X_MSAA_SAMPLE_POSITIONS* pSamplePositions) = 0;
-		virtual void (SetResourceCompression)(_In_ ID3D11Resource* pResource,_In_ UINT Compression) = 0;
-		virtual void (SetResourceCompressionX)(_In_ const D3D11X_DESCRIPTOR_RESOURCE* pResource,_In_ UINT Compression) = 0;
-		virtual void (SetGDSRange)(_In_ D3D11X_GDS_REGION_TYPE RegionType,_In_ UINT OffsetDwords,_In_ UINT NumDwords) = 0;
-		virtual void (WriteGDS)(_In_ D3D11X_GDS_REGION_TYPE RegionType,_In_ UINT OffsetDwords,_In_ UINT NumDwords,_In_ const UINT* pCounterValues,_In_ UINT Flags) = 0;
-		virtual void (ReadGDS)(_In_ D3D11X_GDS_REGION_TYPE RegionType,_In_ UINT OffsetDwords,_In_ UINT NumDwords,_Inout_ UINT* pCounterValues,_In_ UINT Flags) = 0;
-		virtual void (VSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
-		virtual void (HSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
-		virtual void (DSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
-		virtual void (GSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
-		virtual void (PSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
-		virtual void (CSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
-		virtual void (InsertWaitOnMemory)(_In_ const void* pAddress,_In_ UINT Flags,_In_ D3D11_COMPARISON_FUNC ComparisonFunction,_In_ UINT ReferenceValue,_In_ UINT Mask) = 0;
-		virtual void (WriteTimestampToMemory)(_In_ void* pDstAddress) = 0;
-		virtual void (WriteTimestampToBuffer)(_In_ ID3D11Buffer* pBuffer,_In_ UINT OffsetBytes) = 0;
-		virtual void (StoreConstantRam)(_In_ UINT Flags,_In_ ID3D11Buffer* pBuffer,_In_ UINT BufferOffsetInBytes,_In_ UINT CeRamOffsetInBytes,_In_ UINT SizeInBytes) = 0;
-		virtual void (LoadConstantRam)(_In_ UINT Flags,_In_ ID3D11Buffer* pBuffer,_In_ UINT BufferOffsetInBytes,_In_ UINT CeRamOffsetInBytes,_In_ UINT SizeInBytes) = 0;
-		virtual void (WriteQuery)(_In_ D3D11_QUERY QueryType,_In_ UINT QueryIndex,_In_ UINT Flags,_In_ ID3D11Buffer* pBuffer,_In_ UINT OffsetInBytes,_In_ UINT StrideInBytes) = 0;
-		virtual void (ResetQuery)(_In_ D3D11_QUERY QueryType,_In_ UINT QueryIndex,_In_ UINT Flags) = 0;
-		virtual void (ConfigureQuery)(_In_ D3D11_QUERY QueryType,_In_ const void* pConfiguration,_In_ UINT ConfigurationSize) = 0;
-		virtual void (SetShaderUserData)(_In_ D3D11X_HW_STAGE ShaderStage,_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
-		virtual void (SetPixelShaderDepthForceZOrder)(_In_ BOOL ForceOrder) = 0;
-		virtual void (SetPredicationFromQuery)(_In_ D3D11_QUERY QueryType,_In_ ID3D11Buffer* pBuffer,_In_ UINT OffsetInBytes,_In_ UINT Flags) = 0;
-		virtual void (SetBorderColorPalette)(_In_ ID3D11Buffer* pBuffer,_In_ UINT OffsetInBytes,_In_ UINT Flags) = 0;
-		virtual void (WriteValueEndOfPipe64)(_In_ void* pDestination,_In_ UINT64 Value,_In_ UINT Flags) = 0;
-		virtual void (InsertWaitOnMemory64)(_In_ const void* pAddress,_In_ UINT Flags,_In_ D3D11_COMPARISON_FUNC ComparisonFunction,_In_ UINT64 ReferenceValue) = 0;
-		virtual void (LoadConstantRamImmediate)(_In_ UINT Flags,_In_ const void* pBuffer,_In_ UINT CeRamOffsetInBytes,_In_ UINT SizeInBytes) = 0;
-		virtual void (SetScreenExtentsQuery)(_In_ UINT Value) = 0;
-		virtual void (CollectScreenExtents)(_In_ UINT Flags,_In_ UINT AddressCount,_In_reads_(AddressCount) const UINT64* pDestinationAddresses,_In_ USHORT ZMin,_In_ USHORT ZMax) = 0;
-		virtual void (FillResourceWithValue)(_In_ ID3D11Resource* pDstResource,_In_ UINT FillValue) = 0;
-		virtual void (SetDrawBalancing)(_In_ UINT BalancingMode,_In_ UINT Flags) = 0;
+	virtual INT(PIXBeginEvent)(_In_ LPCWSTR Name) = 0;
+	virtual INT(PIXBeginEventEx)(_In_reads_bytes_(DataSize) const void* pData,_In_ UINT DataSize) = 0;
+	virtual INT(PIXEndEvent)() = 0;
+	virtual void (PIXSetMarker)(_In_ LPCWSTR Name) = 0;
+	virtual void (PIXSetMarkerEx)(_In_reads_bytes_(DataSize) const void* pData,_In_ UINT DataSize) = 0;
+	virtual BOOL(PIXGetStatus)() = 0;
+	virtual HRESULT(PIXGpuCaptureNextFrame)(_In_ UINT Flags,_In_z_ LPCWSTR lpOutputFileName) = 0;
+	virtual HRESULT(PIXGpuBeginCapture)(_In_ UINT Flags,_In_z_ LPCWSTR lpOutputFileName) = 0;
+	virtual HRESULT(PIXGpuEndCapture)() = 0;
+	virtual void (StartCounters)(_In_ ID3D11CounterSetX* pCounterSet) = 0;
+	virtual void (SampleCounters)(_In_ ID3D11CounterSampleX* pCounterSample) = 0;
+	virtual void (StopCounters)( ) = 0;
+	virtual HRESULT(GetCounterData)(_In_ ID3D11CounterSampleX* pCounterSample,_Out_ D3D11X_COUNTER_DATA* pData,_In_ UINT GetCounterDataFlags) = 0;
+	virtual void (FlushGpuCaches)(_In_ ID3D11Resource* pResource) = 0;
+	virtual void (FlushGpuCacheRange)(_In_ UINT Flags,_In_ void* pBaseAddress,_In_ SIZE_T SizeInBytes) = 0;
+	virtual void (InsertWaitUntilIdle)(_In_ UINT Flags) = 0;
+	virtual UINT64(InsertFence)(_In_ UINT Flags) = 0;
+	virtual void (InsertWaitOnFence)(_In_ UINT Flags,_In_ UINT64 Fence) = 0;
+	virtual void (RemapConstantBufferInheritance)(_In_ D3D11_STAGE Stage,_In_ UINT Slot,_In_ D3D11_STAGE InheritStage,_In_ UINT InheritSlot) = 0;
+	virtual void (RemapShaderResourceInheritance)(_In_ D3D11_STAGE Stage,_In_ UINT Slot,_In_ D3D11_STAGE InheritStage,_In_ UINT InheritSlot) = 0;
+	virtual void (RemapSamplerInheritance)(_In_ D3D11_STAGE Stage,_In_ UINT Slot,_In_ D3D11_STAGE InheritStage,_In_ UINT InheritSlot) = 0;
+	virtual void (RemapVertexBufferInheritance)(_In_ UINT Slot,_In_ UINT InheritSlot) = 0;
+	virtual void (PSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
+	virtual void (PSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
+	virtual void (PSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
+	virtual void (VSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
+	virtual void (VSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
+	virtual void (VSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
+	virtual void (GSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
+	virtual void (GSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
+	virtual void (GSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
+	virtual void (CSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
+	virtual void (CSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
+	virtual void (CSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
+	virtual void (HSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
+	virtual void (HSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
+	virtual void (HSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
+	virtual void (DSSetFastConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer) = 0;
+	virtual void (DSSetFastShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView) = 0;
+	virtual void (DSSetFastSampler)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11SamplerState* pSampler) = 0;
+	virtual void (IASetFastVertexBuffer)(_In_range_(0, D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pVertexBuffer,_In_ UINT Stride) = 0;
+	virtual void (IASetFastIndexBuffer)(_In_ UINT HardwareIndexFormat,_In_ ID3D11Buffer* pIndexBuffer) = 0;
+	virtual void (PSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
+	virtual void (PSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
+	virtual void (VSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
+	virtual void (VSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
+	virtual void (GSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
+	virtual void (GSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
+	virtual void (CSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
+	virtual void (CSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
+	virtual void (HSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
+	virtual void (HSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
+	virtual void (DSSetPlacementConstantBuffer)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pConstantBuffer,_In_ void* pBaseAddress) = 0;
+	virtual void (DSSetPlacementShaderResource)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11ShaderResourceView* pShaderResourceView,_In_ void* pBaseAddress) = 0;
+	virtual void (IASetPlacementVertexBuffer)(_In_range_(0, D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - 1) UINT Slot,_In_ ID3D11Buffer* pVertexBuffer,_In_ void* pBaseAddress,_In_ UINT Stride) = 0;
+	virtual void (IASetPlacementIndexBuffer)(_In_ UINT HardwareIndexFormat,_In_ ID3D11Buffer* pIndexBuffer,_In_ void* pBaseAddress) = 0;
+	virtual void (HSSetTessellationParameters)(_In_opt_ const D3D11X_TESSELLATION_PARAMETERS* pTessellationParameters) = 0;
+	virtual void (HSGetLastUsedTessellationParameters)(_Inout_ D3D11X_TESSELLATION_PARAMETERS* pTessellationParameters) = 0;
+	virtual void (CSEnableAutomaticGpuFlush)(_In_ BOOL Enable) = 0;
+	virtual void (GpuSendPipelinedEvent)(_In_ D3D11X_GPU_PIPELINED_EVENT Event) = 0;
+	virtual HRESULT(Suspend)(_In_ UINT Flags) = 0;
+	virtual HRESULT(Resume)() = 0;
+	virtual void (BeginCommandListExecution)(_In_ UINT Flags) = 0;
+	virtual void (EndCommandListExecution)( ) = 0;
+	virtual void (SetGraphicsShaderLimits)(_In_opt_ const D3D11X_GRAPHICS_SHADER_LIMITS* pShaderLimits) = 0;
+	virtual void (SetComputeShaderLimits)(_In_opt_ const D3D11X_COMPUTE_SHADER_LIMITS* pShaderLimits) = 0;
+	virtual void (SetPredicationBuffer)(_In_opt_ ID3D11Buffer* pBuffer,_In_ UINT Offset,_In_ UINT Flags) = 0;
+	virtual void (OMSetDepthBounds)(_In_ FLOAT min,_In_ FLOAT max) = 0;
+	virtual void (OMSetDepthStencilStateX)(_In_opt_ ID3D11DepthStencilState* pDepthStencilState) = 0;
+	virtual void (OMSetSampleMask)(_In_ UINT64 QuadSampleMask) = 0;
+	virtual UINT32* (MakeCeSpace) () = 0;
+	virtual void (SetFastResources_Debug)(_In_ UINT* pTableStart,_In_ UINT* pTableEnd) = 0;
+	virtual void (BeginResourceBatch)(_Out_ void* pBuffer,_In_ UINT BufferSize) = 0;
+	virtual UINT(EndResourceBatch)(_Out_opt_ UINT* pSizeNeeded) = 0;
+	virtual void (SetFastResourcesFromBatch_Debug)(_In_ void* pBatch,_In_ UINT Size) = 0; \
+	virtual void (CSPlaceUnorderedAccessView)(_In_range_(0, D3D11_1_UAV_SLOT_COUNT - 1) UINT Slot,_In_ D3D11X_DESCRIPTOR_UNORDERED_ACCESS_VIEW* const pDescriptor,_In_ UINT64 Offset) = 0;
+	virtual void (WriteValueEndOfPipe)(_In_ void* pDestination,_In_ UINT Value,_In_ UINT Flags) = 0;
+	virtual void (CopyMemoryToMemory)(_In_ void* pDstAddress,_In_ void* pSrcAddress,_In_ SIZE_T SizeBytes) = 0;
+	virtual void (FillMemoryWithValue)(_In_ void* pDstAddress,_In_ SIZE_T SizeBytes,_In_ UINT FillValue) = 0;
+	virtual void (BeginProcessVideoResource)(_In_ ID3D11Resource* pResource,_In_ UINT SubResource) = 0;
+	virtual void (EndProcessVideoResource)(_In_ ID3D11Resource* pResource,_In_ UINT SubResource) = 0;
+	virtual HRESULT(StartThreadTrace)(_In_ const D3D11X_THREAD_TRACE_DESC* pDesc,_In_ void* pDstAddressShaderEngine0,_In_ void* pDstAddressShaderEngine1,_In_ SIZE_T BufferSizeBytes) = 0;
+	virtual void (StopThreadTrace)(_In_ void* pDstAddressTraceSize) = 0;
+	virtual void (InsertThreadTraceMarker)(_In_ UINT Marker) = 0;
+	virtual void (IASetPrimitiveResetIndex)(_In_ UINT ResetIndex) = 0;
+	virtual void (SetShaderResourceViewMinLOD)(_In_ ID3D11ShaderResourceView* pShaderResourceView,FLOAT MinLOD) = 0;
+	virtual void (InsertWaitOnPresent)(_In_ UINT Flags,_In_ ID3D11Resource* pBackBuffer) = 0;
+	virtual void (ClearRenderTargetViewX)(_In_ ID3D11RenderTargetView* pRenderTargetView,_In_ UINT Flags,_In_ const FLOAT ColorRGBA[ 4 ]) = 0;
+	virtual UINT(GetResourceCompression)(_In_ ID3D11Resource* pResource) = 0;
+	virtual UINT(GetResourceCompressionX)(_In_ const D3D11X_DESCRIPTOR_RESOURCE* pResource) = 0;
+	virtual void (DecompressResource)(_In_ ID3D11Resource* pDstResource,_In_ UINT DstSubresource,_In_opt_ const D3D11X_POINT* pDstPoint,_In_ ID3D11Resource* pSrcResource,_In_ UINT SrcSubresource,_In_opt_ const D3D11X_RECT* pSrcRect,_In_ DXGI_FORMAT DecompressFormat,_In_ UINT DecompressFlags) = 0;
+	virtual void (DecompressResourceX)(_In_ D3D11X_DESCRIPTOR_RESOURCE* pDstResource,_In_ UINT DstSubresource,_In_opt_ const D3D11X_POINT* pDstPoint,_In_ D3D11X_DESCRIPTOR_RESOURCE* pSrcResource,_In_ UINT SrcSubresource,_In_opt_ const D3D11X_RECT* pSrcRect,_In_ D3D11X_FORMAT DecompressFormat,_In_ UINT DecompressFlags) = 0;
+	virtual void (GSSetParameters)(_In_opt_ const D3D11X_GS_PARAMETERS* pGsParameters) = 0;
+	virtual void (GSGetLastUsedParameters)(_Inout_ D3D11X_GS_PARAMETERS* pGsParameters) = 0;
+	virtual void (MultiDrawIndexedInstancedIndirect)(_In_ UINT PrimitiveCount,_Inout_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs,_In_ UINT StrideByteOffsetForArgs,_In_ UINT Flags) = 0; \
+	virtual void (MultiDrawInstancedIndirect)(_In_ UINT PrimitiveCount,_Inout_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs,_In_ UINT StrideByteOffsetForArgs,_In_ UINT Flags) = 0;
+	virtual void (MultiDrawIndexedInstancedIndirectAuto)(_Inout_ ID3D11Buffer* pBufferForPrimitiveCount,_In_ UINT AlignedByteOffsetForPrimitiveCount,_Inout_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs,_In_ UINT StrideByteOffsetForArgs,_In_ UINT Flags) = 0;
+	virtual void (MultiDrawInstancedIndirectAuto)(_Inout_ ID3D11Buffer* pBufferForPrimitiveCount,_In_ UINT AlignedByteOffsetForPrimitiveCount,_Inout_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs,_In_ UINT StrideByteOffsetForArgs,_In_ UINT Flags) = 0;
+	virtual HRESULT(RSGetMSAASettingsForQuality)(_Inout_opt_ D3D11X_MSAA_SCAN_CONVERTER_SETTINGS* pMSAASCSettings,_Inout_opt_ D3D11X_MSAA_EQAA_SETTINGS* pEQAASettings,_Inout_opt_ D3D11X_MSAA_SAMPLE_PRIORITIES* pCentroidPriorities,_Inout_opt_ D3D11X_MSAA_SAMPLE_POSITIONS* pSamplePositions,_In_ UINT LogSampleCount,_In_ UINT SampleQuality) = 0;
+	virtual void (RSSetScanConverterMSAASettings)(_In_ const D3D11X_MSAA_SCAN_CONVERTER_SETTINGS* pMSAASCSettings) = 0;
+	virtual void (RSSetEQAASettings)(_In_ const D3D11X_MSAA_EQAA_SETTINGS* pEQAASettings) = 0;
+	virtual void (RSSetSamplePositions)(_In_opt_ const D3D11X_MSAA_SAMPLE_PRIORITIES* pSamplesPriorities,_In_opt_ const D3D11X_MSAA_SAMPLE_POSITIONS* pSamplePositions) = 0;
+	virtual void (SetResourceCompression)(_In_ ID3D11Resource* pResource,_In_ UINT Compression) = 0;
+	virtual void (SetResourceCompressionX)(_In_ const D3D11X_DESCRIPTOR_RESOURCE* pResource,_In_ UINT Compression) = 0;
+	virtual void (SetGDSRange)(_In_ D3D11X_GDS_REGION_TYPE RegionType,_In_ UINT OffsetDwords,_In_ UINT NumDwords) = 0;
+	virtual void (WriteGDS)(_In_ D3D11X_GDS_REGION_TYPE RegionType,_In_ UINT OffsetDwords,_In_ UINT NumDwords,_In_ const UINT* pCounterValues,_In_ UINT Flags) = 0;
+	virtual void (ReadGDS)(_In_ D3D11X_GDS_REGION_TYPE RegionType,_In_ UINT OffsetDwords,_In_ UINT NumDwords,_Inout_ UINT* pCounterValues,_In_ UINT Flags) = 0;
+	virtual void (VSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
+	virtual void (HSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
+	virtual void (DSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
+	virtual void (GSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
+	virtual void (PSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
+	virtual void (CSSetShaderUserData)(_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
+	virtual void (InsertWaitOnMemory)(_In_ const void* pAddress,_In_ UINT Flags,_In_ D3D11_COMPARISON_FUNC ComparisonFunction,_In_ UINT ReferenceValue,_In_ UINT Mask) = 0;
+	virtual void (WriteTimestampToMemory)(_In_ void* pDstAddress) = 0;
+	virtual void (WriteTimestampToBuffer)(_In_ ID3D11Buffer* pBuffer,_In_ UINT OffsetBytes) = 0;
+	virtual void (StoreConstantRam)(_In_ UINT Flags,_In_ ID3D11Buffer* pBuffer,_In_ UINT BufferOffsetInBytes,_In_ UINT CeRamOffsetInBytes,_In_ UINT SizeInBytes) = 0;
+	virtual void (LoadConstantRam)(_In_ UINT Flags,_In_ ID3D11Buffer* pBuffer,_In_ UINT BufferOffsetInBytes,_In_ UINT CeRamOffsetInBytes,_In_ UINT SizeInBytes) = 0;
+	virtual void (WriteQuery)(_In_ D3D11_QUERY QueryType,_In_ UINT QueryIndex,_In_ UINT Flags,_In_ ID3D11Buffer* pBuffer,_In_ UINT OffsetInBytes,_In_ UINT StrideInBytes) = 0;
+	virtual void (ResetQuery)(_In_ D3D11_QUERY QueryType,_In_ UINT QueryIndex,_In_ UINT Flags) = 0;
+	virtual void (ConfigureQuery)(_In_ D3D11_QUERY QueryType,_In_ const void* pConfiguration,_In_ UINT ConfigurationSize) = 0;
+	virtual void (SetShaderUserData)(_In_ D3D11X_HW_STAGE ShaderStage,_In_ UINT StartSlot,_In_ UINT NumRegisters,_In_reads_(NumRegisters) const UINT* pData) = 0;
+	virtual void (SetPixelShaderDepthForceZOrder)(_In_ BOOL ForceOrder) = 0;
+	virtual void (SetPredicationFromQuery)(_In_ D3D11_QUERY QueryType,_In_ ID3D11Buffer* pBuffer,_In_ UINT OffsetInBytes,_In_ UINT Flags) = 0;
+	virtual void (SetBorderColorPalette)(_In_ ID3D11Buffer* pBuffer,_In_ UINT OffsetInBytes,_In_ UINT Flags) = 0;
+	virtual void (WriteValueEndOfPipe64)(_In_ void* pDestination,_In_ UINT64 Value,_In_ UINT Flags) = 0;
+	virtual void (InsertWaitOnMemory64)(_In_ const void* pAddress,_In_ UINT Flags,_In_ D3D11_COMPARISON_FUNC ComparisonFunction,_In_ UINT64 ReferenceValue) = 0;
+	virtual void (LoadConstantRamImmediate)(_In_ UINT Flags,_In_ const void* pBuffer,_In_ UINT CeRamOffsetInBytes,_In_ UINT SizeInBytes) = 0;
+	virtual void (SetScreenExtentsQuery)(_In_ UINT Value) = 0;
+	virtual void (CollectScreenExtents)(_In_ UINT Flags,_In_ UINT AddressCount,_In_reads_(AddressCount) const UINT64* pDestinationAddresses,_In_ USHORT ZMin,_In_ USHORT ZMax) = 0;
+	virtual void (FillResourceWithValue)(_In_ ID3D11Resource* pDstResource,_In_ UINT FillValue) = 0;
+	virtual void (SetDrawBalancing)(_In_ UINT BalancingMode,_In_ UINT Flags) = 0;
+	};
+
+	D3DINTERFACE(ID3D11UserDefinedAnnotationX, b2daad8b, 03d4, 4dbf, 95, eb, 32, ab, 4b, 63, d0, ab) {
+
 	};
 }
 
@@ -615,7 +640,8 @@ namespace wd
 		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
 		{
 			if (riid == __uuidof(wdi::ID3D11DeviceContext) || riid == __uuidof(wdi::ID3D11DeviceContext1) ||
-				riid == __uuidof(wdi::ID3D11DeviceContext2) || riid == __uuidof(wdi::ID3D11DeviceContextX))
+				riid == __uuidof(wdi::ID3D11DeviceContext2) || riid == __uuidof(wdi::ID3D11DeviceContextX) ||
+				riid == __uuidof(wdi::ID3D11UserDefinedAnnotationX))
 			{
 				*ppvObject = this;
 				AddRef( );
@@ -641,15 +667,42 @@ namespace wd
 		HRESULT SetName(LPCWSTR pName) override;
 
 	public:
+		void ProcessDirtyFlags()
+		{
+			// 0x46 = topology dirty flag
+			if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x46)
+			{
+				m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x46;
+				int topology = D3D11X_HARDWARE_TO_TOPOLOGY_MAP.at(m_ShaderUserDataManagerDraw.m_Topology);
+				if (topology == 6 || topology == 17 || topology == 18 || topology == 19 || topology == 20)
+					printf("WARN: device_context_x::ProcessDirtyFlags: unsupported topology %d\n", topology);
+
+				wrapped_interface->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
+			}
+
+			// 0x89 = input layout dirty flag
+			if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x89)
+			{
+				m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x89;
+				wrapped_interface->IASetInputLayout(m_ShaderUserDataManagerDraw.m_pInputLayout);
+			}
+
+			// 0x91 = vertex shader dirty flag
+			if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x91)
+			{
+				m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x91;
+				wrapped_interface->VSSetShader(m_ShaderUserDataManagerDraw.m_pVs, nullptr, 0);
+			}
+
+			// 0x121 = pixel shader dirty flag
+			if (m_ShaderUserDataManagerDraw.m_DirtyFlags & 0x121)
+			{
+				m_ShaderUserDataManagerDraw.m_DirtyFlags &= ~0x121;
+				wrapped_interface->PSSetShader(m_ShaderUserDataManagerDraw.m_pPs, nullptr, 0);
+			}
+		}
+
 		void VSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers) override;
-		void PSSetShaderResources(UINT StartSlot, UINT NumViews,
-			ID3D11ShaderResourceView* const* ppShaderResourceViews) override;
-		void PSSetShader(ID3D11PixelShader* pPixelShader, ID3D11ClassInstance* const* ppClassInstances,
-			UINT NumClassInstances) override;
-		void PSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
-		void VSSetShader(ID3D11VertexShader* pVertexShader, ID3D11ClassInstance* const* ppClassInstances,
-			UINT NumClassInstances) override;
-		void DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation) override;
 		void Draw(UINT VertexCount, UINT StartVertexLocation) override;
 		HRESULT Map(ID3D11Resource* pResource, UINT Subresource, D3D11_MAP MapType, UINT MapFlags,
 			D3D11_MAPPED_SUBRESOURCE* pMappedResource) override;
@@ -658,24 +711,11 @@ namespace wd
 		void IASetInputLayout(ID3D11InputLayout* pInputLayout) override;
 		void IASetVertexBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppVertexBuffers,
 			const UINT* pStrides, const UINT* pOffsets) override;
-		void IASetIndexBuffer(ID3D11Buffer* pIndexBuffer, DXGI_FORMAT Format, UINT Offset) override;
-		void DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation,
-			INT BaseVertexLocation, UINT StartInstanceLocation) override;
-		void DrawInstanced(UINT VertexCountPerInstance, UINT InstanceCount, UINT StartVertexLocation,
-			UINT StartInstanceLocation) override;
-		void GSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers) override;
-		void GSSetShader(ID3D11GeometryShader* pShader, ID3D11ClassInstance* const* ppClassInstances,
-			UINT NumClassInstances) override;
-		void IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY Topology) override;
-		void VSSetShaderResources(UINT StartSlot, UINT NumViews,
-			ID3D11ShaderResourceView* const* ppShaderResourceViews) override;
 		void VSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
 		void Begin(ID3D11Asynchronous* pAsync) override;
 		void End(ID3D11Asynchronous* pAsync) override;
 		HRESULT GetData(ID3D11Asynchronous* pAsync, void* pData, UINT DataSize, UINT GetDataFlags) override;
 		void SetPredication(ID3D11Predicate* pPredicate, BOOL PredicateValue) override;
-		void GSSetShaderResources(UINT StartSlot, UINT NumViews,
-			ID3D11ShaderResourceView* const* ppShaderResourceViews) override;
 		void GSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
 		void OMSetRenderTargets(UINT NumViews, ID3D11RenderTargetView* const* ppRenderTargetViews,
 			ID3D11DepthStencilView* pDepthStencilView) override;
@@ -685,7 +725,6 @@ namespace wd
 		void OMSetBlendState(ID3D11BlendState* pBlendState, const FLOAT BlendFactor[4], UINT SampleMask) override;
 		void OMSetDepthStencilState(ID3D11DepthStencilState* pDepthStencilState, UINT StencilRef) override;
 		void SOSetTargets(UINT NumBuffers, ID3D11Buffer* const* ppSOTargets, const UINT* pOffsets) override;
-		void DrawAuto(ID3D11DeviceContext* pDeviceContext) override;
 		void DrawIndexedInstancedIndirect(ID3D11Buffer* pBufferForArgs, UINT AlignedByteOffsetForArgs) override;
 		void DrawInstancedIndirect(ID3D11Buffer* pBufferForArgs, UINT AlignedByteOffsetForArgs) override;
 		void Dispatch(UINT ThreadGroupCountX, UINT ThreadGroupCountY, UINT ThreadGroupCountZ) override;
@@ -713,24 +752,12 @@ namespace wd
 		void ResolveSubresource(ID3D11Resource* pDstResource, UINT DstSubresource, ID3D11Resource* pSrcResource,
 			UINT SrcSubresource, DXGI_FORMAT Format) override;
 		void ExecuteCommandList(ID3D11CommandList* pCommandList, BOOL RestoreContextState) override;
-		void HSSetShaderResources(UINT StartSlot, UINT NumViews,
-			ID3D11ShaderResourceView* const* ppShaderResourceViews) override;
-		void HSSetShader(ID3D11HullShader* pHullShader, ID3D11ClassInstance* const* ppClassInstances,
-			UINT NumClassInstances) override;
 		void HSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
 		void HSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers) override;
-		void DSSetShaderResources(UINT StartSlot, UINT NumViews,
-			ID3D11ShaderResourceView* const* ppShaderResourceViews) override;
-		void DSSetShader(ID3D11DomainShader* pDomainShader, ID3D11ClassInstance* const* ppClassInstances,
-			UINT NumClassInstances) override;
 		void DSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
 		void DSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers) override;
-		void CSSetShaderResources(UINT StartSlot, UINT NumViews,
-			ID3D11ShaderResourceView* const* ppShaderResourceViews) override;
 		void CSSetUnorderedAccessViews(UINT StartSlot, UINT NumUAVs,
 			ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts) override;
-		void CSSetShader(ID3D11ComputeShader* pComputeShader, ID3D11ClassInstance* const* ppClassInstances,
-			UINT NumClassInstances) override;
 		void CSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
 		void CSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers) override;
 		void VSGetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer** ppConstantBuffers) override;
@@ -1016,6 +1043,33 @@ namespace wd
 			USHORT ZMax) override;
 		void FillResourceWithValue(ID3D11Resource* pDstResource, UINT FillValue) override;
 		void SetDrawBalancing(UINT BalancingMode, UINT Flags) override;
+		void PSSetShaderResources(ID3D11ShaderResourceView* const* ppShaderResourceViews, UINT StartSlot,
+			UINT PacketHeader) override;
+		void PSSetShader(ID3D11PixelShader* pPixelShader) override;
+		void PSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
+		void VSSetShader(ID3D11VertexShader* pVertexShader) override;
+		void DrawIndexed(UINT64 StartIndexLocationAndIndexCount, INT BaseVertexLocation) override;
+		void IASetIndexBuffer(UINT HardwareIndexFormat, ID3D11Buffer* pIndexBuffer, UINT Offset) override;
+		void DrawIndexedInstanced(UINT64 StartIndexLocationAndIndexCountPerInstance,
+			UINT64 BaseVertexLocationAndStartInstanceLocation, UINT InstanceCount) override;
+		void DrawInstanced(UINT VertexCountPerInstance, UINT64 StartVertexLocationAndStartInstanceLocation,
+			UINT InstanceCount) override;
+		void GSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers) override;
+		void GSSetShader(ID3D11GeometryShader* pShader) override;
+		void VSSetShaderResources(ID3D11ShaderResourceView* const* ppShaderResourceViews, UINT StartSlot,
+			UINT PacketHeader) override;
+		void GSSetShaderResources(ID3D11ShaderResourceView* const* ppShaderResourceViews, UINT StartSlot,
+			UINT PacketHeader) override;
+		void DrawAuto() override;
+		void HSSetShaderResources(ID3D11ShaderResourceView* const* ppShaderResourceViews, UINT StartSlot,
+			UINT PacketHeader) override;
+		void HSSetShader(ID3D11HullShader* pHullShader) override;
+		void DSSetShaderResources(ID3D11ShaderResourceView* const* ppShaderResourceViews, UINT StartSlot,
+			UINT PacketHeader) override;
+		void DSSetShader(ID3D11DomainShader* pDomainShader) override;
+		void CSSetShaderResources(ID3D11ShaderResourceView* const* ppShaderResourceViews, UINT StartSlot,
+			UINT PacketHeader) override;
+		void CSSetShader(ID3D11ComputeShader* pComputeShader) override;
 
 	private:
 		::ID3D11DeviceContext2* wrapped_interface;

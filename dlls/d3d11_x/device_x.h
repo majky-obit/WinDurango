@@ -5,6 +5,7 @@
 #include "graphics_unknown.h"
 #include <exception>
 #include <format>
+#include "dxgi_device.h"
 
 namespace wdi
 {
@@ -273,6 +274,14 @@ namespace wd
 				return S_OK;
 			}
 
+			if (riid == __uuidof(IDXGIDevice) ||
+				riid == __uuidof(IDXGIDevice1))
+			{
+				wrapped_interface->QueryInterface(__uuidof(IDXGIDevice1), ppvObject);
+				*ppvObject = new dxgi_device(static_cast<IDXGIDevice1*>(*ppvObject));
+				return S_OK;
+			}
+
 			if (riid == __uuidof(wdi::IGraphicsUnwrap))
 			{
 				*ppvObject = wrapped_interface;
@@ -289,40 +298,19 @@ namespace wd
 			return wrapped_interface->CreateBuffer(pDesc, pInitialData, ppBuffer);
 		}
 
-		HRESULT CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture1D** ppTexture1D) override
-		{
-			return wrapped_interface->CreateTexture1D(pDesc, pInitialData, ppTexture1D);
-		}
+		HRESULT CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture1D** ppTexture1D) override;
 
-		HRESULT CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture2D** ppTexture2D) override
-		{
-			return wrapped_interface->CreateTexture2D(pDesc, pInitialData, ppTexture2D);
-		}
+		HRESULT CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture2D** ppTexture2D) override;
 
-		HRESULT CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture3D** ppTexture3D) override
-		{
-			return wrapped_interface->CreateTexture3D(pDesc, pInitialData, ppTexture3D);
-		}
+		HRESULT CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Texture3D** ppTexture3D) override;
 
-		HRESULT CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc, ID3D11ShaderResourceView** ppSRView) override
-		{
-			return wrapped_interface->CreateShaderResourceView(pResource, pDesc, ppSRView);
-		}
+		HRESULT CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc, ID3D11ShaderResourceView** ppSRView) override;
 
-		HRESULT CreateUnorderedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView) override
-		{
-			return wrapped_interface->CreateUnorderedAccessView(pResource, pDesc, ppUAView);
-		}
+		HRESULT CreateUnorderedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView) override;
 
-		HRESULT CreateRenderTargetView(ID3D11Resource* pResource, const D3D11_RENDER_TARGET_VIEW_DESC* pDesc, ID3D11RenderTargetView** ppRTView) override
-		{
-			return wrapped_interface->CreateRenderTargetView(pResource, pDesc, ppRTView);
-		}
+		HRESULT CreateRenderTargetView(ID3D11Resource* pResource, const D3D11_RENDER_TARGET_VIEW_DESC* pDesc, ID3D11RenderTargetView** ppRTView) override;
 
-		HRESULT CreateDepthStencilView(ID3D11Resource* pResource, const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc, ID3D11DepthStencilView** ppDepthStencilView) override
-		{
-			return wrapped_interface->CreateDepthStencilView(pResource, pDesc, ppDepthStencilView);
-		}
+		HRESULT CreateDepthStencilView(ID3D11Resource* pResource, const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc, ID3D11DepthStencilView** ppDepthStencilView) override;
 
 		HRESULT CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs, UINT NumElements, const void* pShaderBytecodeWithInputSignature, SIZE_T BytecodeLength, ID3D11InputLayout** ppInputLayout) override
 		{
@@ -404,10 +392,7 @@ namespace wd
 			return wrapped_interface->CreateCounter(pCounterDesc, ppCounter);
 		}
 
-		HRESULT CreateDeferredContext(UINT ContextFlags, ID3D11DeviceContext** ppDeferredContext) override
-		{
-			return wrapped_interface->CreateDeferredContext(ContextFlags, ppDeferredContext);
-		}
+		HRESULT CreateDeferredContext(UINT ContextFlags, ID3D11DeviceContext** ppDeferredContext) override;
 
 		HRESULT OpenSharedResource(HANDLE hResource, REFIID ReturnedInterface, void** ppResource) override
 		{
@@ -475,10 +460,7 @@ namespace wd
 			return wrapped_interface->GetDeviceRemovedReason( );
 		}
 
-		void GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) override
-		{
-			wrapped_interface->GetImmediateContext(ppImmediateContext);
-		}
+		void GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) override;
 
 		HRESULT SetExceptionMode(UINT RaiseFlags) override
 		{
@@ -496,10 +478,7 @@ namespace wd
 			wrapped_interface->GetImmediateContext1(ppImmediateContext);
 		}
 
-		HRESULT CreateDeferredContext1(UINT ContextFlags, ID3D11DeviceContext1** ppDeferredContext) override
-		{
-			return wrapped_interface->CreateDeferredContext1(ContextFlags, ppDeferredContext);
-		}
+		HRESULT CreateDeferredContext1(UINT ContextFlags, ID3D11DeviceContext1** ppDeferredContext) override;
 
 		HRESULT CreateBlendState1(const D3D11_BLEND_DESC1* pBlendStateDesc, ID3D11BlendState1** ppBlendState) override
 		{
@@ -532,10 +511,7 @@ namespace wd
 			wrapped_interface->GetImmediateContext2(ppImmediateContext);
 		}
 
-		HRESULT CreateDeferredContext2(UINT ContextFlags, ID3D11DeviceContext2** ppDeferredContext) override
-		{
-			return wrapped_interface->CreateDeferredContext2(ContextFlags, ppDeferredContext);
-		}
+		HRESULT CreateDeferredContext2(UINT ContextFlags, ID3D11DeviceContext2** ppDeferredContext) override;
 
 		void GetResourceTiling(ID3D11Resource* pTiledResource, UINT* pNumTilesForEntireResource, D3D11_PACKED_MIP_DESC* pPackedMipDesc, D3D11_TILE_SHAPE* pStandardTileShapeForNonPackedMips, UINT* pNumSubresourceTilings, UINT FirstSubresourceTilingToGet, D3D11_SUBRESOURCE_TILING* pSubresourceTilingsForNonPackedMips) override
 		{

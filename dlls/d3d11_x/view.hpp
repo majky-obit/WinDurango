@@ -1,10 +1,11 @@
 #pragma once
 #include <emmintrin.h>
 #include "device_child_x.h"
+#include "resource.hpp"
 
 namespace wdi
 {
-    #define D3D11X_DESCRIPTOR_TEXTURE_VIEW_SIZE_IN_OWORDS 2
+	#define D3D11X_DESCRIPTOR_TEXTURE_VIEW_SIZE_IN_OWORDS 2
     #define D3D11X_DESCRIPTOR_TEXTURE_VIEW_SIZE_IN_QWORDS 4
     #define D3D11X_DESCRIPTOR_TEXTURE_VIEW_SIZE_IN_DWORDS 8
     #define D3D11X_DESCRIPTOR_TEXTURE_VIEW_SIZE_IN_BYTES 32
@@ -68,5 +69,309 @@ namespace wdi
             /* [annotation] */
             _Out_  D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc) PURE;
 
+    };
+}
+
+namespace wd
+{
+    class render_target_view : public wdi::ID3D11RenderTargetView
+    {
+    public:
+        render_target_view(::ID3D11RenderTargetView* view) : wrapped_interface(view)
+        {
+            m_pResource = reinterpret_cast<wdi::ID3D11Resource*>(wrapped_interface);
+        	wrapped_interface->AddRef( );
+        }
+        IGU_DEFINE_REF
+
+    	HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+        {
+            if (riid == __uuidof(wdi::ID3D11RenderTargetView))
+            {
+                *ppvObject = this;
+                AddRef( );
+                return S_OK;
+            }
+            TRACE_INTERFACE_NOT_HANDLED("render_target_view");
+            *ppvObject = nullptr;
+            return E_NOINTERFACE;
+        }
+
+        void STDMETHODCALLTYPE GetDesc(D3D11_RENDER_TARGET_VIEW_DESC* pDesc) override
+        {
+            wrapped_interface->GetDesc(pDesc);
+        }
+
+        void GetDevice(ID3D11Device** ppDevice) override
+        {
+			printf("WARN: render_target_view::GetDevice returns a PC device!!\n");
+			wrapped_interface->GetDevice(ppDevice);
+        }
+
+        HRESULT GetPrivateData(const GUID& guid, UINT* pDataSize, void* pData) override
+        {
+			return wrapped_interface->GetPrivateData(guid, pDataSize, pData);
+        }
+
+        HRESULT SetPrivateData(const GUID& guid, UINT DataSize, const void* pData) override
+        {
+			return wrapped_interface->SetPrivateData(guid, DataSize, pData);
+        }
+
+        HRESULT SetPrivateDataInterface(const GUID& guid, const IUnknown* pData) override
+        {
+			return wrapped_interface->SetPrivateDataInterface(guid, pData);
+        }
+
+        HRESULT SetPrivateDataInterfaceGraphics(const GUID& guid, const IGraphicsUnknown* pData) override
+        {
+            TRACE_NOT_IMPLEMENTED("render_target_view");
+			return E_NOTIMPL;
+        }
+
+        HRESULT SetName(LPCWSTR pName) override
+        {
+            TRACE_NOT_IMPLEMENTED("render_target_view");
+            return E_NOTIMPL;
+        }
+
+        void GetResource(wdi::ID3D11Resource** ppResource) override
+        {
+            D3D11_RENDER_TARGET_VIEW_DESC desc;
+            wrapped_interface->GetDesc(&desc);
+
+			// FIXME: this only targets 2D textures, but it doesn't matter since all texture* classes are the same
+            ::ID3D11Texture2D* texture2d = nullptr;
+            wrapped_interface->GetResource(reinterpret_cast<::ID3D11Resource**>(&texture2d));
+            *reinterpret_cast<wdi::ID3D11Texture2D**>(ppResource) = new texture_2d(texture2d);
+        }
+
+        ::ID3D11RenderTargetView* wrapped_interface;
+    };
+
+	class depth_stencil_view : public wdi::ID3D11DepthStencilView
+    {
+    public:
+        depth_stencil_view(::ID3D11DepthStencilView* view) : wrapped_interface(view)
+        {
+            m_pResource = reinterpret_cast<wdi::ID3D11Resource*>(wrapped_interface);
+            wrapped_interface->AddRef( );
+        }
+        IGU_DEFINE_REF
+
+		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+        {
+            if (riid == __uuidof(wdi::ID3D11DepthStencilView))
+            {
+                *ppvObject = this;
+                AddRef( );
+                return S_OK;
+            }
+            TRACE_INTERFACE_NOT_HANDLED("depth_stencil_view");
+            *ppvObject = nullptr;
+            return E_NOINTERFACE;
+        }
+
+        void STDMETHODCALLTYPE GetDesc(D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc) override
+        {
+            wrapped_interface->GetDesc(pDesc);
+        }
+
+        void GetDevice(ID3D11Device** ppDevice) override
+        {
+            printf("WARN: depth_stencil_view::GetDevice returns a PC device!!\n");
+            wrapped_interface->GetDevice(ppDevice);
+        }
+
+        HRESULT GetPrivateData(const GUID& guid, UINT* pDataSize, void* pData) override
+        {
+            return wrapped_interface->GetPrivateData(guid, pDataSize, pData);
+        }
+
+        HRESULT SetPrivateData(const GUID& guid, UINT DataSize, const void* pData) override
+        {
+            return wrapped_interface->SetPrivateData(guid, DataSize, pData);
+        }
+
+        HRESULT SetPrivateDataInterface(const GUID& guid, const IUnknown* pData) override
+        {
+            return wrapped_interface->SetPrivateDataInterface(guid, pData);
+        }
+
+        HRESULT SetPrivateDataInterfaceGraphics(const GUID& guid, const IGraphicsUnknown* pData) override
+        {
+            TRACE_NOT_IMPLEMENTED("depth_stencil_view");
+            return E_NOTIMPL;
+        }
+
+        HRESULT SetName(LPCWSTR pName) override
+        {
+            TRACE_NOT_IMPLEMENTED("depth_stencil_view");
+            return E_NOTIMPL;
+        }
+
+        void GetResource(wdi::ID3D11Resource** ppResource) override
+        {
+            D3D11_DEPTH_STENCIL_VIEW_DESC desc;
+            wrapped_interface->GetDesc(&desc);
+
+            // FIXME: this only targets 2D textures, but it doesn't matter since all texture* classes are the same
+            ::ID3D11Texture2D* texture2d = nullptr;
+            wrapped_interface->GetResource(reinterpret_cast<::ID3D11Resource**>(&texture2d));
+            *reinterpret_cast<wdi::ID3D11Texture2D**>(ppResource) = new texture_2d(texture2d);
+        }
+
+        ::ID3D11DepthStencilView* wrapped_interface;
+    };
+
+    class shader_resource_view : public wdi::ID3D11ShaderResourceView
+    {
+    public:
+        shader_resource_view(::ID3D11ShaderResourceView* view) : wrapped_interface(view)
+        {
+            m_pResource = reinterpret_cast<wdi::ID3D11Resource*>(wrapped_interface);
+            wrapped_interface->AddRef( );
+        }
+        IGU_DEFINE_REF
+
+    	HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+        {
+            if (riid == __uuidof(wdi::ID3D11ShaderResourceView))
+            {
+                *ppvObject = this;
+                AddRef( );
+                return S_OK;
+            }
+            TRACE_INTERFACE_NOT_HANDLED("shader_resource_view");
+            *ppvObject = nullptr;
+            return E_NOINTERFACE;
+        }
+
+        void STDMETHODCALLTYPE GetDesc(D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc) override
+        {
+            wrapped_interface->GetDesc(pDesc);
+        }
+
+        void GetDevice(ID3D11Device** ppDevice) override
+        {
+            printf("WARN: shader_resource_view::GetDevice returns a PC device!!\n");
+            wrapped_interface->GetDevice(ppDevice);
+        }
+
+        HRESULT GetPrivateData(const GUID& guid, UINT* pDataSize, void* pData) override
+        {
+            return wrapped_interface->GetPrivateData(guid, pDataSize, pData);
+        }
+
+        HRESULT SetPrivateData(const GUID& guid, UINT DataSize, const void* pData) override
+        {
+            return wrapped_interface->SetPrivateData(guid, DataSize, pData);
+        }
+
+        HRESULT SetPrivateDataInterface(const GUID& guid, const IUnknown* pData) override
+        {
+            return wrapped_interface->SetPrivateDataInterface(guid, pData);
+        }
+
+        HRESULT SetPrivateDataInterfaceGraphics(const GUID& guid, const IGraphicsUnknown* pData) override
+        {
+            TRACE_NOT_IMPLEMENTED("shader_resource_view");
+            return E_NOTIMPL;
+        }
+
+        HRESULT SetName(LPCWSTR pName) override
+        {
+            TRACE_NOT_IMPLEMENTED("shader_resource_view");
+            return E_NOTIMPL;
+        }
+
+        void GetResource(wdi::ID3D11Resource** ppResource) override
+        {
+            D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+            wrapped_interface->GetDesc(&desc);
+
+            // FIXME: this only targets 2D textures, but it doesn't matter since all texture* classes are the same
+            ::ID3D11Texture2D* texture2d = nullptr;
+            wrapped_interface->GetResource(reinterpret_cast<::ID3D11Resource**>(&texture2d));
+            *reinterpret_cast<wdi::ID3D11Texture2D**>(ppResource) = new texture_2d(texture2d);
+        }
+
+        ::ID3D11ShaderResourceView* wrapped_interface;
+    };
+
+    class unordered_access_view : public wdi::ID3D11UnorderedAccessView
+    {
+    public:
+        unordered_access_view(::ID3D11UnorderedAccessView* view) : wrapped_interface(view)
+        {
+            m_pResource = reinterpret_cast<wdi::ID3D11Resource*>(wrapped_interface);
+            wrapped_interface->AddRef( );
+        }
+
+        IGU_DEFINE_REF
+
+    	HRESULT QueryInterface(const IID& riid, void** ppvObject) override
+        {
+            if (riid == __uuidof(wdi::ID3D11UnorderedAccessView))
+            {
+                *ppvObject = this;
+                AddRef( );
+                return S_OK;
+            }
+            TRACE_INTERFACE_NOT_HANDLED("shader_resource_view");
+            *ppvObject = nullptr;
+            return E_NOINTERFACE;
+        }
+
+        void STDMETHODCALLTYPE GetDesc(D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc) override
+        {
+            wrapped_interface->GetDesc(pDesc);
+        }
+
+        void GetDevice(ID3D11Device** ppDevice) override
+        {
+            printf("WARN: depth_stencil_view::GetDevice returns a PC device!!\n");
+            wrapped_interface->GetDevice(ppDevice);
+        }
+
+        HRESULT GetPrivateData(const GUID& guid, UINT* pDataSize, void* pData) override
+        {
+            return wrapped_interface->GetPrivateData(guid, pDataSize, pData);
+        }
+
+        HRESULT SetPrivateData(const GUID& guid, UINT DataSize, const void* pData) override
+        {
+            return wrapped_interface->SetPrivateData(guid, DataSize, pData);
+        }
+
+        HRESULT SetPrivateDataInterface(const GUID& guid, const IUnknown* pData) override
+        {
+            return wrapped_interface->SetPrivateDataInterface(guid, pData);
+        }
+
+        HRESULT SetPrivateDataInterfaceGraphics(const GUID& guid, const IGraphicsUnknown* pData) override
+        {
+            TRACE_NOT_IMPLEMENTED("shader_resource_view");
+            return E_NOTIMPL;
+        }
+
+        HRESULT SetName(LPCWSTR pName) override
+        {
+            TRACE_NOT_IMPLEMENTED("shader_resource_view");
+            return E_NOTIMPL;
+        }
+
+        void GetResource(wdi::ID3D11Resource** ppResource) override
+        {
+            D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
+            wrapped_interface->GetDesc(&desc);
+
+            // FIXME: this only targets 2D textures, but it doesn't matter since all texture* classes are the same
+            ::ID3D11Texture2D* texture2d = nullptr;
+            wrapped_interface->GetResource(reinterpret_cast<::ID3D11Resource**>(&texture2d));
+            *reinterpret_cast<wdi::ID3D11Texture2D**>(ppResource) = new texture_2d(texture2d);
+        }
+
+        ::ID3D11UnorderedAccessView* wrapped_interface;
     };
 }

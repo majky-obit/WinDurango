@@ -21,15 +21,16 @@ HRESULT wd::dxgi_adapter::GetParent(const IID& riid, void** ppParent)
 
 HRESULT wd::dxgi_adapter::EnumOutputs(UINT Output, IDXGIOutput** ppOutput)
 {
-	throw std::logic_error("Not implemented");
+	return wrapped_interface->EnumOutputs(Output, ppOutput);
 }
 
 HRESULT wd::dxgi_adapter::GetDesc(DXGI_ADAPTER_DESC* pDesc)
 {
-	throw std::logic_error("Not implemented");
+	return wrapped_interface->GetDesc(pDesc);
 }
 
 HRESULT wd::dxgi_adapter::CheckInterfaceSupport(const GUID& InterfaceName, LARGE_INTEGER* pUMDVersion)
 {
-	throw std::logic_error("Not implemented");
+	printf("WARN: dxgi_adapter::CheckInterfaceSupport is likely to fail due no support for d3d11.x!!!\n");
+	return wrapped_interface->CheckInterfaceSupport(InterfaceName, pUMDVersion);
 }

@@ -187,7 +187,48 @@ HRESULT __stdcall D3D11CreateDevice_X(
     printf("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!\n");
     printf("SDK Version: %d\n", SDKVersion);
 
-	return CreateDevice(Flags, ppDevice, ppImmediateContext);
+    if (SDKVersion != D3D11_SDK_VERSION)
+    {
+        printf("SDK Version mismatch: %d, correcting to %d\n", SDKVersion, D3D11_SDK_VERSION);
+        SDKVersion = D3D11_SDK_VERSION;
+    }
+
+    D3D_FEATURE_LEVEL featurelevels[] = {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+    };
+
+    ID3D11Device2* device2{};
+    ID3D11DeviceContext2* device_context2{};
+    auto flags = Flags & CREATE_DEVICE_FLAG_MASK;
+#ifdef _DEBUG
+    flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, (ID3D11Device**) ppDevice, pFeatureLevel, (ID3D11DeviceContext**) ppImmediateContext);
+
+
+    if (SUCCEEDED(hr))
+    {
+        // get dx11.2 feature level, since that's what dx11.x inherits from
+        if (ppDevice != nullptr)
+        {
+            (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
+            *ppDevice = reinterpret_cast<wdi::ID3D11Device*>(new wd::device_x(device2));
+        }
+
+        if (ppImmediateContext != nullptr)
+        {
+            (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
+            *ppImmediateContext = reinterpret_cast<wdi::ID3D11DeviceContext*>(new wd::device_context_x(device_context2));
+        }
+    }
+    else
+    {
+        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError( ));
+    }
+
+    return hr;
 }
 
 HRESULT __stdcall D3D11XCreateDeviceX_X(
