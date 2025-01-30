@@ -447,6 +447,23 @@
     <ClCompile Include="Implementation\Windows.Xbox.UI.SystemUI.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.UI.WebAuthenticationResult.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.System.GetTokenAndSignatureResult.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayer.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.Party.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyChat.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyChatMember.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyChatView.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyConfig.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyMember.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyMemberDeviceGroup.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyRosterChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyView.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.UserPartyAssociation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -878,6 +895,23 @@
     <ClInclude Include="Implementation\Windows.Xbox.UI.SystemUI.h" />
     <ClInclude Include="Implementation\Windows.Xbox.UI.WebAuthenticationResult.h" />
     <ClInclude Include="Implementation\Windows.Xbox.System.GetTokenAndSignatureResult.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayer.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.Party.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyChat.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyChatMember.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyChatView.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyConfig.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyMember.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyMemberDeviceGroup.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyRosterChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyView.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.UserPartyAssociation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -963,5 +997,6 @@
     <Midl Include="External\Microsoft.Xbox.Services.UserStatistics.idl" />
     <Midl Include="External\Windows.Kinect.idl" />
     <Midl Include="External\Windows.Xbox.UI.idl" />
+    <Midl Include="External\Windows.Xbox.Multiplayer.idl" />
   </ItemGroup>
 </Project>
