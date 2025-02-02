@@ -2216,6 +2216,7 @@
     <None Include="winrt_x.def" />
     <None Include="PropertySheet.props" />
     <None Include="packages.config" />
+    <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="External\Windows.Xbox.Input.idl">
