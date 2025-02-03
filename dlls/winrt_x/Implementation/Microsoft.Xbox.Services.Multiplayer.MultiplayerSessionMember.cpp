@@ -2,187 +2,227 @@
 #include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionMember.h"
 #include "Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionMember.g.cpp"
 
-// TODO: Add this globally for all projects.
-#define PRINT_FUNCTION_NAME() printf("[%s]\n", __FUNCSIG__)
-#define CONVERT_TO_HSTRING(str) winrt::hstring(std::wstring(str, (str) + strlen(str)))
-
-#define MEMBER_ID                       1234567890  // NOLINT(modernize-macro-to-enum)
-#define TEAM_ID                         CONVERT_TO_HSTRING("0987654321")
-#define XBOX_USER_ID                    CONVERT_TO_HSTRING("0987612345")
-#define CUSTOM_JSON_CONSTANTS           CONVERT_TO_HSTRING("{}")
-#define CUSTOM_JSON_PROPS               CONVERT_TO_HSTRING("{}")
-#define SECURE_BASE_64                  CONVERT_TO_HSTRING("1234567890qwerty")
-#define GAMERTAG                        CONVERT_TO_HSTRING("Durangler")
-
 namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
-    uint32_t MultiplayerSessionMember::MemberId()
-    {
-        PRINT_FUNCTION_NAME();
+	uint32_t MultiplayerSessionMember::MemberId()
+	{
+		PRINT_FUNCTION_NAME();
 
-        return MEMBER_ID;
-    }
+		return MEMBER_ID;
+	}
 
-    hstring MultiplayerSessionMember::TeamId()
-    {
-        PRINT_FUNCTION_NAME( );
+	hstring MultiplayerSessionMember::TeamId()
+	{
+		PRINT_FUNCTION_NAME( );
 
-        return TEAM_ID;
-    }
+		return TEAM_ID;
+	}
 
-    hstring MultiplayerSessionMember::XboxUserId()
-    {
-        PRINT_FUNCTION_NAME();
+	hstring MultiplayerSessionMember::XboxUserId()
+	{
+		PRINT_FUNCTION_NAME();
 
-        return XBOX_USER_ID;
-    }
+		return XBOX_USER_ID;
+	}
 
-    hstring MultiplayerSessionMember::MemberCustomConstantsJson()
-    {
-        PRINT_FUNCTION_NAME();
+	hstring MultiplayerSessionMember::MemberCustomConstantsJson()
+	{
+		PRINT_FUNCTION_NAME();
 
-        return CUSTOM_JSON_CONSTANTS;
-    }
+		return CUSTOM_JSON_CONSTANTS;
+	}
 
-    hstring MultiplayerSessionMember::SecureDeviceAddressBase64()
-    {
-        PRINT_FUNCTION_NAME();
+	hstring MultiplayerSessionMember::SecureDeviceAddressBase64()
+	{
+		PRINT_FUNCTION_NAME();
 
-        return SECURE_BASE_64;
-    }
+		return SECURE_BASE_64;
+	}
 
-    Windows::Foundation::Collections::IMapView<hstring, hstring> MultiplayerSessionMember::Roles()
-    {
-        PRINT_FUNCTION_NAME();
+	Windows::Foundation::Collections::IMapView<hstring, hstring> MultiplayerSessionMember::Roles()
+	{
+		PRINT_FUNCTION_NAME();
 
-        // TODO: Add roles to this collection.
-        Windows::Foundation::Collections::IMapView<hstring, hstring> roles{};
+		// TODO: Add roles to this collection.
+		Windows::Foundation::Collections::IMapView<hstring, hstring> roles{};
 
-        return roles;
-    }
+		return roles;
+	}
 
-    hstring MultiplayerSessionMember::MemberCustomPropertiesJson()
-    {
-        PRINT_FUNCTION_NAME();
+	hstring MultiplayerSessionMember::MemberCustomPropertiesJson()
+	{
+		PRINT_FUNCTION_NAME();
 
-        return CUSTOM_JSON_PROPS;
-    }
+		return CUSTOM_JSON_PROPS;
+	}
 
-    hstring MultiplayerSessionMember::Gamertag()
-    {
-        PRINT_FUNCTION_NAME();
+	hstring MultiplayerSessionMember::Gamertag()
+	{
+		PRINT_FUNCTION_NAME();
 
-        return GAMERTAG;
-    }
+		return GAMERTAG;
+	}
 
-    MultiplayerSessionMemberStatus MultiplayerSessionMember::Status()
-    {
-        PRINT_FUNCTION_NAME();
+	MultiplayerSessionMemberStatus MultiplayerSessionMember::Status()
+	{
+		PRINT_FUNCTION_NAME();
 
-        return MultiplayerSessionMemberStatus::Active;
-    }
+		return MultiplayerSessionMemberStatus::Active;
+	}
 
-    bool MultiplayerSessionMember::IsTurnAvailable()
-    {
-        PRINT_FUNCTION_NAME( );
+	bool MultiplayerSessionMember::IsTurnAvailable()
+	{
+		PRINT_FUNCTION_NAME( );
 
 		return true;
-    }
+	}
 
-    bool MultiplayerSessionMember::IsCurrentUser()
-    {
-        PRINT_FUNCTION_NAME( );
+	bool MultiplayerSessionMember::IsCurrentUser()
+	{
+		PRINT_FUNCTION_NAME();
 
-        return true;
-    }
+		return true;
+	}
 
-    bool MultiplayerSessionMember::InitializeRequested()
-    {
-        throw hresult_not_implemented();
-    }
+	bool MultiplayerSessionMember::InitializeRequested()
+	{
+		return false;
+	}
 
-    hstring MultiplayerSessionMember::MatchmakingResultServerMeasurementsJson()
-    {
-        throw hresult_not_implemented();
-    }
+	hstring MultiplayerSessionMember::MatchmakingResultServerMeasurementsJson()
+	{
+		PRINT_FUNCTION_NAME();
 
-    hstring MultiplayerSessionMember::MemberServerMeasurementsJson()
-    {
-        throw hresult_not_implemented();
-    }
+		return RESULTS_SERVER_MEASUREMENTS_JSON;
+	}
 
-    Windows::Foundation::Collections::IVector<Multiplayer::MultiplayerSessionMember> MultiplayerSessionMember::MembersInGroup()
-    {
-        throw hresult_not_implemented();
-    }
+	hstring MultiplayerSessionMember::MemberServerMeasurementsJson()
+	{
+		PRINT_FUNCTION_NAME();
 
-    Windows::Foundation::Collections::IVector<MultiplayerQualityOfServiceMeasurements> MultiplayerSessionMember::MemberMeasurements()
-    {
-        throw hresult_not_implemented();
-    }
+		return SERVER_MEASUREMENTS_JSON;
+	}
 
-    hstring MultiplayerSessionMember::DeviceToken()
-    {
-        throw hresult_not_implemented();
-    }
+	Windows::Foundation::Collections::IVector<Multiplayer::MultiplayerSessionMember> MultiplayerSessionMember::MembersInGroup()
+	{
+		PRINT_FUNCTION_NAME();
 
-    NetworkAddressTranslationSetting MultiplayerSessionMember::Nat()
-    {
-        throw hresult_not_implemented();
-    }
+		auto members = single_threaded_vector<Multiplayer::MultiplayerSessionMember>();
 
-    uint32_t MultiplayerSessionMember::ActiveTitleId()
-    {
-        throw hresult_not_implemented();
-    }
+		return members;
+	}
 
-    uint32_t MultiplayerSessionMember::InitializationEpisode()
-    {
-        throw hresult_not_implemented();
-    }
+	Windows::Foundation::Collections::IVector<MultiplayerQualityOfServiceMeasurements> MultiplayerSessionMember::MemberMeasurements()
+	{
+		auto memberMeasurement = single_threaded_vector<MultiplayerQualityOfServiceMeasurements>();
 
-    Windows::Foundation::DateTime MultiplayerSessionMember::JoinTime()
-    {
-        throw hresult_not_implemented();
-    }
+		const MultiplayerQualityOfServiceMeasurements measurement{
+			DEVICE_ID,
+			Windows::Foundation::TimeSpan{ 10000000 },
+			1000,
+			1000,
+			L"{}"
+		};
 
-    MultiplayerMeasurementFailure MultiplayerSessionMember::InitializationFailureCause()
-    {
-        throw hresult_not_implemented();
-    }
+		memberMeasurement.Append(measurement);
 
-    MultiplayerSessionReference MultiplayerSessionMember::TournamentTeamSessionRef()
-    {
-        throw hresult_not_implemented();
-    }
+		return memberMeasurement;
+	}
 
-    Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Groups()
-    {
-        throw hresult_not_implemented();
-    }
+	hstring MultiplayerSessionMember::DeviceToken()
+	{
+		PRINT_FUNCTION_NAME();
 
-    void MultiplayerSessionMember::Groups(winrt::Windows::Foundation::Collections::IVector<hstring> const& value)
-    {
-        throw hresult_not_implemented();
-    }
+		return DEVICE_ID;
+	}
 
-    Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Encounters()
-    {
-        throw hresult_not_implemented();
-    }
+	NetworkAddressTranslationSetting MultiplayerSessionMember::Nat()
+	{
+		PRINT_FUNCTION_NAME();
 
-    void MultiplayerSessionMember::Encounters(winrt::Windows::Foundation::Collections::IVector<hstring> const& value)
-    {
-        throw hresult_not_implemented();
-    }
+		return NetworkAddressTranslationSetting::Open;
+	}
 
-    Windows::Foundation::Collections::IMap<hstring, Tournaments::TournamentTeamResult> MultiplayerSessionMember::Results()
-    {
-        throw hresult_not_implemented();
-    }
+	uint32_t MultiplayerSessionMember::ActiveTitleId()
+	{
+		PRINT_FUNCTION_NAME();
 
-    Tournaments::TournamentArbitrationStatus MultiplayerSessionMember::ArbitrationStatus()
-    {
-        throw hresult_not_implemented();
-    }
+		return ACTIVE_TITLE_ID;
+	}
+
+	uint32_t MultiplayerSessionMember::InitializationEpisode()
+	{
+		return 0;
+	}
+
+	Windows::Foundation::DateTime MultiplayerSessionMember::JoinTime( )
+	{
+		PRINT_FUNCTION_NAME( );
+
+		const auto now = std::chrono::system_clock::now( );
+		const auto duration = now.time_since_epoch( );
+		const auto hundred_nanoseconds = std::chrono::duration_cast<Windows::Foundation::TimeSpan>(duration);
+
+		return Windows::Foundation::DateTime{ hundred_nanoseconds };
+	}
+
+	MultiplayerMeasurementFailure MultiplayerSessionMember::InitializationFailureCause()
+	{
+		PRINT_FUNCTION_NAME();
+
+		return MultiplayerMeasurementFailure::None;
+	}
+
+	MultiplayerSessionReference MultiplayerSessionMember::TournamentTeamSessionRef()
+	{
+		PRINT_FUNCTION_NAME();
+
+		return MultiplayerSessionReference{
+			L"serviceConfigurationId",
+			L"sessionTemplateName",
+			L"sessionName"
+		};
+	}
+
+	Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Groups()
+	{
+		PRINT_FUNCTION_NAME();
+
+		auto groups = winrt::single_threaded_vector<hstring>();
+
+		groups.Append(L"WinDurango");
+
+		return groups;
+	}
+
+	void MultiplayerSessionMember::Groups(Windows::Foundation::Collections::IVector<hstring> const& value)
+	{
+		return;
+	}
+
+	Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Encounters()
+	{
+		auto encounters = winrt::single_threaded_vector<hstring>();
+
+		encounters.Append(L"WinDurango");
+
+		return encounters;
+	}
+
+	void MultiplayerSessionMember::Encounters(winrt::Windows::Foundation::Collections::IVector<hstring> const& value)
+	{
+		return;
+	}
+
+	Windows::Foundation::Collections::IMap<hstring, Tournaments::TournamentTeamResult> MultiplayerSessionMember::Results()
+	{
+		auto results = winrt::single_threaded_map<hstring, Tournaments::TournamentTeamResult>();
+
+		return results;
+	}
+
+	Tournaments::TournamentArbitrationStatus MultiplayerSessionMember::ArbitrationStatus()
+	{
+		return Tournaments::TournamentArbitrationStatus::Playing;
+	}
 }

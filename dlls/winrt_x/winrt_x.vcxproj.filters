@@ -2211,6 +2211,7 @@
     <ClInclude Include="Implementation\Windows.Xbox.System.User.h">
       <Filter>Implementation\Windows\Xbox\System</Filter>
     </ClInclude>
+    <ClInclude Include="common.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="winrt_x.def" />
