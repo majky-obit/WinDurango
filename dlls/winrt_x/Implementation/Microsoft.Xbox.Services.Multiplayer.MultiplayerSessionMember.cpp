@@ -197,11 +197,15 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	void MultiplayerSessionMember::Groups(Windows::Foundation::Collections::IVector<hstring> const& value)
 	{
+		PRINT_FUNCTION_NAME();
+
 		return;
 	}
 
 	Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Encounters()
 	{
+		PRINT_FUNCTION_NAME();
+
 		auto encounters = winrt::single_threaded_vector<hstring>();
 
 		encounters.Append(L"WinDurango");
@@ -211,11 +215,15 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	void MultiplayerSessionMember::Encounters(winrt::Windows::Foundation::Collections::IVector<hstring> const& value)
 	{
+		PRINT_FUNCTION_NAME();
+
 		return;
 	}
 
 	Windows::Foundation::Collections::IMap<hstring, Tournaments::TournamentTeamResult> MultiplayerSessionMember::Results()
 	{
+		PRINT_FUNCTION_NAME();
+
 		auto results = winrt::single_threaded_map<hstring, Tournaments::TournamentTeamResult>();
 
 		return results;
@@ -223,6 +231,8 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	Tournaments::TournamentArbitrationStatus MultiplayerSessionMember::ArbitrationStatus()
 	{
+		PRINT_FUNCTION_NAME();
+
 		return Tournaments::TournamentArbitrationStatus::Playing;
 	}
 }
