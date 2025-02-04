@@ -8,231 +8,196 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 	{
 		LOG_FUNCTION_NAME();
 
-		return MEMBER_ID;
+		return m_memberId;
 	}
 
 	hstring MultiplayerSessionMember::TeamId()
 	{
-		LOG_FUNCTION_NAME( );
+		LOG_FUNCTION_NAME();
 
-		return TEAM_ID;
+		return m_teamId;
 	}
 
 	hstring MultiplayerSessionMember::XboxUserId()
 	{
 		LOG_FUNCTION_NAME();
 
-		return XBOX_USER_ID;
+		return m_xboxUserId;
 	}
 
 	hstring MultiplayerSessionMember::MemberCustomConstantsJson()
 	{
 		LOG_FUNCTION_NAME();
 
-		return CUSTOM_JSON_CONSTANTS;
+		return m_customJsonProps;
 	}
 
 	hstring MultiplayerSessionMember::SecureDeviceAddressBase64()
 	{
 		LOG_FUNCTION_NAME();
 
-		return SECURE_BASE_64;
+		return m_secureDeviceAddressBase64;
 	}
 
 	Windows::Foundation::Collections::IMapView<hstring, hstring> MultiplayerSessionMember::Roles()
 	{
 		LOG_FUNCTION_NAME();
 
-		// TODO: Add roles to this collection.
-		Windows::Foundation::Collections::IMapView<hstring, hstring> roles{};
-
-		return roles;
+		return m_roles;
 	}
 
 	hstring MultiplayerSessionMember::MemberCustomPropertiesJson()
 	{
 		LOG_FUNCTION_NAME();
 
-		return CUSTOM_JSON_PROPS;
+		return m_customJsonProps;
 	}
 
 	hstring MultiplayerSessionMember::Gamertag()
 	{
 		LOG_FUNCTION_NAME();
 
-		return GAMERTAG;
+		return m_gamertag;
 	}
 
 	MultiplayerSessionMemberStatus MultiplayerSessionMember::Status()
 	{
 		LOG_FUNCTION_NAME();
 
-		return MultiplayerSessionMemberStatus::Active;
+		return m_status;
 	}
 
 	bool MultiplayerSessionMember::IsTurnAvailable()
 	{
 		LOG_FUNCTION_NAME( );
 
-		return true;
+		return m_isTurnAvailable;
 	}
 
 	bool MultiplayerSessionMember::IsCurrentUser()
 	{
 		LOG_FUNCTION_NAME();
 
-		return true;
+		return m_isCurrentUser;
 	}
 
 	bool MultiplayerSessionMember::InitializeRequested()
 	{
-		return false;
+		return m_initializeRequest;
 	}
 
 	hstring MultiplayerSessionMember::MatchmakingResultServerMeasurementsJson()
 	{
 		LOG_FUNCTION_NAME();
 
-		return RESULTS_SERVER_MEASUREMENTS_JSON;
+		return m_matchingMakingResultServerMeasurementsJson;
 	}
 
 	hstring MultiplayerSessionMember::MemberServerMeasurementsJson()
 	{
 		LOG_FUNCTION_NAME();
 
-		return SERVER_MEASUREMENTS_JSON;
+		return m_memberServerMeasurementsJson;
 	}
 
 	Windows::Foundation::Collections::IVector<Multiplayer::MultiplayerSessionMember> MultiplayerSessionMember::MembersInGroup()
 	{
 		LOG_FUNCTION_NAME();
 
-		auto members = single_threaded_vector<Multiplayer::MultiplayerSessionMember>();
-
-		return members;
+		return m_membersInGroup;
 	}
 
 	Windows::Foundation::Collections::IVector<MultiplayerQualityOfServiceMeasurements> MultiplayerSessionMember::MemberMeasurements()
 	{
-		auto memberMeasurement = single_threaded_vector<MultiplayerQualityOfServiceMeasurements>();
-
-		const MultiplayerQualityOfServiceMeasurements measurement{
-			DEVICE_ID,
-			Windows::Foundation::TimeSpan{ 10000000 },
-			1000,
-			1000,
-			L"{}"
-		};
-
-		memberMeasurement.Append(measurement);
-
-		return memberMeasurement;
+		return m_memberMeasurements;
 	}
 
 	hstring MultiplayerSessionMember::DeviceToken()
 	{
 		LOG_FUNCTION_NAME();
 
-		return DEVICE_ID;
+		return m_deviceId;
 	}
 
 	NetworkAddressTranslationSetting MultiplayerSessionMember::Nat()
 	{
 		LOG_FUNCTION_NAME();
 
-		return NetworkAddressTranslationSetting::Open;
+		return m_nat;
 	}
 
 	uint32_t MultiplayerSessionMember::ActiveTitleId()
 	{
 		LOG_FUNCTION_NAME();
 
-		return ACTIVE_TITLE_ID;
+		return m_activeTitleId;
 	}
 
 	uint32_t MultiplayerSessionMember::InitializationEpisode()
 	{
-		return 0;
+		return m_initializationEpisode;
 	}
 
 	Windows::Foundation::DateTime MultiplayerSessionMember::JoinTime( )
 	{
 		LOG_FUNCTION_NAME( );
 
-		const auto now = std::chrono::system_clock::now( );
-		const auto duration = now.time_since_epoch( );
-		const auto hundred_nanoseconds = std::chrono::duration_cast<Windows::Foundation::TimeSpan>(duration);
-
-		return Windows::Foundation::DateTime{ hundred_nanoseconds };
+		return m_joinTime;
 	}
 
 	MultiplayerMeasurementFailure MultiplayerSessionMember::InitializationFailureCause()
 	{
 		LOG_FUNCTION_NAME();
 
-		return MultiplayerMeasurementFailure::None;
+		return m_initializationFailureCause;
 	}
 
 	MultiplayerSessionReference MultiplayerSessionMember::TournamentTeamSessionRef()
 	{
 		LOG_FUNCTION_NAME();
 
-		return MultiplayerSessionReference{
-			L"serviceConfigurationId",
-			L"sessionTemplateName",
-			L"sessionName"
-		};
+		return m_tournamentTeamSessionRef;
 	}
 
 	Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Groups()
 	{
 		LOG_FUNCTION_NAME();
 
-		auto groups = winrt::single_threaded_vector<hstring>();
-
-		groups.Append(L"WinDurango");
-
-		return groups;
+		return m_groups;
 	}
 
 	void MultiplayerSessionMember::Groups(Windows::Foundation::Collections::IVector<hstring> const& value)
 	{
 		LOG_FUNCTION_NAME();
 
-		return;
+		m_groups = value;
 	}
 
 	Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Encounters()
 	{
 		LOG_FUNCTION_NAME();
 
-		auto encounters = winrt::single_threaded_vector<hstring>();
-
-		encounters.Append(L"WinDurango");
-
-		return encounters;
+		return m_encounters;
 	}
 
 	void MultiplayerSessionMember::Encounters(winrt::Windows::Foundation::Collections::IVector<hstring> const& value)
 	{
 		LOG_FUNCTION_NAME();
 
-		return;
+		m_encounters = value;
 	}
 
 	Windows::Foundation::Collections::IMap<hstring, Tournaments::TournamentTeamResult> MultiplayerSessionMember::Results()
 	{
 		LOG_FUNCTION_NAME();
 
-		auto results = winrt::single_threaded_map<hstring, Tournaments::TournamentTeamResult>();
-
-		return results;
+		return m_tournamentTeamResult;
 	}
 
 	Tournaments::TournamentArbitrationStatus MultiplayerSessionMember::ArbitrationStatus()
 	{
 		LOG_FUNCTION_NAME();
 
-		return Tournaments::TournamentArbitrationStatus::Playing;
+		return m_arbitrationStatus;
 	}
 }
