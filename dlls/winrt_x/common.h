@@ -1,5 +1,5 @@
 ﻿#pragma once
-#define PRINT_FUNCTION_NAME() printf("[%s]\n", __FUNCSIG__)
+#define LOG_FUNCTION_NAME() printf("[%s]\n", __FUNCSIG__)
 #define MAKE_HSTRING(str) winrt::hstring(std::wstring(str, (str) + strlen(str)))
 #define DATETIME_NOW() \
     []() -> Windows::Foundation::DateTime { \

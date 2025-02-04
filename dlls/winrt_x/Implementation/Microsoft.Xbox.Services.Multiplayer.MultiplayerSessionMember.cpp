@@ -6,42 +6,42 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
 	uint32_t MultiplayerSessionMember::MemberId()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return MEMBER_ID;
 	}
 
 	hstring MultiplayerSessionMember::TeamId()
 	{
-		PRINT_FUNCTION_NAME( );
+		LOG_FUNCTION_NAME( );
 
 		return TEAM_ID;
 	}
 
 	hstring MultiplayerSessionMember::XboxUserId()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return XBOX_USER_ID;
 	}
 
 	hstring MultiplayerSessionMember::MemberCustomConstantsJson()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return CUSTOM_JSON_CONSTANTS;
 	}
 
 	hstring MultiplayerSessionMember::SecureDeviceAddressBase64()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return SECURE_BASE_64;
 	}
 
 	Windows::Foundation::Collections::IMapView<hstring, hstring> MultiplayerSessionMember::Roles()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		// TODO: Add roles to this collection.
 		Windows::Foundation::Collections::IMapView<hstring, hstring> roles{};
@@ -51,35 +51,35 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	hstring MultiplayerSessionMember::MemberCustomPropertiesJson()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return CUSTOM_JSON_PROPS;
 	}
 
 	hstring MultiplayerSessionMember::Gamertag()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return GAMERTAG;
 	}
 
 	MultiplayerSessionMemberStatus MultiplayerSessionMember::Status()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return MultiplayerSessionMemberStatus::Active;
 	}
 
 	bool MultiplayerSessionMember::IsTurnAvailable()
 	{
-		PRINT_FUNCTION_NAME( );
+		LOG_FUNCTION_NAME( );
 
 		return true;
 	}
 
 	bool MultiplayerSessionMember::IsCurrentUser()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return true;
 	}
@@ -91,21 +91,21 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	hstring MultiplayerSessionMember::MatchmakingResultServerMeasurementsJson()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return RESULTS_SERVER_MEASUREMENTS_JSON;
 	}
 
 	hstring MultiplayerSessionMember::MemberServerMeasurementsJson()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return SERVER_MEASUREMENTS_JSON;
 	}
 
 	Windows::Foundation::Collections::IVector<Multiplayer::MultiplayerSessionMember> MultiplayerSessionMember::MembersInGroup()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		auto members = single_threaded_vector<Multiplayer::MultiplayerSessionMember>();
 
@@ -131,21 +131,21 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	hstring MultiplayerSessionMember::DeviceToken()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return DEVICE_ID;
 	}
 
 	NetworkAddressTranslationSetting MultiplayerSessionMember::Nat()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return NetworkAddressTranslationSetting::Open;
 	}
 
 	uint32_t MultiplayerSessionMember::ActiveTitleId()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return ACTIVE_TITLE_ID;
 	}
@@ -157,7 +157,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	Windows::Foundation::DateTime MultiplayerSessionMember::JoinTime( )
 	{
-		PRINT_FUNCTION_NAME( );
+		LOG_FUNCTION_NAME( );
 
 		const auto now = std::chrono::system_clock::now( );
 		const auto duration = now.time_since_epoch( );
@@ -168,14 +168,14 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	MultiplayerMeasurementFailure MultiplayerSessionMember::InitializationFailureCause()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return MultiplayerMeasurementFailure::None;
 	}
 
 	MultiplayerSessionReference MultiplayerSessionMember::TournamentTeamSessionRef()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return MultiplayerSessionReference{
 			L"serviceConfigurationId",
@@ -186,7 +186,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Groups()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		auto groups = winrt::single_threaded_vector<hstring>();
 
@@ -197,14 +197,14 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	void MultiplayerSessionMember::Groups(Windows::Foundation::Collections::IVector<hstring> const& value)
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return;
 	}
 
 	Windows::Foundation::Collections::IVector<hstring> MultiplayerSessionMember::Encounters()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		auto encounters = winrt::single_threaded_vector<hstring>();
 
@@ -215,14 +215,14 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	void MultiplayerSessionMember::Encounters(winrt::Windows::Foundation::Collections::IVector<hstring> const& value)
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return;
 	}
 
 	Windows::Foundation::Collections::IMap<hstring, Tournaments::TournamentTeamResult> MultiplayerSessionMember::Results()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		auto results = winrt::single_threaded_map<hstring, Tournaments::TournamentTeamResult>();
 
@@ -231,7 +231,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	Tournaments::TournamentArbitrationStatus MultiplayerSessionMember::ArbitrationStatus()
 	{
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
 		return Tournaments::TournamentArbitrationStatus::Playing;
 	}

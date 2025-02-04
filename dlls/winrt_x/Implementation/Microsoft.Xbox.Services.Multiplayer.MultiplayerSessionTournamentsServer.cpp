@@ -6,78 +6,64 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
     Tournaments::TournamentReference MultiplayerSessionTournamentsServer::TournamentReference()
     {
-        PRINT_FUNCTION_NAME();
+        LOG_FUNCTION_NAME();
 
-        throw hresult_not_implemented();
+        return m_TournamentReference;
     }
 
     Windows::Foundation::Collections::IMapView<hstring, MultiplayerSessionReference> MultiplayerSessionTournamentsServer::Teams()
     {
-        PRINT_FUNCTION_NAME();
+        LOG_FUNCTION_NAME();
 
-		const auto teams = single_threaded_map<hstring, MultiplayerSessionReference>();
-
-		return teams.GetView();
+        return m_Teams;
     }
 
     Tournaments::TournamentRegistrationState MultiplayerSessionTournamentsServer::RegistrationState()
     {
-        PRINT_FUNCTION_NAME();
+        LOG_FUNCTION_NAME();
 
-		return Tournaments::TournamentRegistrationState::Registered;
+        return m_RegistrationState;
     }
 
     Tournaments::TournamentRegistrationReason MultiplayerSessionTournamentsServer::RegistrationReason()
     {
-        PRINT_FUNCTION_NAME();
+        LOG_FUNCTION_NAME();
 
-        return Tournaments::TournamentRegistrationReason::MemberAlreadyRegistered;
+        return m_RegistrationReason;
     }
 
     Windows::Foundation::DateTime MultiplayerSessionTournamentsServer::NextGameStartTime()
     {
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
-		const auto now = std::chrono::system_clock::now();
-		const auto duration = now.time_since_epoch();
-		const auto hundred_nanoseconds = std::chrono::duration_cast<Windows::Foundation::TimeSpan>(duration);
-
-		return Windows::Foundation::DateTime{ hundred_nanoseconds };
+        return m_NextGameStartTime;
     }
 
     MultiplayerSessionReference MultiplayerSessionTournamentsServer::NextGameSessionRef()
     {
-        PRINT_FUNCTION_NAME();
+        LOG_FUNCTION_NAME();
 
-		return MultiplayerSessionReference{
-			L"serviceConfigurationId",
-			L"sessionTemplateName",
-			L"sessionName"
-		};
+		return m_NextGameSessionRef;
     }
 
     Windows::Foundation::DateTime MultiplayerSessionTournamentsServer::LastGameEndTime()
     {
-		PRINT_FUNCTION_NAME();
+		LOG_FUNCTION_NAME();
 
-		const auto now = std::chrono::system_clock::now();
-		const auto duration = now.time_since_epoch();
-		const auto hundred_nanoseconds = std::chrono::duration_cast<Windows::Foundation::TimeSpan>(duration);
-
-		return Windows::Foundation::DateTime{ hundred_nanoseconds };
+        return m_LastGameEndTime;
     }
 
     Tournaments::TournamentTeamResult MultiplayerSessionTournamentsServer::LastTeamResult()
     {
-        PRINT_FUNCTION_NAME();
+        LOG_FUNCTION_NAME();
 
-        throw hresult_not_implemented();
+        return m_LastTeamResult;
     }
 
 	Tournaments::TournamentGameResultSource MultiplayerSessionTournamentsServer::LastGameResultSource()
     {
-        PRINT_FUNCTION_NAME();
+        LOG_FUNCTION_NAME();
 
-		return Tournaments::TournamentGameResultSource::None;
+		return m_LastGameResultSource;
     }
 }
