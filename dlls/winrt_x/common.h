@@ -9,6 +9,8 @@
         return Windows::Foundation::DateTime{ hundred_nanoseconds }; \
     }()
 #define EMPTY_IVECTOR(T) winrt::single_threaded_vector<T>()
+#define EMPTY_IMAP(K, V) winrt::single_threaded_map<K, V>();
+#define EMPTY_IMAPVIEW(K, V) winrt::single_threaded_map<K, V>().GetView()
 
 
 #define MEMBER_ID                               1234567890  // NOLINT(modernize-macro-to-enum)

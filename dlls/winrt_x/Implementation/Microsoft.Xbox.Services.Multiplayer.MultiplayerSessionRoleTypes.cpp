@@ -4,9 +4,10 @@
     
 namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
-    winrt::Windows::Foundation::Collections::IMapView<hstring, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerRoleType> MultiplayerSessionRoleTypes::RoleTypes()
+    Windows::Foundation::Collections::IMapView<hstring, MultiplayerRoleType> MultiplayerSessionRoleTypes::RoleTypes()
     {
-		printf("[Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionRoleTypes] RoleTypes called\n");
-		return winrt::single_threaded_map<hstring, Multiplayer::MultiplayerRoleType>( ).GetView( );
+        LOG_FUNCTION_NAME();
+
+        return m_roleTypes;
     }
 }

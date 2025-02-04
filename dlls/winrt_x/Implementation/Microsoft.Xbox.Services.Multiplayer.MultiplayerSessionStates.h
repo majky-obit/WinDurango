@@ -18,15 +18,15 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
         Windows::Foundation::Collections::IVectorView<hstring> Keywords();
 
     private:
-        Windows::Foundation::DateTime m_StartTime = DATETIME_NOW();
+        Windows::Foundation::DateTime m_startTime = DATETIME_NOW();
         // TODO: This shouldn't be a nullptr, but it will be fine for now.
-		MultiplayerSessionReference m_SessionReference{ nullptr };
-		MultiplayerSessionStatus m_Status = MultiplayerSessionStatus::Active;
-		MultiplayerSessionVisibility m_Visibility = MultiplayerSessionVisibility::Private;
-		bool m_IsMyTurn = true;
-		hstring m_XboxUserId = XBOX_USER_ID;
-		uint32_t m_AcceptedMemberCount = 0;
-        MultiplayerSessionRestriction m_JoinRestriction = MultiplayerSessionRestriction::Local;
-        Windows::Foundation::Collections::IVectorView<hstring> m_Keywords = EMPTY_IVECTOR(hstring).GetView();
+		MultiplayerSessionReference m_sessionReference{ nullptr };
+		MultiplayerSessionStatus m_status = MultiplayerSessionStatus::Active;
+		MultiplayerSessionVisibility m_visibility = MultiplayerSessionVisibility::Private;
+		bool m_isMyTurn = true;
+		hstring m_xboxUserId = XBOX_USER_ID;
+		uint32_t m_acceptedMemberCount = 0;
+        MultiplayerSessionRestriction m_joinRestriction = MultiplayerSessionRestriction::Local;
+        Windows::Foundation::Collections::IVectorView<hstring> m_keywords = EMPTY_IVECTOR(hstring).GetView();
     };
 }

@@ -8,62 +8,62 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     {
 		LOG_FUNCTION_NAME();
 
-        return m_StartTime;
+        return m_startTime;
     }
 
     MultiplayerSessionReference MultiplayerSessionStates::SessionReference()
     {
         LOG_FUNCTION_NAME();
 
-		return m_SessionReference;
+		return m_sessionReference;
     }
 
     MultiplayerSessionStatus MultiplayerSessionStates::Status()
     {
         LOG_FUNCTION_NAME();
 
-        return m_Status;
+        return m_status;
     }
 
     MultiplayerSessionVisibility MultiplayerSessionStates::Visibility()
     {
         LOG_FUNCTION_NAME();
 
-        return m_Visibility;
+        return m_visibility;
     }
 
     bool MultiplayerSessionStates::IsMyTurn()
     {
         LOG_FUNCTION_NAME();
 
-        return m_IsMyTurn;
+        return m_isMyTurn;
     }
 
     hstring MultiplayerSessionStates::XboxUserId()
     {
 		LOG_FUNCTION_NAME();
 
-        return m_XboxUserId;
+        return m_xboxUserId;
     }
 
     uint32_t MultiplayerSessionStates::AcceptedMemberCount()
     {
 		LOG_FUNCTION_NAME();
 
-        return m_AcceptedMemberCount;
+        return m_acceptedMemberCount;
     }
 
     MultiplayerSessionRestriction MultiplayerSessionStates::JoinRestriction()
     {
 		LOG_FUNCTION_NAME();
 
-		return m_JoinRestriction;
+		return m_joinRestriction;
     }
 
     Windows::Foundation::Collections::IVectorView<hstring> MultiplayerSessionStates::Keywords()
     {
 		LOG_FUNCTION_NAME( );
 
-        return m_Keywords;
+        return m_keywords;
     }
 }
