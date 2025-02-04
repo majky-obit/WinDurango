@@ -1,6 +1,14 @@
 ﻿#pragma once
 #define PRINT_FUNCTION_NAME() printf("[%s]\n", __FUNCSIG__)
 #define MAKE_HSTRING(str) winrt::hstring(std::wstring(str, (str) + strlen(str)))
+#define DATETIME_NOW() \
+    []() -> Windows::Foundation::DateTime { \
+        const auto now = std::chrono::system_clock::now(); \
+        const auto duration = now.time_since_epoch(); \
+        const auto hundred_nanoseconds = std::chrono::duration_cast<Windows::Foundation::TimeSpan>(duration); \
+        return Windows::Foundation::DateTime{ hundred_nanoseconds }; \
+    }()
+#define EMPTY_IVECTOR(T) winrt::single_threaded_vector<T>()
 
 
 #define MEMBER_ID                               1234567890  // NOLINT(modernize-macro-to-enum)

@@ -8,70 +8,62 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     {
 		PRINT_FUNCTION_NAME();
 
-		const auto now = std::chrono::system_clock::now();
-		const auto duration = now.time_since_epoch();
-		const auto hundred_nanoseconds = std::chrono::duration_cast<Windows::Foundation::TimeSpan>(duration);
-
-		return Windows::Foundation::DateTime{ hundred_nanoseconds };
+        return m_StartTime;
     }
 
     MultiplayerSessionReference MultiplayerSessionStates::SessionReference()
     {
         PRINT_FUNCTION_NAME();
 
-        throw hresult_not_implemented( );
+		return m_SessionReference;
     }
 
     MultiplayerSessionStatus MultiplayerSessionStates::Status()
     {
         PRINT_FUNCTION_NAME();
 
-		return MultiplayerSessionStatus::Active;
+        return m_Status;
     }
 
     MultiplayerSessionVisibility MultiplayerSessionStates::Visibility()
     {
         PRINT_FUNCTION_NAME();
 
-        return MultiplayerSessionVisibility::Visible;
+        return m_Visibility;
     }
 
     bool MultiplayerSessionStates::IsMyTurn()
     {
         PRINT_FUNCTION_NAME();
 
-        return true;
+        return m_IsMyTurn;
     }
 
     hstring MultiplayerSessionStates::XboxUserId()
     {
 		PRINT_FUNCTION_NAME();
 
-		return XBOX_USER_ID;
+        return m_XboxUserId;
     }
 
     uint32_t MultiplayerSessionStates::AcceptedMemberCount()
     {
 		PRINT_FUNCTION_NAME();
 
-		return 1;
+        return m_AcceptedMemberCount;
     }
 
     MultiplayerSessionRestriction MultiplayerSessionStates::JoinRestriction()
     {
-		PRINT_FUNCTION_NAME( );
+		PRINT_FUNCTION_NAME();
 
-		return MultiplayerSessionRestriction::Local;
+		return m_JoinRestriction;
     }
 
     Windows::Foundation::Collections::IVectorView<hstring> MultiplayerSessionStates::Keywords()
     {
 		PRINT_FUNCTION_NAME( );
 
-		const auto keywords = winrt::single_threaded_vector<hstring>();
-
-		keywords.Append(TEAM_ID);
-
-		return keywords.GetView( );
+        return m_Keywords;
     }
 }
