@@ -8,62 +8,62 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     {
         LOG_FUNCTION_NAME();
 
-        return m_TournamentReference;
+        return m_tournamentReference;
     }
 
     Windows::Foundation::Collections::IMapView<hstring, MultiplayerSessionReference> MultiplayerSessionTournamentsServer::Teams()
     {
         LOG_FUNCTION_NAME();
 
-        return m_Teams;
+        return m_teams;
     }
 
     Tournaments::TournamentRegistrationState MultiplayerSessionTournamentsServer::RegistrationState()
     {
         LOG_FUNCTION_NAME();
 
-        return m_RegistrationState;
+        return m_registrationState;
     }
 
     Tournaments::TournamentRegistrationReason MultiplayerSessionTournamentsServer::RegistrationReason()
     {
         LOG_FUNCTION_NAME();
 
-        return m_RegistrationReason;
+        return m_registrationReason;
     }
 
     Windows::Foundation::DateTime MultiplayerSessionTournamentsServer::NextGameStartTime()
     {
 		LOG_FUNCTION_NAME();
 
-        return m_NextGameStartTime;
+        return m_nextGameStartTime;
     }
 
     MultiplayerSessionReference MultiplayerSessionTournamentsServer::NextGameSessionRef()
     {
         LOG_FUNCTION_NAME();
 
-		return m_NextGameSessionRef;
+		return m_nextGameSessionRef;
     }
 
     Windows::Foundation::DateTime MultiplayerSessionTournamentsServer::LastGameEndTime()
     {
 		LOG_FUNCTION_NAME();
 
-        return m_LastGameEndTime;
+        return m_lastGameEndTime;
     }
 
     Tournaments::TournamentTeamResult MultiplayerSessionTournamentsServer::LastTeamResult()
     {
         LOG_FUNCTION_NAME();
 
-        return m_LastTeamResult;
+        return m_lastTeamResult;
     }
 
 	Tournaments::TournamentGameResultSource MultiplayerSessionTournamentsServer::LastGameResultSource()
     {
         LOG_FUNCTION_NAME();
 
-		return m_LastGameResultSource;
+		return m_lastGameResultSource;
     }
 }

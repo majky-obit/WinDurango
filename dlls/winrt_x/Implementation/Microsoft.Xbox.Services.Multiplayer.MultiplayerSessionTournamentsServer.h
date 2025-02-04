@@ -19,18 +19,18 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
     private:
 		// TODO: These should not be nullptr, but I'm not sure what to put here.
-        Tournaments::TournamentReference m_TournamentReference{ nullptr };
-        Windows::Foundation::Collections::IMapView<hstring, MultiplayerSessionReference> m_Teams{ nullptr };
-		Tournaments::TournamentRegistrationState m_RegistrationState{ Tournaments::TournamentRegistrationState::Completed };
-		Tournaments::TournamentRegistrationReason m_RegistrationReason{ Tournaments::TournamentRegistrationReason::MemberAlreadyRegistered };
-		Windows::Foundation::DateTime m_NextGameStartTime{ DATETIME_NOW() };
-    	MultiplayerSessionReference m_NextGameSessionRef {
+        Tournaments::TournamentReference m_tournamentReference{ nullptr };
+        Windows::Foundation::Collections::IMapView<hstring, MultiplayerSessionReference> m_teams{ nullptr };
+		Tournaments::TournamentRegistrationState m_registrationState{ Tournaments::TournamentRegistrationState::Completed };
+		Tournaments::TournamentRegistrationReason m_registrationReason{ Tournaments::TournamentRegistrationReason::MemberAlreadyRegistered };
+		Windows::Foundation::DateTime m_nextGameStartTime{ DATETIME_NOW() };
+    	MultiplayerSessionReference m_nextGameSessionRef {
 			L"serviceConfigurationId",
 			L"sessionTemplateName",
 			L"sessionName"
 		};
-		Windows::Foundation::DateTime m_LastGameEndTime{ DATETIME_NOW( ) };
-		Tournaments::TournamentTeamResult m_LastTeamResult{ nullptr };
-		Tournaments::TournamentGameResultSource m_LastGameResultSource{ Tournaments::TournamentGameResultSource::None };
+		Windows::Foundation::DateTime m_lastGameEndTime{ DATETIME_NOW( ) };
+		Tournaments::TournamentTeamResult m_lastTeamResult{ nullptr };
+		Tournaments::TournamentGameResultSource m_lastGameResultSource{ Tournaments::TournamentGameResultSource::None };
     };
 }
