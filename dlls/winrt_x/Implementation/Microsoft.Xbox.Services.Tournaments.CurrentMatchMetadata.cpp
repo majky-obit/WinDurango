@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionReference CurrentMatchMetadata::GameSessionReference()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Tournaments::MatchMetadata CurrentMatchMetadata::MatchDetails()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

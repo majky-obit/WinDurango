@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::Social::Manager::implementation
 {
     hstring PreferredColor::PrimaryColor()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring PreferredColor::SecondaryColor()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring PreferredColor::TertiaryColor()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

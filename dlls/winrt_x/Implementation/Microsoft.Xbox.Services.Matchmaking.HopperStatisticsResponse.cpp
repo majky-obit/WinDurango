@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::Matchmaking::implementation
 {
     hstring HopperStatisticsResponse::HopperName()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan HopperStatisticsResponse::EstimatedWaitTime()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     uint32_t HopperStatisticsResponse::PlayersWaitingToMatch()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

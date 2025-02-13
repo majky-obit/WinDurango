@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Achievements::implementation
 {
     hstring AchievementTitleAssociation::Name()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     uint32_t AchievementTitleAssociation::TitleId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

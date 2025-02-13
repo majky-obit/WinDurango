@@ -25,10 +25,10 @@ namespace winrt::Windows::Kinect::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Kinect::AudioBeamFrame> AudioBeamFrameReference::AcquireBeamFrames()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan AudioBeamFrameReference::RelativeTime()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Privacy::implementation
 {
     hstring PermissionDenyReason::Reason()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring PermissionDenyReason::RestrictedSetting()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

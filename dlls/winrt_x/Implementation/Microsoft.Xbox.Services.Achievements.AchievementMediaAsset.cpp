@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::Achievements::implementation
 {
     hstring AchievementMediaAsset::Name()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Achievements::AchievementMediaAssetType AchievementMediaAsset::MediaAssetType()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring AchievementMediaAsset::Url()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

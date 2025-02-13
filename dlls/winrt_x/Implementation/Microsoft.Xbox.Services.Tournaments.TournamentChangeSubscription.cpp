@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     winrt::Microsoft::Xbox::Services::RealTimeActivity::RealTimeActivitySubscriptionState TournamentChangeSubscription::State()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring TournamentChangeSubscription::OrganizerId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring TournamentChangeSubscription::TournamentId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

@@ -25,22 +25,22 @@ namespace winrt::Windows::Xbox::ApplicationModel::State::Internal::implementatio
 {
     winrt::event_token PackageInfoEvents::PackageChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::ApplicationModel::State::Internal::IPackageChangedEventArgs> const& handler)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void PackageInfoEvents::PackageChanged(winrt::event_token const& cookie) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::event_token PackageInfoEvents::PackageReset(winrt::Windows::Foundation::EventHandler<winrt::Windows::Foundation::IInspectable> const& handler)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void PackageInfoEvents::PackageReset(winrt::event_token const& cookie) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void PackageInfoEvents::LogStats()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

@@ -25,6 +25,6 @@ namespace winrt::Windows::Xbox::Chat::implementation
 {
     winrt::Windows::Foundation::Collections::IVector<winrt::Windows::Xbox::Chat::IChatParticipant> ChatChannel::Participants()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

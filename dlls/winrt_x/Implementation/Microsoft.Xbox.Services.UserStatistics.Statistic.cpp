@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::UserStatistics::implementation
 {
     hstring Statistic::StatisticName()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::PropertyType Statistic::StatisticType()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring Statistic::Value()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

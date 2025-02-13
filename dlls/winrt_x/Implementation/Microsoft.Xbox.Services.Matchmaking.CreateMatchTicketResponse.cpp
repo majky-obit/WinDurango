@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Matchmaking::implementation
 {
     hstring CreateMatchTicketResponse::MatchTicketId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan CreateMatchTicketResponse::EstimatedWaitTime()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

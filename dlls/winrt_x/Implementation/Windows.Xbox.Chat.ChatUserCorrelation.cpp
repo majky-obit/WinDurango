@@ -25,6 +25,6 @@ namespace winrt::Windows::Xbox::Chat::implementation
 {
     winrt::Windows::Xbox::System::IUser ChatUserCorrelation::User()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

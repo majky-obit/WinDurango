@@ -25,14 +25,14 @@ namespace winrt::Windows::Xbox::Chat::implementation
 {
     winrt::Windows::Xbox::Chat::IFormat ChatDecoder::Format()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void ChatDecoder::Decode(winrt::Windows::Storage::Streams::IBuffer const& buffer, winrt::Windows::Storage::Streams::IBuffer& decodedBuffer)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     int32_t ChatDecoder::IsDataInFlight()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

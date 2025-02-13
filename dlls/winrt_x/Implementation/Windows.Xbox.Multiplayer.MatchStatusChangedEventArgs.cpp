@@ -6,10 +6,10 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
 {
     winrt::Windows::Xbox::Multiplayer::MultiplayerSessionReference MatchStatusChangedEventArgs::MatchSession()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::Multiplayer::MatchStatus MatchStatusChangedEventArgs::MatchStatus()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

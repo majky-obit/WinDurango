@@ -25,26 +25,26 @@ namespace winrt::Microsoft::Xbox::Services::Achievements::implementation
 {
     hstring AchievementReward::Name()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring AchievementReward::Description()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring AchievementReward::Data()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Achievements::AchievementRewardType AchievementReward::RewardType()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::PropertyType AchievementReward::ValuePropertyType()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Achievements::AchievementMediaAsset AchievementReward::MediaAsset()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

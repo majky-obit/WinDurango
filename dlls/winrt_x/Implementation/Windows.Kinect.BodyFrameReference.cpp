@@ -25,10 +25,10 @@ namespace winrt::Windows::Kinect::implementation
 {
     winrt::Windows::Kinect::BodyFrame BodyFrameReference::AcquireFrame()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan BodyFrameReference::RelativeTime()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

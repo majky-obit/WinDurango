@@ -25,14 +25,14 @@ namespace winrt::Windows::Kinect::implementation
 {
     winrt::Windows::Kinect::FrameSourceTypes FrameCapturedEventArgs::FrameType()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::FrameCapturedStatus FrameCapturedEventArgs::FrameStatus()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan FrameCapturedEventArgs::RelativeTime()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
 {
     winrt::Windows::Xbox::Multiplayer::MultiplayerSessionReference GameSessionReadyEventArgs::GameSession()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Achievements::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Achievements::AchievementRequirement> AchievementProgression::Requirements()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::DateTime AchievementProgression::TimeUnlocked()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

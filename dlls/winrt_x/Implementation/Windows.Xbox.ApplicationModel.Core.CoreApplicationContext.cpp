@@ -32,15 +32,15 @@ namespace winrt::Windows::Xbox::ApplicationModel::Core::implementation
     }
     winrt::event_token CoreApplicationContext::CurrentUserChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Foundation::IInspectable> const& handler)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void CoreApplicationContext::CurrentUserChanged(winrt::event_token const& token) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void CoreApplicationContext::SetCurrentUser(winrt::Windows::Xbox::System::User const& value)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::System::User CoreApplicationContext::CurrentSystemUser()
     {
@@ -48,10 +48,10 @@ namespace winrt::Windows::Xbox::ApplicationModel::Core::implementation
     }
     winrt::event_token CoreApplicationContext::CurrentSystemUserChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Foundation::IInspectable> const& handler)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void CoreApplicationContext::CurrentSystemUserChanged(winrt::event_token const& token) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

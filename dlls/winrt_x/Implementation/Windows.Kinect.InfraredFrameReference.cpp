@@ -25,10 +25,10 @@ namespace winrt::Windows::Kinect::implementation
 {
     winrt::Windows::Kinect::InfraredFrame InfraredFrameReference::AcquireFrame()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan InfraredFrameReference::RelativeTime()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

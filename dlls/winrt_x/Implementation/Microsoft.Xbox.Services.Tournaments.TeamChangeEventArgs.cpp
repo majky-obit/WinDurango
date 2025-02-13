@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     hstring TeamChangeEventArgs::OrganizerId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring TeamChangeEventArgs::TournamentId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring TeamChangeEventArgs::TeamId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

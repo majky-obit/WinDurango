@@ -138,11 +138,11 @@ namespace winrt::Microsoft::Xbox::Services::implementation
     winrt::Microsoft::Xbox::Services::XboxLiveContextSettings XboxLiveContext::Settings()
     {
         printf("!!!!! Microsoft.Xbox.Services.XboxLiveContext [Settings] NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::XboxLiveAppConfiguration XboxLiveContext::AppConfig()
     {
         printf("!!!!! Microsoft.Xbox.Services.XboxLiveContext [AppConfig] NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

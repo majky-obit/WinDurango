@@ -25,18 +25,18 @@ namespace winrt::Microsoft::Xbox::Services::Social::implementation
 {
     hstring XboxSocialRelationship::XboxUserId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     bool XboxSocialRelationship::IsFavorite()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     bool XboxSocialRelationship::IsFollowingCaller()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<hstring> XboxSocialRelationship::SocialNetworks()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

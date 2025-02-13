@@ -6,11 +6,11 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     winrt::event_token PresenceService::DevicePresenceChanged(winrt::Windows::Foundation::EventHandler<winrt::Microsoft::Xbox::Services::Presence::DevicePresenceChangeEventArgs> const& __param0)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void PresenceService::DevicePresenceChanged(winrt::event_token const& __param0) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::event_token PresenceService::TitlePresenceChanged(winrt::Windows::Foundation::EventHandler<winrt::Microsoft::Xbox::Services::Presence::TitlePresenceChangeEventArgs> const& __param0)
     {
@@ -19,11 +19,11 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
     }
     void PresenceService::TitlePresenceChanged(winrt::event_token const& __param0) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction PresenceService::SetPresenceAsync(bool isUserActiveInTitle)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction PresenceService::SetPresenceAsync(bool isUserActiveInTitle, winrt::Microsoft::Xbox::Services::Presence::PresenceData presenceData)
     {
@@ -32,38 +32,38 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Microsoft::Xbox::Services::Presence::PresenceRecord> PresenceService::GetPresenceAsync(hstring xboxUserId)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Presence::PresenceRecord>> PresenceService::GetPresenceForMultipleUsersAsync(winrt::Windows::Foundation::Collections::IVectorView<hstring> xboxUserIds)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Presence::PresenceRecord>> PresenceService::GetPresenceForMultipleUsersAsync(winrt::Windows::Foundation::Collections::IVectorView<hstring> xboxUserIds, winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Presence::PresenceDeviceType> deviceTypes, winrt::Windows::Foundation::Collections::IVectorView<uint32_t> titleIds, winrt::Microsoft::Xbox::Services::Presence::PresenceDetailLevel detailLevel, bool onlineOnly, bool broadcastingOnly)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Presence::PresenceRecord>> PresenceService::GetPresenceForSocialGroupAsync(hstring socialGroup)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Presence::PresenceRecord>> PresenceService::GetPresenceForSocialGroupAsync(hstring socialGroup, hstring socialGroupOwnerXboxuserId, winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Presence::PresenceDeviceType> deviceTypes, winrt::Windows::Foundation::Collections::IVectorView<uint32_t> titleIds, winrt::Microsoft::Xbox::Services::Presence::PresenceDetailLevel detailLevel, bool onlineOnly, bool broadcastingOnly)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Presence::DevicePresenceChangeSubscription PresenceService::SubscribeToDevicePresenceChange(hstring const& xboxUserId)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void PresenceService::UnsubscribeFromDevicePresenceChange(winrt::Microsoft::Xbox::Services::Presence::DevicePresenceChangeSubscription const& subscription)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Presence::TitlePresenceChangeSubscription PresenceService::SubscribeToTitlePresenceChange(hstring const& xboxUserId, uint32_t titleId)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void PresenceService::UnsubscribeFromTitlePresenceChange(winrt::Microsoft::Xbox::Services::Presence::TitlePresenceChangeSubscription const& subscription)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

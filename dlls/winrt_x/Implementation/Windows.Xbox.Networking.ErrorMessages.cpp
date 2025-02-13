@@ -25,6 +25,6 @@ namespace winrt::Windows::Xbox::Networking::implementation
 {
     hstring ErrorMessages::GetMessageForError(uint32_t errorCode)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

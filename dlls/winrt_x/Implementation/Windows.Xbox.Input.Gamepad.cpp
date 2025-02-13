@@ -39,7 +39,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     void Gamepad::GamepadAdded(winrt::event_token const& token) noexcept
     {
         wprintf(L"Gamepad || Gamepad Added!\n");
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::event_token Gamepad::GamepadRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadRemovedEventArgs> const& handler)
     {
@@ -49,7 +49,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     void Gamepad::GamepadRemoved(winrt::event_token const& token) noexcept
     {
         wprintf(L"Gamepad || Gamepad Removed!\n");
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     uint64_t Gamepad::Id()
     {
@@ -67,7 +67,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::Windows::Xbox::Input::INavigationReading Gamepad::GetNavigationReading()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::Input::RawNavigationReading Gamepad::GetRawNavigationReading()
     {
@@ -78,11 +78,11 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::event_token Gamepad::NavigationReadingChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Xbox::Input::NavigationController, winrt::Windows::Xbox::Input::INavigationReadingChangedEventArgs> const& handler)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void Gamepad::NavigationReadingChanged(winrt::event_token const& token) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void Gamepad::SetVibration(winrt::Windows::Xbox::Input::GamepadVibration const& value)
     {
@@ -175,11 +175,11 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::event_token Gamepad::ReadingChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Xbox::Input::Gamepad, winrt::Windows::Xbox::Input::IGamepadReadingChangedEventArgs> const& handler)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     void Gamepad::ReadingChanged(winrt::event_token const& token) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     bool Gamepad::IsTrusted()
     {

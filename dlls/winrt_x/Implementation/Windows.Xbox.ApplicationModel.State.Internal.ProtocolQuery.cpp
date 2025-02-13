@@ -25,6 +25,6 @@ namespace winrt::Windows::Xbox::ApplicationModel::State::Internal::implementatio
 {
     winrt::Windows::Foundation::Collections::IVectorView<hstring> ProtocolQuery::FindAumidsForScheme(hstring const& scheme)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

@@ -6,10 +6,10 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
 {
     hstring PartyChatMember::XboxUserId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     bool PartyChatMember::IsLocal()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

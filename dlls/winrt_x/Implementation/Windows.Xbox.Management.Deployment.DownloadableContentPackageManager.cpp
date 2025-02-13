@@ -41,6 +41,6 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     }
     void DownloadableContentPackageManager::DownloadableContentPackageInstallCompletedWithDetails(winrt::event_token const& eventCookie) noexcept
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

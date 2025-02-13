@@ -25,18 +25,18 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     hstring TournamentReference::DefinitionName()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring TournamentReference::TournamentId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring TournamentReference::Organizer()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring TournamentReference::ServiceConfigurationId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

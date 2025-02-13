@@ -25,13 +25,13 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 	// TODO: This needs to be complete.
 	MultiplayerSessionVisibility MultiplayerSessionConstants::MultiplayerSessionVisibility()
 	{
-		throw hresult_not_implemented();
+		printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
 	}
 
 	// TODO: This needs to be complete.
 	void MultiplayerSessionConstants::MultiplayerSessionVisibility(Multiplayer::MultiplayerSessionVisibility const& value)
 	{
-		throw hresult_not_implemented();
+		printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
 	}
 
 	// Get an IVectorView of strings, where each string is an XboxUserId.
@@ -195,6 +195,6 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 
 	hstring MultiplayerSessionConstants::MeasurementServerAddressesJson()
 	{
-		throw hresult_not_implemented();
+		printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
 	}
 }

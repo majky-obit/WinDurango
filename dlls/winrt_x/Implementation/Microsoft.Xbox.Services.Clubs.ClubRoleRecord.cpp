@@ -25,18 +25,18 @@ namespace winrt::Microsoft::Xbox::Services::Clubs::implementation
 {
     hstring ClubRoleRecord::Xuid()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Clubs::ClubRole ClubRoleRecord::Role()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring ClubRoleRecord::ActorXuid()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::DateTime ClubRoleRecord::CreatedDate()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

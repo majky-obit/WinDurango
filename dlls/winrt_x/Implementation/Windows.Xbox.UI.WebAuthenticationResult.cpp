@@ -25,14 +25,14 @@ namespace winrt::Windows::Xbox::UI::implementation
 {
     hstring WebAuthenticationResult::ResponseData()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::UI::WebAuthenticationStatus WebAuthenticationResult::ResponseStatus()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     uint32_t WebAuthenticationResult::ResponseErrorDetail()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

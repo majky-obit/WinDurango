@@ -25,6 +25,6 @@ namespace winrt::Windows::Xbox::System::implementation
 {
     hstring Console2::ApplicationSpecificDeviceId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

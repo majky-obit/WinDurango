@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Privacy::implementation
 {
     hstring MultiplePermissionsCheckResult::XboxUserId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Privacy::PermissionCheckResult> MultiplePermissionsCheckResult::Items()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

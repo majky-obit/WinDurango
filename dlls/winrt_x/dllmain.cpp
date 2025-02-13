@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "ConnectedStorage/ConnectedStorage.h"
+#define DEBUG_PRINT(msg) printf("%s\n", msg)
 
 DWORD WINAPI ThreadProc(LPVOID lpParam)
 {

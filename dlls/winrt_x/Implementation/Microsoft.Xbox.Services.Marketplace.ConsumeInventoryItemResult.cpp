@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::Marketplace::implementation
 {
     winrt::Windows::Foundation::Uri ConsumeInventoryItemResult::ConsumableUrl()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     uint32_t ConsumeInventoryItemResult::ConsumableBalance()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring ConsumeInventoryItemResult::TransactionId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

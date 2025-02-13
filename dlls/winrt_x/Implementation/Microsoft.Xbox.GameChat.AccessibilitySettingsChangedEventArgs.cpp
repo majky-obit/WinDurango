@@ -25,6 +25,7 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
 {
     winrt::Microsoft::Xbox::GameChat::ChatUser AccessibilitySettingsChangedEventArgs::ChatUser()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__);
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

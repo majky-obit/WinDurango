@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     hstring TournamentChangeEventArgs::OrganizerId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     hstring TournamentChangeEventArgs::TournamentId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::TitleStorage::implementation
 {
     winrt::Windows::Storage::Streams::IBuffer TitleStorageBlobResult::BlobBuffer()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::TitleStorage::TitleStorageBlobMetadata TitleStorageBlobResult::BlobMetadata()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

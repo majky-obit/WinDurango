@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Clubs::implementation
 {
     bool ClubBooleanSetting::Value()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     bool ClubBooleanSetting::CanViewerChangeSetting()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

@@ -25,10 +25,10 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::Manager::implementation
 {
     winrt::Microsoft::Xbox::Services::Multiplayer::Manager::MatchStatus FindMatchCompletedEventArgs::MatchStatus()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerMeasurementFailure FindMatchCompletedEventArgs::InitializationFailureCause()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

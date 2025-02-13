@@ -25,6 +25,6 @@ namespace winrt::Windows::Xbox::ApplicationModel::Store::implementation
 {
     hstring Configuration::MarketplaceId()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

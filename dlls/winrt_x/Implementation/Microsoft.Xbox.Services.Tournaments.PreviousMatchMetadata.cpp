@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     winrt::Microsoft::Xbox::Services::Tournaments::TournamentTeamResult PreviousMatchMetadata::Result()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::DateTime PreviousMatchMetadata::EndTime()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Tournaments::MatchMetadata PreviousMatchMetadata::MatchDetails()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

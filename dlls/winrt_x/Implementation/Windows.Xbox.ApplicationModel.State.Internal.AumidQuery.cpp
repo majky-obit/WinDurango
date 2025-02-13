@@ -25,6 +25,6 @@ namespace winrt::Windows::Xbox::ApplicationModel::State::Internal::implementatio
 {
     void AumidQuery::GetXboxLiveInfo(hstring const& aumid, uint32_t& titleId, winrt::guid& primaryScid, bool& requireXboxLive)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

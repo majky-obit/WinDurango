@@ -8,14 +8,14 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     {
 		LOG_FUNCTION_NAME();
 
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 
 	Multiplayer::MultiplayerSessionReference MultiplayerSessionReference::ParseFromUriPath(hstring const& uriPath)
     {
         LOG_FUNCTION_NAME();
 
-		throw hresult_not_implemented();
+		printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 
     hstring MultiplayerSessionReference::ServiceConfigurationId()

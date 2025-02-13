@@ -25,6 +25,6 @@ namespace winrt::Windows::Kinect::implementation
 {
     hstring PropertyChangedEventArgs::PropertyName()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }

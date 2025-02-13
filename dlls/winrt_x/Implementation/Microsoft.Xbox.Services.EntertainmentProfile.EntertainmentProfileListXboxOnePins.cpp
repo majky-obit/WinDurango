@@ -25,14 +25,14 @@ namespace winrt::Microsoft::Xbox::Services::EntertainmentProfile::implementation
 {
     winrt::Windows::Foundation::IAsyncAction EntertainmentProfileListXboxOnePins::AddItemAsync(winrt::Microsoft::Xbox::Services::Marketplace::MediaItemType itemType, hstring providerId, hstring provider, winrt::Windows::Foundation::Uri imageUrl, winrt::Windows::Foundation::Uri providerLogoImageUrl, hstring title, hstring subTitle, hstring locale)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction EntertainmentProfileListXboxOnePins::RemoveItemAsync(hstring providerId, hstring provider)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Microsoft::Xbox::Services::EntertainmentProfile::EntertainmentProfileListContainsItemResult> EntertainmentProfileListXboxOnePins::ContainsItemAsync(hstring providerId, hstring provider)
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
     }
 }
