@@ -1,59 +1,80 @@
 #include "pch.h"
 #include "AcpHal.h"
 #include <stdlib.h>
+#include "../common/debug.h"
 
-struct IAcpHal;
-
-HRESULT AcpHalAllocateShapeContexts_X(__int64 a1) {
+HRESULT AcpHalAllocateShapeContexts_X(
+         AcpHal_SHAPE_CONTEXTS* contextArrays
+) {
+    DEBUG_PRINT( );
     return 0;
 }
 
-HRESULT AcpHalCreate_X(IAcpHal* a1) {
-    return 0;
-}
-
-HRESULT AcpHalReleaseShapeContexts_X() {
+HRESULT AcpHalReleaseShapeContexts_X( ) {
+    DEBUG_PRINT( );
     return 0;
 }
 
 HRESULT ApuAlloc_X(
          void** virtualAddress,
-         UINT32* physicalAddress,
+         APU_ADDRESS* physicalAddress,
          UINT32 sizeInBytes,
          UINT32 alignmentInBytes,
          UINT32 flags
 )
 {
-    *virtualAddress = malloc(sizeInBytes);
-
-    if (physicalAddress != nullptr)
-		*physicalAddress = 0;
-
+    alignmentInBytes = 4;
+    DEBUG_PRINT( );
     return 0;
 }
 
-HRESULT ApuCreateHeap_X(size_t initialSize, size_t maximumSize) {
+HRESULT ApuCreateHeap_X(UINT32 cachedSizeInBytes, UINT32 nonCachedSizeInBytes)
+{
+    nonCachedSizeInBytes = 0;
+    DEBUG_PRINT( );
     // Don't think we need that as this is for chaning memory pool iirc...
     return 0;
 }
 
-HRESULT ApuFree_X(void* ptr) {
-    free(ptr);
+HRESULT ApuFree_X(void* virtualAddress) {
+    DEBUG_PRINT( );
+    free(virtualAddress);
     return 0;
 }
 
-HRESULT ApuHeapGetState_X(ApuHeapState* a1, int type) {
+HRESULT ApuHeapGetState_X(
+         ApuHeapState* apuHeapState,
+         UINT32 flags
+)
+{
+    DEBUG_PRINT( );
     return 0;
 }
 
-HRESULT ApuIsVirtualAddressValid_X(unsigned __int64 a1, unsigned int a2) {
+bool ApuIsVirtualAddressValid_X(
+         const void* virtualAddress,
+         UINT32 physicalAlignmentInBytes
+)
+{
+    DEBUG_PRINT( );
     return 0;
 }
-
-HRESULT ApuMapApuAddress_X(unsigned int a1) {
+APU_ADDRESS ApuMapVirtualAddress_X(
+         const void* virtualAddress
+)
+{
+    DEBUG_PRINT( );
     return 0;
 }
-
-HRESULT ApuMapVirtualAddress_X(unsigned __int64 a1) {
+HRESULT AcpHalCreate_X(IAcpHal** acp)
+{
+    DEBUG_PRINT( );
+    return 0;
+}
+void* ApuMapApuAddress_X(
+         APU_ADDRESS apuPhysicalAddress
+)
+{
+    DEBUG_PRINT( );
     return 0;
 }
