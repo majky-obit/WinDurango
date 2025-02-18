@@ -1,1 +1,1 @@
-﻿#pragma once
+﻿#define DurangoAPI      __stdcall
