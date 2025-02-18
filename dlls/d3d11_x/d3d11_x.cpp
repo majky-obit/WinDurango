@@ -266,13 +266,6 @@ HRESULT __stdcall D3DFreeGraphicsMemory_X(void* pAddress)
     return S_OK;
 }
 
-HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags,
-    VOID* pVirtualAddress,
-    UINT NumPages,
-    _In_reads_opt_(NumPages) const UINT* pPageList)
-{
-    return E_NOTIMPL;
-}
 
 HRESULT __stdcall DXGIXGetFrameStatistics_X(
     _In_ UINT NumberFramesRequested,

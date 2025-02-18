@@ -80,33 +80,43 @@ BOOL __stdcall WaitOnAddress_X(volatile void* Address, PVOID CompareAddress, SIZ
 {
     return WaitOnAddress(Address, CompareAddress, AddressSize, dwMilliseconds);
 }
-
-BOOL ToolingMemoryStatus_X(LPTOOLINGMEMORYSTATUS buffer)
-{
-    __int64 SystemInformation[4];
-
-    if (buffer->dwLength != 40)
-    {
-        SetLastError(0x57u);
+BOOL JobTitleMemoryStatus_X(void* pJob, LPTITLEMEMORYSTATUS Buffer) {
+    __int64 jobInfo[7]; // Buffer to store job object memory information
+    NTSTATUS status;
+    DEBUG_PRINT();
+    // Validate input parameters
+    if (!pJob || !Buffer || Buffer->dwLength != sizeof(TITLEMEMORYSTATUS)) {
+        SetLastError(ERROR_INVALID_PARAMETER);
         return FALSE;
     }
 
-    NTSTATUS Status = NtQuerySystemInformation((SYSTEM_INFORMATION_CLASS)(0x96 | 0x80), SystemInformation, 0x20u, 0i64);
-    if (!NT_SUCCESS(Status))
-    {
-        SetLastError(Status);
+    // Query job memory information
+    status = QueryInformationJobObject(pJob, (JOBOBJECTINFOCLASS)(JobObjectGroupInformation | 0x10), jobInfo, JOB_INFO_SIZE, NULL);
+    if (status < 0) {
+        RtlSetLastWin32ErrorAndNtStatusFromNtStatus(status);
         return FALSE;
     }
 
-    buffer->ullTotalMem = SystemInformation[0];
-    buffer->ullAvailMem = SystemInformation[1];
-    buffer->ulPeakUsage = SystemInformation[2];
-    buffer->ullPageTableUsage = SystemInformation[3];
+    // Extract job memory stats
+    DWORDLONG totalMem = jobInfo[0];
+    DWORDLONG usedMem = jobInfo[1];
+    DWORDLONG peakLegacy = jobInfo[2];
+    DWORDLONG totalLegacy = jobInfo[3];
+    DWORDLONG limitLegacy = jobInfo[4];
+    DWORDLONG currentTitle = jobInfo[5];
+    DWORDLONG peakTitle = jobInfo[6];
 
-    return TRUE;
+    // Populate TITLEMEMORYSTATUS structure
+    Buffer->ullTotalMem = totalMem;
+    Buffer->ullAvailMem = totalMem - usedMem;
+    Buffer->ullLegacyUsed = peakLegacy;
+    Buffer->ullLegacyPeak = totalLegacy;
+    Buffer->ullLegacyAvail = limitLegacy - peakLegacy;
+    Buffer->ullTitleUsed = currentTitle;
+    Buffer->ullTitleAvail = peakTitle - currentTitle;
+
+    return TRUE; // Success
 }
-
-
 // We ignore setting this as we actually don't care about this.
 bool SetThreadpoolAffinityMask_X()
 {
