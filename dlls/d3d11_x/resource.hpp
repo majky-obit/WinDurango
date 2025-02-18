@@ -80,10 +80,12 @@ namespace wd
 			throw std::logic_error("Not implemented");
 		}
 
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 		HRESULT SetName(LPCWSTR pName) override
 		{
 			throw std::logic_error("Not implemented");
 		}
+#endif
 
 		void GetType(D3D11_RESOURCE_DIMENSION* pResourceDimension) override
 		{
@@ -158,12 +160,13 @@ namespace wd
 			TRACE_NOT_IMPLEMENTED("texture_1d");
 			return E_NOTIMPL;
 		}
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 		HRESULT SetName(LPCWSTR pName) override
 		{
 			TRACE_NOT_IMPLEMENTED("texture_1d");
 			return E_NOTIMPL;
 		}
+#endif
 
 		void GetType(D3D11_RESOURCE_DIMENSION* pResourceDimension) override
 		{
@@ -197,7 +200,7 @@ namespace wd
 
 		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
 		{
-			if (riid == __uuidof(wdi::ID3D11Texture2D))
+			if (riid == __uuidof(wdi::ID3D11Texture2D) || riid == __uuidof(wdi::ID3D11Resource))
 			{
 				*ppvObject = this;
 				AddRef( );
@@ -240,12 +243,13 @@ namespace wd
 			TRACE_NOT_IMPLEMENTED("texture_2d");
 			return E_NOTIMPL;
 		}
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 		HRESULT SetName(LPCWSTR pName) override
 		{
 			TRACE_NOT_IMPLEMENTED("texture_2d");
 			return E_NOTIMPL;
 		}
+#endif
 
 		void GetType(D3D11_RESOURCE_DIMENSION* pResourceDimension) override
 		{
@@ -279,7 +283,7 @@ namespace wd
 
 		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
 		{
-			if (riid == __uuidof(wdi::ID3D11Texture3D))
+			if (riid == __uuidof(wdi::ID3D11Texture3D) || riid == __uuidof(wdi::ID3D11Resource))
 			{
 				*ppvObject = this;
 				AddRef( );
@@ -322,12 +326,13 @@ namespace wd
 			TRACE_NOT_IMPLEMENTED("texture_3d");
 			return E_NOTIMPL;
 		}
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 		HRESULT SetName(LPCWSTR pName) override
 		{
 			TRACE_NOT_IMPLEMENTED("texture_3d");
 			return E_NOTIMPL;
 		}
+#endif
 
 		void GetType(D3D11_RESOURCE_DIMENSION* pResourceDimension) override
 		{
@@ -403,12 +408,13 @@ namespace wd
 			TRACE_NOT_IMPLEMENTED("buffer");
 			return E_NOTIMPL;
 		}
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 		HRESULT SetName(LPCWSTR pName) override
 		{
 			TRACE_NOT_IMPLEMENTED("buffer");
 			return E_NOTIMPL;
 		}
+#endif
 
 		void GetType(D3D11_RESOURCE_DIMENSION* pResourceDimension) override
 		{

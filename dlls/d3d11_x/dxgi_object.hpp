@@ -8,6 +8,13 @@ namespace wdi
 
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID Name, UINT DataSize, const void* pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(REFGUID Name, const IUnknown* pUnknown) = 0;
+
+#if !defined(DX_VERSION) || DX_VERSION < MAKEINTVERSION(2, 18) // if Version is below 2.18
+		virtual HRESULT SetPrivateDataInterfaceGraphics(const _GUID& guid, const IGraphicsUnknown* Unknown)
+		{
+			return SetPrivateDataInterface(guid, reinterpret_cast<IUnknown const*>(Unknown));
+		}
+#endif
 		virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID Name, UINT* pDataSize, void* pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE GetParent(REFIID riid, void** ppParent) = 0;
 	};

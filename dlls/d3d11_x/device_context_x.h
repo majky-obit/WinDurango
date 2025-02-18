@@ -406,10 +406,14 @@ namespace wdi
 	D3DINTERFACE(ID3D11DeviceContextX, 48800095, 7134, 4be7, 91, 86, b8, 6b, ec, b2, 64, 77) : public ID3D11DeviceContext2 {
 	public:
 	virtual INT(PIXBeginEvent)(_In_ LPCWSTR Name) = 0;
+#if !defined(DX_VERSION) || DX_VERSION >= MAKEINTVERSION(2, 17)
 	virtual INT(PIXBeginEventEx)(_In_reads_bytes_(DataSize) const void* pData,_In_ UINT DataSize) = 0;
+#endif
 	virtual INT(PIXEndEvent)() = 0;
 	virtual void (PIXSetMarker)(_In_ LPCWSTR Name) = 0;
+#if !defined(DX_VERSION) || DX_VERSION >= MAKEINTVERSION(2, 17)
 	virtual void (PIXSetMarkerEx)(_In_reads_bytes_(DataSize) const void* pData,_In_ UINT DataSize) = 0;
+#endif
 	virtual BOOL(PIXGetStatus)() = 0;
 	virtual HRESULT(PIXGpuCaptureNextFrame)(_In_ UINT Flags,_In_z_ LPCWSTR lpOutputFileName) = 0;
 	virtual HRESULT(PIXGpuBeginCapture)(_In_ UINT Flags,_In_z_ LPCWSTR lpOutputFileName) = 0;
@@ -542,6 +546,11 @@ namespace wdi
 	D3DINTERFACE(ID3D11UserDefinedAnnotationX, b2daad8b, 03d4, 4dbf, 95, eb, 32, ab, 4b, 63, d0, ab) {
 
 	};
+
+	D3DINTERFACE(ID3D11PerformanceContextX, 9458FE06, C78D, 47F7, 96, A0, EC, 7B, 72, 7B, E1, E9) : public ID3D11DeviceContextX
+	{
+
+	};
 }
 
 namespace wd
@@ -641,7 +650,7 @@ namespace wd
 		{
 			if (riid == __uuidof(wdi::ID3D11DeviceContext) || riid == __uuidof(wdi::ID3D11DeviceContext1) ||
 				riid == __uuidof(wdi::ID3D11DeviceContext2) || riid == __uuidof(wdi::ID3D11DeviceContextX) ||
-				riid == __uuidof(wdi::ID3D11UserDefinedAnnotationX))
+				riid == __uuidof(wdi::ID3D11UserDefinedAnnotationX) || riid == __uuidof(wdi::ID3D11PerformanceContextX))
 			{
 				*ppvObject = this;
 				AddRef( );
@@ -654,6 +663,7 @@ namespace wd
 				return S_OK;
 			}
 
+
 			TRACE_INTERFACE_NOT_HANDLED("device_context_x");
 			*ppvObject = nullptr;
 			return E_NOINTERFACE;
@@ -664,7 +674,9 @@ namespace wd
 		HRESULT SetPrivateData(const GUID& guid, UINT DataSize, const void* pData) override;
 		HRESULT SetPrivateDataInterface(const GUID& guid, const IUnknown* pData) override;
 		HRESULT SetPrivateDataInterfaceGraphics(const GUID& guid, const IGraphicsUnknown* pData) override;
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 		HRESULT SetName(LPCWSTR pName) override;
+#endif
 
 	public:
 		void ProcessDirtyFlags()
@@ -873,10 +885,14 @@ namespace wd
 		void TiledResourceBarrier(ID3D11DeviceChild* pTiledResourceOrViewAccessBeforeBarrier,
 			ID3D11DeviceChild* pTiledResourceOrViewAccessAfterBarrier) override;
 		INT PIXBeginEvent(LPCWSTR Name) override;
+#if !defined(DX_VERSION) || DX_VERSION >= MAKEINTVERSION(2, 17)
 		INT PIXBeginEventEx(const void* pData, UINT DataSize) override;
+#endif
 		INT PIXEndEvent() override;
 		void PIXSetMarker(LPCWSTR Name) override;
+#if !defined(DX_VERSION) || DX_VERSION >= MAKEINTVERSION(2, 17)
 		void PIXSetMarkerEx(const void* pData, UINT DataSize) override;
+#endif
 		BOOL PIXGetStatus() override;
 		HRESULT PIXGpuCaptureNextFrame(UINT Flags, LPCWSTR lpOutputFileName) override;
 		HRESULT PIXGpuBeginCapture(UINT Flags, LPCWSTR lpOutputFileName) override;

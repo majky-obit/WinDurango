@@ -47,6 +47,8 @@ HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11Device
     return hr;
 }
 
+#include "../common/debug.h"
+
 HRESULT _stdcall D3DQuerySEQCounters_X(D3D_SEQ_COUNTER_DATA* pData)
 {
     return E_NOTIMPL;
@@ -75,13 +77,14 @@ HRESULT __stdcall D3D11XCreateDeviceXAndSwapChain1_X(const D3D11X_CREATE_DEVICE_
         return E_INVALIDARG;
     }
 
-    printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
-    printf("SDK Version: %d\n", pParameters->Version);
+    DEBUGPRINT("!!! Game is trying to initialize D3D11 through D3D11X !!!");
+    DEBUGPRINT("SDK Version: %d\n", pParameters->Version);
     return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
 }
 
 HRESULT __stdcall D3DAllocateGraphicsMemory_X(SIZE_T SizeBytes, SIZE_T AlignmentBytes, UINT64 DesiredGpuVirtualAddress, UINT Flags, void** ppAddress)
 {
+    printf("D3DAllocateGraphicsMemory_X was called!!!\n");
     DWORD Protect = 0;
 
     if (!ppAddress || AlignmentBytes > 0x20000)
@@ -130,13 +133,38 @@ HRESULT __stdcall D3DFreeGraphicsMemory_X(void* pAddress)
     return S_OK;
 }
 
-HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags,
-    VOID* pVirtualAddress,
-    UINT NumPages,
-    _In_reads_opt_(NumPages) const UINT* pPageList)
+HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags, VOID* pVirtualAddress, UINT NumPages, const UINT* pPageList)
 {
+    printf("NOT IMPLEMENTED: D3DMapEsramMemory_X was called!!!\n");
+
     return E_NOTIMPL;
 }
+
+HRESULT __stdcall DeviceIoControlHelper(HANDLE hDevice)
+{
+    DWORD bytesReturned = 0;
+
+    // Check if the handle is invalid
+    if (hDevice == INVALID_HANDLE_VALUE)
+        return HRESULT_FROM_WIN32(ERROR_INVALID_HANDLE); // 2147942487 (0x80070006)
+
+    // Perform the DeviceIoControl operation
+    if (DeviceIoControl(hDevice, 0x7900C190u, nullptr, 0, nullptr, 0, &bytesReturned, nullptr))
+    {
+        return (bytesReturned != 0) ? E_FAIL : S_OK; // 0x80004005 (Generic failure) if bytesReturned is not zero
+    }
+
+    // Get last error if DeviceIoControl fails
+    DWORD lastError = GetLastError( );
+    if (lastError > 0)
+    {
+        return HRESULT_FROM_WIN32(lastError);
+    }
+
+    return lastError;
+}
+
+
 
 HRESULT __stdcall DXGIXGetFrameStatistics_X(
     _In_ UINT NumberFramesRequested,
@@ -153,7 +181,7 @@ HRESULT _stdcall DXGIXPresentArray_X(
     _In_ IDXGISwapChain1* const* ppSwapChain,
     _In_ const DXGIX_PRESENTARRAY_PARAMETERS* pPresentParameters)
 {
-    printf("[d3d11_x] !!! STUBBED: DXGIXPresentArray !!!");
+    DEBUGPRINT("[d3d11_x] !!! STUBBED: DXGIXPresentArray !!!");
     return E_NOTIMPL;
 }
 
@@ -184,12 +212,12 @@ HRESULT __stdcall D3D11CreateDevice_X(
     _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
     _Out_opt_ wdi::ID3D11DeviceContext** ppImmediateContext)
 {
-    printf("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!\n");
-    printf("SDK Version: %d\n", SDKVersion);
+    DEBUGPRINT("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!\n");
+    DEBUGPRINT("SDK Version: %d\n", SDKVersion);
 
     if (SDKVersion != D3D11_SDK_VERSION)
     {
-        printf("SDK Version mismatch: %d, correcting to %d\n", SDKVersion, D3D11_SDK_VERSION);
+        DEBUGPRINT("SDK Version mismatch: %d, correcting to %d\n", SDKVersion, D3D11_SDK_VERSION);
         SDKVersion = D3D11_SDK_VERSION;
     }
 
@@ -225,9 +253,9 @@ HRESULT __stdcall D3D11CreateDevice_X(
     }
     else
     {
-        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError( ));
+        DEBUGPRINT("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError());
     }
-
+    
     return hr;
 }
 
@@ -256,8 +284,8 @@ HRESULT __stdcall D3D11CreateDeviceAndSwapChain_X(
     _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
     _Out_opt_ ID3D11DeviceContext** ppImmediateContext)
 {
-    printf("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!");
-    printf("SDK Version: %d\n", SDKVersion);
+    DEBUGPRINT("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!");
+    DEBUGPRINT("SDK Version: %d\n", SDKVersion);
     return D3D11CreateDeviceAndSwapChain(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion, pSwapChainDesc, ppSwapChain, ppDevice, pFeatureLevel, ppImmediateContext);
 }
 
@@ -270,14 +298,14 @@ std::mutex g_NotifyMutex;
 void WD11XNotify_X(WDEVENT_TYPE event)
 {
     const std::lock_guard lock(g_NotifyMutex);
-	printf("[d3d11_x] received notification\n");
+	DEBUGPRINT("[d3d11_x] received notification\n");
 
     switch (event)
     {
 	case WDEVENT_TYPE_INVALID:
 		throw std::exception("this shouldn't happen, check code that sends events.");
 	case WDEVENT_TYPE_KEYBOARD_ENGAGE:
-		printf("[d3d11_x] keyboard engage\n");
+		DEBUGPRINT("[d3d11_x] keyboard engage\n");
 		WinDurango::g_Overlay->EnableKeyboard( );
 		break;
     }
@@ -285,7 +313,7 @@ void WD11XNotify_X(WDEVENT_TYPE event)
 
 void WDWaitForKeyboard(const char** outText)
 {
-	printf("[d3d11_x] waiting for keyboard\n");
+	DEBUGPRINT("[d3d11_x] waiting for keyboard\n");
 
     WaitForSingleObject(WinDurango::g_KeyboardFinished, INFINITE);
 

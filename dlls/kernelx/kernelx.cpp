@@ -316,8 +316,57 @@ void XMemSetAllocationHooks_X(decltype(&XMemAlloc_X) Alloc, decltype(&XMemFree_X
 
 }
 
-#define PROTECT_FLAGS_MASK (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY | PAGE_NOACCESS | PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_GUARD | PAGE_NOCACHE)
-#define ALLOCATION_FLAGS_MASK (MEM_COMMIT | MEM_RESERVE | MEM_RESET | MEM_LARGE_PAGES | MEM_PHYSICAL | MEM_TOP_DOWN | MEM_WRITE_WATCH)
+__int64 sub_18001BB8C()
+{
+    // I know it should look better if it was initalized at dllmain.cpp but then I can't fix some idiotic errors
+    HMODULE ntdll = LoadLibraryA("ntdll.dll");
+    if (ntdll) {
+        NtAllocateVirtualMemory =
+            (NtAllocateVirtualMemory_t)GetProcAddress(ntdll, "NtAllocateVirtualMemory");
+        NtFreeVirtualMemory =
+            (NtFreeVirtualMemory_t)GetProcAddress(ntdll, "NtFreeVirtualMemory");
+        FreeLibrary(ntdll);
+    }
+    return 0;
+}
+
+LPVOID VirtualAllocEx_X(
+    HANDLE hProcess,
+    LPVOID lpAddress,
+    SIZE_T dwSize,
+    DWORD flAllocationType,
+    DWORD flProtect
+)
+{
+    sub_18001BB8C();
+
+    PVOID BaseAddress = lpAddress;
+    SIZE_T AllocationSize[2];
+
+    AllocationSize[0] = dwSize;
+
+    if ((flProtect & 0x10000) == 0x10000)
+        flProtect &= ~0x10000;
+
+    if ((flAllocationType & MEM_RESERVE) != 0)
+        flAllocationType = 0x2000;
+
+    if ((flAllocationType & MEM_COMMIT) != 0)
+        flAllocationType = 0x1000;
+
+    else if ((flAllocationType & MEM_COMMIT & MEM_RESERVE) == 0)
+        flAllocationType = flAllocationType;
+
+    NTSTATUS hresult = NtAllocateVirtualMemory(hProcess, &BaseAddress, 0, AllocationSize, flAllocationType, flProtect);
+
+    if (NT_SUCCESS(hresult))
+    {
+        return BaseAddress;
+    }
+
+    printf("WARN:VirtualAllocEx_X failed!---> LastError: %i\n", GetLastError());
+    return (LPVOID)0x0;
+}
 
 LPVOID VirtualAlloc_X(
     LPVOID lpAddress,
@@ -326,19 +375,5 @@ LPVOID VirtualAlloc_X(
     DWORD  flProtect
 )
 {
-	flProtect &= PROTECT_FLAGS_MASK;
-	flAllocationType &= ALLOCATION_FLAGS_MASK;
-
-    LPVOID ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
-
-	// backup plan in the case that VirtualAlloc fails despite the flags being masked away
-	if (ret == nullptr)
-	{
-		printf("VirtualAlloc failed with %i, using backup...\n", GetLastError());
-        ret = VirtualAlloc(lpAddress, dwSize, MEM_COMMIT, flProtect);
-	}
-
-    assert(ret != nullptr && "VirtualAlloc should not fail, check proper handling of xbox-one specific memory protection constants.");
-
-	return ret;
+    return VirtualAllocEx_X(GetCurrentProcess(), lpAddress, dwSize, flAllocationType, flProtect);
 }

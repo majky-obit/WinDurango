@@ -13,7 +13,13 @@
         D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY | D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT | D3D11_CREATE_DEVICE_VIDEO_SUPPORT)
 
 typedef GUID DXGI_DEBUG_ID;
-
+HRESULT __stdcall DeviceIoControlHelper(HANDLE hDevice);
+HRESULT __stdcall VdMapAddressToEsram(
+    HANDLE hDevice,
+    DWORD flags,
+    uintptr_t virtualAddress,
+    UINT numPages,
+    const UINT* pageList);
 typedef enum D3D11_GRAPHICS_MEMORY_ACCESS_FLAG
 {
     D3D11_GRAPHICS_MEMORY_ACCESS_CPU_CACHE_COHERENT = 0,
@@ -121,8 +127,8 @@ DEFINE_GUID(DXGI_DEBUG_DXGI, 0x25cddaa4, 0xb1c6, 0x47e1, 0xac, 0x3e, 0x98, 0x87,
 DEFINE_GUID(DXGI_DEBUG_APP, 0x6cd6e01, 0x4219, 0x4ebd, 0x87, 0x9, 0x27, 0xed, 0x23, 0x36, 0xc, 0x62);
 DEFINE_GUID(DXGI_DEBUG_D3D11, 0x4b99317b, 0xac39, 0x4aa6, 0xbb, 0xb, 0xba, 0xa0, 0x47, 0x84, 0x79, 0x8f);
 
-#define DX_MAJOR 2
-#define DX_MINOR 18
+#define DX_MAJOR 1
+#define DX_MINOR 11
 
 #define MAKEINTVERSION(major, minor) (((0LL + (major)) << 48) | ((0LL + (minor)) << 32))
 #define DX_VERSION (((0LL + (DX_MAJOR)) << 48) | ((0LL + (DX_MINOR)) << 32))

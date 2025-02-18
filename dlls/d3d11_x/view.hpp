@@ -86,7 +86,7 @@ namespace wd
 
     	HRESULT QueryInterface(const IID& riid, void** ppvObject) override
         {
-            if (riid == __uuidof(wdi::ID3D11RenderTargetView))
+            if (riid == __uuidof(wdi::ID3D11RenderTargetView) || riid == __uuidof(wdi::ID3D11View))
             {
                 *ppvObject = this;
                 AddRef( );
@@ -128,12 +128,13 @@ namespace wd
             TRACE_NOT_IMPLEMENTED("render_target_view");
 			return E_NOTIMPL;
         }
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
         HRESULT SetName(LPCWSTR pName) override
         {
             TRACE_NOT_IMPLEMENTED("render_target_view");
             return E_NOTIMPL;
         }
+#endif
 
         void GetResource(wdi::ID3D11Resource** ppResource) override
         {
@@ -161,7 +162,7 @@ namespace wd
 
 		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
         {
-            if (riid == __uuidof(wdi::ID3D11DepthStencilView))
+            if (riid == __uuidof(wdi::ID3D11DepthStencilView) || riid == __uuidof(wdi::ID3D11View))
             {
                 *ppvObject = this;
                 AddRef( );
@@ -203,12 +204,13 @@ namespace wd
             TRACE_NOT_IMPLEMENTED("depth_stencil_view");
             return E_NOTIMPL;
         }
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
         HRESULT SetName(LPCWSTR pName) override
         {
             TRACE_NOT_IMPLEMENTED("depth_stencil_view");
             return E_NOTIMPL;
         }
+#endif
 
         void GetResource(wdi::ID3D11Resource** ppResource) override
         {
@@ -278,12 +280,13 @@ namespace wd
             TRACE_NOT_IMPLEMENTED("shader_resource_view");
             return E_NOTIMPL;
         }
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
         HRESULT SetName(LPCWSTR pName) override
         {
             TRACE_NOT_IMPLEMENTED("shader_resource_view");
             return E_NOTIMPL;
         }
+#endif
 
         void GetResource(wdi::ID3D11Resource** ppResource) override
         {
@@ -354,12 +357,13 @@ namespace wd
             TRACE_NOT_IMPLEMENTED("shader_resource_view");
             return E_NOTIMPL;
         }
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
         HRESULT SetName(LPCWSTR pName) override
         {
             TRACE_NOT_IMPLEMENTED("shader_resource_view");
             return E_NOTIMPL;
         }
+#endif
 
         void GetResource(wdi::ID3D11Resource** ppResource) override
         {

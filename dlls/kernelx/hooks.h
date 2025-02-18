@@ -1,14 +1,11 @@
 ﻿#pragma once
 #include <winrt/Windows.ApplicationModel.h>
-
+#include "MMDeviceEnumeratorWrapper.h"
 #include "utils.h"
 #include "CoreApplicationWrapperX.h"
 #include <windows.applicationmodel.core.h>
-
 #include "CurrentAppWrapper.hpp"
-
-#define RETURN_HR(hr) return hr
-#define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
+#include <mmdeviceapi.h>
 
 /* This function is used to compare the class name of the classId with the classIdName. */
 inline bool IsClassName(HSTRING classId, const char* classIdName)
@@ -41,7 +38,6 @@ HMODULE GetRuntimeModule()
 	return hModule;
 }
 
-HRESULT WINAPI GetActivationFactoryRedirect(PCWSTR str, REFIID riid, void** ppFactory);
 /* Function pointers for the DllGetForCurrentThread */
 typedef HRESULT(*DllGetForCurrentThreadFunc) (ICoreWindowStatic*, CoreWindow**);
 /* Function pointers for the DllGetForCurrentThread */
@@ -52,7 +48,6 @@ HRESULT(STDMETHODCALLTYPE* TrueGetForCurrentThread)(ICoreWindowStatic* staticWin
 typedef HRESULT(*DllGetActivationFactoryFunc) (HSTRING, IActivationFactory**);
 /* Function pointers for the DllGetActivationFactory */
 DllGetActivationFactoryFunc pDllGetActivationFactory = nullptr;
-DllGetActivationFactoryFunc pMediaDllGetActivationFactory = nullptr;
 /* Function pointers for the WinRT RoGetActivationFactory function. */
 HRESULT(WINAPI* TrueRoGetActivationFactory)(HSTRING classId, REFIID iid, void** factory) = RoGetActivationFactory;
 
@@ -74,84 +69,34 @@ BOOL(WINAPI* TrueDeleteFileW)(LPCWSTR lpFileName) = DeleteFileW;
 HMODULE(WINAPI* TrueLoadLibraryExW)(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD dwFlags) = LoadLibraryExW;
 HMODULE(WINAPI* TrueLoadLibraryExA)(LPCSTR lpLibFileName, HANDLE  hFile, DWORD dwFlags) = LoadLibraryExA;
 HMODULE(WINAPI* TrueLoadLibraryW)(LPCWSTR lpLibFileName) = LoadLibraryW;
+HRESULT(WINAPI* TrueCoCreateInstance)(_In_ REFCLSID rclsid,
+	_In_opt_ LPUNKNOWN pUnkOuter,
+	_In_ DWORD dwClsContext,
+	_In_ REFIID riid,
+	_COM_Outptr_ _At_(*ppv, _Post_readable_size_(_Inexpressible_(varies))) LPVOID  FAR* ppv) = CoCreateInstance;
 
 HRESULT(STDMETHODCALLTYPE* TrueGetLicenseInformation)(
 	ABI::Windows::ApplicationModel::Store::ILicenseInformation** value
-) = nullptr;
+	) = nullptr;
 
-HRESULT XWineGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ LPCSTR Import, _Out_ PIMAGE_THUNK_DATA* pThunk)
+
+
+
+HRESULT __stdcall CoCreateInstance_hook(
+	_In_ REFCLSID rclsid,
+	_In_opt_ LPUNKNOWN pUnkOuter,
+	_In_ DWORD dwClsContext,
+	_In_ REFIID riid,
+	_COM_Outptr_ _At_(*ppv, _Post_readable_size_(_Inexpressible_(varies))) LPVOID  FAR* ppv
+)
 {
-	if (ImportModule == nullptr)
-		RETURN_HR(E_INVALIDARG);
 
-	if (pThunk == nullptr)
-		RETURN_HR(E_POINTER);
-
-	if (Module == nullptr)
-		Module = GetModuleHandleW(nullptr);
-
-	auto dosHeader = (PIMAGE_DOS_HEADER)Module;
-	auto ntHeaders = (PIMAGE_NT_HEADERS)((PBYTE)Module + dosHeader->e_lfanew);
-	auto directory = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
-
-	if (directory->VirtualAddress == 0)
-		RETURN_HR(E_FAIL);
-
-	auto peImports = (PIMAGE_IMPORT_DESCRIPTOR)((PBYTE)Module + directory->VirtualAddress);
-
-	for (size_t i = 0; peImports[i].Name; i++)
+	HRESULT hr = TrueCoCreateInstance(rclsid, pUnkOuter, dwClsContext, riid, ppv);
+	if (riid == __uuidof(IMMDeviceEnumerator))
 	{
-		if (GetModuleHandleA((LPCSTR)((PBYTE)Module + peImports[i].Name)) != ImportModule)
-			continue;
-
-		auto iatThunks = (PIMAGE_THUNK_DATA)((PBYTE)Module + peImports[i].FirstThunk);
-		auto intThunks = (PIMAGE_THUNK_DATA)((PBYTE)Module + peImports[i].OriginalFirstThunk);
-
-		for (size_t j = 0; intThunks[j].u1.AddressOfData; j++)
-		{
-			if ((intThunks[j].u1.AddressOfData & IMAGE_ORDINAL_FLAG) != 0)
-			{
-				if (!IS_INTRESOURCE(Import))
-					continue;
-
-				if (((intThunks[j].u1.Ordinal & ~IMAGE_ORDINAL_FLAG) == (ULONG_PTR)Import))
-				{
-					*pThunk = &iatThunks[j];
-					return S_OK;
-				}
-
-				continue;
-			}
-
-			if (strcmp(((PIMAGE_IMPORT_BY_NAME)((PBYTE)Module + intThunks[j].u1.AddressOfData))->Name, Import))
-				continue;
-
-			*pThunk = &iatThunks[j];
-			return S_OK;
-		}
+		*ppv = new MMDeviceEnumeratorWrapper(static_cast<IMMDeviceEnumerator*>(*ppv));
 	}
-
-	*pThunk = nullptr;
-	return (E_FAIL);
-}
-
-HRESULT XWinePatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
-{
-	DWORD protect;
-	PIMAGE_THUNK_DATA pThunk;
-	RETURN_IF_FAILED(XWineGetImport(Module, ImportModule, Import, &pThunk));
-	RETURN_LAST_ERROR_IF(!VirtualProtect(&pThunk->u1.Function, sizeof(ULONG_PTR), PAGE_READWRITE, &protect));
-	pThunk->u1.Function = (ULONG_PTR)Function;
-	RETURN_LAST_ERROR_IF(!VirtualProtect(&pThunk->u1.Function, sizeof(ULONG_PTR), protect, &protect));
-	return S_OK;
-}
-
-HRESULT PatchNeededImports(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
-{
-	PIMAGE_THUNK_DATA pThunk;
-	RETURN_IF_FAILED(XWineGetImport(Module, ImportModule, Import, &pThunk));
-
-	return XWinePatchImport(Module, ImportModule, Import, Function);
+	return hr;
 }
 
 HMODULE WINAPI LoadLibraryExW_X(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dwFlags)
@@ -186,9 +131,8 @@ HMODULE WINAPI LoadLibraryExW_X(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dw
 		}
 	}
 
-	HMODULE mod = LoadLibraryExW(lpLibFileName, hFile, dwFlags);
-	PatchNeededImports(mod, GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
-	return mod;
+
+	return LoadLibraryExW(lpLibFileName, hFile, dwFlags);
 }
 
 
@@ -248,8 +192,6 @@ HMODULE WINAPI LoadLibraryExA_Hook(LPCSTR lpLibFileName, _Reserved_ HANDLE hFile
 	{
 		printf("LoadLibraryExA_Hook failed: %d\n", GetLastError());
 	}
-
-	PatchNeededImports(result, GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
 	return result;
 }
 
@@ -273,9 +215,7 @@ HMODULE WINAPI LoadLibraryW_Hook(LPCWSTR lpLibFileName)
 	}
 	//printf("LoadLibraryW_Hook: %ls\n", lpLibFileName);
 
-	HMODULE result = TrueLoadLibraryW(lpLibFileName);
-	PatchNeededImports(result, GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
-	return result;
+	return TrueLoadLibraryW(lpLibFileName);
 }
 HFILE WINAPI OpenFile_Hook(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle)
 {
@@ -447,20 +387,4 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 		return fallbackFactory.CopyTo(iid, factory);
 
 	return TrueRoGetActivationFactory(classId, iid, factory);
-}
-
-HRESULT WINAPI GetActivationFactoryRedirect(PCWSTR str, REFIID riid, void** ppFactory)
-{
-	HRESULT hr;
-	HSTRING className;
-	HSTRING_HEADER classNameHeader;
-
-	if (FAILED(hr = WindowsCreateStringReference(str, wcslen(str), &classNameHeader, &className)))
-		return hr;
-
-	//printf("GetActivationFactoryRedirect: %S\n", str);
-
-	hr = RoGetActivationFactory_Hook(className, riid, ppFactory);
-	WindowsDeleteString(className);
-	return hr;
 }

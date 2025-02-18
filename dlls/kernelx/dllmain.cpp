@@ -10,8 +10,89 @@
 //Rodrigo Todescatto: For debbuging Forza.
 #define RETURN_IF_FAILED(hr) if (FAILED(hr)) return hr
 #define FORZADEBUG
+#define RETURN_HR(hr) return hr
+#define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
 
 std::vector<HMODULE> loadedMods;
+
+inline HRESULT WINAPI GetActivationFactoryRedirect(PCWSTR str, REFIID riid, void** ppFactory)
+{
+	HRESULT hr;
+	HSTRING className;
+	HSTRING_HEADER classNameHeader;
+
+	if (FAILED(hr = WindowsCreateStringReference(str, wcslen(str), &classNameHeader, &className)))
+		return hr;
+
+	//DEBUG_PRINT("GetActivationFactoryRedirect: %S\n", str);
+
+	hr = RoGetActivationFactory_Hook(className, riid, ppFactory);
+	WindowsDeleteString(className);
+	return hr;
+}
+
+HRESULT XWineGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ LPCSTR Import, _Out_ PIMAGE_THUNK_DATA * pThunk)
+{
+	if (ImportModule == nullptr)
+		RETURN_HR(E_INVALIDARG);
+
+	if (pThunk == nullptr)
+		RETURN_HR(E_POINTER);
+
+	if (Module == nullptr)
+		Module = GetModuleHandleW(nullptr);
+
+	auto dosHeader = (PIMAGE_DOS_HEADER)Module;
+	auto ntHeaders = (PIMAGE_NT_HEADERS)((PBYTE)Module + dosHeader->e_lfanew);
+	auto directory = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+	auto peImports = (PIMAGE_IMPORT_DESCRIPTOR)((PBYTE)Module + directory->VirtualAddress);
+
+	for (size_t i = 0; peImports[i].Name; i++)
+	{
+		if (GetModuleHandleA((LPCSTR)((PBYTE)Module + peImports[i].Name)) != ImportModule)
+			continue;
+
+		auto iatThunks = (PIMAGE_THUNK_DATA)((PBYTE)Module + peImports[i].FirstThunk);
+		auto intThunks = (PIMAGE_THUNK_DATA)((PBYTE)Module + peImports[i].OriginalFirstThunk);
+
+		for (size_t j = 0; intThunks[j].u1.AddressOfData; j++)
+		{
+			if ((intThunks[j].u1.AddressOfData & IMAGE_ORDINAL_FLAG) != 0)
+			{
+				if (!IS_INTRESOURCE(Import))
+					continue;
+
+				if (((intThunks[j].u1.Ordinal & ~IMAGE_ORDINAL_FLAG) == (ULONG_PTR)Import))
+				{
+					*pThunk = &iatThunks[j];
+					return S_OK;
+				}
+
+				continue;
+			}
+
+			if (strcmp(((PIMAGE_IMPORT_BY_NAME)((PBYTE)Module + intThunks[j].u1.AddressOfData))->Name, Import))
+				continue;
+
+			*pThunk = &iatThunks[j];
+			return S_OK;
+		}
+	}
+
+	*pThunk = nullptr;
+	return (E_FAIL);
+}
+
+HRESULT XWinePatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
+{
+	DWORD protect;
+	PIMAGE_THUNK_DATA pThunk;
+	RETURN_IF_FAILED(XWineGetImport(Module, ImportModule, Import, &pThunk));
+	RETURN_LAST_ERROR_IF(!VirtualProtect(&pThunk->u1.Function, sizeof(ULONG_PTR), PAGE_READWRITE, &protect));
+	pThunk->u1.Function = (ULONG_PTR)Function;
+	RETURN_LAST_ERROR_IF(!VirtualProtect(&pThunk->u1.Function, sizeof(ULONG_PTR), protect, &protect));
+	return S_OK;
+}
 
 inline void LoadMods()
 {
@@ -152,6 +233,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExW), LoadLibraryExW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryW), LoadLibraryW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExA), LoadLibraryExA_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueCoCreateInstance), CoCreateInstance_hook);
 
 		DetourTransactionCommit();
 

@@ -6,6 +6,7 @@
 #include <exception>
 #include <format>
 #include "dxgi_device.h"
+#include "dma_engine.h"
 
 namespace wdi
 {
@@ -250,6 +251,11 @@ namespace wdi
 		virtual HRESULT (SetGpuMemoryPriority)(UINT Priority) = 0;
 		virtual void (GetGpuHardwareConfiguration)(D3D11X_GPU_HARDWARE_CONFIGURATION* pGpuHardwareConfiguration) = 0;
 	};
+
+	D3DINTERFACE(ID3D11PerformanceDeviceX, 88671610, 712E, 4F1E, 84, AB, 01, B5, 94, 8B, D3, 73) : public ID3D11DeviceX
+	{
+
+	};
 }
 
 namespace wd
@@ -267,7 +273,7 @@ namespace wd
 				return E_POINTER;
 			}
 
-			if (riid == __uuidof(wdi::ID3D11DeviceX) || riid == __uuidof(wdi::ID3D11Device) || riid == __uuidof(wdi::ID3D11Device1) || riid == __uuidof(wdi::ID3D11Device2))
+			if (riid == __uuidof(wdi::ID3D11DeviceX) || riid == __uuidof(wdi::ID3D11Device) || riid == __uuidof(wdi::ID3D11Device1) || riid == __uuidof(wdi::ID3D11Device2) || riid == __uuidof(wdi::ID3D11PerformanceDeviceX))
 			{
 				*ppvObject = static_cast<wdi::ID3D11DeviceX*>(this);
 				AddRef( );
@@ -461,7 +467,8 @@ namespace wd
 
 		HRESULT SetExceptionMode(UINT RaiseFlags) override
 		{
-			return wrapped_interface->SetExceptionMode(RaiseFlags);
+			printf("SetExceptionMode was called!!!\n");
+			return E_NOTIMPL;
 		}
 
 		UINT GetExceptionMode( ) override

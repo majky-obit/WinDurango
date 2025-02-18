@@ -7,7 +7,10 @@
 
 void wd::device_context_x::GetDevice(ID3D11Device** ppDevice)
 {
-	throw std::logic_error("Not implemented");
+	if (ppDevice != nullptr)
+	{
+		return wrapped_interface->GetDevice(ppDevice);
+	}
 }
 
 HRESULT wd::device_context_x::GetPrivateData(const GUID& guid, UINT* pDataSize, void* pData)
@@ -29,14 +32,17 @@ HRESULT wd::device_context_x::SetPrivateDataInterfaceGraphics(const GUID& guid, 
 {
 	throw std::logic_error("Not implemented");
 }
-
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 HRESULT wd::device_context_x::SetName(LPCWSTR pName)
 {
 	throw std::logic_error("Not implemented");
 }
+#endif
 
 void wd::device_context_x::VSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
+	printf("VSSetConstantBuffers was called!!!!!!!\n");
+
 	if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
 	{
 		ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
@@ -54,6 +60,8 @@ void wd::device_context_x::VSSetConstantBuffers(UINT StartSlot, UINT NumBuffers,
 
 void wd::device_context_x::Draw(UINT VertexCount, UINT StartVertexLocation)
 {
+	printf("Draw was called!!!!!!!\n");
+
 	ProcessDirtyFlags( );
 	wrapped_interface->Draw(VertexCount, StartVertexLocation);
 }
@@ -61,7 +69,9 @@ void wd::device_context_x::Draw(UINT VertexCount, UINT StartVertexLocation)
 HRESULT wd::device_context_x::Map(ID3D11Resource* pResource, UINT Subresource, D3D11_MAP MapType, UINT MapFlags,
 	D3D11_MAPPED_SUBRESOURCE* pMappedResource)
 {
-	return wrapped_interface->Map(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, Subresource, MapType, MapFlags, pMappedResource);
+	HRESULT hr = wrapped_interface->Map(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, Subresource, MapType, MapFlags, pMappedResource);
+
+	return hr;
 }
 
 void wd::device_context_x::Unmap(ID3D11Resource* pResource, UINT Subresource)
@@ -71,6 +81,8 @@ void wd::device_context_x::Unmap(ID3D11Resource* pResource, UINT Subresource)
 
 void wd::device_context_x::PSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
+	printf("PSSetConstantBuffers was called!!!!!!!\n");
+
 	if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
 	{
 		ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
@@ -88,12 +100,16 @@ void wd::device_context_x::PSSetConstantBuffers(UINT StartSlot, UINT NumBuffers,
 
 void wd::device_context_x::IASetInputLayout(ID3D11InputLayout* pInputLayout)
 {
+	printf("IASetInputLayout was called!!!!!!!\n");
+
 	wrapped_interface->IASetInputLayout(pInputLayout);
 }
 
 void wd::device_context_x::IASetVertexBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppVertexBuffers,
 	const UINT* pStrides, const UINT* pOffsets)
 {
+	printf("IASetVertexBuffers was called!!!!!!!\n");
+
 	if (NumBuffers > D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - StartSlot)
 	{
 		printf("WARN: device_context_x::IASetVertexBuffers: NumBuffers > D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT - StartSlot\n");
@@ -178,6 +194,7 @@ void wd::device_context_x::GSSetShaderResources(ID3D11ShaderResourceView* const*
 
 void wd::device_context_x::DrawAuto()
 {
+	printf("DrawAuto was called!!!!!!!\n");
 	throw std::logic_error("Not implemented");
 }
 
@@ -242,7 +259,6 @@ void wd::device_context_x::DSSetShader(ID3D11DomainShader* pDomainShader)
 void wd::device_context_x::CSSetShaderResources(ID3D11ShaderResourceView* const* ppShaderResourceViews, UINT StartSlot,
 	UINT PacketHeader)
 {
-
 	UINT NumViews = (PacketHeader >> 19) + 1;
 
 	if (ppShaderResourceViews != NULL)
@@ -266,42 +282,50 @@ void wd::device_context_x::CSSetShaderResources(ID3D11ShaderResourceView* const*
 
 void wd::device_context_x::CSSetShader(ID3D11ComputeShader* pComputeShader)
 {
+	printf("CSSetShader was called!!!!!!!\n");
 	wrapped_interface->CSSetShader(pComputeShader, nullptr, 0);
 }
 
 void wd::device_context_x::VSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers)
 {
+	printf("VSSetSamplers was called!!!!!!!\n");
 	wrapped_interface->VSSetSamplers(StartSlot, NumSamplers, ppSamplers);
 }
 
 void wd::device_context_x::Begin(ID3D11Asynchronous* pAsync)
 {
+	printf("Begin was called!!!!!!!\n");
 	wrapped_interface->Begin(pAsync);
 }
 
 void wd::device_context_x::End(ID3D11Asynchronous* pAsync)
 {
+	printf("End was called!!!!!!!\n");
 	wrapped_interface->End(pAsync);
 }
 
 HRESULT wd::device_context_x::GetData(ID3D11Asynchronous* pAsync, void* pData, UINT DataSize, UINT GetDataFlags)
 {
+	printf("GetData was called!!!!!!!\n");
 	return wrapped_interface->GetData(pAsync, pData, DataSize, GetDataFlags);
 }
 
 void wd::device_context_x::SetPredication(ID3D11Predicate* pPredicate, BOOL PredicateValue)
 {
+	printf("SetPredication was called!!!!!!!\n");
 	wrapped_interface->SetPredication(pPredicate, PredicateValue);
 }
 
 void wd::device_context_x::GSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers)
 {
+	printf("GSSetSamplers was called!!!!!!!\n");
 	wrapped_interface->GSSetSamplers(StartSlot, NumSamplers, ppSamplers);
 }
 
 void wd::device_context_x::OMSetRenderTargets(UINT NumViews, ID3D11RenderTargetView* const* ppRenderTargetViews,
 	ID3D11DepthStencilView* pDepthStencilView)
 {
+	printf("OMSetRenderTargets was called!!!!!!!\n");
 	auto* depthStencilView = pDepthStencilView;
 	if (depthStencilView != nullptr)
 		depthStencilView = reinterpret_cast<depth_stencil_view*>(pDepthStencilView)->wrapped_interface;
@@ -328,6 +352,7 @@ void wd::device_context_x::OMSetRenderTargetsAndUnorderedAccessViews(UINT NumRTV
 	ID3D11RenderTargetView* const* ppRenderTargetViews, ID3D11DepthStencilView* pDepthStencilView, UINT UAVStartSlot,
 	UINT NumUAVs, ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts)
 {
+	printf("OMSetRenderTargetsAndUnorderedAccessViews was called!!!!!!!\n");
 	wrapped_interface->OMSetRenderTargetsAndUnorderedAccessViews(NumRTVs, ppRenderTargetViews, pDepthStencilView,
 	                                                                UAVStartSlot, NumUAVs, ppUnorderedAccessViews,
 	                                                                pUAVInitialCounts);
@@ -335,46 +360,55 @@ void wd::device_context_x::OMSetRenderTargetsAndUnorderedAccessViews(UINT NumRTV
 
 void wd::device_context_x::OMSetBlendState(ID3D11BlendState* pBlendState, const FLOAT BlendFactor[4], UINT SampleMask)
 {
+	printf("OMSetBlendState was called!!!!!!!\n");
 	wrapped_interface->OMSetBlendState(pBlendState, BlendFactor, SampleMask);
 }
 
 void wd::device_context_x::OMSetDepthStencilState(ID3D11DepthStencilState* pDepthStencilState, UINT StencilRef)
 {
+	printf("OMSetDepthStencilState was called!!!!!!!\n");
 	wrapped_interface->OMSetDepthStencilState(pDepthStencilState, StencilRef);
 }
 
 void wd::device_context_x::SOSetTargets(UINT NumBuffers, ID3D11Buffer* const* ppSOTargets, const UINT* pOffsets)
 {
+	printf("SOSetTargets was called!!!!!!!\n");
 	wrapped_interface->SOSetTargets(NumBuffers, ppSOTargets, pOffsets);
 }
 
 void wd::device_context_x::DrawIndexedInstancedIndirect(ID3D11Buffer* pBufferForArgs, UINT AlignedByteOffsetForArgs)
 {
+	printf("DrawIndexedInstancedIndirect was called!!!!!!!\n");
 	wrapped_interface->DrawIndexedInstancedIndirect(pBufferForArgs, AlignedByteOffsetForArgs);
 }
 
 void wd::device_context_x::DrawInstancedIndirect(ID3D11Buffer* pBufferForArgs, UINT AlignedByteOffsetForArgs)
 {
+	printf("DrawInstancedIndirect was called!!!!!!!\n");
 	wrapped_interface->DrawInstancedIndirect(pBufferForArgs, AlignedByteOffsetForArgs);
 }
 
 void wd::device_context_x::Dispatch(UINT ThreadGroupCountX, UINT ThreadGroupCountY, UINT ThreadGroupCountZ)
 {
+	printf("Dispatch was called!!!!!!!\n");
 	wrapped_interface->Dispatch(ThreadGroupCountX, ThreadGroupCountY, ThreadGroupCountZ);
 }
 
 void wd::device_context_x::DispatchIndirect(ID3D11Buffer* pBufferForArgs, UINT AlignedByteOffsetForArgs)
 {
+	printf("DispatchIndirect was called!!!!!!!\n");
 	wrapped_interface->DispatchIndirect(pBufferForArgs, AlignedByteOffsetForArgs);
 }
 
 void wd::device_context_x::RSSetState(ID3D11RasterizerState* pRasterizerState)
 {
+	printf("RSSetState was called!!!!!!!\n");
 	wrapped_interface->RSSetState(pRasterizerState);
 }
 
 void wd::device_context_x::RSSetViewports(UINT NumViewports, const D3D11_VIEWPORT* pViewports)
 {
+	printf("RSSetViewports was called!!!!!!!\n");
 	wrapped_interface->RSSetViewports(NumViewports, pViewports);
 }
 
@@ -1019,10 +1053,12 @@ INT wd::device_context_x::PIXBeginEvent(LPCWSTR Name)
 	throw std::logic_error("Not implemented");
 }
 
+#if !defined(DX_VERSION) || DX_VERSION >= MAKEINTVERSION(2, 17)
 INT wd::device_context_x::PIXBeginEventEx(const void* pData, UINT DataSize)
 {
 	throw std::logic_error("Not implemented");
 }
+#endif
 
 INT wd::device_context_x::PIXEndEvent()
 {
@@ -1034,10 +1070,12 @@ void wd::device_context_x::PIXSetMarker(LPCWSTR Name)
 	throw std::logic_error("Not implemented");
 }
 
+#if !defined(DX_VERSION) || DX_VERSION >= MAKEINTVERSION(2, 17)
 void wd::device_context_x::PIXSetMarkerEx(const void* pData, UINT DataSize)
 {
 	throw std::logic_error("Not implemented");
 }
+#endif
 
 BOOL wd::device_context_x::PIXGetStatus()
 {
@@ -1320,7 +1358,7 @@ void wd::device_context_x::HSGetLastUsedTessellationParameters(
 
 void wd::device_context_x::CSEnableAutomaticGpuFlush(BOOL Enable)
 {
-	throw std::logic_error("Not implemented");
+
 }
 
 void wd::device_context_x::GpuSendPipelinedEvent(wdi::D3D11X_GPU_PIPELINED_EVENT Event)

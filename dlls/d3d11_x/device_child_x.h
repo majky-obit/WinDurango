@@ -17,7 +17,9 @@ namespace wdi
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID guid, UINT DataSize, const void* pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(REFGUID guid, const IUnknown* pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateDataInterfaceGraphics(REFGUID guid, const IGraphicsUnknown* pData) = 0;
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 		virtual HRESULT STDMETHODCALLTYPE SetName(LPCWSTR pName) = 0;
+#endif
 	};
 }
 

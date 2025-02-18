@@ -38,6 +38,7 @@ HRESULT wd::dxgi_factory::CreateSwapChainForHwnd(IGraphicsUnknown* pDevice, HWND
 HRESULT wd::dxgi_factory::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice, IUnknown* pWindow,
 	DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain)
 {
+	printf("CreateSwapChainForCoreWindow was called!!!!!!!\n");
 	IDXGISwapChain1* swap = nullptr;
 	HRESULT hr;
 	pDesc->Flags &= DXGI_SWAPCHAIN_FLAG_MASK;
@@ -53,6 +54,7 @@ HRESULT wd::dxgi_factory::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice
 
 	if (pWindow == nullptr)
 	{
+		printf("pWindow was nullptr!!!!!!!\n");
 		Microsoft::WRL::ComPtr<ABI::Windows::UI::Core::ICoreWindowStatic> coreWindowStatic;
 		RoGetActivationFactory(Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get( ), IID_PPV_ARGS(&coreWindowStatic));
 

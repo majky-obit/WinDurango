@@ -1,5 +1,6 @@
 #include "dxgi_device.h"
 #include "dxgi_adapter.h"
+#include <iostream>
 
 HRESULT wd::dxgi_device::GetParent(const IID& riid, void** ppParent)
 {
@@ -29,8 +30,20 @@ HRESULT wd::dxgi_device::GetAdapter(wdi::IDXGIAdapter** pAdapter)
 
 HRESULT wd::dxgi_device::CreateSurface(const DXGI_SURFACE_DESC* pDesc, UINT NumSurfaces, DXGI_USAGE Usage,
 	const DXGI_SHARED_RESOURCE* pSharedResource, IDXGISurface** ppSurface)
-{
-	return wrapped_interface->CreateSurface(pDesc, NumSurfaces, Usage, pSharedResource, ppSurface);
+{ 
+	printf("CreateSurface was called!!!\n");
+
+	std::cout << "NumSurfaces: " << NumSurfaces << "\n";
+
+	HRESULT hr = wrapped_interface->CreateSurface(pDesc, NumSurfaces, Usage, pSharedResource, ppSurface);
+
+	if (FAILED(hr))
+	{
+		printf("CreateSurface failed!!!\n");
+		hr = wrapped_interface->CreateSurface(pDesc, NumSurfaces, Usage, pSharedResource, ppSurface);
+	}
+
+	return hr;
 }
 
 HRESULT wd::dxgi_device::QueryResourceResidency(IGraphicsUnknown** ppResources, DXGI_RESIDENCY* pResidencyStatus,
