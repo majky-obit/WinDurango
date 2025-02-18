@@ -1,9 +1,6 @@
 // ReSharper disable CppInconsistentNaming
 // ReSharper disable CppParameterMayBeConst
-#include "pch.h"
-
-#include <cstdlib>
-
+#include "windows.h"
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReserved)
 {
 	constexpr BOOL result = TRUE;

@@ -297,6 +297,10 @@ static decltype(&XMemFree_X) XMemFreeRoutine_X;
 
 void XMemSetAllocationHooks_X(decltype(&XMemAlloc_X) Alloc, decltype(&XMemFree_X) Free)
 {
+    if (XMemSetAllocationHooksLock_X.OwningThread == 0) {
+        InitializeCriticalSection(&XMemSetAllocationHooksLock_X);
+    }
+
     EnterCriticalSection(&XMemSetAllocationHooksLock_X);
 
     if (Alloc) {
@@ -311,219 +315,30 @@ void XMemSetAllocationHooks_X(decltype(&XMemAlloc_X) Alloc, decltype(&XMemFree_X
     LeaveCriticalSection(&XMemSetAllocationHooksLock_X);
 
 }
-// TODO
-// absolutely temporary implementation I just want to make it work
-// sub_18001BCA0 
-char* TblPtrs;
-HANDLE hExtendedLocaleKey;
-HANDLE hCustomLocaleKey;
-HANDLE hLangGroupsKey;
-HANDLE hAltSortsKey;
-HANDLE hLocaleKey;
-HANDLE hCodePageKey;
-HANDLE gpACPHashN;
-char* dword_18002B84C;
-LPVOID P; // ?!?! ?
-LPVOID P_0; // ¡!¡ ¡!?!??
 
-//sub_18001BB8C
-int IsNlsProcessInitialized;
+#define PROTECT_FLAGS_MASK (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY | PAGE_NOACCESS | PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_GUARD | PAGE_NOCACHE)
+#define ALLOCATION_FLAGS_MASK (MEM_COMMIT | MEM_RESERVE | MEM_RESET | MEM_LARGE_PAGES | MEM_PHYSICAL | MEM_TOP_DOWN | MEM_WRITE_WATCH)
 
-
-int sub_18001D528()
+LPVOID VirtualAlloc_X(
+    LPVOID lpAddress,
+    SIZE_T dwSize,
+    DWORD  flAllocationType,
+    DWORD  flProtect
+)
 {
-    //TODO
-    return 0;
+	flProtect &= PROTECT_FLAGS_MASK;
+	flAllocationType &= ALLOCATION_FLAGS_MASK;
+
+    LPVOID ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
+
+	// backup plan in the case that VirtualAlloc fails despite the flags being masked away
+	if (ret == nullptr)
+	{
+		printf("VirtualAlloc failed with %i, using backup...\n", GetLastError());
+        ret = VirtualAlloc(lpAddress, dwSize, MEM_COMMIT, flProtect);
+	}
+
+    assert(ret != nullptr && "VirtualAlloc should not fail, check proper handling of xbox-one specific memory protection constants.");
+
+	return ret;
 }
-
-INT16 sub_18001D768()
-{
-    //TODO
-    return 0;
-}
-
-int sub_18001D96C(int v2, unsigned short* codePageData, unsigned int p, bool t, long l)
-{
-    //TODO
-    return 0;
-}
-
-__int64 sub_18001BB8C()
-{
-    // I know it should look better if it was initalized at dllmain.cpp but then I can't fix some idiotic errors
-    HMODULE ntdll = LoadLibraryA("ntdll.dll");
-    if (ntdll) {
-        NtAllocateVirtualMemory =
-            (NtAllocateVirtualMemory_t)GetProcAddress(ntdll, "NtAllocateVirtualMemory");
-        NtFreeVirtualMemory =
-            (NtFreeVirtualMemory_t)GetProcAddress(ntdll, "NtFreeVirtualMemory");
-
-        FreeLibrary(ntdll);
-    }
-    /*unsigned int v0; // ebx
-    unsigned __int16* AnsiCodePageData; // rdx
-    int v2; // ecx
-    PVOID v3; // rbx
-    HMODULE v4; // rcx
-
-    v0 = 0;
-    if (!dword_18002B84C)
-    {
-
-        v0 = sub_18001D528();
-        if (!v0)
-        {
-            v0 = sub_18001D768();
-            if (!v0)
-            {
-                // not sure
-                AnsiCodePageData = (unsigned __int16*)NtCurrentTeb()->ProcessEnvironmentBlock->ProcessParameters;
-                v2 = AnsiCodePageData[1];
-                dword_18002BF68 = v2;
-                v0 = sub_18001D96C(v2, AnsiCodePageData, (unsigned int)&P, 0, 0LL);
-                if (!v0)
-                {
-                    RtlAcquireSRWLockExclusive(&unk_18002B838);
-                    qword_18002B828 = sub_18001EB38(127LL);
-                    if (qword_18002B828)
-                    {
-                        RtlReleaseSRWLockExclusive(&unk_18002B838);
-                        qword_18002B990 = 0LL;
-                        qword_18002B980 = 0LL;
-                        word_18002BF64 = 1;
-                        Event = 0LL;
-                        dword_18002B84C = 1;
-                    }
-                    else
-                    {
-                        RtlReleaseSRWLockExclusive(&unk_18002B838);
-                        v3 = gpACPHashN;
-                        v4 = (HMODULE) * ((_QWORD*)gpACPHashN + 8);
-                        if (v4)
-                            FreeLibrary(v4);
-                        RtlFreeHeap(NtCurrentPeb()->ProcessHeap, 0, v3);
-                        gpACPHashN = 0LL;
-                        return 87;
-                    }
-                }
-            }
-        }
-    }
-    return v0;*/
-    return 0;
-}
-
-
-// absolutely temporary implementation I just want to make it work
-// decompilation from ghidra (it looks horrible lol)
-NTSTATUS NlsProcessDestroy(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReserved)
-{
-    char* v0; // rax
-    __int64 v1; // rdi
-    __int64 v2; // rsi
-    char* v3; // rbx
-    HMODULE v4; // rcx
-    char* v5; // rbp
-    char* v6; // rax
-    __int64 v7; // rdi
-    __int64 v8; // rsi
-    char* v9; // r8
-    char* v10; // rbx
-    PVOID v11; // rbx
-    HMODULE v12; // rcx
-    NTSTATUS result; // al
-
-
-    v0 = (char*)TblPtrs;
-    if (TblPtrs)
-    {
-        v1 = 0LL;
-        v2 = 197LL;
-        do
-        {
-            v3 = *(char**)&v0[v1];
-            if (v3)
-            {
-                do
-                {
-                    v4 = (HMODULE)v3[8];
-                    v5 = (char*)v3[9];
-                    if (v4)
-                        FreeLibrary(v4);
-                    HeapFree(GetProcessHeap(), 0, v3);
-                    v3 = v5;
-                } while (v5);
-                v0 = (char*)TblPtrs;
-            }
-            v1 += 8LL;
-            --v2;
-        } while (v2);
-        if (v0)
-            HeapFree(GetProcessHeap(), 0, TblPtrs);
-        TblPtrs = 0LL;
-    }
-    v6 = (char*)P;
-    v7 = 0LL;
-    v8 = 128LL;
-    do
-    {
-        v9 = *(char**)&v6[v7];
-        if (v9)
-        {
-            do
-            {
-                v10 = (char*)v9[10];
-                HeapFree(GetProcessHeap(), 0, v9);
-                v9 = v10;
-            } while (v10);
-            v6 = (char*)P;
-        }
-        v7 += 8LL;
-        --v8;
-    } while (v8);
-    if (v6)
-        HeapFree(GetProcessHeap(), 0, P);
-    P = 0LL;
-    if (P_0)
-        HeapFree(GetProcessHeap(), 0, P_0);
-    v11 = gpACPHashN;
-    P_0 = 0LL;
-    v12 = (HMODULE) * ((char*)gpACPHashN + 8);
-    if (v12)
-        FreeLibrary(v12);
-    result = HeapFree(GetProcessHeap(), 0, v11);
-    gpACPHashN = 0LL;
-    if (hCodePageKey)
-    {
-        result = NtClose(hCodePageKey);
-        hCodePageKey = 0LL;
-    }
-    if (hLocaleKey)
-    {
-        result = NtClose(hLocaleKey);
-        hLocaleKey = 0LL;
-    }
-    if (hAltSortsKey)
-    {
-        result = NtClose(hAltSortsKey);
-        hAltSortsKey = 0LL;
-    }
-    if (hLangGroupsKey)
-    {
-        result = NtClose(hLangGroupsKey);
-        hLangGroupsKey = 0LL;
-    }
-    if (hCustomLocaleKey)
-    {
-        result = NtClose(hCustomLocaleKey);
-        hCustomLocaleKey = 0LL;
-    }
-    if (hExtendedLocaleKey)
-    {
-        result = NtClose(hExtendedLocaleKey);
-        hExtendedLocaleKey = 0LL;
-    }
-    IsNlsProcessInitialized = 0;
-    return result;
-}
-

@@ -1,156 +1,161 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Source Files\ID3D">
-      <UniqueIdentifier>{21a7221a-d303-4d64-98fa-eb1ef76f3c17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ID3D">
-      <UniqueIdentifier>{a66d9c88-9c40-410e-8899-f02975549067}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\IDXGI">
-      <UniqueIdentifier>{cc2a8930-4142-49f7-9b17-f71e472520ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\IDXGI">
-      <UniqueIdentifier>{93367b01-f957-4ef5-82c7-4aab1139fc9c}</UniqueIdentifier>
-    </Filter>
+    <None Include="Exports.def.bak" />
+    <None Include="Exports.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="d3d11_x.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Exports.def">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="d3d_x\d3d_x.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="d3d_x\d3d11_x_device.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IDXGIWrappers.h">
-      <Filter>Header Files\IDXGI</Filter>
-    </ClInclude>
-    <ClInclude Include="ID3DX.h">
-      <Filter>Header Files\ID3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ID3DWrappers.h">
-      <Filter>Header Files\ID3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ID3DDeviceContext.h">
-      <Filter>Header Files\ID3D</Filter>
-    </ClInclude>
-    <ClInclude Include="overlay\overlay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\thirdparty\imgui_impl_uwp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\thirdparty\imgui\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\thirdparty\imgui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\thirdparty\imgui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\thirdparty\imgui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\thirdparty\imgui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\thirdparty\imgui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\thirdparty\imgui\backends\imgui_impl_dx11.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="d3d11_x.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="d3d_x\d3d11_x_device.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IDXGI.h">
-      <Filter>Header Files\IDXGI</Filter>
-    </ClCompile>
-    <ClCompile Include="IDXGIFactoryWrapper.cpp">
-      <Filter>Source Files\IDXGI</Filter>
-    </ClCompile>
-    <ClCompile Include="IDXGIDeviceWrapper.cpp">
-      <Filter>Source Files\IDXGI</Filter>
-    </ClCompile>
-    <ClCompile Include="IDXGIAdapterWrapper.cpp">
-      <Filter>Source Files\IDXGI</Filter>
-    </ClCompile>
-    <ClCompile Include="ID3D11TextureWrapper.cpp">
-      <Filter>Source Files\ID3D</Filter>
-    </ClCompile>
-    <ClCompile Include="IDXGISwapChainWrapper.cpp">
-      <Filter>Source Files\IDXGI</Filter>
-    </ClCompile>
-    <ClCompile Include="ID3D11ViewWrapper.cpp">
-      <Filter>Source Files\ID3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ID3DWrappers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ID3D11BufferWrapper.cpp">
-      <Filter>Source Files\ID3D</Filter>
-    </ClCompile>
-    <ClCompile Include="overlay\overlay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="d3d11_x.cpp" />
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="..\..\thirdparty\imgui_impl_uwp.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\thirdparty\imgui\imgui.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\thirdparty\imgui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\thirdparty\imgui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\thirdparty\imgui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\thirdparty\imgui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\thirdparty\imgui\backends\imgui_impl_dx11.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="device_context_x.cpp">
+      <Filter>wrappers\device_context_x</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_unknown.cpp">
+      <Filter>wrappers\graphics_unknown</Filter>
+    </ClCompile>
+    <ClCompile Include="device_x.cpp">
+      <Filter>wrappers\device_x</Filter>
+    </ClCompile>
+    <ClCompile Include="dxgi_factory.cpp">
+      <Filter>wrappers\dxgi_factory</Filter>
+    </ClCompile>
+    <ClCompile Include="dxgi_swapchain.cpp">
+      <Filter>wrappers\dxgi_swapchain</Filter>
+    </ClCompile>
+    <ClCompile Include="dxgi_adapter.cpp">
+      <Filter>wrappers\dxgi_adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="dxgi_device.cpp">
+      <Filter>wrappers\dxgi_device</Filter>
+    </ClCompile>
+    <ClCompile Include="device_child_x.cpp">
+      <Filter>wrappers\device_child_x</Filter>
+    </ClCompile>
+    <ClCompile Include="overlay\overlay.cpp">
+      <Filter>overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="dxgi_object.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Exports.def.bak" />
+    <ClInclude Include="d3d11_x.h" />
+    <ClInclude Include="..\..\thirdparty\imgui_impl_uwp.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\thirdparty\imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\thirdparty\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\thirdparty\imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\thirdparty\imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\thirdparty\imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\thirdparty\imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\thirdparty\imgui\backends\imgui_impl_dx11.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_unknown.h">
+      <Filter>wrappers\graphics_unknown</Filter>
+    </ClInclude>
+    <ClInclude Include="device_x.h">
+      <Filter>wrappers\device_x</Filter>
+    </ClInclude>
+    <ClInclude Include="dxgi_factory.h">
+      <Filter>wrappers\dxgi_factory</Filter>
+    </ClInclude>
+    <ClInclude Include="dxgi_swapchain.h">
+      <Filter>wrappers\dxgi_swapchain</Filter>
+    </ClInclude>
+    <ClInclude Include="dxgi_adapter.h">
+      <Filter>wrappers\dxgi_adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="dxgi_device.h">
+      <Filter>wrappers\dxgi_device</Filter>
+    </ClInclude>
+    <ClInclude Include="device_child_x.h">
+      <Filter>wrappers\device_child_x</Filter>
+    </ClInclude>
+    <ClInclude Include="device_context_x.h">
+      <Filter>wrappers\device_context_x</Filter>
+    </ClInclude>
+    <ClInclude Include="view.hpp">
+      <Filter>wrappers\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.hpp">
+      <Filter>wrappers\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="overlay\overlay.h">
+      <Filter>overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="dxgi_object.hpp">
+      <Filter>wrappers\shared</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{05dbf885-3dd2-475f-8171-033a782575c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers">
+      <UniqueIdentifier>{39b32424-9e02-45ef-aa1d-35d2c826c195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\device_context_x">
+      <UniqueIdentifier>{1a6f44de-5d28-438f-979d-fa49751b49b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\device_x">
+      <UniqueIdentifier>{8b45d36f-f82a-42a4-9ab4-49cd5f4e84f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\dxgi_swapchain">
+      <UniqueIdentifier>{fa3c5ff2-f1d3-47ab-b788-aeae8b5b1fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\dxgi_adapter">
+      <UniqueIdentifier>{779f96ac-8cf1-454a-b925-af90d267f050}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\dxgi_device">
+      <UniqueIdentifier>{04a867f6-7f1f-46a0-90ee-c8b5406ecb04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\shared">
+      <UniqueIdentifier>{4da0bfed-551b-45f1-81fc-f183c0e9d847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\graphics_unknown">
+      <UniqueIdentifier>{2afc72a9-22d2-49a6-a611-f539527d3e1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\device_child_x">
+      <UniqueIdentifier>{e284d976-b304-4e1e-98ef-7a22d8eeaa8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrappers\dxgi_factory">
+      <UniqueIdentifier>{a326eddd-f6a8-4e01-bd0b-6c5b91adf983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="overlay">
+      <UniqueIdentifier>{c54987f8-e8bd-47e3-8940-2740f44a8f49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

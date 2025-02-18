@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "overlay.h"
+
 #include "../../../thirdparty/imgui/imgui.h"
 #include "../../../thirdparty/imgui/backends/imgui_impl_dx11.h"
 #include "../../../thirdparty/imgui_impl_uwp.h"

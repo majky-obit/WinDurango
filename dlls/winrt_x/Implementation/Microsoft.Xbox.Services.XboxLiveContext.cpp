@@ -4,6 +4,7 @@
 #include "Microsoft.Xbox.Services.Presence.PresenceService.h"
 #include "Microsoft.Xbox.Services.XboxLiveContext.g.cpp"
 #include "Microsoft.Xbox.Services.Multiplayer.MultiplayerService.h"
+#include "Microsoft.Xbox.Services.RealTimeActivity.RealTimeActivityService.h"
 #include "Microsoft.Xbox.Services.Social.SocialService.h"
 #include "Microsoft.Xbox.Services.UserStatistics.UserStatisticsService.h"
 
@@ -83,8 +84,7 @@ namespace winrt::Microsoft::Xbox::Services::implementation
     }
     winrt::Microsoft::Xbox::Services::RealTimeActivity::RealTimeActivityService XboxLiveContext::RealTimeActivityService()
     {
-        printf("!!!!! Microsoft.Xbox.Services.XboxLiveContext [RealTimeActivityService] NOT IMPLEMENTED !!!!\n");
-        throw hresult_not_implemented();
+		return winrt::make<RealTimeActivity::implementation::RealTimeActivityService>( );
     }
     winrt::Microsoft::Xbox::Services::Presence::PresenceService XboxLiveContext::PresenceService()
     {
