@@ -1,21 +1,4 @@
 #pragma once
-
-typedef NTSTATUS(NTAPI* NtAllocateVirtualMemory_t)(
-	HANDLE ProcessHandle,
-	PVOID* BaseAddress,
-	ULONG_PTR ZeroBits,
-	PSIZE_T RegionSize,
-	ULONG AllocationType,
-	ULONG Protect
-	);
-
-typedef NTSTATUS(NTAPI* NtFreeVirtualMemory_t)(
-	HANDLE ProcessHandle,
-	PVOID* BaseAddress,
-	PSIZE_T RegionSize,
-	ULONG FreeType
-	);
-
 // THE VALUES FOR NAMES ARE GUESSED, BUT NAMES ARE CORRECT (THAT HOW ENUM SHOULD LOOK LIKE)
 enum CONSOLE_TYPE {
 	CONSOLE_TYPE_XBOX_ONE = 1,
@@ -23,7 +6,27 @@ enum CONSOLE_TYPE {
 	CONSOLE_TYPE_XBOX_ONE_X = 3,
 	CONSOLE_TYPE_XBOX_ONE_X_DEVKIT = 4
 };
+static CRITICAL_SECTION XMemSetAllocationHooksLock_X;
+extern HANDLE XmpHeaps[32];
+extern int XmpHeapPageTypes[16];
+extern const int XmpHeapAllocationTypes[16];
+#define JOB_INFO_SIZE 0x38 // JobInformation size in bytes
+#ifndef _XMP_ALLOCATION_HOOK_LOCK_DEFINED_
+#define _XMP_ALLOCATION_HOOK_LOCK_DEFINED_
+// Define the structure for the critical section lock
+typedef struct _XmpAllocationHookLock {
+	PRTL_CRITICAL_SECTION_DEBUG DebugInfo;
+	LONG LockCount;
+	LONG RecursionCount;
+	HANDLE OwningThread;
+	HANDLE LockSemaphore;
+	ULONG_PTR SpinCount;
+} XmpAllocationHookLock_t;
 
+// Declare global variables (extern means they are defined elsewhere)
+extern XmpAllocationHookLock_t XmpAllocationHookLock;
+extern RTL_CRITICAL_SECTION_DEBUG XmpAllocationHookLock_DEBUG;
+#endif // _XMP_ALLOCATION_HOOK_LOCK_DEFINED_
 typedef struct _SYSTEMOSVERSIONINFO {
 	UINT8 MajorVersion;
 	UINT8 MinorVersion;
@@ -57,9 +60,5 @@ typedef struct _TITLEMEMORYSTATUS {
 	DWORDLONG ullTitleUsed;
 	DWORDLONG ullTitleAvail;
 } TITLEMEMORYSTATUS, * PTITLEMEMORYSTATUS, * LPTITLEMEMORYSTATUS;
-
-__int64 sub_18001BB8C();
-
-NTSTATUS sub_18001BCA0(HINSTANCE hInstance, DWORD forwardReason, LPVOID lpvReserved);
 
 static CRITICAL_SECTION XMemSetAllocationHooksLock_X;
