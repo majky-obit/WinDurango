@@ -107,7 +107,13 @@ typedef enum DXGIX_VLINECOUNTER
 //    UINT ESRAMOffsetBytes;
 //    UINT ESRAMUsageBytes;
 //};
-
+HRESULT __stdcall DeviceIoControlHelper(HANDLE hDevice);
+HRESULT __stdcall VdMapAddressToEsram(
+    HANDLE hDevice,
+    DWORD flags,
+    uintptr_t virtualAddress,
+    UINT numPages,
+    const UINT* pageList);
 
 typedef enum WDEVENT_TYPE : int
 {

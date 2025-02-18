@@ -1,8 +1,68 @@
 #include "pch.h"
+#include "../common/common.h"
+#include "../common/debug.h"
 
-NtAllocateVirtualMemory_t NtAllocateVirtualMemory;
-NtFreeVirtualMemory_t NtFreeVirtualMemory;
+uint32_t dword_180021AA0[16];
+uint32_t dword_180021A60[16];
+int64_t qword_18002C7E0[34];
+HANDLE HeapHandle;
+// Global function pointers for memory allocation and deallocation
+PVOID(__fastcall* XmpAllocRoutine)(SIZE_T, uint64_t) = nullptr;
+BOOLEAN(__stdcall* XmpFreeRoutine)(PVOID, uint64_t) = nullptr;
+// Define the global critical section lock
+XmpAllocationHookLock_t XmpAllocationHookLock = {
+    &XmpAllocationHookLock_DEBUG, // Pointer to debug info
+    -1,                           // LockCount (unowned)
+    0,                            // RecursionCount
+    0,                            // OwningThread
+    0,                            // LockSemaphore
+    0x4000000                     // SpinCount (high-performance)
+};
 
+// Define the debug info structure (can be initialized later if needed)
+RTL_CRITICAL_SECTION_DEBUG XmpAllocationHookLock_DEBUG = { 0 };
+
+
+// Define the global variables here (only once)
+void* XmpHeaps[32] = { 0 };
+
+int XmpHeapPageTypes[16] = {
+    PAGE_READWRITE,         // 0 - Standard heap memory
+    PAGE_READWRITE,         // 1 - General memory use
+    PAGE_READWRITE,         // 2 - Shared memory
+    0,                      // 3 - Unused/invalid
+    PAGE_READWRITE,         // 4 - Standard heap allocation
+    PAGE_READWRITE,         // 5 - Memory-mapped I/O
+    PAGE_READWRITE,         // 6 - Stack allocation
+    0,                      // 7 - Unused/invalid
+    PAGE_READWRITE,         // 8 - System memory allocation
+    0,                      // 9 - Unused
+    PAGE_EXECUTE_READ,      // 10 - Executable code memory
+    0,                      // 11 - Unused
+    PAGE_READWRITE,         // 12 - Shared heap
+    0,                      // 13 - Unused
+    PAGE_READWRITE,         // 14 - Custom memory pool
+    0                       // 15 - Reserved
+};
+
+const int XmpHeapAllocationTypes[16] = {
+    MEM_COMMIT | MEM_RESERVE,   // 0: Standard committed memory
+    MEM_LARGE_PAGES,            // 1: Large page allocation (if supported)
+    MEM_COMMIT,                 // 2: Committed memory only
+    MEM_RESERVE,                // 3: Reserved memory (uncommitted)
+    MEM_TOP_DOWN,               // 4: Allocate from highest address
+    MEM_WRITE_WATCH,            // 5: Write-watched memory pages
+    MEM_COMMIT | MEM_TOP_DOWN,  // 6: Committed with top-down allocation
+    MEM_RESERVE | MEM_TOP_DOWN, // 7: Reserved with top-down allocation
+    MEM_PHYSICAL,               // 8: Physical memory mapping
+    MEM_RESET,                  // 9: Reset memory (discards data)
+    MEM_RESET_UNDO,             // 10: Undo memory reset
+    MEM_LARGE_PAGES | MEM_COMMIT, // 11: Large Pages with Commit
+    MEM_MAPPED,                 // 12: Mapped memory
+    MEM_PRIVATE,                // 13: Private memory allocation
+    MEM_COMMIT | MEM_LARGE_PAGES, // 14: Large Pages with Commit (alt)
+    MEM_COMMIT | MEM_RESERVE | MEM_TOP_DOWN // 15: Fully committed, reserved, top-down
+};
 //Ignoring this as for now (just hope it's not being used and it's not useful.)
 __int64 NlsUpdateLocale_X() {
     return 0();
@@ -20,76 +80,43 @@ BOOL __stdcall WaitOnAddress_X(volatile void* Address, PVOID CompareAddress, SIZ
 {
     return WaitOnAddress(Address, CompareAddress, AddressSize, dwMilliseconds);
 }
-
-BOOL ToolingMemoryStatus_X(LPTOOLINGMEMORYSTATUS buffer)
-{
-    __int64 SystemInformation[4];
-
-    if (buffer->dwLength != 40)
-    {
-        SetLastError(0x57u);
+BOOL JobTitleMemoryStatus_X(void* pJob, LPTITLEMEMORYSTATUS Buffer) {
+    __int64 jobInfo[7]; // Buffer to store job object memory information
+    NTSTATUS status;
+    DEBUG_PRINT();
+    // Validate input parameters
+    if (!pJob || !Buffer || Buffer->dwLength != sizeof(TITLEMEMORYSTATUS)) {
+        SetLastError(ERROR_INVALID_PARAMETER);
         return FALSE;
     }
 
-    NTSTATUS Status = NtQuerySystemInformation((SYSTEM_INFORMATION_CLASS)(0x96 | 0x80), SystemInformation, 0x20u, 0i64);
-    if (!NT_SUCCESS(Status))
-    {
-        SetLastError(Status);
+    // Query job memory information
+    status = QueryInformationJobObject(pJob, (JOBOBJECTINFOCLASS)(JobObjectGroupInformation | 0x10), jobInfo, JOB_INFO_SIZE, NULL);
+    if (status < 0) {
+        RtlSetLastWin32ErrorAndNtStatusFromNtStatus(status);
         return FALSE;
     }
 
-    buffer->ullTotalMem = SystemInformation[0];
-    buffer->ullAvailMem = SystemInformation[1];
-    buffer->ulPeakUsage = SystemInformation[2];
-    buffer->ullPageTableUsage = SystemInformation[3];
+    // Extract job memory stats
+    DWORDLONG totalMem = jobInfo[0];
+    DWORDLONG usedMem = jobInfo[1];
+    DWORDLONG peakLegacy = jobInfo[2];
+    DWORDLONG totalLegacy = jobInfo[3];
+    DWORDLONG limitLegacy = jobInfo[4];
+    DWORDLONG currentTitle = jobInfo[5];
+    DWORDLONG peakTitle = jobInfo[6];
 
-    return TRUE;
+    // Populate TITLEMEMORYSTATUS structure
+    Buffer->ullTotalMem = totalMem;
+    Buffer->ullAvailMem = totalMem - usedMem;
+    Buffer->ullLegacyUsed = peakLegacy;
+    Buffer->ullLegacyPeak = totalLegacy;
+    Buffer->ullLegacyAvail = limitLegacy - peakLegacy;
+    Buffer->ullTitleUsed = currentTitle;
+    Buffer->ullTitleAvail = peakTitle - currentTitle;
+
+    return TRUE; // Success
 }
-
-BOOL TitleMemoryStatus_X(LPTITLEMEMORYSTATUS Buffer)
-{
-    __int64 ProcessInformation[10]; // [rsp+30h] [rbp-68h] BYREF
-
-    if (Buffer->dwLength != 80)
-    {
-        SetLastError(0x57u);
-        return false;
-    }
-
-    NTSTATUS Status = NtQueryInformationProcess(
-        (HANDLE)0xFFFFFFFFFFFFFFFFi64,
-        (PROCESSINFOCLASS)(0x3A | 0x3A),
-        ProcessInformation,
-        0x48u,
-        0i64);
-
-    if (!NT_SUCCESS(Status))
-    {
-        SetLastError(Status);
-        return FALSE;
-    }
-
-    Buffer->ullTotalMem = ProcessInformation[0];
-    Buffer->ullAvailMem = ProcessInformation[0] - ProcessInformation[1];
-
-    Buffer->ullLegacyUsed = ProcessInformation[2];
-    Buffer->ullAvailMem = ProcessInformation[4] - ProcessInformation[2];
-
-    Buffer->ullTitleUsed = ProcessInformation[5];
-    Buffer->ullTitleUsed = ProcessInformation[5] - ProcessInformation[6];
-
-    //// @Patoke todo: what is this doing? it's writing outside the bounds of TITLEMEMORYSTATUS
-    //*(DWORD*)((uint8_t*)Buffer + 64) = ProcessInformation[7];
-    //*(DWORD*)((uint8_t*)Buffer + 72) = ProcessInformation[8];
-
-    // equivalent to the previous code
-    auto* nextBuffer = Buffer++;
-    nextBuffer->dwLength = ProcessInformation[7];
-    nextBuffer->dwReserved = ProcessInformation[8];
-
-    return TRUE;
-}
-
 // We ignore setting this as we actually don't care about this.
 bool SetThreadpoolAffinityMask_X()
 {
@@ -130,43 +157,6 @@ void QueryProcessorSchedulingStatistics_X(PPROCESSOR_SCHEDULING_STATISTICS Proce
     ProcessorSchedulingStatistics->IdleTime = __ull_rshift(cpuInfo[3], cpuInfo[2]); // EDX (RDX), ECX (RCX)
 }
 
-BOOL JobTitleMemoryStatus_X(void* pJob, LPTITLEMEMORYSTATUS Buffer)
-{
-    __int64 JobInformation[10]; // [rsp+30h] [rbp-68h] BYREF
-
-    if (Buffer->dwLength != 80)
-    {
-        SetLastError(0x57u);
-        return FALSE;
-    }
-
-    NTSTATUS Status = QueryInformationJobObject(pJob, (JOBOBJECTINFOCLASS)(JobObjectGroupInformation | 0x10), JobInformation, 0x48u, 0i64);
-    if (!NT_SUCCESS(Status))
-    {
-        SetLastError(Status);
-        return FALSE;
-    }
-
-    Buffer->ullTotalMem = JobInformation[0];
-    Buffer->ullAvailMem = JobInformation[0] - JobInformation[1];
-
-    Buffer->ullLegacyUsed = JobInformation[2];
-    Buffer->ullAvailMem = JobInformation[4] - JobInformation[2];
-
-    Buffer->ullTitleUsed = JobInformation[5];
-    Buffer->ullTitleUsed = JobInformation[5] - JobInformation[6];
-
-    //// @Patoke todo: what is this doing? it's writing outside the bounds of TITLEMEMORYSTATUS
-    //*(DWORD*)((uint8_t*)Buffer + 64) = JobInformation[7];
-    //*(DWORD*)((uint8_t*)Buffer + 72) = JobInformation[8];
-
-    // equivalent to the previous code
-    auto* nextBuffer = Buffer++;
-    nextBuffer->dwLength = JobInformation[7];
-    nextBuffer->dwReserved = JobInformation[8];
-
-    return TRUE;
-}
 
 BOOL GetThreadName_X(HANDLE hThread, PWSTR lpThreadName, SIZE_T nBufferLength, SIZE_T* pnRequiredLength)
 {
@@ -251,17 +241,136 @@ CONSOLE_TYPE GetConsoleType_X() {
     return CONSOLE_TYPE::CONSOLE_TYPE_XBOX_ONE_X_DEVKIT;
 }
 
-uint32_t dword_180021AA0[16];
-uint32_t dword_180021A60[16];
-int64_t qword_18002C7E0[34];
-HANDLE HeapHandle;
+PVOID __fastcall XMemAllocDefault_X(SIZE_T dwSize, uint64_t flags)
+{
+    if (dwSize == 0) {
+        return NULL;
+    }
 
+    SIZE_T regionSize = dwSize;
+    PVOID baseAddress = NULL;
+    unsigned int allocType;
+    HANDLE titleHeap;
+    ULONG protectFlags;
+    int allocationFlags;
 
-void XMemFreeDefault_X(PVOID pADDRESS, uint64_t dwAllocAttributes) {
-	// note from unixian: previous implementation used invalid handle, Alloc uses malloc, so we use free here
-	// this SHOULD be replaced with a proper reversal of xmem, but for now, this *should* be fine
-	free(pADDRESS);
+    // Determine heap index
+    unsigned int heapIndex = (flags >> 29) & 0xF;
+    if (!XmpHeapPageTypes[heapIndex]) {
+        return NULL;
+    }
+
+    // Check allocation type
+    if (XmpHeapAllocationTypes[heapIndex] != 0x10000000) {
+        unsigned int heapFlags = flags >> 24;
+        if ((flags & 0x1F) <= 4) {
+            allocType = 32;  // Standard heap allocation
+            if ((flags & 0xC000) == 0) {
+                goto allocate_heap;
+            }
+        }
+        allocType = 33;  // Virtual memory allocation
+    }
+    else {
+        allocType = heapIndex;
+        if ((flags & 0xC000) < 0x4000) {
+            flags |= 0x4000;
+        }
+
+        unsigned int flagBits = flags & 0x1F;
+        if (flagBits > 0x10 || dwSize > 0x20000) {
+            allocType = 33;  // Virtual allocation
+        }
+        else if (flagBits > 0xC || dwSize > 0xF00) {
+            allocType |= 0x10;
+        }
+    }
+
+allocate_heap:
+
+    if (allocType == 32) {  // Heap allocation
+        titleHeap = HeapCreate(0, 0, 0x80002u);
+        return titleHeap ? HeapAlloc(titleHeap, 0, regionSize) : NULL;
+    }
+
+    if (allocType == 33) {  // Virtual memory allocation
+        int memFlag = MEM_COMMIT | MEM_RESERVE;
+        switch (flags >> 14) {
+        case 1: memFlag = MEM_LARGE_PAGES; break;
+        case 2: memFlag = MEM_PHYSICAL; break;
+        }
+
+        allocationFlags = XmpHeapAllocationTypes[heapIndex] | memFlag;
+        protectFlags = XmpHeapPageTypes[heapIndex];
+
+        if (allocationFlags & 0x400000) {
+            allocationFlags &= ~0x400000;
+            if (!(flags >> 14)) {
+                allocationFlags |= MEM_TOP_DOWN;
+            }
+        }
+
+        baseAddress = VirtualAlloc(NULL, regionSize, allocationFlags, protectFlags);
+        if (baseAddress != NULL) {
+            return baseAddress;
+        }
+    }
+
+    HANDLE heapHandle = XmpHeaps[allocType];
+    if (!heapHandle) {
+        heapHandle = (HANDLE)HeapCreate(HEAP_NO_SERIALIZE, 0, 0);
+        XmpHeaps[allocType] = heapHandle;
+    }
+
+    return heapHandle ? HeapAlloc(heapHandle, 0, regionSize) : NULL;
 }
+BOOLEAN __stdcall XMemFreeDefault_X(PVOID pAddress, uint64_t dwAllocAttributes) {
+    if (!pAddress) {
+        return FALSE; // Avoid processing NULL pointers
+    }
+    DEBUGPRINT();
+    uint64_t allocTypeIndex = (dwAllocAttributes >> 29) & 0xF;
+    PVOID baseAddress = pAddress;
+    ULONG_PTR regionSize = 0;
+
+    // Case 1: Freeing memory allocated using the title heap
+    if (!XmpHeapAllocationTypes[allocTypeIndex] &&
+        (dwAllocAttributes & 0x1F000000u) <= 0x4000000u &&
+        !(dwAllocAttributes & 0xC000))
+    {
+        static HANDLE XmpTitleHeap = NULL;
+        if (!XmpTitleHeap) {
+            XmpTitleHeap = HeapCreate(0, 0, 0x80002u);
+        }
+        return (XmpTitleHeap && pAddress) ? HeapFree(XmpTitleHeap, 0, pAddress) : FALSE;
+    }
+
+    // Case 2: Try to locate the correct heap in XmpHeaps
+    void* heapRegion = XmpHeaps[allocTypeIndex];
+    if (!heapRegion ||
+        !(*(PVOID*)((uintptr_t)heapRegion + 48)) ||
+        (*(PVOID*)((uintptr_t)heapRegion + 48) > pAddress) ||
+        (*(PVOID*)((uintptr_t)heapRegion + 56) < pAddress))
+    {
+        heapRegion = XmpHeaps[allocTypeIndex + 16];
+        if (!heapRegion ||
+            !(*(PVOID*)((uintptr_t)heapRegion + 48)) ||
+            (*(PVOID*)((uintptr_t)heapRegion + 48) > pAddress) ||
+            (*(PVOID*)((uintptr_t)heapRegion + 56) < pAddress))
+        {
+            heapRegion = NULL;
+        }
+    }
+
+    // Case 3: If a valid heap was found, free the memory using HeapFree
+    if (heapRegion) {
+        return HeapFree(heapRegion, 0, pAddress);
+    }
+
+    // Case 4: If no heap was found, free virtual memory using VirtualFree
+    return VirtualFree(baseAddress, 0, MEM_RELEASE);
+}
+
 
 void XMemFree_X(PVOID pADDRESS, uint64_t dwAllocAttributes) {
     XMemFreeDefault_X(pADDRESS, dwAllocAttributes);
@@ -272,48 +381,34 @@ void XMemFree_X(PVOID pADDRESS, uint64_t dwAllocAttributes) {
 typedef void* PVOID;
 #endif
 
-PVOID XMemAllocDefault_X(SIZE_T dwSize, uint64_t flags) {
-    PVOID ptr = nullptr;
-    // Example flag usage: we assume if the highest bit of flags is set, we zero the memory.
-    bool shouldZeroMemory = (flags & (1ULL << 63)) != 0;
 
-    // Allocate memory
-    ptr = malloc(dwSize);
-
-    // Optionally zero out the memory if the flag is set
-    if (ptr && shouldZeroMemory) {
-        memset(ptr, 0, dwSize);
-    }
-
-    return ptr;
-}
 
 PVOID XMemAlloc_X(SIZE_T dwSize, uint64_t flags) {
     return XMemAllocDefault_X(dwSize, flags);
 }
 
-static decltype(&XMemAlloc_X) XMemAllocRoutine_X;
-static decltype(&XMemFree_X) XMemFreeRoutine_X;
-
-void XMemSetAllocationHooks_X(decltype(&XMemAlloc_X) Alloc, decltype(&XMemFree_X) Free)
+NTSTATUS __fastcall XMemSetAllocationHooks_X(PVOID(__fastcall* XMemAlloc)(SIZE_T, uint64_t), BOOLEAN(__stdcall* XMemFree)(PVOID, uint64_t))
 {
-    if (XMemSetAllocationHooksLock_X.OwningThread == 0) {
-        InitializeCriticalSection(&XMemSetAllocationHooksLock_X);
+    // Enter critical section using direct WinAPI
+    EnterCriticalSection((LPCRITICAL_SECTION)&XmpAllocationHookLock);
+
+    if (XMemAlloc)
+    {
+        // Set custom memory management functions
+        XmpAllocRoutine = XMemAlloc;
+        XmpFreeRoutine = XMemFree;
+    }
+    else
+    {
+        // Use default memory functions
+        XmpAllocRoutine = XMemAllocDefault_X;
+        XmpFreeRoutine = XMemFreeDefault_X;
     }
 
-    EnterCriticalSection(&XMemSetAllocationHooksLock_X);
+    // Leave critical section using direct WinAPI
+    LeaveCriticalSection((LPCRITICAL_SECTION)&XmpAllocationHookLock);
 
-    if (Alloc) {
-        XMemAllocRoutine_X = Alloc;
-        XMemFreeRoutine_X = Free;
-    }
-    else {
-        XMemAllocRoutine_X = &XMemAllocDefault_X;
-        XMemFreeRoutine_X = &XMemFreeDefault_X;
-    }
-
-    LeaveCriticalSection(&XMemSetAllocationHooksLock_X);
-
+    return STATUS_SUCCESS;
 }
 
 #define PROTECT_FLAGS_MASK (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY | PAGE_NOACCESS | PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_GUARD | PAGE_NOCACHE)
@@ -341,4 +436,61 @@ LPVOID VirtualAlloc_X(
     assert(ret != nullptr && "VirtualAlloc should not fail, check proper handling of xbox-one specific memory protection constants.");
 
 	return ret;
+}
+BOOL ToolingMemoryStatus_X(LPTOOLINGMEMORYSTATUS buffer)
+{
+    DEBUG_PRINT();
+    __int64 SystemInformation[4];
+
+    if (buffer->dwLength != 40)
+    {
+        SetLastError(0x57u);
+        return FALSE;
+    }
+
+    NTSTATUS Status = NtQuerySystemInformation((SYSTEM_INFORMATION_CLASS)(0x96 | 0x80), SystemInformation, 0x20u, 0i64);
+    if (!NT_SUCCESS(Status))
+    {
+        SetLastError(Status);
+        return FALSE;
+    }
+
+    buffer->ullTotalMem = SystemInformation[0];
+    buffer->ullAvailMem = SystemInformation[1];
+    buffer->ulPeakUsage = SystemInformation[2];
+    buffer->ullPageTableUsage = SystemInformation[3];
+
+    return TRUE;
+}
+//Vodka Doc: 1 to 1 copy from the original function
+BOOL __stdcall TitleMemoryStatus_X(PTITLEMEMORYSTATUS Buffer) {
+    DEBUG_PRINT();
+    if (!Buffer || Buffer->dwLength != sizeof(TITLEMEMORYSTATUS)) {
+        SetLastError(ERROR_INVALID_PARAMETER);
+        return FALSE;
+    }
+
+    NTSTATUS status;
+    DWORDLONG ProcessInformation[7] = { 0 };
+    status = NtQueryInformationProcess(
+        GetCurrentProcess(),
+        (PROCESSINFOCLASS)(0x3A | 0x3A),
+        &ProcessInformation,
+        sizeof(ProcessInformation),
+        NULL);
+
+    if (status < 0) {
+        RtlSetLastWin32ErrorAndNtStatusFromNtStatus(status);
+        return FALSE;
+    }
+
+    Buffer->ullTotalMem = ProcessInformation[0];
+    Buffer->ullAvailMem = ProcessInformation[0] - ProcessInformation[1];
+    Buffer->ullLegacyUsed = ProcessInformation[2];
+    Buffer->ullLegacyAvail = ProcessInformation[4] - ProcessInformation[2];
+    Buffer->ullLegacyPeak = ProcessInformation[3];
+    Buffer->ullTitleUsed = ProcessInformation[5];
+    Buffer->ullTitleAvail = ProcessInformation[6] - ProcessInformation[5];
+
+    return TRUE;
 }
