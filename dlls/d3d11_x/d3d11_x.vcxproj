@@ -65,7 +65,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d10.lib;d3d11.lib;dxgi.lib;%(AdditionalDependencies);runtimeobject.lib;onecore.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d10.lib;d3d11.lib;d3d12.lib;dxgi.lib;%(AdditionalDependencies);runtimeobject.lib;onecore.lib</AdditionalDependencies>
       <ModuleDefinitionFile>Exports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>

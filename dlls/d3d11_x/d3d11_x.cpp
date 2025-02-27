@@ -3,9 +3,10 @@
 #include <mutex>
 #include "overlay/overlay.h"
 #include <d3d11.h>
-
+#include <d3d12.h>
 #include "device_context_x.h"
 #include "device_x.h"
+#include "wrl.h"
 
 HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11DeviceContext** ppImmediateContext)
 {
@@ -48,6 +49,8 @@ HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11Device
 }
 
 #include "../common/debug.h"
+#include <wrl/client.h>
+#include <iostream>
 
 HRESULT _stdcall D3DQuerySEQCounters_X(D3D_SEQ_COUNTER_DATA* pData)
 {
@@ -79,7 +82,15 @@ HRESULT __stdcall D3D11XCreateDeviceXAndSwapChain1_X(const D3D11X_CREATE_DEVICE_
 
     DEBUGPRINT("!!! Game is trying to initialize D3D11 through D3D11X !!!");
     DEBUGPRINT("SDK Version: %d\n", pParameters->Version);
-    return D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
+
+    HRESULT hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
+
+    if (FAILED(hr))
+    {
+        DEBUGPRINT("!!!D3D11XCreateDeviceXAndSwapChain1_X failed!!!");
+    }
+
+    return hr;
 }
 
 HRESULT __stdcall D3DAllocateGraphicsMemory_X(SIZE_T SizeBytes, SIZE_T AlignmentBytes, UINT64 DesiredGpuVirtualAddress, UINT Flags, void** ppAddress)
@@ -135,36 +146,18 @@ HRESULT __stdcall D3DFreeGraphicsMemory_X(void* pAddress)
 
 HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags, VOID* pVirtualAddress, UINT NumPages, const UINT* pPageList)
 {
-    printf("NOT IMPLEMENTED: D3DMapEsramMemory_X was called!!!\n");
+    DEBUGPRINT( );
+    
+    //Rodrigo Todescatto: This will allocate 4mb of RAM as a stub.
+    VirtualAlloc(pVirtualAddress, 0x3D0900, MEM_COMMIT, PAGE_READWRITE);
 
-    return E_NOTIMPL;
-}
-
-HRESULT __stdcall DeviceIoControlHelper(HANDLE hDevice)
-{
-    DWORD bytesReturned = 0;
-
-    // Check if the handle is invalid
-    if (hDevice == INVALID_HANDLE_VALUE)
-        return HRESULT_FROM_WIN32(ERROR_INVALID_HANDLE); // 2147942487 (0x80070006)
-
-    // Perform the DeviceIoControl operation
-    if (DeviceIoControl(hDevice, 0x7900C190u, nullptr, 0, nullptr, 0, &bytesReturned, nullptr))
+    if (pPageList == 0)
     {
-        return (bytesReturned != 0) ? E_FAIL : S_OK; // 0x80004005 (Generic failure) if bytesReturned is not zero
+        VirtualFree(pVirtualAddress, 0x3D0900, MEM_RELEASE);
     }
 
-    // Get last error if DeviceIoControl fails
-    DWORD lastError = GetLastError( );
-    if (lastError > 0)
-    {
-        return HRESULT_FROM_WIN32(lastError);
-    }
-
-    return lastError;
+    return S_OK;
 }
-
-
 
 HRESULT __stdcall DXGIXGetFrameStatistics_X(
     _In_ UINT NumberFramesRequested,
@@ -181,7 +174,7 @@ HRESULT _stdcall DXGIXPresentArray_X(
     _In_ IDXGISwapChain1* const* ppSwapChain,
     _In_ const DXGIX_PRESENTARRAY_PARAMETERS* pPresentParameters)
 {
-    DEBUGPRINT("[d3d11_x] !!! STUBBED: DXGIXPresentArray !!!");
+    DEBUGPRINT();
     return E_NOTIMPL;
 }
 

@@ -3,12 +3,27 @@
 #include "resource.hpp"
 #include "view.hpp"
 #include <iostream>
+#include "d3d11_x.h"
 
 HRESULT wd::device_x::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Buffer** ppBuffer)
 {
+	auto pDesc2 = *pDesc;
+	pDesc2.MiscFlags &= D3D11_MISC_FLAGS_MASK;
+
+	if (pDesc->MiscFlags != 0x0 && pDesc->MiscFlags != 0x20000 && pDesc->MiscFlags != 0x40000 && pDesc->MiscFlags != 0x20 && pDesc->MiscFlags != 0x20020 && pDesc->MiscFlags != 0x40)
+	{
+		printf("[CreateBuffer] Unknown pDesc->MiscFlags flag!!! Value: 0x%llX\n", pDesc->MiscFlags);
+	}
+
+	if (pDesc->MiscFlags == 0x20020)
+	{
+		D3DMapEsramMemory_X(0, &pInitialData, 512, (const UINT*) 0x200);
+		pDesc2.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+	}
+
 	ID3D11Buffer* buffer = nullptr;
-	HRESULT hr = wrapped_interface->CreateBuffer(pDesc, pInitialData, &buffer);
+	HRESULT hr = wrapped_interface->CreateBuffer(&pDesc2, pInitialData, &buffer);
 
 	if (ppBuffer != nullptr)
 	{
@@ -37,11 +52,46 @@ HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D
 HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Texture2D** ppTexture2D)
 {
-	//Rodrigo Todescatto: SampleDesc.Quality is kind of obsolete nowadays.
-	const_cast<D3D11_TEXTURE2D_DESC*>(pDesc)->SampleDesc.Quality = 0;
+	if (pDesc->MiscFlags != 0x0 && pDesc->MiscFlags != 0x20000 && pDesc->MiscFlags != 0x40000 && pDesc->MiscFlags != 0x20)
+	{
+		printf("[CreateTexture2D] Unknown pDesc->MiscFlags flag!!! Value: 0x%llX\n", pDesc->MiscFlags);
+	}
+
+	auto pDesc2 = *pDesc;
+	pDesc2.MiscFlags &= D3D11_MISC_FLAGS_MASK;
+
+	if (pDesc->MiscFlags & D3D11_RESOURCE_MISC_TILE_POOL_X)
+	{
+		pDesc2.MiscFlags |= D3D11_RESOURCE_MISC_TILE_POOL;
+		pInitialData = NULL;
+		pDesc2.BindFlags = 0;
+	}
+	if (pDesc->MiscFlags & D3D11_RESOURCE_MISC_TILED_X)
+	{
+		pDesc2.MiscFlags |= D3D11_RESOURCE_MISC_TILED;
+		pInitialData = NULL;
+		pDesc2.BindFlags = 0;
+	}
+
+	if (pDesc->MiscFlags == 0x40000)
+	{
+		pDesc2.MiscFlags = 0;
+	}
+
+	if (pDesc->MiscFlags == D3D11X_RESOURCE_MISC_ESRAM_RESIDENT)
+	{
+		D3DMapEsramMemory_X(0, &pInitialData, 512, (const UINT*)0x200);
+		pDesc2.MiscFlags = 0;
+	}
+
+	if (pDesc->SampleDesc.Count > 1)
+	{
+		pDesc2.MiscFlags = 0;
+	}
 
 	ID3D11Texture2D* texture2d = nullptr;
-	HRESULT hr = wrapped_interface->CreateTexture2D(pDesc, pInitialData, &texture2d);
+
+ 	HRESULT hr = wrapped_interface->CreateTexture2D(&pDesc2, pInitialData, &texture2d);
 
 	printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
 
@@ -57,6 +107,7 @@ HRESULT wd::device_x::CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D
 	ID3D11Texture3D** ppTexture3D)
 {
 	ID3D11Texture3D* texture3d = nullptr;
+
 	HRESULT hr = wrapped_interface->CreateTexture3D(pDesc, pInitialData, &texture3d);
 
 	printf("[CreateTexture3D] created texture at 0x%llX\n", texture3d);
@@ -238,52 +289,41 @@ HRESULT wd::device_x::CreatePlacementBuffer(const D3D11_BUFFER_DESC* pDesc, void
 HRESULT wd::device_x::CreatePlacementTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,
 										   void* pVirtualAddress, ID3D11Texture1D** ppTexture1D)
 {
-	ID3D11Texture1D* PlacementTexture1D = nullptr;
-	HRESULT hr = wrapped_interface->CreateTexture1D(pDesc, 0, &PlacementTexture1D);
+	auto pInitialData = new D3D11_SUBRESOURCE_DATA[pDesc->MipLevels * pDesc->ArraySize];
 
-	printf("[CreatePlacementTexture1D] created texture at 0x%llX\n", &PlacementTexture1D);
+	pInitialData->pSysMem = pVirtualAddress;
+	pInitialData->SysMemPitch = Pitch;
+	pInitialData->SysMemSlicePitch = 0;
 
-	if (ppTexture1D != nullptr)
-	{
-		*ppTexture1D = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Texture1D*>(new texture_1d(PlacementTexture1D)) : nullptr;
-	}
+	CreateTexture1D(pDesc, pInitialData, ppTexture1D);
 
-	return hr;
+	delete[] pInitialData;
+
+	return S_OK;
 }
 
 HRESULT wd::device_x::CreatePlacementTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,
 										   void* pVirtualAddress, ID3D11Texture2D** ppTexture2D)
 {
-	//Rodrigo Todescatto: SampleDesc.Quality is kind of obsolete nowadays.
-	const_cast<D3D11_TEXTURE2D_DESC*>(pDesc)->SampleDesc.Quality = 0;
+	auto pInitialData = new D3D11_SUBRESOURCE_DATA[pDesc->MipLevels * pDesc->ArraySize];
 
-	ID3D11Texture2D* PlacementTexture2D = nullptr;
-	HRESULT hr = wrapped_interface->CreateTexture2D(pDesc, 0, &PlacementTexture2D);
+	pInitialData->pSysMem = ppTexture2D;
+	pInitialData->SysMemPitch = Pitch + 2;
+	pInitialData->SysMemSlicePitch = 0;
 
-	printf("[CreatePlacementTexture2D] created texture at 0x%llX\n", &PlacementTexture2D);
+	CreateTexture2D(pDesc, pInitialData, ppTexture2D);
 
-	if (ppTexture2D != nullptr)
-	{
-		*ppTexture2D = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Texture2D*>(new texture_2d(PlacementTexture2D)) : nullptr;
-	}
+	delete[] pInitialData;
 
-	return hr;
+	return S_OK;
+
 }
 
 HRESULT wd::device_x::CreatePlacementTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,
 										   void* pVirtualAddress, ID3D11Texture3D** ppTexture3D)
 {
-	ID3D11Texture3D* PlacementTexture3D = nullptr;
-	HRESULT hr = wrapped_interface->CreateTexture3D(pDesc, 0, &PlacementTexture3D);
-
-	printf("[CreatePlacementTexture3D] created texture at 0x%llX\n", &PlacementTexture3D);
-
-	if (ppTexture3D != nullptr)
-	{
-		*ppTexture3D = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Texture3D*>(new texture_3d(PlacementTexture3D)) : nullptr;
-	}
-
-	return hr;
+	CreateTexture3D(pDesc, 0, ppTexture3D);
+	return S_OK;
 }
 
 void wd::device_x::GetTimestamps(UINT64* pGpuTimestamp, UINT64* pCpuRdtscTimestamp)
@@ -337,7 +377,7 @@ HRESULT wd::device_x::CreateComputeContextX(const wdi::D3D11_COMPUTE_CONTEXT_DES
 										wdi::ID3D11ComputeContextX** ppComputeContext)
 {
 	printf("CreateComputeContextX was called!!!!!!!\n");
-	throw std::logic_error("Not implemented");
+	return CreateDeferredContext2(0, (ID3D11DeviceContext2**)ppComputeContext);
 }
 
 void wd::device_x::ComposeShaderResourceView(const wdi::D3D11X_DESCRIPTOR_RESOURCE* pDescriptorResource,
