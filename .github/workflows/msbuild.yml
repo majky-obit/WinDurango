@@ -75,4 +75,4 @@ jobs:
         path: |
           D:\a\WinDurango\WinDurango\x64\${{ matrix.configuration }}\*.dll
           D:\a\WinDurango\WinDurango\x64\${{ matrix.configuration }}\*.pdb
-          D:\a\WinDurango\WinDurango\x64\${{ matrix.configuration }}commit_hash.txt
+          D:\a\WinDurango\WinDurango\x64\${{ matrix.configuration }}\commit_hash.txt
