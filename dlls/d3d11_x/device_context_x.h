@@ -27,6 +27,7 @@ static std::map<UINT64, int> D3D11X_HARDWARE_TO_TOPOLOGY_MAP = {
 
 namespace wdi
 {
+
 	#pragma region struct_defs
 	typedef enum _D3D11X_GDS_REGION_TYPE
 	{
@@ -83,7 +84,6 @@ namespace wdi
 		D3D11_STAGE_PS = 4,
 		D3D11_STAGE_CS = 5
 	} D3D11_STAGE;
-
 	typedef struct D3D11X_TESSELLATION_PARAMETERS
 	{
 		UINT  Size;
