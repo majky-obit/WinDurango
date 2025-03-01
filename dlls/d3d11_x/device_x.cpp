@@ -91,7 +91,7 @@ HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D
 
 	ID3D11Texture2D* texture2d = nullptr;
 
- 	HRESULT hr = wrapped_interface->CreateTexture2D(&pDesc2, pInitialData, &texture2d);
+ 	HRESULT hr = wrapped_interface->CreateTexture2D(&pDesc2, 0, &texture2d);
 
 	printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
 
@@ -184,6 +184,11 @@ HRESULT wd::device_x::CreateDepthStencilView(ID3D11Resource* pResource, const D3
 
 HRESULT wd::device_x::CreateDeferredContext(UINT ContextFlags, ID3D11DeviceContext** ppDeferredContext)
 {
+	if (ContextFlags != 0)
+	{
+		ContextFlags = 0;
+	}
+
 	::ID3D11DeviceContext* ctx{};
 	HRESULT hr = wrapped_interface->CreateDeferredContext(ContextFlags, &ctx);
 	if (FAILED(hr))
@@ -283,7 +288,9 @@ HRESULT wd::device_x::CreatePlacementBuffer(const D3D11_BUFFER_DESC* pDesc, void
 										ID3D11Buffer** ppBuffer)
 {
 	printf("CreatePlacementBuffer was called!!!!!!!\n");
-	throw std::logic_error("Not implemented");
+	CreateBuffer(pDesc, 0, ppBuffer);
+
+	return S_OK;
 }
 
 HRESULT wd::device_x::CreatePlacementTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,

@@ -444,7 +444,7 @@ void wd::device_context_x::CopyStructureCount(ID3D11Buffer* pDstBuffer, UINT Dst
 
 void wd::device_context_x::ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView, const FLOAT ColorRGBA[4])
 {
-	wrapped_interface->ClearRenderTargetView(pRenderTargetView, ColorRGBA);
+	wrapped_interface->ClearRenderTargetView(reinterpret_cast<wd::render_target_view*>(pRenderTargetView)->wrapped_interface, ColorRGBA);
 }
 
 void wd::device_context_x::ClearUnorderedAccessViewUint(ID3D11UnorderedAccessView* pUnorderedAccessView,
@@ -462,7 +462,7 @@ void wd::device_context_x::ClearUnorderedAccessViewFloat(ID3D11UnorderedAccessVi
 void wd::device_context_x::ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView, UINT ClearFlags,
 	FLOAT Depth, UINT8 Stencil)
 {
-	wrapped_interface->ClearDepthStencilView(pDepthStencilView, ClearFlags, Depth, Stencil);
+	wrapped_interface->ClearDepthStencilView(reinterpret_cast<wd::depth_stencil_view*>(pDepthStencilView)->wrapped_interface, ClearFlags, Depth, Stencil);
 }
 
 void wd::device_context_x::GenerateMips(ID3D11ShaderResourceView* pShaderResourceView)
