@@ -107,6 +107,7 @@
     <ClCompile Include="device_child_x.cpp" />
     <ClCompile Include="device_context_x.cpp" />
     <ClCompile Include="device_x.cpp" />
+    <ClCompile Include="XGUIDs.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="dma_engine.cpp" />
     <ClCompile Include="dxgi_adapter.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="device_child_x.h" />
     <ClInclude Include="device_context_x.h" />
     <ClInclude Include="device_x.h" />
+    <ClInclude Include="XGUIDs.h" />
     <ClInclude Include="dma_engine.h" />
     <ClInclude Include="dxgi_adapter.h" />
     <ClInclude Include="dxgi_device.h" />
