@@ -21,7 +21,6 @@ WinDurango::Overlay::~Overlay()
 	m_pSwapchain = nullptr;
 }
 
-// This should be called when Run is called by the game inside the wrapper.
 void WinDurango::Overlay::Initialize()
 {
 	g_KeyboardFinished = CreateEventA(NULL, FALSE, FALSE, "KeyboardFinished");

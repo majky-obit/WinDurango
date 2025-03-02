@@ -15,7 +15,6 @@ std::vector<HMODULE> loadedMods;
 
 inline void LoadMods()
 {
-	
 	WCHAR path[MAX_PATH];
 	GetModuleFileNameW(GetModuleHandleW(nullptr), path, MAX_PATH);
 	PathRemoveFileSpecW(path);
