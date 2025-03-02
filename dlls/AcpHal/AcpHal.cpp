@@ -29,71 +29,6 @@ struct SHAPE_CONTEXTS {
     APU_ADDRESS apuPcmContextArray;
 };
 
-DECLARE_INTERFACE(IAcpHal)
-{
-    STDMETHOD(Connect)(THIS_ UINT32 numCommands,UINT32 numMessages) PURE;
-    STDMETHOD(Disconnect)(THIS) PURE;
-    STDMETHOD(SubmitCommand)(THIS_ ACP_COMMAND_TYPE command, UINT64 commandId, UINT32 audioFrame, _In_opt_ const void* data = nullptr, _In_opt_ APU_ADDRESS notification = 0) PURE;
-    _Success_(return) STDMETHOD_(bool, PopMessage)(THIS_ _Out_ ACP_MESSAGE * message) PURE;
-    STDMETHOD_(UINT32, GetNumMessages)(THIS) PURE;
-    STDMETHOD_(void, Release)(THIS) PURE;
-};
-
-
-class AcpHal : public IAcpHal {
-public:
-	HRESULT Connect(UINT32 numCommands, UINT32 numMessages) override
-	{
-		printf("[AcpHal] Connect\n");
-		return S_OK;
-	}
-
-	HRESULT Disconnect() override
-	{
-		printf("[AcpHal] Disconnect\n");
-		return S_OK;
-	}
-
-	HRESULT SubmitCommand(ACP_COMMAND_TYPE command, UINT64 commandId, UINT32 audioFrame, const void* data,
-		APU_ADDRESS notification) override
-	{
-		printf("[AcpHal] SubmitCommand\n");
-
-        if (notification != 0)
-            *reinterpret_cast<UINT32*>(notification) = 1;
-
-		return S_OK;
-	}
-
-	bool PopMessage(ACP_MESSAGE* message) override
-	{
-		static ACP_MESSAGE dummyMessage = {
-            ACP_MESSAGE_TYPE_DISCONNECTED,
-            0,
-            GetTickCount()
-		};
-
-		*message = dummyMessage;
-		return true;
-	}
-
-	UINT32 GetNumMessages() override
-	{
-		printf("[AcpHal] GetNumMessages\n");
-		return 0;
-	}
-
-	void Release() override
-	{
-		printf("[AcpHal] Release\n");
-	}
-
-private:
-	UINT32 m_numCommands;
-	UINT32 m_numMessages;
-
-};
-
 
 HRESULT AcpHalAllocateShapeContexts_X(SHAPE_CONTEXTS* ctx) {
     if (ctx->numSrcContexts > 0)
@@ -118,8 +53,14 @@ HRESULT AcpHalAllocateShapeContexts_X(SHAPE_CONTEXTS* ctx) {
     return S_OK;
 }
 
+HRESULT AcpHalReleaseShapeContexts_X() {
+    DEBUG_PRINT( );
+	return S_OK;
+}
+
 HRESULT AcpHalCreate_X(IAcpHal** acpInterface) {
-	*acpInterface = new AcpHal( );
+	printf("[WARNING] AcpHalCreate returns back a nullptr, the game is likely to crash!\n");
+	*acpInterface = nullptr;
     return 0;
 }
 
@@ -133,22 +74,6 @@ HRESULT ApuAlloc_X(
 {
     alignmentInBytes = 4;
     DEBUG_PRINT( );
-    return 0;
-}
-
-HRESULT ApuAlloc_X(
-         void** virtualAddress,
-         UINT32* physicalAddress,
-         UINT32 sizeInBytes,
-         UINT32 alignmentInBytes,
-         UINT32 flags
-)
-{
-    *virtualAddress = malloc(sizeInBytes);
-
-    if (physicalAddress != nullptr)
-		*physicalAddress = 0;
-
     return 0;
 }
 
@@ -187,11 +112,7 @@ APU_ADDRESS ApuMapVirtualAddress_X(
     DEBUG_PRINT( );
     return 0;
 }
-HRESULT AcpHalCreate_X(IAcpHal** acp)
-{
-    DEBUG_PRINT( );
-    return 0;
-}
+
 void* ApuMapApuAddress_X(
          APU_ADDRESS apuPhysicalAddress
 )
