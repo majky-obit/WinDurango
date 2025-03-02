@@ -1,25 +1,53 @@
+#include "EtwPlus.h"
 #include "pch.h"
+#include <stdio.h>
+#include "../common/debug.h"
+#include "../common/common.h"
 
-ULONG EtxEventWrite_X(__int64 a1, __int64 a2, __int64 a3, ULONG a4, struct _EVENT_DATA_DESCRIPTOR* a5) {
-	return 0;
+VOID DurangoAPI EtxFillCommonFields_v7_X(EVENT_DATA_DESCRIPTOR* eventDataDescriptors, UINT8* buffer, UINT32 bufferSize) {
+    DEBUG_PRINT( );
+    // Implementation here
 }
 
-__int64 EtxFillCommonFields_v7_X(__int64 a1, char* a2, unsigned int a3) {
-	return 0;
+ULONG DurangoAPI EtxRegister_X(EVENT_PROVIDER_DESCRIPTOR* provider, REGHANDLE* handle) {
+    // Implementation here
+    DEBUG_PRINT( );
+    return 0;
 }
 
-__int64 EtxRegister_X(void* Source, __int64 RegHandle) {
-	return 0;
+ULONG DurangoAPI EtxUnregister_X(EVENT_PROVIDER_DESCRIPTOR* provider, REGHANDLE* handle) {
+    DEBUG_PRINT( );
+    REGHANDLE v3; // rcx
+
+    v3 = *handle;
+    if (*handle)
+    {
+        *handle = 0i64;
+        EventUnregister(v3);
+        //sub_180001658(provider);
+    }
+    return 0;
 }
 
-void EtxResumeUploading_X() {
-
+ULONG DurangoAPI EtxEventWrite_X(
+    __in const EVENT_DESCRIPTOR_STRUCT* eventDescriptor,
+    __in const EVENT_PROVIDER_DESCRIPTOR* providerDescriptor,
+    __in REGHANDLE handle,
+    __in ULONG dataCount,
+    __in const EVENT_DATA_DESCRIPTOR* eventData
+) {
+    DEBUG_PRINT( );
+    // Implementation here
+    return 0;
 }
 
-void EtxSuspendUploading_X() {
-
+void DurangoAPI EtxSuspendUploading_X( ) {
+    DEBUG_PRINT( );
+    // Implementation here
 }
 
-__int64 EtxUnregister_X(__int64 a1, __int64 a2) {
-	return 0;
+void DurangoAPI
+EtxResumeUploading_X( ) {
+    DEBUG_PRINT( );
+    // Implementation here
 }

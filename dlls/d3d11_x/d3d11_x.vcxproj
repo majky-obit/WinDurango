@@ -44,11 +44,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>d3d11_x</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(SolutionDir)thirdparty\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>d3d11_x</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(SolutionDir)thirdparty\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -57,9 +57,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;D3D11X_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -77,9 +77,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;D3D11X_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -92,6 +92,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="Exports.def" />
+    <None Include="Exports.def.bak" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\thirdparty\imgui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\..\thirdparty\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\thirdparty\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\thirdparty\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\thirdparty\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\thirdparty\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\thirdparty\imgui_impl_uwp.cpp" />
+    <ClCompile Include="d3d11_x.cpp" />
+    <ClCompile Include="device_child_x.cpp" />
+    <ClCompile Include="device_context_x.cpp" />
+    <ClCompile Include="device_x.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="dxgi_adapter.cpp" />
+    <ClCompile Include="dxgi_device.cpp" />
+    <ClCompile Include="dxgi_factory.cpp" />
+    <ClCompile Include="dxgi_object.cpp" />
+    <ClCompile Include="dxgi_swapchain.cpp" />
+    <ClCompile Include="graphics_unknown.cpp" />
+    <ClCompile Include="overlay\overlay.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="..\..\thirdparty\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\thirdparty\imgui\imconfig.h" />
     <ClInclude Include="..\..\thirdparty\imgui\imgui.h" />
@@ -101,66 +126,18 @@
     <ClInclude Include="..\..\thirdparty\imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\thirdparty\imgui_impl_uwp.h" />
     <ClInclude Include="d3d11_x.h" />
-    <ClInclude Include="d3d_x\d3d11_x_device.h" />
-    <ClInclude Include="d3d_x\d3d_x.hpp" />
-    <ClInclude Include="Exports.def" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="ID3DDeviceContext.h" />
-    <ClInclude Include="ID3DWrappers.h" />
-    <ClInclude Include="ID3DX.h" />
-    <ClInclude Include="IDXGIWrappers.h" />
+    <ClInclude Include="device_child_x.h" />
+    <ClInclude Include="device_context_x.h" />
+    <ClInclude Include="device_x.h" />
+    <ClInclude Include="dxgi_adapter.h" />
+    <ClInclude Include="dxgi_device.h" />
+    <ClInclude Include="dxgi_factory.h" />
+    <ClInclude Include="dxgi_object.hpp" />
+    <ClInclude Include="dxgi_swapchain.h" />
+    <ClInclude Include="graphics_unknown.h" />
     <ClInclude Include="overlay\overlay.h" />
-    <ClInclude Include="pch.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\thirdparty\imgui\backends\imgui_impl_dx11.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\thirdparty\imgui\imgui.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\thirdparty\imgui\imgui_demo.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\thirdparty\imgui\imgui_draw.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\thirdparty\imgui\imgui_tables.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\thirdparty\imgui\imgui_widgets.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\thirdparty\imgui_impl_uwp.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="d3d11_x.cpp" />
-    <ClCompile Include="d3d_x\d3d11_x_device.cpp" />
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="ID3D11BufferWrapper.cpp" />
-    <ClCompile Include="ID3D11ViewWrapper.cpp" />
-    <ClCompile Include="ID3D11TextureWrapper.cpp" />
-    <ClCompile Include="ID3DWrappers.cpp" />
-    <ClCompile Include="IDXGI.h" />
-    <ClCompile Include="IDXGIAdapterWrapper.cpp" />
-    <ClCompile Include="IDXGIDeviceWrapper.cpp" />
-    <ClCompile Include="IDXGIFactoryWrapper.cpp" />
-    <ClCompile Include="IDXGISwapChainWrapper.cpp" />
-    <ClCompile Include="overlay\overlay.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Exports.def.bak" />
+    <ClInclude Include="resource.hpp" />
+    <ClInclude Include="view.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

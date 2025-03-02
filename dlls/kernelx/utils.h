@@ -1,8 +1,9 @@
 ﻿#pragma once
-
-#include <Windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include <filesystem>
-#include <shlwapi.h>
+#include <Shlwapi.h>
+
 
 #define FAILED(hr) (((HRESULT)(hr)) < 0)
 #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)

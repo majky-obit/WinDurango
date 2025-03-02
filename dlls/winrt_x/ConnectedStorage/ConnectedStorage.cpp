@@ -147,6 +147,15 @@ Storage::ContainerInfo2>> WinDurango::impl::ConnectedStorage::GetContainerInfo2A
     co_return containerInfoVector.GetView( );
 }
 
+winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::DeleteContainer(winrt::hstring containerName)
+{
+    winrt::hstring containerPath = m_storagePath + L"\\" + containerName;
+    if (co_await DoesFolderExist(containerPath)) {
+        auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(containerPath);
+        co_await folder.DeleteAsync( );
+    }
+}
+
 winrt::hstring WinDurango::impl::ConnectedStorage::ObtainPackageName()
 {
     return winrt::Windows::ApplicationModel::Package::Current( ).Id( ).FamilyName( );

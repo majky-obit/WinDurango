@@ -108,7 +108,8 @@ namespace winrt::Windows::Xbox::Storage::implementation
 
     winrt::Windows::Foundation::IAsyncAction ConnectedStorageSpace::DeleteContainerAsync(hstring containerName)
     {
-        co_return;
+        co_await m_connectedStorage->DeleteContainer(containerName);
+        containers.Remove(containerName);
     }
 
     winrt::Windows::Xbox::Storage::ContainerInfoQueryResult ConnectedStorageSpace::CreateContainerInfoQuery(hstring const& containerNamePrefix)

@@ -42,6 +42,8 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
         winrt::Windows::Xbox::Management::Deployment::InstallationState GetInstallationState(winrt::Windows::Xbox::Management::Deployment::ChunkSpecifiers const& specifiers);
         winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Management::Deployment::PackageTransferWatcher> AddChunkSpecifiersAsync(winrt::Windows::Xbox::Management::Deployment::ChunkSpecifiers additionalSpecifiers);
         winrt::Windows::Foundation::IAsyncAction RemoveChunkSpecifiersAsync(winrt::Windows::Xbox::Management::Deployment::ChunkSpecifiers removeSpecifiers);
+
+        inline static Deployment::PackageTransferManager static_manager = { nullptr };
     };
 }
 namespace winrt::Windows::Xbox::Management::Deployment::factory_implementation

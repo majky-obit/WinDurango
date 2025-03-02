@@ -37,7 +37,13 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferManager PackageTransferManager::Current()
     {
-        throw hresult_not_implemented();
+        if (static_manager == Deployment::PackageTransferManager{ nullptr })
+        {
+            static_manager = make<PackageTransferManager>( );
+        }
+
+        printf("PackageTransferManager::Current()\n");
+        return static_manager;
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferManager PackageTransferManager::Create(winrt::Windows::ApplicationModel::Package const& package)
     {
@@ -49,7 +55,8 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     }
     bool PackageTransferManager::IsChunkInstalled(uint32_t chunkId)
     {
-        throw hresult_not_implemented();
+        printf("PackageTransferManager::IsChunkInstalled() STUBBED\n");
+        return true;
     }
     bool PackageTransferManager::AreChunksInstalled(winrt::Windows::Foundation::Collections::IIterable<uint32_t> const& chunkIds)
     {

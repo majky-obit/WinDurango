@@ -1,14 +1,188 @@
-// ReSharper disable CppInconsistentNaming
-// ReSharper disable CppClangTidyClangDiagnosticUnusedFunction
-#include "pch.h"
-
+#include "d3d11_x.h"
 #include <cstdio>
 #include <mutex>
-
-#include "d3d_x/d3d_x.hpp"
-#include "ID3DWrappers.h"
 #include "overlay/overlay.h"
+#include <d3d11.h>
+#include "device_context_x.h"
+#include "device_x.h"
+#include "../common/debug.h"
 
+HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11DeviceContext** ppImmediateContext)
+{
+    D3D_FEATURE_LEVEL featurelevels[] = {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+    };
+
+    ID3D11Device2* device2{};
+    ID3D11DeviceContext2* device_context2{};
+
+    auto flags = Flags & CREATE_DEVICE_FLAG_MASK;
+
+#ifdef _DEBUG
+    flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    HRESULT hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, flags, featurelevels, _ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, reinterpret_cast<ID3D11Device**>(ppDevice), NULL, reinterpret_cast<ID3D11DeviceContext**>(ppImmediateContext));
+    if (SUCCEEDED(hr))
+    {
+        // get dx11.2 feature level, since that's what dx11.x inherits from
+        if (ppDevice != nullptr)
+        {
+            (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
+            *ppDevice = reinterpret_cast<wdi::ID3D11Device*>(new wd::device_x(device2));
+        }
+
+        if (ppImmediateContext != nullptr)
+        {
+            (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
+            *ppImmediateContext = reinterpret_cast<wdi::ID3D11DeviceContext*>(new wd::device_context_x(device_context2));
+        }
+    }
+    else
+    {
+        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError( ));
+    }
+
+    return hr;
+}
+HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags, VOID* pVirtualAddress, UINT NumPages, const UINT* pPageList)
+{
+    DEBUGPRINT( );
+    HANDLE hDevice = INVALID_HANDLE_VALUE;
+    HRESULT result = 0;
+    DWORD accessFlags = 0;
+    HANDLE deviceHandle = INVALID_HANDLE_VALUE;
+
+    // Open a handle to the VdKmd device
+    hDevice = CreateFileW(L"\\\\.\\VdKmd", GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+    if (hDevice == INVALID_HANDLE_VALUE)
+    {
+        DWORD lastError = GetLastError( );
+        result = HRESULT_FROM_WIN32(lastError);
+    }
+    else
+    {
+        // Call DeviceIoControlHelper to check access
+        result = DeviceIoControlHelper(hDevice);
+        if (SUCCEEDED(result))
+        {
+            deviceHandle = hDevice;
+            result = S_OK;
+        }
+        else
+        {
+            CloseHandle(hDevice);
+        }
+    }
+
+    if (SUCCEEDED(result))
+    {
+        // Set access flags based on Flags parameter
+        if (Flags & 1)
+        {
+            accessFlags = 0x20000000;
+        }
+        else if (Flags & 2)
+        {
+            accessFlags = 0x80000000;
+        }
+
+        // Map the address to ESRAM
+        result = VdMapAddressToEsram(deviceHandle, accessFlags, (uintptr_t) pVirtualAddress, NumPages, pPageList);
+
+        // Close device handle after operation
+        CloseHandle(deviceHandle);
+    }
+
+    return result;
+}
+
+HRESULT __stdcall VdMapAddressToEsram(
+    HANDLE hDevice,
+    DWORD flags,
+    uintptr_t virtualAddress,
+    UINT numPages,
+    const UINT* pageList)
+{
+    // Early validation checks
+    if (hDevice == INVALID_HANDLE_VALUE || numPages == 0 || !virtualAddress || (flags & 0x5FFFFFFF) != 0)
+        return HRESULT_FROM_WIN32(ERROR_INVALID_PARAMETER); // 2147942487 (0x80070057)
+
+    unsigned int pageLimit = (flags & 0x20000000) ? 511 : 7;
+
+    if (((flags & 0x20000000) && (virtualAddress == 0)) ||
+        (!(flags & 0x20000000) && (virtualAddress & 0x3FFFFF) != 0) ||
+        (numPages > pageLimit + 1))
+    {
+        return HRESULT_FROM_WIN32(ERROR_INVALID_PARAMETER);
+    }
+
+    // Initialize input buffer
+    struct
+    {
+        DWORD flags;
+        uintptr_t virtualAddress;
+        UINT numPages;
+        UINT pageData[ 512 ]; // Maximum possible pages
+    } inBuffer = { 0 };
+
+    memset(&inBuffer, 0, sizeof(inBuffer));
+    inBuffer.flags = flags;
+    inBuffer.virtualAddress = virtualAddress;
+    inBuffer.numPages = numPages;
+
+    // Copy page list if provided
+    if (pageList)
+    {
+        for (unsigned int i = 0; i < numPages; ++i)
+        {
+            if (pageList[ i ] > pageLimit)
+                return HRESULT_FROM_WIN32(ERROR_INVALID_PARAMETER); // Invalid page number
+            inBuffer.pageData[ i ] = pageList[ i ];
+        }
+    }
+    else
+    {
+        inBuffer.flags |= 1; // If page list is null, modify flags
+    }
+
+    DWORD bytesReturned = 0;
+
+    // Send IOCTL request to device
+    if (DeviceIoControl(hDevice, 0x7900C1ACu, &inBuffer, sizeof(inBuffer), nullptr, 0, &bytesReturned, nullptr))
+    {
+        return S_OK;
+    }
+
+    // If DeviceIoControl fails, retrieve and return the error code
+    DWORD lastError = GetLastError( );
+    return HRESULT_FROM_WIN32(lastError);
+}
+HRESULT __stdcall DeviceIoControlHelper(HANDLE hDevice)
+{
+    DWORD bytesReturned = 0;
+
+    // Check if the handle is invalid
+    if (hDevice == INVALID_HANDLE_VALUE)
+        return HRESULT_FROM_WIN32(ERROR_INVALID_HANDLE); // 2147942487 (0x80070006)
+
+    // Perform the DeviceIoControl operation
+    if (DeviceIoControl(hDevice, 0x7900C190u, nullptr, 0, nullptr, 0, &bytesReturned, nullptr))
+    {
+        return (bytesReturned != 0) ? E_FAIL : S_OK; // 0x80004005 (Generic failure) if bytesReturned is not zero
+    }
+
+    // Get last error if DeviceIoControl fails
+    DWORD lastError = GetLastError( );
+    if (lastError > 0)
+    {
+        return HRESULT_FROM_WIN32(lastError);
+    }
+
+    return lastError;
+}
 HRESULT _stdcall D3DQuerySEQCounters_X(D3D_SEQ_COUNTER_DATA* pData)
 {
     return E_NOTIMPL;
@@ -92,13 +266,6 @@ HRESULT __stdcall D3DFreeGraphicsMemory_X(void* pAddress)
     return S_OK;
 }
 
-HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags,
-    VOID* pVirtualAddress,
-    UINT NumPages,
-    _In_reads_opt_(NumPages) const UINT* pPageList)
-{
-    return E_NOTIMPL;
-}
 
 HRESULT __stdcall DXGIXGetFrameStatistics_X(
     _In_ UINT NumberFramesRequested,
@@ -142,9 +309,9 @@ HRESULT __stdcall D3D11CreateDevice_X(
     _In_reads_opt_(FeatureLevels) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
     UINT FeatureLevels,
     UINT SDKVersion,
-    _Out_opt_ d3d11x::ID3D11Device** ppDevice,
+    _Out_opt_ wdi::ID3D11Device** ppDevice,
     _Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
-    _Out_opt_ d3d11x::ID3D11DeviceContext** ppImmediateContext)
+    _Out_opt_ wdi::ID3D11DeviceContext** ppImmediateContext)
 {
     printf("!!! Game is trying to initialize D3D11 through NORMAL D3D11 !!!\n");
     printf("SDK Version: %d\n", SDKVersion);
@@ -164,65 +331,26 @@ HRESULT __stdcall D3D11CreateDevice_X(
     ID3D11DeviceContext2* device_context2{};
     auto flags = Flags & CREATE_DEVICE_FLAG_MASK;
 #ifdef _DEBUG
-	//flags |= D3D11_CREATE_DEVICE_DEBUG;
+    flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, (ID3D11Device**)ppDevice, pFeatureLevel, (ID3D11DeviceContext**)ppImmediateContext);
-    
+    HRESULT hr = D3D11CreateDevice(pAdapter, DriverType, Software, flags, featurelevels, _ARRAYSIZE(featurelevels), SDKVersion, (ID3D11Device**) ppDevice, pFeatureLevel, (ID3D11DeviceContext**) ppImmediateContext);
 
-	if (SUCCEEDED(hr))
+
+    if (SUCCEEDED(hr))
     {
         // get dx11.2 feature level, since that's what dx11.x inherits from
-		if (ppDevice != nullptr)
+        if (ppDevice != nullptr)
         {
             (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
-            *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
+            *ppDevice = reinterpret_cast<wdi::ID3D11Device*>(new wd::device_x(device2));
         }
 
         if (ppImmediateContext != nullptr)
         {
             (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
-            *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(device_context2));
+            *ppImmediateContext = reinterpret_cast<wdi::ID3D11DeviceContext*>(new wd::device_context_x(device_context2));
         }
-    }
-    else
-    {
-        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError());
-    }
-    
-    return hr;
-}
-
-HRESULT __stdcall D3D11XCreateDeviceX_X(
-    _In_ const D3D11X_CREATE_DEVICE_PARAMETERS* pParameters,
-    _Out_opt_ d3d11x::ID3D11Device** ppDevice,
-    _Out_opt_ d3d11x::ID3D11DeviceContext** ppImmediateContext)
-{
-    printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
-    printf("SDK Version: %d\n", pParameters->Version);
-
-    D3D_FEATURE_LEVEL featurelevels[] = {
-		D3D_FEATURE_LEVEL_11_1,
-		D3D_FEATURE_LEVEL_11_0,
-    };
-    ID3D11Device2* device2{};
-    ID3D11DeviceContext2* device_context2{};
-
-    auto flags = pParameters->Flags & CREATE_DEVICE_FLAG_MASK;
-#ifdef _DEBUG
-    //flags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-    HRESULT hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, flags, featurelevels, _ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, reinterpret_cast<ID3D11Device**>(ppDevice), NULL, reinterpret_cast<ID3D11DeviceContext**>(ppImmediateContext));
-    if (SUCCEEDED(hr))
-    {
-        // get dx11.2 feature level, since that's what dx11.x inherits from
-        // MAYBE-TODO: VS doesn't like this line due to ppDevice not having a clear value. Maybe check if ppDevice is valid before deref.
-        (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
-        (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
-
-        *ppDevice = reinterpret_cast<d3d11x::ID3D11Device*>(new d3d11x::D3D11DeviceXWrapperX(device2));
-        *ppImmediateContext = reinterpret_cast<d3d11x::ID3D11DeviceContext*>(new d3d11x::ID3D11DeviceContextXWrapper(device_context2));
     }
     else
     {
@@ -230,6 +358,17 @@ HRESULT __stdcall D3D11XCreateDeviceX_X(
     }
 
     return hr;
+}
+
+HRESULT __stdcall D3D11XCreateDeviceX_X(
+    _In_ const D3D11X_CREATE_DEVICE_PARAMETERS* pParameters,
+    _Out_opt_ wdi::ID3D11Device** ppDevice,
+    _Out_opt_ wdi::ID3D11DeviceContext** ppImmediateContext)
+{
+    printf("!!! Game is trying to initialize D3D11 through D3D11X !!!");
+    printf("SDK Version: %d\n", pParameters->Version);
+
+	return CreateDevice(pParameters->Flags, ppDevice, ppImmediateContext);
 }
 
 HRESULT __stdcall D3D11CreateDeviceAndSwapChain_X(
@@ -250,6 +389,8 @@ HRESULT __stdcall D3D11CreateDeviceAndSwapChain_X(
     printf("SDK Version: %d\n", SDKVersion);
     return D3D11CreateDeviceAndSwapChain(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion, pSwapChainDesc, ppSwapChain, ppDevice, pFeatureLevel, ppImmediateContext);
 }
+
+
 
 std::mutex g_NotifyMutex;
 

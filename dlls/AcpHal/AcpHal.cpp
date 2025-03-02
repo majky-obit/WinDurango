@@ -4,6 +4,7 @@
 #include <basetyps.h>
 #include <cstdio>
 #include <stdlib.h>
+#include "../common/debug.h"
 
 #include "contexts.h"
 
@@ -122,7 +123,16 @@ HRESULT AcpHalCreate_X(IAcpHal** acpInterface) {
     return 0;
 }
 
-HRESULT AcpHalReleaseShapeContexts_X() {
+HRESULT ApuAlloc_X(
+         void** virtualAddress,
+         APU_ADDRESS* physicalAddress,
+         UINT32 sizeInBytes,
+         UINT32 alignmentInBytes,
+         UINT32 flags
+)
+{
+    alignmentInBytes = 4;
+    DEBUG_PRINT( );
     return 0;
 }
 
@@ -147,23 +157,45 @@ HRESULT ApuCreateHeap_X(size_t initialSize, size_t maximumSize) {
     return 0;
 }
 
-HRESULT ApuFree_X(void* ptr) {
-    free(ptr);
+HRESULT ApuFree_X(void* virtualAddress) {
+    DEBUG_PRINT( );
+    free(virtualAddress);
     return 0;
 }
 
-HRESULT ApuHeapGetState_X(ApuHeapState* a1, int type) {
+HRESULT ApuHeapGetState_X(
+         ApuHeapState* apuHeapState,
+         UINT32 flags
+)
+{
+    DEBUG_PRINT( );
     return 0;
 }
 
-HRESULT ApuIsVirtualAddressValid_X(unsigned __int64 a1, unsigned int a2) {
+bool ApuIsVirtualAddressValid_X(
+         const void* virtualAddress,
+         UINT32 physicalAlignmentInBytes
+)
+{
+    DEBUG_PRINT( );
     return 0;
 }
-
-HRESULT ApuMapApuAddress_X(unsigned int a1) {
+APU_ADDRESS ApuMapVirtualAddress_X(
+         const void* virtualAddress
+)
+{
+    DEBUG_PRINT( );
     return 0;
 }
-
-HRESULT ApuMapVirtualAddress_X(unsigned __int64 a1) {
+HRESULT AcpHalCreate_X(IAcpHal** acp)
+{
+    DEBUG_PRINT( );
+    return 0;
+}
+void* ApuMapApuAddress_X(
+         APU_ADDRESS apuPhysicalAddress
+)
+{
+    DEBUG_PRINT( );
     return 0;
 }
