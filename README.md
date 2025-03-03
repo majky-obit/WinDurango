@@ -7,7 +7,7 @@
 <h1 align="center">WinDurango</h1>
 
 [![Join our Discord](https://img.shields.io/discord/1280176159010848790?color=2c9510&label=WinDurango%20Discord&logo=Discord&logoColor=white)](https://discord.gg/mHN2BgH7MR)
-![GitHub contributors](https://img.shields.io/github/contributors/WinDurango/WinDurango?color=2c9510&)
+[![GitHub contributors](https://img.shields.io/github/contributors/WinDurango/WinDurango?color=2c9510&label=Contributors)](https://github.com/WinDurango/WinDurango/graphs/contributors)
 ![GitHub Repo stars](https://img.shields.io/github/stars/WinDurango/WinDurango?color=2c9510&)
 
 
@@ -32,7 +32,7 @@ Discussing illegal activities, such as piracy, (illegal) hacking, doxxing/cyberb
 
 ## Status
 [![GitHub Latest Release](https://img.shields.io/badge/Latest-Release-green?color=2c9510&)](https://github.com/WinDurango/WinDurango/releases)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/WinDurango/WinDurango/msbuild.yml?label=Nightly&color=2c9510&)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/WinDurango/WinDurango/msbuild.yml?label=Nightly&color=2c9510&)](https://github.com/WinDurango/WinDurango/actions)
 
 Currently, only Minecraft: Xbox One Edition runs with WinDurango.
 See the [Game compatibility list](https://windurango.github.io/Documentation/playable-games.html)
