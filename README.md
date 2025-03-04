@@ -8,7 +8,7 @@
 
 [![Join our Discord](https://img.shields.io/discord/1280176159010848790?color=2c9510&label=WinDurango%20Discord&logo=Discord&logoColor=white)](https://discord.gg/mHN2BgH7MR)
 [![GitHub contributors](https://img.shields.io/github/contributors/WinDurango/WinDurango?color=2c9510&label=Contributors)](https://github.com/WinDurango/WinDurango/graphs/contributors)
-![GitHub Repo stars](https://img.shields.io/github/stars/WinDurango/WinDurango?color=2c9510&)
+[![GitHub Repo stars](https://img.shields.io/github/stars/WinDurango/WinDurango?color=2c9510&)](https://github.com/WinDurango/WinDurango/stargazers)
 
 
 For more information, see the
