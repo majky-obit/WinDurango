@@ -155,9 +155,11 @@
     <Filter Include="Implementation\Windows\Xbox\Speech\Recognition">
       <UniqueIdentifier>{8bbdeb8d-b4d2-47a9-9d8b-c61fa4c912e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Implementation\WinDurango">
+      <UniqueIdentifier>{39c5e887-fef6-48c2-9f60-7ddf8b3acdbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConnectedStorage\ConnectedStorage.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Implementation\Microsoft.Xbox.GameChat.AccessibilitySettingsChangedEventArgs.cpp">
       <Filter>Implementation\Microsoft\Xbox\GameChat</Filter>
@@ -1238,9 +1240,11 @@
     <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechSequenceRule.cpp">
       <Filter>Implementation\Windows\Xbox\Speech\Recognition</Filter>
     </ClCompile>
+    <ClCompile Include="ConnectedStorage\ConnectedStorage.cpp">
+      <Filter>Implementation\WinDurango</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConnectedStorage\ConnectedStorage.h" />
     <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.h">
       <Filter>Implementation\Microsoft\Xbox\GameChat</Filter>
     </ClInclude>
@@ -2214,7 +2218,6 @@
     <ClInclude Include="Implementation\Windows.Xbox.System.User.h">
       <Filter>Implementation\Windows\Xbox\System</Filter>
     </ClInclude>
-    <ClInclude Include="common.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechSequenceRule.h">
       <Filter>Implementation\Windows\Xbox\Speech\Recognition</Filter>
     </ClInclude>
@@ -2319,6 +2322,10 @@
     </ClInclude>
     <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRuleReferenceItem.h">
       <Filter>Implementation\Windows\Xbox\Speech\Recognition</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="ConnectedStorage\ConnectedStorage.h">
+      <Filter>Implementation\WinDurango</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
