@@ -241,89 +241,22 @@ CONSOLE_TYPE GetConsoleType_X() {
     return CONSOLE_TYPE::CONSOLE_TYPE_XBOX_ONE_X_DEVKIT;
 }
 
-PVOID __fastcall XMemAllocDefault_X(SIZE_T dwSize, uint64_t flags)
-{
-    if (dwSize == 0) {
-        return NULL;
+PVOID XMemAllocDefault_X(SIZE_T dwSize, uint64_t flags) {
+    PVOID ptr = nullptr;
+    // Example flag usage: we assume if the highest bit of flags is set, we zero the memory.
+    bool shouldZeroMemory = (flags & (1ULL << 63)) != 0;
+
+    // Allocate memory
+    ptr = malloc(dwSize);
+
+    // Optionally zero out the memory if the flag is set
+    if (ptr && shouldZeroMemory) {
+        memset(ptr, 0, dwSize);
     }
 
-    SIZE_T regionSize = dwSize;
-    PVOID baseAddress = NULL;
-    unsigned int allocType;
-    HANDLE titleHeap;
-    ULONG protectFlags;
-    int allocationFlags;
-
-    // Determine heap index
-    unsigned int heapIndex = (flags >> 29) & 0xF;
-    if (!XmpHeapPageTypes[heapIndex]) {
-        return NULL;
-    }
-
-    // Check allocation type
-    if (XmpHeapAllocationTypes[heapIndex] != 0x10000000) {
-        unsigned int heapFlags = flags >> 24;
-        if ((flags & 0x1F) <= 4) {
-            allocType = 32;  // Standard heap allocation
-            if ((flags & 0xC000) == 0) {
-                goto allocate_heap;
-            }
-        }
-        allocType = 33;  // Virtual memory allocation
-    }
-    else {
-        allocType = heapIndex;
-        if ((flags & 0xC000) < 0x4000) {
-            flags |= 0x4000;
-        }
-
-        unsigned int flagBits = flags & 0x1F;
-        if (flagBits > 0x10 || dwSize > 0x20000) {
-            allocType = 33;  // Virtual allocation
-        }
-        else if (flagBits > 0xC || dwSize > 0xF00) {
-            allocType |= 0x10;
-        }
-    }
-
-allocate_heap:
-
-    if (allocType == 32) {  // Heap allocation
-        titleHeap = HeapCreate(0, 0, 0x80002u);
-        return titleHeap ? HeapAlloc(titleHeap, 0, regionSize) : NULL;
-    }
-
-    if (allocType == 33) {  // Virtual memory allocation
-        int memFlag = MEM_COMMIT | MEM_RESERVE;
-        switch (flags >> 14) {
-        case 1: memFlag = MEM_LARGE_PAGES; break;
-        case 2: memFlag = MEM_PHYSICAL; break;
-        }
-
-        allocationFlags = XmpHeapAllocationTypes[heapIndex] | memFlag;
-        protectFlags = XmpHeapPageTypes[heapIndex];
-
-        if (allocationFlags & 0x400000) {
-            allocationFlags &= ~0x400000;
-            if (!(flags >> 14)) {
-                allocationFlags |= MEM_TOP_DOWN;
-            }
-        }
-
-        baseAddress = VirtualAlloc(NULL, regionSize, allocationFlags, protectFlags);
-        if (baseAddress != NULL) {
-            return baseAddress;
-        }
-    }
-
-    HANDLE heapHandle = XmpHeaps[allocType];
-    if (!heapHandle) {
-        heapHandle = (HANDLE)HeapCreate(HEAP_NO_SERIALIZE, 0, 0);
-        XmpHeaps[allocType] = heapHandle;
-    }
-
-    return heapHandle ? HeapAlloc(heapHandle, 0, regionSize) : NULL;
+    return ptr;
 }
+
 BOOLEAN __stdcall XMemFreeDefault_X(PVOID pAddress, uint64_t dwAllocAttributes) {
     if (!pAddress) {
         return FALSE; // Avoid processing NULL pointers
@@ -414,6 +347,37 @@ NTSTATUS __fastcall XMemSetAllocationHooks_X(PVOID(__fastcall* XMemAlloc)(SIZE_T
 #define PROTECT_FLAGS_MASK (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY | PAGE_NOACCESS | PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_GUARD | PAGE_NOCACHE)
 #define ALLOCATION_FLAGS_MASK (MEM_COMMIT | MEM_RESERVE | MEM_RESET | MEM_LARGE_PAGES | MEM_PHYSICAL | MEM_TOP_DOWN | MEM_WRITE_WATCH)
 
+LPVOID VirtualAllocEx_X(
+    HANDLE hProcess,
+    LPVOID lpAddress,
+    SIZE_T dwSize,
+    DWORD  flAllocationType,
+    DWORD  flProtect
+)
+{
+    flProtect &= PROTECT_FLAGS_MASK;
+    flAllocationType &= ALLOCATION_FLAGS_MASK;
+
+    LPVOID ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
+
+    // backup plan in the case that VirtualAlloc fails despite the flags being masked away
+    if (ret == nullptr)
+    {
+        //printf("VirtualAlloc failed with %i, using backup...\n", GetLastError());
+        if ((flAllocationType & 0x2000) != 0)
+        {
+            flAllocationType = 0x2000;
+        }
+        if ((flAllocationType & 0x1000) != 0)
+        {
+            flAllocationType = 0x1000;
+        }
+        ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
+    }
+
+    return ret;
+}
+
 LPVOID VirtualAlloc_X(
     LPVOID lpAddress,
     SIZE_T dwSize,
@@ -421,22 +385,9 @@ LPVOID VirtualAlloc_X(
     DWORD  flProtect
 )
 {
-	flProtect &= PROTECT_FLAGS_MASK;
-	flAllocationType &= ALLOCATION_FLAGS_MASK;
-
-    LPVOID ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
-
-	// backup plan in the case that VirtualAlloc fails despite the flags being masked away
-	if (ret == nullptr)
-	{
-		printf("VirtualAlloc failed with %i, using backup...\n", GetLastError());
-        ret = VirtualAlloc(lpAddress, dwSize, MEM_COMMIT, flProtect);
-	}
-
-    assert(ret != nullptr && "VirtualAlloc should not fail, check proper handling of xbox-one specific memory protection constants.");
-
-	return ret;
+    return VirtualAllocEx_X(GetCurrentProcess(), lpAddress, dwSize, flAllocationType, flProtect);
 }
+
 BOOL ToolingMemoryStatus_X(LPTOOLINGMEMORYSTATUS buffer)
 {
     DEBUG_PRINT();
@@ -462,35 +413,47 @@ BOOL ToolingMemoryStatus_X(LPTOOLINGMEMORYSTATUS buffer)
 
     return TRUE;
 }
-//Vodka Doc: 1 to 1 copy from the original function
-BOOL __stdcall TitleMemoryStatus_X(PTITLEMEMORYSTATUS Buffer) {
-    DEBUG_PRINT();
-    if (!Buffer || Buffer->dwLength != sizeof(TITLEMEMORYSTATUS)) {
-        SetLastError(ERROR_INVALID_PARAMETER);
-        return FALSE;
+
+BOOL TitleMemoryStatus_X(LPTITLEMEMORYSTATUS Buffer)
+{
+    __int64 ProcessInformation[10]; // [rsp+30h] [rbp-68h] BYREF
+
+    if (Buffer->dwLength != 80)
+    {
+        SetLastError(0x57u);
+        return false;
     }
 
-    NTSTATUS status;
-    DWORDLONG ProcessInformation[7] = { 0 };
-    status = NtQueryInformationProcess(
-        GetCurrentProcess(),
+    NTSTATUS Status = NtQueryInformationProcess(
+        (HANDLE)0xFFFFFFFFFFFFFFFFi64,
         (PROCESSINFOCLASS)(0x3A | 0x3A),
-        &ProcessInformation,
-        sizeof(ProcessInformation),
-        NULL);
+        ProcessInformation,
+        0x48u,
+        0i64);
 
-    if (status < 0) {
-        RtlSetLastWin32ErrorAndNtStatusFromNtStatus(status);
+    if (!NT_SUCCESS(Status))
+    {
+        SetLastError(Status);
         return FALSE;
     }
 
     Buffer->ullTotalMem = ProcessInformation[0];
     Buffer->ullAvailMem = ProcessInformation[0] - ProcessInformation[1];
+
     Buffer->ullLegacyUsed = ProcessInformation[2];
-    Buffer->ullLegacyAvail = ProcessInformation[4] - ProcessInformation[2];
-    Buffer->ullLegacyPeak = ProcessInformation[3];
+    Buffer->ullAvailMem = ProcessInformation[4] - ProcessInformation[2];
+
     Buffer->ullTitleUsed = ProcessInformation[5];
-    Buffer->ullTitleAvail = ProcessInformation[6] - ProcessInformation[5];
+    Buffer->ullTitleUsed = ProcessInformation[5] - ProcessInformation[6];
+
+    //// @Patoke todo: what is this doing? it's writing outside the bounds of TITLEMEMORYSTATUS
+    //*(DWORD*)((uint8_t*)Buffer + 64) = ProcessInformation[7];
+    //*(DWORD*)((uint8_t*)Buffer + 72) = ProcessInformation[8];
+
+    // equivalent to the previous code
+    auto* nextBuffer = Buffer++;
+    nextBuffer->dwLength = ProcessInformation[7];
+    nextBuffer->dwReserved = ProcessInformation[8];
 
     return TRUE;
 }
