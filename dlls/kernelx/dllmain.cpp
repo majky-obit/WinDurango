@@ -152,6 +152,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExW), LoadLibraryExW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryW), LoadLibraryW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExA), LoadLibraryExA_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueCoCreateInstance), CoCreateInstance_hook);
 
 		DetourTransactionCommit();
 
@@ -173,6 +174,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExW), LoadLibraryExW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryW), LoadLibraryW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExA), LoadLibraryExA_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueCoCreateInstance), CoCreateInstance_hook);
 
 		DetourTransactionCommit();
 

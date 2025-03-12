@@ -6,6 +6,7 @@
 #include <windows.applicationmodel.core.h>
 
 #include "CurrentAppWrapper.hpp"
+#include "MMDeviceEnumeratorWrapper.h"
 
 #define RETURN_HR(hr) return hr
 #define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
@@ -78,6 +79,31 @@ HMODULE(WINAPI* TrueLoadLibraryW)(LPCWSTR lpLibFileName) = LoadLibraryW;
 HRESULT(STDMETHODCALLTYPE* TrueGetLicenseInformation)(
 	ABI::Windows::ApplicationModel::Store::ILicenseInformation** value
 ) = nullptr;
+
+HRESULT(WINAPI* TrueCoCreateInstance)(_In_ REFCLSID rclsid,
+	_In_opt_ LPUNKNOWN pUnkOuter,
+	_In_ DWORD dwClsContext,
+	_In_ REFIID riid,
+	_COM_Outptr_ _At_(*ppv, _Post_readable_size_(_Inexpressible_(varies))) LPVOID  FAR* ppv) = CoCreateInstance;
+
+HRESULT __stdcall CoCreateInstance_hook(
+	_In_ REFCLSID rclsid,
+	_In_opt_ LPUNKNOWN pUnkOuter,
+	_In_ DWORD dwClsContext,
+	_In_ REFIID riid,
+	_COM_Outptr_ _At_(*ppv, _Post_readable_size_(_Inexpressible_(varies))) LPVOID  FAR* ppv
+)
+{
+
+	HRESULT hr = TrueCoCreateInstance(rclsid, pUnkOuter, dwClsContext, riid, ppv);
+	if (riid == __uuidof(IMMDeviceEnumerator))
+	{
+		*ppv = new MMDeviceEnumeratorWrapper(static_cast<IMMDeviceEnumerator*>(*ppv));
+	}
+	return hr;
+}
+
+
 
 HRESULT XWineGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ LPCSTR Import, _Out_ PIMAGE_THUNK_DATA* pThunk)
 {
