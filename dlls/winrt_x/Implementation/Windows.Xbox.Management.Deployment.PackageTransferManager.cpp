@@ -60,11 +60,11 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     }
     bool PackageTransferManager::AreChunksInstalled(winrt::Windows::Foundation::Collections::IIterable<uint32_t> const& chunkIds)
     {
-        throw hresult_not_implemented();
+        return true;
     }
     uint32_t PackageTransferManager::FindChunkFromFile(hstring const& path)
     {
-        throw hresult_not_implemented();
+        return 0;
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferStatus PackageTransferManager::TransferStatus()
     {
