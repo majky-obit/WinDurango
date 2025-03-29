@@ -258,50 +258,10 @@ PVOID XMemAllocDefault_X(SIZE_T dwSize, uint64_t flags) {
 }
 
 BOOLEAN __stdcall XMemFreeDefault_X(PVOID pAddress, uint64_t dwAllocAttributes) {
-    if (!pAddress) {
-        return FALSE; // Avoid processing NULL pointers
-    }
-    DEBUGPRINT();
-    uint64_t allocTypeIndex = (dwAllocAttributes >> 29) & 0xF;
-    PVOID baseAddress = pAddress;
-    ULONG_PTR regionSize = 0;
+    
+    free(pAddress);
 
-    // Case 1: Freeing memory allocated using the title heap
-    if (!XmpHeapAllocationTypes[allocTypeIndex] &&
-        (dwAllocAttributes & 0x1F000000u) <= 0x4000000u &&
-        !(dwAllocAttributes & 0xC000))
-    {
-        static HANDLE XmpTitleHeap = NULL;
-        if (!XmpTitleHeap) {
-            XmpTitleHeap = HeapCreate(0, 0, 0x80002u);
-        }
-        return (XmpTitleHeap && pAddress) ? HeapFree(XmpTitleHeap, 0, pAddress) : FALSE;
-    }
-
-    // Case 2: Try to locate the correct heap in XmpHeaps
-    void* heapRegion = XmpHeaps[allocTypeIndex];
-    if (!heapRegion ||
-        !(*(PVOID*)((uintptr_t)heapRegion + 48)) ||
-        (*(PVOID*)((uintptr_t)heapRegion + 48) > pAddress) ||
-        (*(PVOID*)((uintptr_t)heapRegion + 56) < pAddress))
-    {
-        heapRegion = XmpHeaps[allocTypeIndex + 16];
-        if (!heapRegion ||
-            !(*(PVOID*)((uintptr_t)heapRegion + 48)) ||
-            (*(PVOID*)((uintptr_t)heapRegion + 48) > pAddress) ||
-            (*(PVOID*)((uintptr_t)heapRegion + 56) < pAddress))
-        {
-            heapRegion = NULL;
-        }
-    }
-
-    // Case 3: If a valid heap was found, free the memory using HeapFree
-    if (heapRegion) {
-        return HeapFree(heapRegion, 0, pAddress);
-    }
-
-    // Case 4: If no heap was found, free virtual memory using VirtualFree
-    return VirtualFree(baseAddress, 0, MEM_RELEASE);
+    return TRUE;
 }
 
 
