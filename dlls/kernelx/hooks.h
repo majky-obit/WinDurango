@@ -7,6 +7,7 @@
 
 #include "CurrentAppWrapper.hpp"
 #include "MMDeviceEnumeratorWrapper.h"
+#include <winrt/windows.storage.provider.h>
 
 #define RETURN_HR(hr) return hr
 #define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
@@ -64,6 +65,11 @@ HRESULT(WINAPI* TrueActivateInstance)(IActivationFactory* thisptr, IInspectable*
 HFILE(WINAPI* TrueOpenFile)(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle) = OpenFile;
 HANDLE(WINAPI* TrueCreateFileW)(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes,
 	DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile) = CreateFileW;
+
+HANDLE(WINAPI* TrueCreateFile2)(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
+DWORD dwCreationDisposition, LPCREATEFILE2_EXTENDED_PARAMETERS pCreateExParams) = CreateFile2;
+
+BOOL(WINAPI* TrueCreateDirectoryA)(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes) = CreateDirectoryA;
 
 DWORD(WINAPI* TrueGetFileAttributesW)(LPCWSTR lpFileName) = GetFileAttributesW;
 BOOL(WINAPI* TrueGetFileAttributesExW)(LPCWSTR lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, LPVOID lpFileInformation) = GetFileAttributesExW;
@@ -235,7 +241,7 @@ void FixRelativePath(LPCWSTR& lpFileName)
 
 		lpFileName = convert.data();
 	}
-	else if (fileName[0] == 'G' && fileName[1] == ':')
+	else if ((fileName[0] == 'G' || fileName[0] == 'g') && fileName[1] == ':')
 	{
 
 		static std::wstring trimPath{};
@@ -246,8 +252,39 @@ void FixRelativePath(LPCWSTR& lpFileName)
 
 		lpFileName = convert.data();
 	}
+	else if ((fileName[0] == 'T' || fileName[0] == 't') && fileName[1] == ':')
+	{
+
+		static std::wstring trimPath{};
+		trimPath = fileName.substr(2);
+		fileName = trimPath.data();
+		convert = winrt::Windows::Storage::ApplicationData::Current().TemporaryFolder().Path();
+		convert.append(fileName);
+
+		lpFileName = convert.data();
+	}
 }
 
+#include <atlbase.h>
+
+HANDLE CreateFile2_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
+	DWORD dwCreationDisposition, LPCREATEFILE2_EXTENDED_PARAMETERS pCreateExParams)
+{
+	FixRelativePath(lpFileName);
+
+	return TrueCreateFile2(lpFileName, dwDesiredAccess, dwShareMode, dwCreationDisposition, pCreateExParams);
+}
+
+BOOL CreateDirectoryA_Hook(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes)
+{
+	USES_CONVERSION;
+
+	LPCWSTR PathName = A2W(lpPathName);
+
+	FixRelativePath(PathName);
+
+	return CreateDirectoryW(PathName, lpSecurityAttributes);
+}
 
 HMODULE WINAPI LoadLibraryExA_Hook(LPCSTR lpLibFileName, _Reserved_ HANDLE hFile, _In_ DWORD dwFlags)
 {
