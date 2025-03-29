@@ -35,7 +35,6 @@ HRESULT wd::dxgi_swapchain::GetDevice(const IID& riid, void** ppDevice)
 
 HRESULT wd::dxgi_swapchain::Present(UINT SyncInterval, UINT Flags)
 {
-	printf("Present\n");
 	return wrapped_interface->Present(SyncInterval, Flags);
 }
 

@@ -11,6 +11,7 @@ extern const IID IID_ID3D11PerformanceDeviceX;
 extern const IID IID_ID3D11PerformanceContextX;
 extern const IID IID_ID3D11DmaEngineContextX;
 extern const IID IID_ID3D11DeviceX;
+extern const IID IID_ID3D11Texture2D;
 extern const IID IID_ID3D11DeviceContextX;
 extern const IID IID_ID3D11CounterSetX;
 extern const IID IID_ID3D11CounterSampleX;

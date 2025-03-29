@@ -4,9 +4,21 @@
 #include "overlay/overlay.h"
 #include <d3d11.h>
 #include <d3d12.h>
+#include <dxgi1_2.h>
 #include "device_context_x.h"
 #include "device_x.h"
 #include "wrl.h"
+#include <windows.ui.core.h>
+
+
+using namespace Microsoft::WRL;
+using namespace ABI::Windows::UI::Core;
+
+#define DXGI_SWAPCHAIN_FLAG_MASK DXGI_SWAP_CHAIN_FLAG_NONPREROTATED | DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE \
+		| DXGI_SWAP_CHAIN_FLAG_RESTRICTED_CONTENT | DXGI_SWAP_CHAIN_FLAG_RESTRICT_SHARED_RESOURCE_DRIVER | DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY | DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT \
+		| DXGI_SWAP_CHAIN_FLAG_FOREGROUND_LAYER | DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO | DXGI_SWAP_CHAIN_FLAG_YUV_VIDEO \
+		| DXGI_SWAP_CHAIN_FLAG_HW_PROTECTED | DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING \
+		| DXGI_SWAP_CHAIN_FLAG_RESTRICTED_TO_ALL_HOLOGRAPHIC_DISPLAYS 
 
 HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11DeviceContext** ppImmediateContext)
 {
@@ -51,6 +63,7 @@ HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11Device
 #include "../common/debug.h"
 #include <wrl/client.h>
 #include <iostream>
+#include "dxgi_swapchain.h"
 
 HRESULT _stdcall D3DQuerySEQCounters_X(D3D_SEQ_COUNTER_DATA* pData)
 {
@@ -69,10 +82,72 @@ HRESULT _stdcall D3DUploadCustomMicrocode_X(
     return E_NOTIMPL;
 }
 
+HRESULT CreateDeviceAndSwapChain(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11DeviceContext** ppImmediateContext, wdi::IDXGISwapChain1** ppSwapChain, const DXGI_SWAP_CHAIN_DESC1* pSwapChainDesc)
+{
+    D3D_FEATURE_LEVEL featurelevels[] = {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+    };
+
+    ID3D11Device2* device2{};
+    ID3D11DeviceContext2* device_context2{};
+    IDXGISwapChain1* swap_chain1{};
+
+
+    auto flags = Flags & CREATE_DEVICE_FLAG_MASK;
+
+#ifdef _DEBUG
+    flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    HRESULT hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, flags, featurelevels, _ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, reinterpret_cast<ID3D11Device**>(ppDevice), NULL, reinterpret_cast<ID3D11DeviceContext**>(ppImmediateContext));
+    if (SUCCEEDED(hr))
+    {
+        // get dx11.2 feature level, since that's what dx11.x inherits from
+        if (ppDevice != nullptr)
+        {
+            (*ppDevice)->QueryInterface(IID_PPV_ARGS(&device2));
+            *ppDevice = reinterpret_cast<wdi::ID3D11Device*>(new wd::device_x(device2));
+        }
+
+        if (ppImmediateContext != nullptr)
+        {
+            (*ppImmediateContext)->QueryInterface(IID_PPV_ARGS(&device_context2));
+            *ppImmediateContext = reinterpret_cast<wdi::ID3D11DeviceContext*>(new wd::device_context_x(device_context2));
+        }
+    }
+    else
+    {
+        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError( ));
+    }
+
+    ComPtr<IDXGIFactory2> pFactory;
+    CreateDXGIFactory1(IID_PPV_ARGS(&pFactory));
+
+    ComPtr<ICoreWindowStatic> pWindowStatic;
+    RoGetActivationFactory(Microsoft::WRL::Wrappers::HStringReference::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get( ), IID_PPV_ARGS(&pWindowStatic));
+
+    ComPtr<ICoreWindow> pWindow;
+    pWindowStatic->GetForCurrentThread(&pWindow);
+
+    auto swap_chain_desc = *pSwapChainDesc;
+
+    swap_chain_desc.Scaling = DXGI_SCALING_ASPECT_RATIO_STRETCH;
+    swap_chain_desc.Flags &= DXGI_SWAPCHAIN_FLAG_MASK;
+
+    pFactory->CreateSwapChainForCoreWindow(reinterpret_cast<IUnknown*>(device2), pWindow.Get( ), &swap_chain_desc, nullptr, &swap_chain1);
+
+    if (ppSwapChain != nullptr)
+    {
+        *ppSwapChain = new wd::dxgi_swapchain(swap_chain1);
+    }
+    return hr;
+}
+
 HRESULT __stdcall D3D11XCreateDeviceXAndSwapChain1_X(const D3D11X_CREATE_DEVICE_PARAMETERS* pParameters,
-    const DXGI_SWAP_CHAIN_DESC1* pSwapChainDesc, IDXGISwapChain1** ppSwapChain,
+    const DXGI_SWAP_CHAIN_DESC1* pSwapChainDesc, wdi::IDXGISwapChain1** ppSwapChain,
     // ID3D11DeviceX** ppDevice, ID3D11DeviceContextX** ppImmediateContext
-    ID3D11Device** ppDevice, ID3D11DeviceContext** ppImmediateContext)
+    wdi::ID3D11Device** ppDevice, wdi::ID3D11DeviceContext** ppImmediateContext)
 {
     // D3D11_CREATE_DEVICE_VIDEO_EXCLUSIVE
     if ((pParameters->Flags & 0x10000) != 0 || !ppSwapChain)
@@ -83,12 +158,7 @@ HRESULT __stdcall D3D11XCreateDeviceXAndSwapChain1_X(const D3D11X_CREATE_DEVICE_
     DEBUGPRINT("!!! Game is trying to initialize D3D11 through D3D11X !!!");
     DEBUGPRINT("SDK Version: %d\n", pParameters->Version);
 
-    HRESULT hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, 0, pParameters->Flags & CREATE_DEVICE_FLAG_MASK, NULL, NULL, D3D11_SDK_VERSION, ppDevice, NULL, ppImmediateContext);
-
-    if (FAILED(hr))
-    {
-        DEBUGPRINT("!!!D3D11XCreateDeviceXAndSwapChain1_X failed!!!");
-    }
+    HRESULT hr = CreateDeviceAndSwapChain(pParameters->Flags, ppDevice, ppImmediateContext, ppSwapChain, pSwapChainDesc);
 
     return hr;
 }
@@ -146,7 +216,7 @@ HRESULT __stdcall D3DFreeGraphicsMemory_X(void* pAddress)
 
 HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags, VOID* pVirtualAddress, UINT NumPages, const UINT* pPageList)
 {
-    DEBUGPRINT( );
+    printf("D3DMapEsramMemory_X was called!!!\n");
     
     //Rodrigo Todescatto: This will allocate 4mb of RAM as a stub.
     VirtualAlloc(pVirtualAddress, 0x3D0900, MEM_COMMIT, PAGE_READWRITE);
@@ -171,11 +241,15 @@ HRESULT _stdcall DXGIXPresentArray_X(
     _In_ UINT PresentImmediateThreshold,
     _In_ UINT Flags,
     _In_ UINT NumSwapChains,
-    _In_ IDXGISwapChain1* const* ppSwapChain,
+    _In_ wdi::IDXGISwapChain1* const* ppSwapChain,
     _In_ const DXGIX_PRESENTARRAY_PARAMETERS* pPresentParameters)
 {
-    DEBUGPRINT();
-    return E_NOTIMPL;
+    //printf("DXGIXPresentArray_X was called!!!\n");
+
+    int i = 0;
+    HRESULT hr = ppSwapChain[i]->Present(SyncInterval, Flags);
+
+    return hr;
 }
 
 HRESULT __stdcall DXGIXSetFrameNotification_X(
