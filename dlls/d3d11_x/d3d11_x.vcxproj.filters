@@ -60,6 +60,9 @@
     <ClCompile Include="dma_engine.cpp">
       <Filter>wrappers\dma_engine</Filter>
     </ClCompile>
+    <ClCompile Include="view.cpp">
+      <Filter>wrappers\shared</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d11_x.h" />
@@ -128,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="dma_engine.h">
       <Filter>wrappers\dma_engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Blend.hpp">
+      <Filter>wrappers\shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

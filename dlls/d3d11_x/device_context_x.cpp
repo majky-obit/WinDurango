@@ -1,9 +1,8 @@
 #include <d3d11_1.h>
 #include <d3d11_2.h>
+#include "view.hpp"
 #include "device_context_x.h"
 #include <stdexcept>
-
-#include "view.hpp"
 #include <vector>
 
 void wd::device_context_x::GetDevice(ID3D11Device** ppDevice)
@@ -336,46 +335,73 @@ void wd::device_context_x::GSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D1
 	wrapped_interface->GSSetSamplers(StartSlot, NumSamplers, ppSamplers);
 }
 
-void wd::device_context_x::OMSetRenderTargets(UINT NumViews, ID3D11RenderTargetView* const* ppRenderTargetViews,
-	ID3D11DepthStencilView* pDepthStencilView)
+void wd::device_context_x::OMSetRenderTargets(UINT NumViews, wdi::ID3D11RenderTargetView* const* ppRenderTargetViews,
+	wdi::ID3D11DepthStencilView* pDepthStencilView)
 {
-	//printf("OMSetRenderTargets was called!!!!!!!\n");
-	auto* depthStencilView = pDepthStencilView;
-	if (depthStencilView != nullptr)
-		depthStencilView = reinterpret_cast<depth_stencil_view*>(pDepthStencilView)->wrapped_interface;
 
-	if (ppRenderTargetViews != NULL)
+	ID3D11DepthStencilView* depthStencilView = nullptr;
+	ID3D11RenderTargetView* modifiedViews[ D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT ] = {};
+
+	if (pDepthStencilView != nullptr)
 	{
-		ID3D11RenderTargetView* modifiedViews[ D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT ];
+		depthStencilView = reinterpret_cast<depth_stencil_view*>(pDepthStencilView)->wrapped_interface;
+	}
+
+	if (ppRenderTargetViews != nullptr)
+	{
 		for (UINT i = 0; i < NumViews; i++)
 		{
 			if (ppRenderTargetViews[ i ] == nullptr)
-				modifiedViews[ i ] = nullptr;
+				modifiedViews[ i ] = 0;
 			else
-				modifiedViews[ i ] = reinterpret_cast<render_target_view*>(ppRenderTargetViews[ i ])->wrapped_interface;
+				modifiedViews[ i ] = reinterpret_cast<wd::render_target_view*>(ppRenderTargetViews[ i ])->wrapped_interface;
 		}
-		wrapped_interface->OMSetRenderTargets(NumViews, modifiedViews, depthStencilView);
 	}
-	else
-	{
-		wrapped_interface->OMSetRenderTargets(NumViews, ppRenderTargetViews, depthStencilView);
-	}
+
+	wrapped_interface->OMSetRenderTargets(NumViews, modifiedViews, pDepthStencilView ? depthStencilView : nullptr);
 }
 
 void wd::device_context_x::OMSetRenderTargetsAndUnorderedAccessViews(UINT NumRTVs,
-	ID3D11RenderTargetView* const* ppRenderTargetViews, ID3D11DepthStencilView* pDepthStencilView, UINT UAVStartSlot,
-	UINT NumUAVs, ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts)
+	wdi::ID3D11RenderTargetView* const* ppRenderTargetViews, wdi::ID3D11DepthStencilView* pDepthStencilView, UINT UAVStartSlot,
+	UINT NumUAVs, wdi::ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts)
 {
-	//printf("OMSetRenderTargetsAndUnorderedAccessViews was called!!!!!!!\n");
-	wrapped_interface->OMSetRenderTargetsAndUnorderedAccessViews(NumRTVs, ppRenderTargetViews, pDepthStencilView,
-	                                                                UAVStartSlot, NumUAVs, ppUnorderedAccessViews,
+	ID3D11DepthStencilView* depthStencilView = nullptr;
+	if (depthStencilView != nullptr)
+		depthStencilView = reinterpret_cast<depth_stencil_view*>(pDepthStencilView)->wrapped_interface;
+
+	ID3D11UnorderedAccessView* unorderedAccessViews[ D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT ];
+	ID3D11RenderTargetView* modifiedViews[ D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT ];
+	for (UINT i = 0; i < NumUAVs; i++)
+	{
+		if (ppRenderTargetViews[ i ] == nullptr)
+			modifiedViews[ i ] = 0;
+		else
+			modifiedViews[ i ] = reinterpret_cast<render_target_view*>(ppRenderTargetViews[ i ])->wrapped_interface;
+
+
+		if (ppUnorderedAccessViews[ i ] == nullptr)
+			unorderedAccessViews[ i ] = 0;
+		else
+			unorderedAccessViews[ i ] = reinterpret_cast<unordered_access_view*>(ppUnorderedAccessViews[ i ])->wrapped_interface;
+	}
+
+	wrapped_interface->OMSetRenderTargetsAndUnorderedAccessViews(NumRTVs, modifiedViews, depthStencilView,
+	                                                               UAVStartSlot, NumUAVs, unorderedAccessViews,
 	                                                                pUAVInitialCounts);
 }
 
-void wd::device_context_x::OMSetBlendState(ID3D11BlendState* pBlendState, const FLOAT BlendFactor[4], UINT SampleMask)
+void wd::device_context_x::OMSetBlendState(wdi::ID3D11BlendState* pBlendState, const FLOAT BlendFactor[4], UINT SampleMask)
 {
 	//printf("OMSetBlendState was called!!!!!!!\n");
-	wrapped_interface->OMSetBlendState(pBlendState, BlendFactor, SampleMask);
+
+	ID3D11BlendState* blendState = nullptr;
+
+	if (pBlendState != nullptr)
+	{
+		blendState = reinterpret_cast<blend_state*>(pBlendState)->wrapped_interface;
+	}
+
+	wrapped_interface->OMSetBlendState(blendState, BlendFactor, SampleMask);
 }
 
 void wd::device_context_x::OMSetDepthStencilState(ID3D11DepthStencilState* pDepthStencilState, UINT StencilRef)
@@ -451,32 +477,32 @@ void wd::device_context_x::UpdateSubresource(ID3D11Resource* pDstResource, UINT 
 }
 
 void wd::device_context_x::CopyStructureCount(ID3D11Buffer* pDstBuffer, UINT DstAlignedByteOffset,
-	ID3D11UnorderedAccessView* pSrcView)
+	wdi::ID3D11UnorderedAccessView* pSrcView)
 {
-	wrapped_interface->CopyStructureCount(pDstBuffer, DstAlignedByteOffset, pSrcView);
+	wrapped_interface->CopyStructureCount(pDstBuffer, DstAlignedByteOffset, reinterpret_cast<wd::unordered_access_view*>(pSrcView)->wrapped_interface);
 }
 
-void wd::device_context_x::ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView, const FLOAT ColorRGBA[4])
+void wd::device_context_x::ClearRenderTargetView(wdi::ID3D11RenderTargetView* pRenderTargetView, const FLOAT ColorRGBA[4])
 {
 	wrapped_interface->ClearRenderTargetView(reinterpret_cast<wd::render_target_view*>(pRenderTargetView)->wrapped_interface, ColorRGBA);
 }
 
-void wd::device_context_x::ClearUnorderedAccessViewUint(ID3D11UnorderedAccessView* pUnorderedAccessView,
+void wd::device_context_x::ClearUnorderedAccessViewUint(wdi::ID3D11UnorderedAccessView* pUnorderedAccessView,
 	const UINT Values[4])
 {
-	wrapped_interface->ClearUnorderedAccessViewUint(pUnorderedAccessView, Values);
+	wrapped_interface->ClearUnorderedAccessViewUint(reinterpret_cast<wd::unordered_access_view*>(pUnorderedAccessView)->wrapped_interface, Values);
 }
 
-void wd::device_context_x::ClearUnorderedAccessViewFloat(ID3D11UnorderedAccessView* pUnorderedAccessView,
+void wd::device_context_x::ClearUnorderedAccessViewFloat(wdi::ID3D11UnorderedAccessView* pUnorderedAccessView,
 	const FLOAT Values[4])
 {
-	wrapped_interface->ClearUnorderedAccessViewFloat(pUnorderedAccessView, Values);
+	wrapped_interface->ClearUnorderedAccessViewFloat(reinterpret_cast<wd::unordered_access_view*>(pUnorderedAccessView)->wrapped_interface, Values);
 }
 
-void wd::device_context_x::ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView, UINT ClearFlags,
+void wd::device_context_x::ClearDepthStencilView(wdi::ID3D11DepthStencilView* pDepthStencilView, UINT ClearFlags,
 	FLOAT Depth, UINT8 Stencil)
 {
-	//wrapped_interface->ClearDepthStencilView(reinterpret_cast<wd::depth_stencil_view*>(pDepthStencilView)->wrapped_interface, ClearFlags, Depth, Stencil);
+	//wrapped_interface->ClearDepthStencilView(reinterpret_cast<depth_stencil_view*>(pDepthStencilView)->wrapped_interface, ClearFlags, Depth, Stencil);
 }
 
 void wd::device_context_x::GenerateMips(ID3D11ShaderResourceView* pShaderResourceView)
@@ -549,9 +575,9 @@ void wd::device_context_x::DSSetConstantBuffers(UINT StartSlot, UINT NumBuffers,
 }
 
 void wd::device_context_x::CSSetUnorderedAccessViews(UINT StartSlot, UINT NumUAVs,
-	ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts)
+	wdi::ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts)
 {
-	wrapped_interface->CSSetUnorderedAccessViews(StartSlot, NumUAVs, ppUnorderedAccessViews, pUAVInitialCounts);
+	//wrapped_interface->CSSetUnorderedAccessViews(StartSlot, NumUAVs, ppUnorderedAccessViews, pUAVInitialCounts);
 }
 
 void wd::device_context_x::CSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers)
@@ -729,39 +755,72 @@ void wd::device_context_x::GSGetSamplers(UINT StartSlot, UINT NumSamplers, ID3D1
 	wrapped_interface->GSGetSamplers(StartSlot, NumSamplers, ppSamplers);
 }
 
-void wd::device_context_x::OMGetRenderTargets(UINT NumViews, ID3D11RenderTargetView** ppRenderTargetViews,
-	ID3D11DepthStencilView** ppDepthStencilView)
+void wd::device_context_x::OMGetRenderTargets(
+	UINT NumViews,
+	wdi::ID3D11RenderTargetView** ppRenderTargetViews,
+	wdi::ID3D11DepthStencilView** ppDepthStencilView)
 {
-	/*ID3D11DepthStencilView* pDepthStencilView = nullptr;
+	ID3D11DepthStencilView* pDepthStencilView = nullptr;
 	ID3D11RenderTargetView* RenderTargetViews[ D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT ] = {};
-
 	wrapped_interface->OMGetRenderTargets(NumViews, RenderTargetViews, ppDepthStencilView ? &pDepthStencilView : nullptr);
 
 	if (ppRenderTargetViews != nullptr)
 	{
 		for (UINT i = 0; i < NumViews; i++)
 		{
-			ppRenderTargetViews[i] = reinterpret_cast<ID3D11RenderTargetView*>(new render_target_view(RenderTargetViews[i]));
+			ppRenderTargetViews[ i ] = RenderTargetViews[ i ] ? new render_target_view(RenderTargetViews[ i ]) : nullptr;
 		}
 	}
 
 	if (ppDepthStencilView != nullptr)
 	{
-		*ppDepthStencilView = ppDepthStencilView ? reinterpret_cast<ID3D11DepthStencilView*>(new depth_stencil_view(pDepthStencilView)) : nullptr;
-	}*/
+		*ppDepthStencilView = pDepthStencilView ? new depth_stencil_view(pDepthStencilView) : nullptr;
+	}
 }
 
 void wd::device_context_x::OMGetRenderTargetsAndUnorderedAccessViews(UINT NumRTVs,
-	ID3D11RenderTargetView** ppRenderTargetViews, ID3D11DepthStencilView** ppDepthStencilView, UINT UAVStartSlot,
-	UINT NumUAVs, ID3D11UnorderedAccessView** ppUnorderedAccessViews)
+	wdi::ID3D11RenderTargetView** ppRenderTargetViews, wdi::ID3D11DepthStencilView** ppDepthStencilView, UINT UAVStartSlot,
+	UINT NumUAVs, wdi::ID3D11UnorderedAccessView** ppUnorderedAccessViews)
 {
-	wrapped_interface->OMGetRenderTargetsAndUnorderedAccessViews(NumRTVs, ppRenderTargetViews, ppDepthStencilView,
-	                                                                UAVStartSlot, NumUAVs, ppUnorderedAccessViews);
+	ID3D11DepthStencilView* pDepthStencilView = nullptr;
+	ID3D11RenderTargetView* RenderTargetViews[ D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT ] = {};
+	ID3D11UnorderedAccessView* unorderedAccessViews[ 8 ] = {};
+
+	wrapped_interface->OMGetRenderTargetsAndUnorderedAccessViews(NumRTVs, RenderTargetViews, ppDepthStencilView ? &pDepthStencilView : nullptr,
+	                                                             UAVStartSlot, NumUAVs, unorderedAccessViews);
+
+	if (RenderTargetViews != nullptr)
+	{
+		for (UINT i = 0; i < NumUAVs; i++)
+		{
+			ppRenderTargetViews[ i ] = new render_target_view(RenderTargetViews[ i ]);
+		}
+	}
+
+	if (unorderedAccessViews != nullptr)
+	{
+		for (UINT i = 0; i < NumUAVs; i++)
+		{
+			ppUnorderedAccessViews[ i ] = new unordered_access_view(unorderedAccessViews[ i ]);
+		}
+	}
+
+	if (pDepthStencilView != nullptr)
+	{
+		*ppDepthStencilView = pDepthStencilView ? new depth_stencil_view(pDepthStencilView) : nullptr;
+	}
 }
 
-void wd::device_context_x::OMGetBlendState(ID3D11BlendState** ppBlendState, FLOAT BlendFactor[4], UINT* pSampleMask)
+void wd::device_context_x::OMGetBlendState(wdi::ID3D11BlendState** ppBlendState, FLOAT BlendFactor[4], UINT* pSampleMask)
 {
-	wrapped_interface->OMGetBlendState(ppBlendState, BlendFactor, pSampleMask);
+	ID3D11BlendState* blendState;
+
+	wrapped_interface->OMGetBlendState(&blendState, BlendFactor, pSampleMask);
+
+	if (ppBlendState != nullptr)
+	{
+		*ppBlendState = blendState ? new blend_state(blendState) : nullptr;
+	}
 }
 
 void wd::device_context_x::OMGetDepthStencilState(ID3D11DepthStencilState** ppDepthStencilState, UINT* pStencilRef)
@@ -840,9 +899,18 @@ void wd::device_context_x::CSGetShaderResources(UINT StartSlot, UINT NumViews,
 }
 
 void wd::device_context_x::CSGetUnorderedAccessViews(UINT StartSlot, UINT NumUAVs,
-	ID3D11UnorderedAccessView** ppUnorderedAccessViews)
+	wdi::ID3D11UnorderedAccessView** ppUnorderedAccessViews)
 {
-	wrapped_interface->CSGetUnorderedAccessViews(StartSlot, NumUAVs, ppUnorderedAccessViews);
+	ID3D11UnorderedAccessView* unorderedAccessViews[ 8 ] = {};
+	wrapped_interface->CSGetUnorderedAccessViews(StartSlot, NumUAVs, unorderedAccessViews);
+
+	if (unorderedAccessViews != nullptr)
+	{
+		for (UINT i = 0; i < NumUAVs; i++)
+		{
+			ppUnorderedAccessViews[ i ] = new unordered_access_view(unorderedAccessViews[ i ]);
+		}
+	}
 }
 
 void wd::device_context_x::CSGetShader(ID3D11ComputeShader** ppComputeShader, ID3D11ClassInstance** ppClassInstances,
@@ -1137,7 +1205,7 @@ void wd::device_context_x::FlushGpuCaches(ID3D11Resource* pResource)
 
 void wd::device_context_x::FlushGpuCacheRange(UINT Flags, void* pBaseAddress, SIZE_T SizeInBytes)
 {
-	throw std::logic_error("Not implemented");
+	
 }
 
 void wd::device_context_x::InsertWaitUntilIdle(UINT Flags)
@@ -1375,7 +1443,7 @@ void wd::device_context_x::CSEnableAutomaticGpuFlush(BOOL Enable)
 
 void wd::device_context_x::GpuSendPipelinedEvent(wdi::D3D11X_GPU_PIPELINED_EVENT Event)
 {
-	throw std::logic_error("Not implemented");
+
 }
 
 HRESULT wd::device_context_x::Suspend(UINT Flags)
@@ -1515,7 +1583,7 @@ void wd::device_context_x::InsertWaitOnPresent(UINT Flags, ID3D11Resource* pBack
 	throw std::logic_error("Not implemented");
 }
 
-void wd::device_context_x::ClearRenderTargetViewX(ID3D11RenderTargetView* pRenderTargetView, UINT Flags,
+void wd::device_context_x::ClearRenderTargetViewX(wdi::ID3D11RenderTargetView* pRenderTargetView, UINT Flags,
 	const FLOAT ColorRGBA[4])
 {
 	throw std::logic_error("Not implemented");

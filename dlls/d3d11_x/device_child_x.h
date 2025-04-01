@@ -1,7 +1,6 @@
 #pragma once
 #include <cassert>
 #include <exception>
-
 #include "d3d11_x.h"
 #include "graphics_unknown.h"
 

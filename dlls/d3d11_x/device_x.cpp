@@ -5,6 +5,8 @@
 #include <iostream>
 #include "d3d11_x.h"
 
+DXGI_FORMAT LastResourceFormat2D = DXGI_FORMAT_UNKNOWN;
+
 HRESULT wd::device_x::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Buffer** ppBuffer)
 {
@@ -28,7 +30,33 @@ HRESULT wd::device_x::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_S
 		pDesc2.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 	}
 
+	if (pDesc->MiscFlags == 0x40)
+	{
+		pDesc2.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	}
+
+	if (pDesc->MiscFlags & D3D11_RESOURCE_MISC_TILE_POOL_X)
+	{
+		pDesc2.MiscFlags |= D3D11_RESOURCE_MISC_TILE_POOL;
+		pInitialData = NULL;
+		pDesc2.BindFlags = 0;
+	}
+
+	if (pDesc->MiscFlags & D3D11_RESOURCE_MISC_TILED_X)
+	{
+		pDesc2.MiscFlags |= D3D11_RESOURCE_MISC_TILED;
+		pInitialData = NULL;
+		pDesc2.BindFlags = 0;
+	}
+
+	if (pDesc->MiscFlags == D3D11X_RESOURCE_MISC_ESRAM_RESIDENT)
+	{
+		VirtualAlloc(&pInitialData, 0x3D0900, MEM_COMMIT, PAGE_READWRITE);
+		pDesc2.MiscFlags = 0;
+	}
+
 	ID3D11Buffer* buffer = nullptr;
+
 	HRESULT hr = wrapped_interface->CreateBuffer(&pDesc2, pInitialData, &buffer);
 
 	if (ppBuffer != nullptr)
@@ -43,14 +71,10 @@ HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D
                                       ID3D11Texture1D** ppTexture1D)
 {
 	ID3D11Texture1D* texture1d = nullptr;
+
 	HRESULT hr = wrapped_interface->CreateTexture1D(pDesc, pInitialData, &texture1d);
 
 	printf("[CreateTexture1D] created texture at 0x%llX\n", texture1d);
-
-	if (ppTexture1D != nullptr)
-	{
-		*ppTexture1D = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Texture1D*>(new texture_1d(texture1d)) : nullptr;
-	}
 
 	return hr;
 }
@@ -58,8 +82,6 @@ HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D
 HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Texture2D** ppTexture2D)
 {
-	std::cout << std::hex << "CreateTexture2D MiscFlag---> " << pDesc->MiscFlags << "\n";
-
 	auto pDesc2 = *pDesc;
 	pDesc2.MiscFlags &= D3D11_MISC_FLAGS_MASK;
 
@@ -83,7 +105,7 @@ HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D
 
 	if (pDesc->MiscFlags == 0x4)
 	{
-		pDesc2.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+		pDesc2.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
 	}
 
 	if (pDesc->MiscFlags == D3D11X_RESOURCE_MISC_ESRAM_RESIDENT)
@@ -95,6 +117,11 @@ HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D
 	if (pDesc->SampleDesc.Count > 1)
 	{
 		pDesc2.MiscFlags = 0;
+	}
+
+	if (pDesc->MiscFlags == 0x40)
+	{
+		pDesc2.MiscFlags |= D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	}
 
 	ID3D11Texture2D* texture2d = nullptr;
@@ -141,12 +168,14 @@ HRESULT wd::device_x::CreateShaderResourceView(ID3D11Resource* pResource, const 
 	}
 
 	return hr;
+	
 }
 
 HRESULT wd::device_x::CreateUnorderedAccessView(ID3D11Resource* pResource,
                                                 const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView)
 {
 	::ID3D11UnorderedAccessView* target = nullptr;
+	
 	HRESULT hr = wrapped_interface->CreateUnorderedAccessView(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
 
 	if (ppUAView != nullptr)
@@ -162,6 +191,7 @@ HRESULT wd::device_x::CreateRenderTargetView(ID3D11Resource* pResource, const D3
                                              ID3D11RenderTargetView** ppRTView)
 {
 	::ID3D11RenderTargetView* target = nullptr;
+
 	HRESULT hr = wrapped_interface->CreateRenderTargetView(reinterpret_cast<wd::d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
 
 	if (ppRTView != nullptr)
@@ -176,9 +206,8 @@ HRESULT wd::device_x::CreateRenderTargetView(ID3D11Resource* pResource, const D3
 HRESULT wd::device_x::CreateDepthStencilView(ID3D11Resource* pResource, const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
 	ID3D11DepthStencilView** ppDepthStencilView)
 {
-	printf("CreateDepthStencilView was called!!!!!!!\n");
-
 	::ID3D11DepthStencilView* target = nullptr;
+
 	HRESULT hr = wrapped_interface->CreateDepthStencilView(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
 
 	if (ppDepthStencilView != nullptr)
@@ -190,6 +219,20 @@ HRESULT wd::device_x::CreateDepthStencilView(ID3D11Resource* pResource, const D3
 	return hr;
 }
 
+HRESULT wd::device_x::CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, wdi::ID3D11BlendState** ppBlendState)
+{
+	ID3D11BlendState* blendState = nullptr;
+
+	HRESULT hr = wrapped_interface->CreateBlendState(pBlendStateDesc, &blendState);
+
+	if (ppBlendState != nullptr)
+	{
+		*ppBlendState = SUCCEEDED(hr) ? reinterpret_cast<wdi::ID3D11BlendState*>(new wd::blend_state(blendState)) : nullptr;
+	}
+
+	return S_OK;
+}
+
 HRESULT wd::device_x::CreateDeferredContext(UINT ContextFlags, ID3D11DeviceContext** ppDeferredContext)
 {
 	if (ContextFlags != 0)
@@ -199,10 +242,6 @@ HRESULT wd::device_x::CreateDeferredContext(UINT ContextFlags, ID3D11DeviceConte
 
 	::ID3D11DeviceContext* ctx{};
 	HRESULT hr = wrapped_interface->CreateDeferredContext(ContextFlags, &ctx);
-	if (FAILED(hr))
-	{
-		printf("CreateDeferredContext failed!!!!!!!\n");
-	}
 
 	if (ppDeferredContext != nullptr && SUCCEEDED(hr))
 	{
@@ -217,7 +256,6 @@ HRESULT wd::device_x::CreateDeferredContext(UINT ContextFlags, ID3D11DeviceConte
 
 void wd::device_x::GetImmediateContext(ID3D11DeviceContext** ppImmediateContext)
 {
-	printf("GetImmediateContext was called!!!\n");
 	::ID3D11DeviceContext* ctx{};
 	wrapped_interface->GetImmediateContext(&ctx);
 
@@ -276,6 +314,7 @@ HRESULT wd::device_x::SetDriverHint(UINT Feature, UINT Value)
 HRESULT wd::device_x::CreateDmaEngineContext(const wdi::D3D11_DMA_ENGINE_CONTEXT_DESC* pDmaEngineContextDesc,
 										 wdi::ID3D11DmaEngineContextX** ppDmaDeviceContext)
 {
+	*ppDmaDeviceContext = new D3D11DmaEngineContextX();
 	return S_OK;
 }
 
@@ -296,14 +335,13 @@ BOOL wd::device_x::IsResourcePending(ID3D11Resource* pResource)
 HRESULT wd::device_x::CreatePlacementBuffer(const D3D11_BUFFER_DESC* pDesc, void* pVirtualAddress,
 										ID3D11Buffer** ppBuffer)
 {
-	printf("CreatePlacementBuffer was called!!!!!!!\n");
-
 	D3D11_SUBRESOURCE_DATA initialData = {};
 	initialData.pSysMem = pVirtualAddress;
 	initialData.SysMemPitch = pDesc->ByteWidth * 3;
-	return CreateBuffer(pDesc, &initialData, ppBuffer);
 
-	return S_OK;
+	HRESULT hr = CreateBuffer(pDesc, &initialData, ppBuffer);
+
+	return hr;
 }
 
 HRESULT wd::device_x::CreatePlacementTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,
@@ -317,9 +355,9 @@ HRESULT wd::device_x::CreatePlacementTexture1D(const D3D11_TEXTURE1D_DESC* pDesc
 		initialData[ i ].SysMemPitch = pDesc->Width;
 	}
 
-	CreateTexture1D(pDesc, initialData.data(), ppTexture1D);
+	HRESULT hr = CreateTexture1D(pDesc, initialData.data(), ppTexture1D);
 
-	return S_OK;
+	return hr;
 }
 
 HRESULT wd::device_x::CreatePlacementTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,
@@ -337,7 +375,7 @@ HRESULT wd::device_x::CreatePlacementTexture2D(const D3D11_TEXTURE2D_DESC* pDesc
 	for (int i = 0; i < initialData.size( ); i++)
 	{
 		initialData[ i ].pSysMem = pVirtualAddress;
-		initialData[ i ].SysMemPitch = pDesc->Width;
+		initialData[ i ].SysMemPitch = pDesc->Width * 2;
 	}
 
 	CreateTexture2D(pDesc, initialData.data(), ppTexture2D);
@@ -353,7 +391,7 @@ HRESULT wd::device_x::CreatePlacementTexture3D(const D3D11_TEXTURE3D_DESC* pDesc
 	for (int i = 0; i < initialData.size( ); i++)
 	{
 		initialData[ i ].pSysMem = pVirtualAddress;
-		initialData[ i ].SysMemPitch = pDesc->Width;
+		initialData[ i ].SysMemPitch = pDesc->Width * 2;
 		initialData[ i ].SysMemSlicePitch = pDesc->Width;
 	}
 
@@ -411,7 +449,8 @@ HRESULT wd::device_x::CreateComputeContextX(const wdi::D3D11_COMPUTE_CONTEXT_DES
 										wdi::ID3D11ComputeContextX** ppComputeContext)
 {
 	printf("CreateComputeContextX was called!!!!!!!\n");
-	return CreateDeferredContext2(0, (ID3D11DeviceContext2**)ppComputeContext);
+
+	return S_OK;
 }
 
 void wd::device_x::ComposeShaderResourceView(const wdi::D3D11X_DESCRIPTOR_RESOURCE* pDescriptorResource,
@@ -484,4 +523,8 @@ HRESULT wd::device_x::SetGpuMemoryPriority(UINT Priority)
 void wd::device_x::GetGpuHardwareConfiguration(wdi::D3D11X_GPU_HARDWARE_CONFIGURATION* pGpuHardwareConfiguration)
 {
 	printf("GetGpuHardwareConfiguration was called!!!!!!!\n");
+
+	//Xbox One X
+	pGpuHardwareConfiguration->GpuFrequency = 1172;
+	pGpuHardwareConfiguration->GpuCuCount = 2560;
 }

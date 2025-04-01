@@ -8,6 +8,7 @@
 #include "dxgi_device.h"
 #include "dma_engine.h"
 
+
 #define D3D11_RESOURCE_MISC_TILE_POOL_X 0x4000000
 #define D3D11_RESOURCE_MISC_TILED_X 0x8000000
 #define D3D11_MISC_FLAGS_MASK (D3D11_RESOURCE_MISC_TILE_POOL | D3D11_RESOURCE_MISC_TILED)
@@ -15,6 +16,8 @@
 
 namespace wdi
 {
+	class ID3D11DeviceContext;
+	class ID3D11BlendState;
 	class ID3D11DeviceContextX;
 	struct D3D11X_COUNTER_SET_DESC;
 	struct D3D11X_DESCRIPTOR_RESOURCE;
@@ -365,10 +368,7 @@ namespace wd
 			return wrapped_interface->CreateClassLinkage(ppLinkage);
 		}
 
-		HRESULT CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, ID3D11BlendState** ppBlendState) override
-		{
-			return wrapped_interface->CreateBlendState(pBlendStateDesc, ppBlendState);
-		}
+		HRESULT CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, wdi::ID3D11BlendState** ppBlendState) override;
 
 		HRESULT CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc, ID3D11DepthStencilState** ppDepthStencilState) override
 		{

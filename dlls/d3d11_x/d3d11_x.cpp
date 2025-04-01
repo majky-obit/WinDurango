@@ -215,9 +215,7 @@ HRESULT __stdcall D3DFreeGraphicsMemory_X(void* pAddress)
 }
 
 HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags, VOID* pVirtualAddress, UINT NumPages, const UINT* pPageList)
-{
-    printf("D3DMapEsramMemory_X was called!!!\n");
-    
+{  
     //Rodrigo Todescatto: This will allocate 4mb of RAM as a stub.
     VirtualAlloc(pVirtualAddress, 0x3D0900, MEM_COMMIT, PAGE_READWRITE);
 

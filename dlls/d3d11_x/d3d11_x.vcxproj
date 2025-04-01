@@ -107,6 +107,7 @@
     <ClCompile Include="device_child_x.cpp" />
     <ClCompile Include="device_context_x.cpp" />
     <ClCompile Include="device_x.cpp" />
+    <ClCompile Include="view.cpp" />
     <ClCompile Include="XGUIDs.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="dma_engine.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="..\..\thirdparty\imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\thirdparty\imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\thirdparty\imgui_impl_uwp.h" />
+    <ClInclude Include="Blend.hpp" />
     <ClInclude Include="d3d11_x.h" />
     <ClInclude Include="device_child_x.h" />
     <ClInclude Include="device_context_x.h" />

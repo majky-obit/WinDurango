@@ -1,9 +1,9 @@
 #pragma once
 #include <array>
 #include <map>
-
 #include "device_child_x.h"
 #include "device_x.h"
+#include "blend.hpp"
 
 static std::map<UINT64, int> D3D11X_HARDWARE_TO_TOPOLOGY_MAP = {
 	{0x000001ffc0009e00, 0}, {0x000003ffc0009e00, 1}, {0x000005ffc0009e00, 2}, {0x000007ffc0009e00, 3},
@@ -27,6 +27,9 @@ static std::map<UINT64, int> D3D11X_HARDWARE_TO_TOPOLOGY_MAP = {
 
 namespace wdi
 {
+	class ID3D11RenderTargetView;
+	class ID3D11DepthStencilView;
+	class ID3D11UnorderedAccessView;
 
 	#pragma region struct_defs
 	typedef enum _D3D11X_GDS_REGION_TYPE
@@ -340,7 +343,7 @@ namespace wdi
 		virtual void (GetPredication)(_Out_opt_ ID3D11Predicate** ppPredicate,_Out_opt_ BOOL* pPredicateValue) = 0;
 		virtual void (GSGetShaderResources)(_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot) UINT NumViews,_Out_writes_opt_(NumViews) ID3D11ShaderResourceView** ppShaderResourceViews) = 0;
 		virtual void (GSGetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_Out_writes_opt_(NumSamplers) ID3D11SamplerState** ppSamplers) = 0;
-		virtual void (OMGetRenderTargets)(_In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) UINT NumViews,_Out_writes_opt_(NumViews) ID3D11RenderTargetView** ppRenderTargetViews,_Out_opt_ ID3D11DepthStencilView** ppDepthStencilView) = 0;
+		virtual void (OMGetRenderTargets)(_In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) UINT NumViews,_Out_writes_opt_(NumViews) wdi::ID3D11RenderTargetView** ppRenderTargetViews,_Out_opt_ ID3D11DepthStencilView** ppDepthStencilView) = 0;
 		virtual void (OMGetRenderTargetsAndUnorderedAccessViews)(_In_range_(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) UINT NumRTVs,_Out_writes_opt_(NumRTVs) ID3D11RenderTargetView** ppRenderTargetViews,_Out_opt_ ID3D11DepthStencilView** ppDepthStencilView,_In_range_(0, D3D11_PS_CS_UAV_REGISTER_COUNT - 1) UINT UAVStartSlot,_In_range_(0, D3D11_PS_CS_UAV_REGISTER_COUNT - UAVStartSlot) UINT NumUAVs,_Out_writes_opt_(NumUAVs) ID3D11UnorderedAccessView** ppUnorderedAccessViews) = 0;
 		virtual void (OMGetBlendState)(_Out_opt_ ID3D11BlendState** ppBlendState,_Out_writes_all_opt_(4) FLOAT BlendFactor[ 4 ],_Out_opt_ UINT* pSampleMask) = 0;
 		virtual void (OMGetDepthStencilState)(_Out_opt_ ID3D11DepthStencilState** ppDepthStencilState,_Out_opt_ UINT* pStencilRef) = 0;
@@ -729,12 +732,12 @@ namespace wd
 		HRESULT GetData(ID3D11Asynchronous* pAsync, void* pData, UINT DataSize, UINT GetDataFlags) override;
 		void SetPredication(ID3D11Predicate* pPredicate, BOOL PredicateValue) override;
 		void GSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
-		void OMSetRenderTargets(UINT NumViews, ID3D11RenderTargetView* const* ppRenderTargetViews,
-			ID3D11DepthStencilView* pDepthStencilView) override;
-		void OMSetRenderTargetsAndUnorderedAccessViews(UINT NumRTVs, ID3D11RenderTargetView* const* ppRenderTargetViews,
-			ID3D11DepthStencilView* pDepthStencilView, UINT UAVStartSlot, UINT NumUAVs,
-			ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts) override;
-		void OMSetBlendState(ID3D11BlendState* pBlendState, const FLOAT BlendFactor[4], UINT SampleMask) override;
+		void OMSetRenderTargets(UINT NumViews, wdi::ID3D11RenderTargetView* const* ppRenderTargetViews,
+			wdi::ID3D11DepthStencilView* pDepthStencilView) override;
+		void OMSetRenderTargetsAndUnorderedAccessViews(UINT NumRTVs, wdi::ID3D11RenderTargetView* const* ppRenderTargetViews,
+			wdi::ID3D11DepthStencilView* pDepthStencilView, UINT UAVStartSlot, UINT NumUAVs,
+			wdi::ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts) override;
+		void OMSetBlendState(wdi::ID3D11BlendState* pBlendState, const FLOAT BlendFactor[4], UINT SampleMask) override;
 		void OMSetDepthStencilState(ID3D11DepthStencilState* pDepthStencilState, UINT StencilRef) override;
 		void SOSetTargets(UINT NumBuffers, ID3D11Buffer* const* ppSOTargets, const UINT* pOffsets) override;
 		void DrawIndexedInstancedIndirect(ID3D11Buffer* pBufferForArgs, UINT AlignedByteOffsetForArgs) override;
@@ -750,13 +753,13 @@ namespace wd
 		void UpdateSubresource(ID3D11Resource* pDstResource, UINT DstSubresource, const D3D11_BOX* pDstBox,
 			const void* pSrcData, UINT SrcRowPitch, UINT SrcDepthPitch) override;
 		void CopyStructureCount(ID3D11Buffer* pDstBuffer, UINT DstAlignedByteOffset,
-			ID3D11UnorderedAccessView* pSrcView) override;
-		void ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView, const FLOAT ColorRGBA[4]) override;
-		void ClearUnorderedAccessViewUint(ID3D11UnorderedAccessView* pUnorderedAccessView,
+			wdi::ID3D11UnorderedAccessView* pSrcView) override;
+		void ClearRenderTargetView(wdi::ID3D11RenderTargetView* pRenderTargetView, const FLOAT ColorRGBA[4]) override;
+		void ClearUnorderedAccessViewUint(wdi::ID3D11UnorderedAccessView* pUnorderedAccessView,
 			const UINT Values[4]) override;
-		void ClearUnorderedAccessViewFloat(ID3D11UnorderedAccessView* pUnorderedAccessView,
+		void ClearUnorderedAccessViewFloat(wdi::ID3D11UnorderedAccessView* pUnorderedAccessView,
 			const FLOAT Values[4]) override;
-		void ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView, UINT ClearFlags, FLOAT Depth,
+		void ClearDepthStencilView(wdi::ID3D11DepthStencilView* pDepthStencilView, UINT ClearFlags, FLOAT Depth,
 			UINT8 Stencil) override;
 		void GenerateMips(ID3D11ShaderResourceView* pShaderResourceView) override;
 		void SetResourceMinLOD(ID3D11Resource* pResource, FLOAT MinLOD) override;
@@ -769,7 +772,7 @@ namespace wd
 		void DSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
 		void DSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers) override;
 		void CSSetUnorderedAccessViews(UINT StartSlot, UINT NumUAVs,
-			ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts) override;
+			wdi::ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts) override;
 		void CSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers) override;
 		void CSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers) override;
 		void VSGetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer** ppConstantBuffers) override;
@@ -796,12 +799,12 @@ namespace wd
 		void GSGetShaderResources(UINT StartSlot, UINT NumViews,
 			ID3D11ShaderResourceView** ppShaderResourceViews) override;
 		void GSGetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState** ppSamplers) override;
-		void OMGetRenderTargets(UINT NumViews, ID3D11RenderTargetView** ppRenderTargetViews,
-			ID3D11DepthStencilView** ppDepthStencilView) override;
-		void OMGetRenderTargetsAndUnorderedAccessViews(UINT NumRTVs, ID3D11RenderTargetView** ppRenderTargetViews,
-			ID3D11DepthStencilView** ppDepthStencilView, UINT UAVStartSlot, UINT NumUAVs,
-			ID3D11UnorderedAccessView** ppUnorderedAccessViews) override;
-		void OMGetBlendState(ID3D11BlendState** ppBlendState, FLOAT BlendFactor[4], UINT* pSampleMask) override;
+		void OMGetRenderTargets(UINT NumViews, wdi::ID3D11RenderTargetView** ppRenderTargetViews,
+		wdi::ID3D11DepthStencilView** ppDepthStencilView) override;
+		void OMGetRenderTargetsAndUnorderedAccessViews(UINT NumRTVs, wdi::ID3D11RenderTargetView** ppRenderTargetViews,
+			wdi::ID3D11DepthStencilView** ppDepthStencilView, UINT UAVStartSlot, UINT NumUAVs,
+			wdi::ID3D11UnorderedAccessView** ppUnorderedAccessViews) override;
+		void OMGetBlendState(wdi::ID3D11BlendState** ppBlendState, FLOAT BlendFactor[4], UINT* pSampleMask) override;
 		void OMGetDepthStencilState(ID3D11DepthStencilState** ppDepthStencilState, UINT* pStencilRef) override;
 		void SOGetTargets(UINT NumBuffers, ID3D11Buffer** ppSOTargets) override;
 		void RSGetState(ID3D11RasterizerState** ppRasterizerState) override;
@@ -822,7 +825,7 @@ namespace wd
 		void CSGetShaderResources(UINT StartSlot, UINT NumViews,
 			ID3D11ShaderResourceView** ppShaderResourceViews) override;
 		void CSGetUnorderedAccessViews(UINT StartSlot, UINT NumUAVs,
-			ID3D11UnorderedAccessView** ppUnorderedAccessViews) override;
+			wdi::ID3D11UnorderedAccessView** ppUnorderedAccessViews) override;
 		void CSGetShader(ID3D11ComputeShader** ppComputeShader, ID3D11ClassInstance** ppClassInstances,
 			UINT* pNumClassInstances) override;
 		void CSGetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState** ppSamplers) override;
@@ -989,7 +992,7 @@ namespace wd
 		void IASetPrimitiveResetIndex(UINT ResetIndex) override;
 		void SetShaderResourceViewMinLOD(ID3D11ShaderResourceView* pShaderResourceView, FLOAT MinLOD) override;
 		void InsertWaitOnPresent(UINT Flags, ID3D11Resource* pBackBuffer) override;
-		void ClearRenderTargetViewX(ID3D11RenderTargetView* pRenderTargetView, UINT Flags,
+		void ClearRenderTargetViewX(wdi::ID3D11RenderTargetView* pRenderTargetView, UINT Flags,
 			const FLOAT ColorRGBA[4]) override;
 		UINT GetResourceCompression(ID3D11Resource* pResource) override;
 		UINT GetResourceCompressionX(const wdi::D3D11X_DESCRIPTOR_RESOURCE* pResource) override;
