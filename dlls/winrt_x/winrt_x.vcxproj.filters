@@ -1999,9 +1999,6 @@
     <ClInclude Include="Implementation\Windows.Xbox.Input.Controller.h">
       <Filter>Implementation\Windows\Xbox\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Implementation\Windows.Xbox.Input.ControllerInputManager.h">
-      <Filter>Implementation\Windows\Xbox\Input</Filter>
-    </ClInclude>
     <ClInclude Include="Implementation\Windows.Xbox.Input.Gamepad.h">
       <Filter>Implementation\Windows\Xbox\Input</Filter>
     </ClInclude>
@@ -2326,6 +2323,9 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="ConnectedStorage\ConnectedStorage.h">
       <Filter>Implementation\WinDurango</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Input.ControllerInputManager.h">
+      <Filter>Implementation\Windows\Xbox\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
