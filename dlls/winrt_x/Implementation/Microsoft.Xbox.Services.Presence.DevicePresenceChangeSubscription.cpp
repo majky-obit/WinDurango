@@ -37,6 +37,6 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
     }
     hstring DevicePresenceChangeSubscription::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
 }

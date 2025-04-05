@@ -29,7 +29,7 @@ namespace winrt::Microsoft::Xbox::Services::Social::implementation
     }
     hstring ReputationFeedbackItem::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     winrt::Microsoft::Xbox::Services::Social::ReputationFeedbackType ReputationFeedbackItem::FeedbackType()
     {

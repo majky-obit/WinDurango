@@ -33,7 +33,7 @@ namespace winrt::Microsoft::Xbox::Services::TitleStorage::implementation
     }
     hstring TitleStorageQuota::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     hstring TitleStorageQuota::MultiplayerSessionTemplateName()
     {

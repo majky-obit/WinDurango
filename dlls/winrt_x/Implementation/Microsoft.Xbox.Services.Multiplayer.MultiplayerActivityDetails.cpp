@@ -49,7 +49,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     hstring MultiplayerActivityDetails::OwnerXboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     uint32_t MultiplayerActivityDetails::MaxMembersCount()
     {

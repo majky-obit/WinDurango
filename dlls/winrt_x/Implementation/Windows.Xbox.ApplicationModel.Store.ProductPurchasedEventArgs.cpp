@@ -25,6 +25,6 @@ namespace winrt::Windows::Xbox::ApplicationModel::Store::implementation
 {
     hstring ProductPurchasedEventArgs::Receipt()
     {
-        throw hresult_not_implemented();
+        return L"";
     }
 }

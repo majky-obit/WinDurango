@@ -25,7 +25,7 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     hstring DevicePresenceChangeEventArgs::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     winrt::Microsoft::Xbox::Services::Presence::PresenceDeviceType DevicePresenceChangeEventArgs::DeviceType()
     {

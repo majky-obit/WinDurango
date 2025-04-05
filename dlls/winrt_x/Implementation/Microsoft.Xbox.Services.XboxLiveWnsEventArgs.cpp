@@ -25,7 +25,7 @@ namespace winrt::Microsoft::Xbox::Services::implementation
 {
     hstring XboxLiveWnsEventArgs::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     hstring XboxLiveWnsEventArgs::NotificationType()
     {

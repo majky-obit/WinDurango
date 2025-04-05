@@ -77,7 +77,7 @@ namespace winrt::Microsoft::Xbox::Services::TitleStorage::implementation
     }
     hstring TitleStorageBlobMetadata::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     hstring TitleStorageBlobMetadata::MultiplayerSessionTemplateName()
     {

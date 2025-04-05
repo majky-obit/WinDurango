@@ -25,6 +25,6 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::Manager::implementation
 {
     hstring UserAddedEventArgs::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
 }

@@ -46,21 +46,21 @@ namespace winrt::Windows::Xbox::ApplicationModel::Store::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::ApplicationModel::Store::PrivilegeCheckResult> Product::CheckPrivilegeAsync(winrt::Windows::Xbox::System::IUser user, uint32_t privilegeId, bool attemptResolution, hstring friendlyDisplay)
     {
-        auto args = winrt::make<implementation::ProductPurchasedEventArgs>( );
+        auto args = winrt::make<implementation::ProductPurchasedEventArgs>();
         co_return PrivilegeCheckResult::NoIssue;
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::ApplicationModel::Store::PrivilegeCheckResult> Product::CheckPrivilegesAsync(winrt::Windows::Xbox::System::IUser user, winrt::Windows::Foundation::Collections::IVectorView<uint32_t> privilegeIds, bool attemptResolution, hstring friendlyDisplay)
     {
-        auto args = winrt::make<implementation::ProductPurchasedEventArgs>( );
+        auto args = winrt::make<implementation::ProductPurchasedEventArgs>();
         co_return PrivilegeCheckResult::NoIssue;
     }
     winrt::event_token Product::ProductPurchased(winrt::Windows::Xbox::ApplicationModel::Store::ProductPurchasedEventHandler const& handler)
     {
-        return m_productPurchasedEvent.add(handler);
+        return {};
     }
     void Product::ProductPurchased(winrt::event_token const& token) noexcept
     {
-        m_productPurchasedEvent.remove(token);
+        throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction Product::ShowPurchaseForStoreIdAsync(winrt::Windows::Xbox::System::IUser requestingUser, hstring storeId)
     {

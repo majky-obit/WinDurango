@@ -25,7 +25,7 @@ namespace winrt::Microsoft::Xbox::Services::Social::Manager::implementation
 {
     hstring XboxSocialUser::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     bool XboxSocialUser::IsFavorite()
     {

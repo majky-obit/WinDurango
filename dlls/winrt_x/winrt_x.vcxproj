@@ -470,6 +470,19 @@
     <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationTemplate.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceSocketDescription.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Services.XboxLiveConfiguration.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.QosMetrics.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.QosMetricsChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.QosSettings.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassAuxiliaryStream.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDevice.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDeviceCollection.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDeviceWatcher.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDirectSurface.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassHtmlSurface.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassMessageReceivedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassSensors.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntryEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntrySurface.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.ContinuousSpeechRecognitionResultEventArgs.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.ContinuousSpeechRecognitionStatusEventArgs.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.InstalledSpeechRecognizers.h" />
@@ -521,6 +534,23 @@
     <ClInclude Include="Implementation\Windows.Xbox.UI.SystemUI.h" />
     <ClInclude Include="Implementation\Windows.Xbox.UI.WebAuthenticationResult.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayer.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.MultiplayerSessionReference.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.Party.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChat.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChatMember.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChatView.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyConfig.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyMember.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyMemberDeviceGroup.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyRosterChangedEventArgs.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyView.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.UserPartyAssociation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectedStorage\ConnectedStorage.cpp" />
@@ -833,6 +863,19 @@
     <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationTemplate.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceSocketDescription.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Services.XboxLiveConfiguration.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.QosMetrics.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.QosMetricsChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.QosSettings.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassAuxiliaryStream.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDevice.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDeviceCollection.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDeviceWatcher.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDirectSurface.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassHtmlSurface.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassMessageReceivedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassSensors.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntryEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntrySurface.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.ContinuousSpeechRecognitionResultEventArgs.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.ContinuousSpeechRecognitionStatusEventArgs.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.InstalledSpeechRecognizers.cpp" />
@@ -888,6 +931,23 @@
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayer.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.MultiplayerSessionReference.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.Party.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChat.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChatMember.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChatView.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyConfig.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyMember.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyMemberDeviceGroup.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyRosterChangedEventArgs.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyView.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.UserPartyAssociation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -932,10 +992,12 @@
     <Midl Include="External\Windows.Xbox.Management.idl" />
     <Midl Include="External\Windows.Xbox.Media.GameTransportControls.idl" />
     <Midl Include="External\Windows.Xbox.Media.idl" />
+    <Midl Include="External\Windows.Xbox.Multiplayer.idl" />
     <Midl Include="External\Windows.Xbox.Networking.idl" />
     <Midl Include="External\Windows.Xbox.Services.idl" />
     <Midl Include="External\Windows.Xbox.Shell.idl" />
     <Midl Include="External\Windows.Xbox.Shell.Social.idl" />
+    <Midl Include="External\Windows.Xbox.SmartGlass.idl" />
     <Midl Include="External\Windows.Xbox.Speech.Recognition.idl" />
     <Midl Include="External\Windows.Xbox.Storage.idl" />
     <Midl Include="External\Windows.Xbox.System.idl" />

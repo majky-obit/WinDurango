@@ -25,7 +25,7 @@ namespace winrt::Microsoft::Xbox::Services::Privacy::implementation
 {
     hstring MultiplePermissionsCheckResult::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Privacy::PermissionCheckResult> MultiplePermissionsCheckResult::Items()
     {

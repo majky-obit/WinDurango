@@ -53,7 +53,7 @@ namespace winrt::Microsoft::Xbox::Services::Marketplace::implementation
     }
     hstring CatalogItem::SandboxId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     bool CatalogItem::IsBundle()
     {

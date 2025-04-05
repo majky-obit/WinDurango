@@ -33,7 +33,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
     }
     hstring MultiplayerSessionMember::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     hstring MultiplayerSessionMember::MemberCustomConstantsJson()
     {

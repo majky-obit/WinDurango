@@ -37,6 +37,6 @@ namespace winrt::Microsoft::Xbox::Services::Social::implementation
     }
     hstring SocialRelationshipChangeSubscription::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
 }

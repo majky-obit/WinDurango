@@ -45,7 +45,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     uint64_t NavigationController::Id()
     {
-        throw hresult_not_implemented();
+        return 0;
     }
     hstring NavigationController::Type()
     {

@@ -29,7 +29,7 @@ namespace winrt::Windows::Xbox::Chat::implementation
     }
     hstring UserMuteStateChangedEventArgs::RecipientXboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     bool UserMuteStateChangedEventArgs::Muted()
     {

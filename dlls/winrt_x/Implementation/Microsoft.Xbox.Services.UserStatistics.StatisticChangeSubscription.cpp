@@ -37,7 +37,7 @@ namespace winrt::Microsoft::Xbox::Services::UserStatistics::implementation
     }
     hstring StatisticChangeSubscription::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     hstring StatisticChangeSubscription::ServiceConfigurationId()
     {

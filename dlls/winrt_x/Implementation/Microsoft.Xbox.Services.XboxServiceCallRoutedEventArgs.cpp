@@ -85,6 +85,6 @@ namespace winrt::Microsoft::Xbox::Services::implementation
     }
     hstring XboxServiceCallRoutedEventArgs::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
 }

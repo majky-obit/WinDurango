@@ -25,7 +25,7 @@ namespace winrt::Microsoft::Xbox::Services::Social::implementation
 {
     hstring SocialRelationshipChangeEventArgs::CallerXboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     winrt::Microsoft::Xbox::Services::Social::SocialNotificationType SocialRelationshipChangeEventArgs::SocialNotification()
     {

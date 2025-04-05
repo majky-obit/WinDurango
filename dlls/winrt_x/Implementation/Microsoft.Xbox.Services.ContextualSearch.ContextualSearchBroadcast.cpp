@@ -25,7 +25,7 @@ namespace winrt::Microsoft::Xbox::Services::ContextualSearch::implementation
 {
     hstring ContextualSearchBroadcast::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     hstring ContextualSearchBroadcast::Provider()
     {

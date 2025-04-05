@@ -29,7 +29,7 @@ namespace winrt::Microsoft::Xbox::Services::Leaderboard::implementation
     }
     hstring LeaderboardRow::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     double LeaderboardRow::Percentile()
     {

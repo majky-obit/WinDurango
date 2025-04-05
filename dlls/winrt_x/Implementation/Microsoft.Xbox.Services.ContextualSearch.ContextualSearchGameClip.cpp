@@ -57,7 +57,7 @@ namespace winrt::Microsoft::Xbox::Services::ContextualSearch::implementation
     }
     hstring ContextualSearchGameClip::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::ContextualSearch::ContextualSearchGameClipStat> ContextualSearchGameClip::Stats()
     {

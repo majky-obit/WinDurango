@@ -33,7 +33,7 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::Manager::implementation
     }
     hstring MultiplayerMember::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     hstring MultiplayerMember::DebugGamertag()
     {

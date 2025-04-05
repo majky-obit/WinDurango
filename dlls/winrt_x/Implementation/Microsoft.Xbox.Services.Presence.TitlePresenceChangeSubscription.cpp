@@ -37,7 +37,7 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
     }
     hstring TitlePresenceChangeSubscription::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     uint32_t TitlePresenceChangeSubscription::TitleId()
     {

@@ -48,6 +48,7 @@ namespace winrt::Windows::Xbox::Input::implementation
         uint16_t HardwareProductId();
         uint16_t HardwareVendorId();
 
+        uint64_t m_id{ 0 };
         inline static winrt::Windows::Foundation::Collections::IVector<winrt::Windows::Xbox::Input::IController> staticControllers = { nullptr };
     };
 }

@@ -26,6 +26,6 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
     winrt::Windows::Xbox::Speech::Recognition::SpeechRecognizer SpeechRecognizerFactory::CreateSpeechRecognizerForLocale(uint16_t requestedLanguageId)
     {
         printf("SpeechRecognizerFactory::CreateSpeechRecognizerForLocale\n");
-        return 0;
+        throw hresult_not_implemented();
     }
 }

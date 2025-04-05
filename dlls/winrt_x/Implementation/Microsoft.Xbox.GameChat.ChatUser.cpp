@@ -25,7 +25,7 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
 {
     hstring ChatUser::XboxUserId()
     {
-        throw hresult_not_implemented();
+        return L"0";
     }
     winrt::Windows::Foundation::IInspectable ChatUser::UniqueConsoleIdentifier()
     {
