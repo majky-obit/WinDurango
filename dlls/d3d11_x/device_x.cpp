@@ -74,7 +74,7 @@ HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D
 
 	HRESULT hr = wrapped_interface->CreateTexture1D(pDesc, pInitialData, &texture1d);
 
-	printf("[CreateTexture1D] created texture at 0x%llX\n", texture1d);
+	//printf("[CreateTexture1D] created texture at 0x%llX\n", texture1d);
 
 	return hr;
 }
@@ -128,7 +128,7 @@ HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D
 
 	HRESULT hr = wrapped_interface->CreateTexture2D(&pDesc2, pInitialData, &texture2d);
 
-	printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
+	//printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
 
 	if (ppTexture2D != nullptr)
 	{
@@ -145,7 +145,7 @@ HRESULT wd::device_x::CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D
 
 	HRESULT hr = wrapped_interface->CreateTexture3D(pDesc, pInitialData, &texture3d);
 
-	printf("[CreateTexture3D] created texture at 0x%llX\n", texture3d);
+	//printf("[CreateTexture3D] created texture at 0x%llX\n", texture3d);
 
 	if (ppTexture3D != nullptr)
 	{

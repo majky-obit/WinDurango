@@ -133,6 +133,7 @@
     <ClInclude Include="device_child_x.h" />
     <ClInclude Include="device_context_x.h" />
     <ClInclude Include="device_x.h" />
+    <ClInclude Include="XG.h" />
     <ClInclude Include="XGUIDs.h" />
     <ClInclude Include="dma_engine.h" />
     <ClInclude Include="dxgi_adapter.h" />

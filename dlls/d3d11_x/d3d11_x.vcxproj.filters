@@ -135,6 +135,9 @@
     <ClInclude Include="Blend.hpp">
       <Filter>wrappers\shared</Filter>
     </ClInclude>
+    <ClInclude Include="XG.h">
+      <Filter>wrappers\device_x</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Exports.def" />

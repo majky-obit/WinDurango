@@ -472,8 +472,57 @@ void wd::device_context_x::CopyResource(ID3D11Resource* pDstResource, ID3D11Reso
 void wd::device_context_x::UpdateSubresource(ID3D11Resource* pDstResource, UINT DstSubresource,
 	const D3D11_BOX* pDstBox, const void* pSrcData, UINT SrcRowPitch, UINT SrcDepthPitch)
 {
-	wrapped_interface->UpdateSubresource(reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface, DstSubresource, pDstBox, pSrcData, SrcRowPitch,
-	                                        SrcDepthPitch);
+	D3D11_RESOURCE_DIMENSION dimension;
+	reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface->GetType(&dimension);
+
+	if (dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D && pSrcData != nullptr)
+	{
+		ID3D11Texture2D* texture = nullptr;
+		if (SUCCEEDED(reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface->QueryInterface(__uuidof(ID3D11Texture2D), (void**) &texture)))
+		{
+			D3D11_TEXTURE2D_DESC desc;
+			texture->GetDesc(&desc);
+
+			if (desc.Format == DXGI_FORMAT_R8G8B8A8_UNORM ||
+				desc.Format == DXGI_FORMAT_B8G8R8A8_UNORM ||
+				desc.Format == DXGI_FORMAT_R8G8B8A8_TYPELESS ||
+				desc.Format == DXGI_FORMAT_B8G8R8A8_TYPELESS)
+			{
+				UINT height = pDstBox ? (pDstBox->bottom - pDstBox->top) : desc.Height;
+
+				SIZE_T dataSize = SrcRowPitch * height;
+				BYTE* swappedData = new BYTE[ dataSize ];
+				memcpy(swappedData, pSrcData, dataSize);
+
+				UINT width = pDstBox ? (pDstBox->right - pDstBox->left) : desc.Width;
+
+				for (UINT y = 0; y < height; y++)
+				{
+					for (UINT x = 0; x < width; x++)
+					{
+						UINT pixelOffset = y * SrcRowPitch + x * 4;
+						BYTE temp = swappedData[ pixelOffset ];
+						swappedData[ pixelOffset ] = swappedData[ pixelOffset + 2 ];
+						swappedData[ pixelOffset + 2 ] = temp;
+					}
+				}
+
+				wrapped_interface->UpdateSubresource(
+					reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface,
+					DstSubresource, pDstBox, swappedData, SrcRowPitch, SrcDepthPitch);
+
+				delete[] swappedData;
+				texture->Release( );
+				return;
+			}
+
+			texture->Release( );
+		}
+	}
+
+	wrapped_interface->UpdateSubresource(
+		reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface,
+		DstSubresource, pDstBox, pSrcData, SrcRowPitch, SrcDepthPitch);
 }
 
 void wd::device_context_x::CopyStructureCount(ID3D11Buffer* pDstBuffer, UINT DstAlignedByteOffset,
@@ -484,7 +533,13 @@ void wd::device_context_x::CopyStructureCount(ID3D11Buffer* pDstBuffer, UINT Dst
 
 void wd::device_context_x::ClearRenderTargetView(wdi::ID3D11RenderTargetView* pRenderTargetView, const FLOAT ColorRGBA[4])
 {
-	wrapped_interface->ClearRenderTargetView(reinterpret_cast<wd::render_target_view*>(pRenderTargetView)->wrapped_interface, ColorRGBA);
+	FLOAT swappedColor[ 4 ];
+	swappedColor[ 0 ] = ColorRGBA[ 2 ]; // Red becomes Blue
+	swappedColor[ 1 ] = ColorRGBA[ 1 ]; // Green stays the same
+	swappedColor[ 2 ] = ColorRGBA[ 0 ]; // Blue becomes Red
+	swappedColor[ 3 ] = ColorRGBA[ 3 ]; // Alpha stays the same
+
+	wrapped_interface->ClearRenderTargetView(reinterpret_cast<wd::render_target_view*>(pRenderTargetView)->wrapped_interface, swappedColor);
 }
 
 void wd::device_context_x::ClearUnorderedAccessViewUint(wdi::ID3D11UnorderedAccessView* pUnorderedAccessView,
@@ -964,8 +1019,57 @@ void wd::device_context_x::CopySubresourceRegion1(ID3D11Resource* pDstResource, 
 void wd::device_context_x::UpdateSubresource1(ID3D11Resource* pDstResource, UINT DstSubresource,
 	const D3D11_BOX* pDstBox, const void* pSrcData, UINT SrcRowPitch, UINT SrcDepthPitch, UINT CopyFlags)
 {
-	wrapped_interface->UpdateSubresource1(reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface, DstSubresource, pDstBox, pSrcData, SrcRowPitch,
-	                                         SrcDepthPitch, CopyFlags);
+	D3D11_RESOURCE_DIMENSION dimension;
+	reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface->GetType(&dimension);
+
+	if (dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D && pSrcData != nullptr)
+	{
+		ID3D11Texture2D* texture = nullptr;
+		if (SUCCEEDED(reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface->QueryInterface(__uuidof(ID3D11Texture2D), (void**) &texture)))
+		{
+			D3D11_TEXTURE2D_DESC desc;
+			texture->GetDesc(&desc);
+
+			if (desc.Format == DXGI_FORMAT_R8G8B8A8_UNORM ||
+				desc.Format == DXGI_FORMAT_B8G8R8A8_UNORM ||
+				desc.Format == DXGI_FORMAT_R8G8B8A8_TYPELESS ||
+				desc.Format == DXGI_FORMAT_B8G8R8A8_TYPELESS)
+			{
+				UINT height = pDstBox ? (pDstBox->bottom - pDstBox->top) : desc.Height;
+
+				SIZE_T dataSize = SrcRowPitch * height;
+				BYTE* swappedData = new BYTE[ dataSize ];
+				memcpy(swappedData, pSrcData, dataSize);
+
+				UINT width = pDstBox ? (pDstBox->right - pDstBox->left) : desc.Width;
+
+				for (UINT y = 0; y < height; y++)
+				{
+					for (UINT x = 0; x < width; x++)
+					{
+						UINT pixelOffset = y * SrcRowPitch + x * 4;
+						BYTE temp = swappedData[ pixelOffset ];
+						swappedData[ pixelOffset ] = swappedData[ pixelOffset + 2 ];
+						swappedData[ pixelOffset + 2 ] = temp;
+					}
+				}
+
+				wrapped_interface->UpdateSubresource1(
+					reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface,
+					DstSubresource, pDstBox, swappedData, SrcRowPitch, SrcDepthPitch, CopyFlags);
+
+				delete[] swappedData;
+				texture->Release( );
+				return;
+			}
+
+			texture->Release( );
+		}
+	}
+
+	wrapped_interface->UpdateSubresource1(
+		reinterpret_cast<d3d11_resource*>(pDstResource)->wrapped_interface,
+		DstSubresource, pDstBox, pSrcData, SrcRowPitch, SrcDepthPitch, CopyFlags);
 }
 
 void wd::device_context_x::DiscardResource(ID3D11Resource* pResource)
@@ -1200,7 +1304,7 @@ HRESULT wd::device_context_x::GetCounterData(wdi::ID3D11CounterSampleX* pCounter
 
 void wd::device_context_x::FlushGpuCaches(ID3D11Resource* pResource)
 {
-	throw std::logic_error("Not implemented");
+	
 }
 
 void wd::device_context_x::FlushGpuCacheRange(UINT Flags, void* pBaseAddress, SIZE_T SizeInBytes)
@@ -1836,24 +1940,23 @@ void wd::device_context_x::SetDrawBalancing(UINT BalancingMode, UINT Flags)
 
 void wd::device_context_x::PSSetShaderResources(UINT StartSlot, UINT NumViews, ID3D11ShaderResourceView* const* ppShaderResourceViews)
 {
-	UINT UNumViews = (NumViews >> 19) + 1;
+	ID3D11ShaderResourceView* ShaderResourceViews[ D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT ] = {};
 
-	if (ppShaderResourceViews != NULL)
+	if (ppShaderResourceViews != nullptr)
 	{
-		ID3D11ShaderResourceView* modifiedViews[ D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT ];
-
 		for (UINT i = 0; i < NumViews; i++)
 		{
 			if (ppShaderResourceViews[ i ] == nullptr)
-				modifiedViews[ i ] = nullptr;
+				ShaderResourceViews[ i ] = 0;
 			else
-				modifiedViews[ i ] = reinterpret_cast<shader_resource_view*>(ppShaderResourceViews[ i ])->wrapped_interface;
+				ShaderResourceViews[ i ] = reinterpret_cast<wd::shader_resource_view*>(ppShaderResourceViews[ i ])->wrapped_interface;
 		}
-		wrapped_interface->PSSetShaderResources(StartSlot, UNumViews, modifiedViews);
+
+		wrapped_interface->PSSetShaderResources(StartSlot, NumViews, ShaderResourceViews);
 	}
 	else
 	{
-		wrapped_interface->PSSetShaderResources(StartSlot, UNumViews, ppShaderResourceViews);
+		wrapped_interface->PSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
 	}
 }
 
