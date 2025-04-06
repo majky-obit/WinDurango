@@ -19,11 +19,11 @@
     <ClCompile Include="CurrentAppWrapper.cpp">
       <Filter>Windows.ApplicationModel.Store\CurrentApp</Filter>
     </ClCompile>
+    <ClCompile Include="MMXboxDeviceEnumeratorWrapper.cpp">
+      <Filter>MMDeviceEnumerator\Xbox</Filter>
+    </ClCompile>
     <ClCompile Include="MMDeviceEnumeratorWrapper.cpp">
       <Filter>MMDeviceEnumerator</Filter>
-    </ClCompile>
-    <ClCompile Include="MMXboxDeviceEnumerator.cpp">
-      <Filter>MMDeviceEnumerator\Xbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,11 +59,11 @@
     <ClInclude Include="ICoreApplicationGpuPolicy.h">
       <Filter>Windows.ApplicationModel.Core</Filter>
     </ClInclude>
+    <ClInclude Include="MMXboxDeviceEnumeratorWrapper.h">
+      <Filter>MMDeviceEnumerator\Xbox</Filter>
+    </ClInclude>
     <ClInclude Include="MMDeviceEnumeratorWrapper.h">
       <Filter>MMDeviceEnumerator</Filter>
-    </ClInclude>
-    <ClInclude Include="MMXboxDeviceEnumerator.h">
-      <Filter>MMDeviceEnumerator\Xbox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -97,10 +97,10 @@
       <UniqueIdentifier>{19e1cefa-5dbe-43ed-a9ad-b22278e05c1a}</UniqueIdentifier>
     </Filter>
     <Filter Include="MMDeviceEnumerator">
-      <UniqueIdentifier>{05d14c92-322a-44d6-a69a-9fb10fe6450a}</UniqueIdentifier>
+      <UniqueIdentifier>{28b69cd1-c8f0-4a87-991d-b7cc93451aa7}</UniqueIdentifier>
     </Filter>
     <Filter Include="MMDeviceEnumerator\Xbox">
-      <UniqueIdentifier>{26231d18-0492-41d5-bc79-091730b4eaa7}</UniqueIdentifier>
+      <UniqueIdentifier>{58f8ec7f-d4c1-43e8-a2a9-81a75350ae82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

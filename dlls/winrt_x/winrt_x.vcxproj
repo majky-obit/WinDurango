@@ -82,7 +82,31 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\External</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(ProjectDir);$(WindowsSDK_IncludePath);$(ProjectDir)\External;$(ProjectDir)\$(PlatformShortName)\$(Configuration)\Generated Files;$(ProjectDir)\</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;D:\Documents\Visual Studio 2022\Projects\WinDurango\dlls\winrt_x\x64\Debug\Generated Files</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;D:\Documents\Visual Studio 2022\Projects\WinDurango\dlls\winrt_x\x64\Debug\Generated Files</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;D:\Documents\Visual Studio 2022\Projects\WinDurango\dlls\winrt_x\x64\Debug\Generated Files</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;D:\Documents\Visual Studio 2022\Projects\WinDurango\dlls\winrt_x\x64\Debug\Generated Files</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;D:\Documents\Visual Studio 2022\Projects\WinDurango\dlls\winrt_x\x64\Debug\Generated Files</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;D:\Documents\Visual Studio 2022\Projects\WinDurango\dlls\winrt_x\x64\Debug\Generated Files</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\External;$(ProjectDir)\$(PlatformShortName)\$(Configuration)\Generated Files;$(ProjectDir)\</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(ProjectDir);$(WindowsSDK_IncludePath);$(ProjectDir)\External;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -135,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="common.h" />
     <ClInclude Include="ConnectedStorage\ConnectedStorage.h" />
     <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.AccessibilitySettingsChangedEventArgs.h" />
     <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.ChannelUpdatedEventArgs.h" />
@@ -462,6 +487,51 @@
     <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationTemplate.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Networking.SecureDeviceSocketDescription.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Services.XboxLiveConfiguration.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassAuxiliaryStream.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDevice.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDeviceCollection.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDeviceWatcher.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDirectSurface.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassHtmlSurface.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassMessageReceivedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassSensors.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntryEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntrySurface.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.ContinuousSpeechRecognitionResultEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.ContinuousSpeechRecognitionStatusEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.InstalledSpeechRecognizers.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.InstalledSpeechRecognizersInProc.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechAudioProblemOccurredEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechChoiceRule.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGarbageItem.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGrammar.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGrammarBuilder.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGrammarBuilderRuleSet.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGrammarSet.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGraphRule.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGraphState.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechHypothesisResultEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechNullItem.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechPhraseItem.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechPronunciationDetail.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionResult.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionResultBodyCorrelation.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionResultDetail.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionResultToken.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionSemanticProperty.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizer.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerAnalyzer.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerAudioCaptureStateChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerAudioContext.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerFactory.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerInformation.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerInputSetting.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerPhraseStartedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerSettings.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerSoundEndedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerSoundStartedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRuleReferenceItem.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechSequenceRule.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Storage.BlobInfoQueryResult.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Storage.ConnectedStorageContainer.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Storage.ConnectedStorageSpace.h" />
@@ -807,6 +877,51 @@
     <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceAssociationTemplate.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Networking.SecureDeviceSocketDescription.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Services.XboxLiveConfiguration.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassAuxiliaryStream.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDevice.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDeviceCollection.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDeviceWatcher.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassDirectSurface.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassHtmlSurface.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassMessageReceivedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassSensors.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntryEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntrySurface.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.ContinuousSpeechRecognitionResultEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.ContinuousSpeechRecognitionStatusEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.InstalledSpeechRecognizers.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.InstalledSpeechRecognizersInProc.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechAudioProblemOccurredEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechChoiceRule.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGarbageItem.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGrammar.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGrammarBuilder.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGrammarBuilderRuleSet.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGrammarSet.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGraphRule.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechGraphState.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechHypothesisResultEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechNullItem.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechPhraseItem.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechPronunciationDetail.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionResult.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionResultBodyCorrelation.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionResultDetail.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionResultToken.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognitionSemanticProperty.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizer.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerAnalyzer.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerAudioCaptureStateChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerAudioContext.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerFactory.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerInformation.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerInputSetting.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerPhraseStartedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerSettings.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerSoundEndedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRecognizerSoundStartedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechRuleReferenceItem.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Speech.Recognition.SpeechSequenceRule.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Storage.BlobInfoQueryResult.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Storage.ConnectedStorageContainer.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Storage.ConnectedStorageSpace.cpp" />
@@ -829,6 +944,7 @@
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="packages.config" />
     <None Include="winrt_x.def" />
   </ItemGroup>
@@ -875,6 +991,8 @@
     <Midl Include="External\Windows.Xbox.Services.idl" />
     <Midl Include="External\Windows.Xbox.Shell.idl" />
     <Midl Include="External\Windows.Xbox.Shell.Social.idl" />
+    <Midl Include="External\Windows.Xbox.SmartGlass.idl" />
+    <Midl Include="External\Windows.Xbox.Speech.Recognition.idl" />
     <Midl Include="External\Windows.Xbox.Storage.idl" />
     <Midl Include="External\Windows.Xbox.System.idl" />
     <Midl Include="External\Windows.Xbox.Achievements.idl" />

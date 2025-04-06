@@ -3,9 +3,10 @@
 #include "ForzaThreadHook_X.h"
 #include "kernelx.h"
 #include <Windows.h>
+#include "Shlwapi.h"
 
 // note from unixian: i used this since using appxlauncher requires me attaching to the game after it launches
-#define WINDURANGO_WAIT_FOR_DEBUGGER 0
+#define WINDURANGO_WAIT_FOR_DEBUGGER 1
 
 //Rodrigo Todescatto: For debbuging Forza.
 #define RETURN_IF_FAILED(hr) if (FAILED(hr)) return hr
@@ -96,7 +97,6 @@ HRESULT XWinePatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In
 
 inline void LoadMods()
 {
-	
 	WCHAR path[MAX_PATH];
 	GetModuleFileNameW(GetModuleHandleW(nullptr), path, MAX_PATH);
 	PathRemoveFileSpecW(path);
@@ -225,7 +225,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		XWinePatchImport(GetModuleHandleW(nullptr), GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
 
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueOpenFile), OpenFile_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateDirectoryA), CreateDirectoryA_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateFileW), CreateFileW_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateFile2), CreateFile2_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesW), GetFileAttributesW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesExW), GetFileAttributesExW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueFindFirstFileW), FindFirstFileW_Hook);
@@ -247,7 +249,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueRoGetActivationFactory), RoGetActivationFactory_Hook);
 		
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueOpenFile), OpenFile_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateDirectoryA), CreateDirectoryA_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateFileW), CreateFileW_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateFile2), CreateFile2_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesW), GetFileAttributesW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesExW), GetFileAttributesExW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueFindFirstFileW), FindFirstFileW_Hook);
@@ -255,6 +259,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExW), LoadLibraryExW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryW), LoadLibraryW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExA), LoadLibraryExA_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueCoCreateInstance), CoCreateInstance_hook);
 
 		DetourTransactionCommit();
 
