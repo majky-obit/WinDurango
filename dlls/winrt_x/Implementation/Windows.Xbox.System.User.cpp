@@ -21,8 +21,8 @@ namespace winrt::Windows::Xbox::System::implementation
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::User> User::Users()
     {
 		wprintf(L"User || Users Queried!\n");
-        if (staticUsers == Foundation::Collections::IVector<winrt::Windows::Xbox::System::User>(nullptr) || staticUsers.Size( ) == 0) {
-            staticUsers = winrt::single_threaded_vector<System::User>( );
+        if (staticUsers == Foundation::Collections::IVector<winrt::Windows::Xbox::System::User>(nullptr) || staticUsers.Size() == 0) {
+            staticUsers = winrt::single_threaded_vector<System::User>();
 
             for (int i = 0; i < 4; i++)
             {
@@ -146,12 +146,12 @@ namespace winrt::Windows::Xbox::System::implementation
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::IAudioDeviceInfo> User::AudioDevices()
     {
         printf("!!!! Windows.Xbox.System.User AudioDevices | NOT IMPLEMENTED !!!!\n");
-        return winrt::single_threaded_vector<System::IAudioDeviceInfo>( ).GetView( );
+        return winrt::single_threaded_vector<System::IAudioDeviceInfo>().GetView();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::IController> User::Controllers()
     {
         printf("!!!! Windows.Xbox.System.User Controllers | NOT IMPLEMENTED !!!!\n");
-        return winrt::single_threaded_vector<Input::IController>( ).GetView( );
+        return winrt::single_threaded_vector<Input::IController>().GetView();
     }
     winrt::Windows::Xbox::System::UserDisplayInfo User::DisplayInfo()
     {

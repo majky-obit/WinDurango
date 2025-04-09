@@ -62,7 +62,7 @@ void wd::device_context_x::Draw(UINT VertexCount, UINT StartVertexLocation)
 {
 	//printf("Draw was called!!!!!!!\n");
 
-	ProcessDirtyFlags( );
+	ProcessDirtyFlags();
 	wrapped_interface->Draw(VertexCount, StartVertexLocation);
 }
 
@@ -512,11 +512,11 @@ void wd::device_context_x::UpdateSubresource(ID3D11Resource* pDstResource, UINT 
 					DstSubresource, pDstBox, swappedData, SrcRowPitch, SrcDepthPitch);
 
 				delete[] swappedData;
-				texture->Release( );
+				texture->Release();
 				return;
 			}
 
-			texture->Release( );
+			texture->Release();
 		}
 	}
 
@@ -1059,11 +1059,11 @@ void wd::device_context_x::UpdateSubresource1(ID3D11Resource* pDstResource, UINT
 					DstSubresource, pDstBox, swappedData, SrcRowPitch, SrcDepthPitch, CopyFlags);
 
 				delete[] swappedData;
-				texture->Release( );
+				texture->Release();
 				return;
 			}
 
-			texture->Release( );
+			texture->Release();
 		}
 	}
 
@@ -1980,7 +1980,7 @@ void wd::device_context_x::DrawIndexed(UINT64 StartIndexLocationAndIndexCount, I
 	UINT StartIndexLocation = static_cast<UINT>(StartIndexLocationAndIndexCount & 0xFFFFFFFF);
 	UINT IndexCount = static_cast<UINT>((StartIndexLocationAndIndexCount >> 32) & 0xFFFFFFFF);
 
-	ProcessDirtyFlags( );
+	ProcessDirtyFlags();
 	wrapped_interface->DrawIndexed(IndexCount, StartIndexLocation, BaseVertexLocation);
 }
 
@@ -2008,7 +2008,7 @@ void wd::device_context_x::DrawIndexedInstanced(UINT64 StartIndexLocationAndInde
 	UINT StartInstanceLocation = static_cast<UINT>((BaseVertexLocationAndStartInstanceLocation >> 32) &
 		0xFFFFFFFF);
 
-	ProcessDirtyFlags( );
+	ProcessDirtyFlags();
 	wrapped_interface->DrawIndexedInstanced(IndexCountPerInstance, InstanceCount, StartIndexLocation,
 										  BaseVertexLocation, StartInstanceLocation);
 }
@@ -2020,7 +2020,7 @@ void wd::device_context_x::DrawInstanced(UINT VertexCountPerInstance,
 	UINT StartInstanceLocation = static_cast<UINT>((StartVertexLocationAndStartInstanceLocation >> 32) &
 		0xFFFFFFFF);
 
-	ProcessDirtyFlags( );
+	ProcessDirtyFlags();
 	wrapped_interface->DrawInstanced(VertexCountPerInstance, InstanceCount, StartVertexLocation,
 								   StartInstanceLocation);
 }

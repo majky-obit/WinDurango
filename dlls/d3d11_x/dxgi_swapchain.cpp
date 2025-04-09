@@ -7,7 +7,7 @@ HRESULT wd::dxgi_swapchain::QueryInterface(const IID& riid, void** ppvObject)
 	if (riid == __uuidof(wdi::IDXGISwapChain1))
 	{
 		*ppvObject = this;
-		AddRef( );
+		AddRef();
 		return S_OK;
 	}
 
@@ -66,7 +66,7 @@ HRESULT wd::dxgi_swapchain::GetBuffer(UINT Buffer, const IID& riid, void** ppSur
 
 	if (incRef)
 	{
-		AddRef( );
+		AddRef();
 		return S_OK;
 	}
 
@@ -158,7 +158,7 @@ HRESULT wd::dxgi_swapchain::Present1(UINT SyncInterval, UINT PresentFlags,
 BOOL wd::dxgi_swapchain::IsTemporaryMonoSupported()
 {
 	printf("IsTemporaryMonoSupported\n");
-	return wrapped_interface->IsTemporaryMonoSupported( );
+	return wrapped_interface->IsTemporaryMonoSupported();
 }
 
 HRESULT wd::dxgi_swapchain::GetRestrictToOutput(IDXGIOutput** ppRestrictToOutput)

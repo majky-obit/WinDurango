@@ -44,9 +44,9 @@ MMDEVAPI_EXPORT_ORDINAL(DllRegisterServer, 37)
 MMDEVAPI_EXPORT_ORDINAL(DllUnregisterServer, 38)
 
 
-void DisableBitstreamOut_X( ) {}
-HRESULT EnableSpatialAudio_X( ) { return S_OK; }
-void RestoreBitstreamOut_X( ) {}
+void DisableBitstreamOut_X() {}
+HRESULT EnableSpatialAudio_X() { return S_OK; }
+void RestoreBitstreamOut_X() {}
 DWORD_PTR SetWasapiThreadAffinityMask_X(DWORD_PTR dwThreadAffinityMask) { return 0; }
 void RefreshWasapiDeviceList_X() {}
 

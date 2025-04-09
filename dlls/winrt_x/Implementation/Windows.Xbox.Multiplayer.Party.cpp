@@ -14,7 +14,7 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
     winrt::Windows::Foundation::IAsyncAction Party::RegisterGameSessionAsync(winrt::Windows::Xbox::System::User actingUser, winrt::Windows::Xbox::Multiplayer::MultiplayerSessionReference sessionReference)
     {
         printf("%s called\n", __FUNCTION__);
-        co_await winrt::resume_background( );
+        co_await winrt::resume_background();
         printf("Game session registered successfully.\n");
         co_return;
     }

@@ -349,7 +349,7 @@ HRESULT wd::device_x::CreatePlacementTexture1D(const D3D11_TEXTURE1D_DESC* pDesc
 {
 	std::vector<D3D11_SUBRESOURCE_DATA> initialData(pDesc->MipLevels);
 
-	for (int i = 0; i < initialData.size( ); i++)
+	for (int i = 0; i < initialData.size(); i++)
 	{
 		initialData[ i ].pSysMem = pVirtualAddress;
 		initialData[ i ].SysMemPitch = pDesc->Width;
@@ -372,7 +372,7 @@ HRESULT wd::device_x::CreatePlacementTexture2D(const D3D11_TEXTURE2D_DESC* pDesc
 		return S_OK;
 	}
 
-	for (int i = 0; i < initialData.size( ); i++)
+	for (int i = 0; i < initialData.size(); i++)
 	{
 		initialData[ i ].pSysMem = pVirtualAddress;
 		initialData[ i ].SysMemPitch = pDesc->Width * 2;
@@ -388,7 +388,7 @@ HRESULT wd::device_x::CreatePlacementTexture3D(const D3D11_TEXTURE3D_DESC* pDesc
 {
 	std::vector<D3D11_SUBRESOURCE_DATA> initialData(pDesc->MipLevels);
 
-	for (int i = 0; i < initialData.size( ); i++)
+	for (int i = 0; i < initialData.size(); i++)
 	{
 		initialData[ i ].pSysMem = pVirtualAddress;
 		initialData[ i ].SysMemPitch = pDesc->Width * 2;
@@ -497,7 +497,7 @@ void wd::device_x::SetDebugFlags(UINT Flags)
 	printf("SetDebugFlags was called!!!!!!!\n");
 }
 
-UINT wd::device_x::GetDebugFlags( )
+UINT wd::device_x::GetDebugFlags()
 {
 	printf("GetDebugFlags was called!!!!!!!\n");
 	return 0;

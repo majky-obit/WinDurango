@@ -13,8 +13,8 @@ namespace winrt::Windows::Xbox::Input::implementation
     {
         wprintf(L"Gamepad || Gamepads Queried!\n");
 
-        if (staticGamepads == Foundation::Collections::IVector<winrt::Windows::Xbox::Input::IGamepad>(nullptr) || staticGamepads.Size( ) == 0) {
-            staticGamepads = winrt::single_threaded_vector<Input::IGamepad>( );
+        if (staticGamepads == Foundation::Collections::IVector<winrt::Windows::Xbox::Input::IGamepad>(nullptr) || staticGamepads.Size() == 0) {
+            staticGamepads = winrt::single_threaded_vector<Input::IGamepad>();
             
             for (DWORD gamepad = 0; gamepad < XUSER_MAX_COUNT; gamepad++)
             {
@@ -29,13 +29,13 @@ namespace winrt::Windows::Xbox::Input::implementation
             }
         }
 
-        if (staticGamepads.Size( ) == 0) {
+        if (staticGamepads.Size() == 0) {
             wprintf(L"Gamepad || No Gamepads Found!\n");
             IGamepad dummyGamepad = winrt::make<Gamepad>(0);
             staticGamepads.Append(dummyGamepad);
         }
 
-        return staticGamepads.GetView( );
+        return staticGamepads.GetView();
     }
     winrt::event_token Gamepad::GamepadAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadAddedEventArgs> const& handler)
     {
@@ -69,7 +69,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     winrt::Windows::Xbox::System::User Gamepad::User()
     {
 		wprintf(L"Gamepad || User Queried!\n");
-		return System::implementation::User::Users( ).GetAt(Id());
+		return System::implementation::User::Users().GetAt(Id());
     }
     winrt::Windows::Xbox::Input::INavigationReading Gamepad::GetNavigationReading()
     {
@@ -77,8 +77,8 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::Windows::Xbox::Input::RawNavigationReading Gamepad::GetRawNavigationReading()
     {
-        RawNavigationReading dummyNavigationReading = RawNavigationReading( );
-        dummyNavigationReading.Timestamp = GetTickCount64( );
+        RawNavigationReading dummyNavigationReading = RawNavigationReading();
+        dummyNavigationReading.Timestamp = GetTickCount64();
 		dummyNavigationReading.Buttons |= NavigationButtons::Up;
 		return dummyNavigationReading;
     }

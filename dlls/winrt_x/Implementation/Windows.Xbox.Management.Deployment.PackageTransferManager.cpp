@@ -39,7 +39,7 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     {
         if (static_manager == Deployment::PackageTransferManager{ nullptr })
         {
-            static_manager = make<PackageTransferManager>( );
+            static_manager = make<PackageTransferManager>();
         }
 
         printf("PackageTransferManager::Current()\n");

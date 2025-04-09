@@ -54,7 +54,7 @@ HRESULT AcpHalAllocateShapeContexts_X(SHAPE_CONTEXTS* ctx) {
 }
 
 HRESULT AcpHalReleaseShapeContexts_X() {
-    DEBUG_PRINT( );
+    DEBUG_PRINT();
 	return S_OK;
 }
 
@@ -73,7 +73,7 @@ HRESULT ApuAlloc_X(
 )
 {
     alignmentInBytes = 4;
-    DEBUG_PRINT( );
+    DEBUG_PRINT();
     return 0;
 }
 
@@ -83,7 +83,7 @@ HRESULT ApuCreateHeap_X(size_t initialSize, size_t maximumSize) {
 }
 
 HRESULT ApuFree_X(void* virtualAddress) {
-    DEBUG_PRINT( );
+    DEBUG_PRINT();
     free(virtualAddress);
     return 0;
 }
@@ -93,7 +93,7 @@ HRESULT ApuHeapGetState_X(
          UINT32 flags
 )
 {
-    DEBUG_PRINT( );
+    DEBUG_PRINT();
     return 0;
 }
 
@@ -102,14 +102,14 @@ bool ApuIsVirtualAddressValid_X(
          UINT32 physicalAlignmentInBytes
 )
 {
-    DEBUG_PRINT( );
+    DEBUG_PRINT();
     return 0;
 }
 APU_ADDRESS ApuMapVirtualAddress_X(
          const void* virtualAddress
 )
 {
-    DEBUG_PRINT( );
+    DEBUG_PRINT();
     return 0;
 }
 
@@ -117,6 +117,6 @@ void* ApuMapApuAddress_X(
          APU_ADDRESS apuPhysicalAddress
 )
 {
-    DEBUG_PRINT( );
+    DEBUG_PRINT();
     return 0;
 }

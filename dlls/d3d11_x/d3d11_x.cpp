@@ -54,7 +54,7 @@ HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11Device
     }
     else
     {
-        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError( ));
+        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError());
     }
 
     return hr;
@@ -118,14 +118,14 @@ HRESULT CreateDeviceAndSwapChain(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::
     }
     else
     {
-        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError( ));
+        printf("failed to assign wrapped device, result code 0x%X, error code 0x%X\n", hr, GetLastError());
     }
 
     ComPtr<IDXGIFactory2> pFactory;
     CreateDXGIFactory1(IID_PPV_ARGS(&pFactory));
 
     ComPtr<ICoreWindowStatic> pWindowStatic;
-    RoGetActivationFactory(Microsoft::WRL::Wrappers::HStringReference::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get( ), IID_PPV_ARGS(&pWindowStatic));
+    RoGetActivationFactory(Microsoft::WRL::Wrappers::HStringReference::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), IID_PPV_ARGS(&pWindowStatic));
 
     ComPtr<ICoreWindow> pWindow;
     pWindowStatic->GetForCurrentThread(&pWindow);
@@ -135,7 +135,7 @@ HRESULT CreateDeviceAndSwapChain(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::
     swap_chain_desc.Scaling = DXGI_SCALING_ASPECT_RATIO_STRETCH;
     swap_chain_desc.Flags &= DXGI_SWAPCHAIN_FLAG_MASK;
 
-    pFactory->CreateSwapChainForCoreWindow(reinterpret_cast<IUnknown*>(device2), pWindow.Get( ), &swap_chain_desc, nullptr, &swap_chain1);
+    pFactory->CreateSwapChainForCoreWindow(reinterpret_cast<IUnknown*>(device2), pWindow.Get(), &swap_chain_desc, nullptr, &swap_chain1);
 
     if (ppSwapChain != nullptr)
     {
@@ -204,7 +204,7 @@ HRESULT __stdcall D3DConfigureVirtualMemory_X(_Inout_ D3D11X_VIRTUAL_MEMORY_CONF
 
 void __stdcall D3DFlushEntireCpuCache_X()
 {
-    FlushInstructionCache(GetCurrentProcess( ), NULL, NULL);
+    FlushInstructionCache(GetCurrentProcess(), NULL, NULL);
 }
 
 HRESULT __stdcall D3DFreeGraphicsMemory_X(void* pAddress)
@@ -371,7 +371,7 @@ void WD11XNotify_X(WDEVENT_TYPE event)
 		throw std::exception("this shouldn't happen, check code that sends events.");
 	case WDEVENT_TYPE_KEYBOARD_ENGAGE:
 		DEBUGPRINT("[d3d11_x] keyboard engage\n");
-		wd::g_Overlay->EnableKeyboard( );
+		wd::g_Overlay->EnableKeyboard();
 		break;
     }
 }

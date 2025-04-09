@@ -31,7 +31,7 @@ namespace wd
 	class dxgi_device : public wdi::IDXGIDevice
 	{
 	public:
-		dxgi_device(::IDXGIDevice* device) : wrapped_interface(device) { wrapped_interface->AddRef( ); }
+		dxgi_device(::IDXGIDevice* device) : wrapped_interface(device) { wrapped_interface->AddRef(); }
 
 		IGU_DEFINE_REF
 
@@ -40,7 +40,7 @@ namespace wd
 			if (riid == __uuidof(wdi::IDXGIDevice))
 			{
 				*ppvObject = this;
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 

@@ -39,11 +39,11 @@ HRESULT __stdcall wd::D3D11DmaEngineContextX::SetName(LPCWSTR pName)
 }
 #endif
 
-D3D11_DEVICE_CONTEXT_TYPE wd::D3D11DmaEngineContextX::GetType( )
+D3D11_DEVICE_CONTEXT_TYPE wd::D3D11DmaEngineContextX::GetType()
 {
 	printf("D3D11DmaEngineContextX---> GetType was called!!!!!!!\n");
 	throw std::logic_error("Not implemented");
-	return D3D11_DEVICE_CONTEXT_TYPE( );
+	return D3D11_DEVICE_CONTEXT_TYPE();
 }
 
 void wd::D3D11DmaEngineContextX::CopyResource(ID3D11Resource*, ID3D11Resource*, uint32_t)
@@ -108,7 +108,7 @@ void wd::D3D11DmaEngineContextX::InsertWaitOnFence(uint32_t, uint64_t)
 	throw std::logic_error("Not implemented");
 }
 
-HRESULT wd::D3D11DmaEngineContextX::Submit( )
+HRESULT wd::D3D11DmaEngineContextX::Submit()
 {
 	printf("D3D11DmaEngineContextX---> Submit was called!!!!!!!\n");
 	throw std::logic_error("Not implemented");

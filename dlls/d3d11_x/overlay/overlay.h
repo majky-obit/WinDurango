@@ -8,11 +8,11 @@ namespace wd
 	{
 	public:
 		Overlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, IDXGISwapChain1* pSwapchain);
-		~Overlay( );
+		~Overlay();
 		void Initialize();
-		void Shutdown( );
-		void EnableKeyboard( );
-		void Present( );
+		void Shutdown();
+		void EnableKeyboard();
+		void Present();
 
 	private:
 		bool m_bOpen = false;

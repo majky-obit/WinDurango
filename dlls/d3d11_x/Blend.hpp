@@ -18,7 +18,7 @@ namespace wd
 	public:
 		blend_state(::ID3D11BlendState* blendState) : wrapped_interface(blendState)
 		{
-			wrapped_interface->AddRef( );
+			wrapped_interface->AddRef();
 		}
 		IGU_DEFINE_REF
 
@@ -27,7 +27,7 @@ namespace wd
 			if (riid == __uuidof(wdi::ID3D11BlendState))
 			{
 				*ppvObject = this;
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 

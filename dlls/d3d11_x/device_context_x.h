@@ -292,7 +292,7 @@ namespace wdi
 		virtual void (OMSetBlendState)(_In_opt_ ID3D11BlendState* pBlendState,_In_opt_ const FLOAT BlendFactor[ 4 ],_In_ UINT SampleMask) = 0;
 		virtual void (OMSetDepthStencilState)(_In_opt_ ID3D11DepthStencilState* pDepthStencilState,_In_ UINT StencilRef) = 0;
 		virtual void (SOSetTargets)(_In_range_(0, D3D11_SO_BUFFER_SLOT_COUNT) UINT NumBuffers,_In_reads_opt_(NumBuffers) ID3D11Buffer* const* ppSOTargets,_In_reads_opt_(NumBuffers) const UINT* pOffsets) = 0;
-		virtual void (DrawAuto)( ) = 0;
+		virtual void (DrawAuto)() = 0;
 		virtual void (DrawIndexedInstancedIndirect)(_In_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs) = 0;
 		virtual void (DrawInstancedIndirect)(_In_ ID3D11Buffer* pBufferForArgs,_In_ UINT AlignedByteOffsetForArgs) = 0;
 		virtual void (Dispatch)(_In_ UINT ThreadGroupCountX,_In_ UINT ThreadGroupCountY,_In_ UINT ThreadGroupCountZ) = 0;
@@ -364,8 +364,8 @@ namespace wdi
 		virtual void (CSGetShader)(_Out_ ID3D11ComputeShader** ppComputeShader,_Out_writes_opt_(*pNumClassInstances) ID3D11ClassInstance** ppClassInstances,_Inout_opt_ UINT* pNumClassInstances) = 0;
 		virtual void (CSGetSamplers)(_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot) UINT NumSamplers,_Out_writes_opt_(NumSamplers) ID3D11SamplerState** ppSamplers) = 0;
 		virtual void (CSGetConstantBuffers)(_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1) UINT StartSlot,_In_range_(0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot) UINT NumBuffers,_Out_writes_opt_(NumBuffers) ID3D11Buffer** ppConstantBuffers) = 0;
-		virtual void (ClearState)( ) = 0;
-		virtual void (Flush)( ) = 0;
+		virtual void (ClearState)() = 0;
+		virtual void (Flush)() = 0;
 		virtual D3D11_DEVICE_CONTEXT_TYPE(GetType)() = 0;
 		virtual UINT(GetContextFlags)() = 0;
 		virtual HRESULT(FinishCommandList)(BOOL RestoreDeferredContextState,_Out_opt_ ID3D11CommandList** ppCommandList) = 0;
@@ -423,7 +423,7 @@ namespace wdi
 	virtual HRESULT(PIXGpuEndCapture)() = 0;
 	virtual void (StartCounters)(_In_ ID3D11CounterSetX* pCounterSet) = 0;
 	virtual void (SampleCounters)(_In_ ID3D11CounterSampleX* pCounterSample) = 0;
-	virtual void (StopCounters)( ) = 0;
+	virtual void (StopCounters)() = 0;
 	virtual HRESULT(GetCounterData)(_In_ ID3D11CounterSampleX* pCounterSample,_Out_ D3D11X_COUNTER_DATA* pData,_In_ UINT GetCounterDataFlags) = 0;
 	virtual void (FlushGpuCaches)(_In_ ID3D11Resource* pResource) = 0;
 	virtual void (FlushGpuCacheRange)(_In_ UINT Flags,_In_ void* pBaseAddress,_In_ SIZE_T SizeInBytes) = 0;
@@ -475,7 +475,7 @@ namespace wdi
 	virtual HRESULT(Suspend)(_In_ UINT Flags) = 0;
 	virtual HRESULT(Resume)() = 0;
 	virtual void (BeginCommandListExecution)(_In_ UINT Flags) = 0;
-	virtual void (EndCommandListExecution)( ) = 0;
+	virtual void (EndCommandListExecution)() = 0;
 	virtual void (SetGraphicsShaderLimits)(_In_opt_ const D3D11X_GRAPHICS_SHADER_LIMITS* pShaderLimits) = 0;
 	virtual void (SetComputeShaderLimits)(_In_opt_ const D3D11X_COMPUTE_SHADER_LIMITS* pShaderLimits) = 0;
 	virtual void (SetPredicationBuffer)(_In_opt_ ID3D11Buffer* pBuffer,_In_ UINT Offset,_In_ UINT Flags) = 0;
@@ -622,8 +622,8 @@ namespace wd
 	public:
 		device_context_x(::ID3D11DeviceContext2* wrapped_interface) : wrapped_interface(wrapped_interface)
 		{
-			populate_function_tables( );
-			wrapped_interface->AddRef( );
+			populate_function_tables();
+			wrapped_interface->AddRef();
 		}
 
 	private:
@@ -639,11 +639,11 @@ namespace wd
 
 		std::array<FARPROC, 270> function_table;
 
-		void populate_function_tables( )
+		void populate_function_tables()
 		{
 			auto v_ptr = *reinterpret_cast<FARPROC**>(this);
 
-			for (size_t i = 0; i < function_table.size( ); i++)
+			for (size_t i = 0; i < function_table.size(); i++)
 				function_table[ i ] = v_ptr[ i ];
 		}
 
@@ -656,7 +656,7 @@ namespace wd
 				riid == __uuidof(wdi::ID3D11UserDefinedAnnotationX) || riid == __uuidof(wdi::ID3D11PerformanceContextX))
 			{
 				*ppvObject = this;
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 

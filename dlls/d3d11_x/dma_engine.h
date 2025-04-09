@@ -5,7 +5,7 @@ namespace wdi
 {
 	D3DINTERFACE(ID3D11DmaEngineContextX, A6332DDB, 8E02, 427D, B0, B7, 34, A1, E6, 1A, 64, 88) : public wdi::ID3D11DeviceChild
 	{
-		virtual D3D11_DEVICE_CONTEXT_TYPE GetType( ) = 0;
+		virtual D3D11_DEVICE_CONTEXT_TYPE GetType() = 0;
 		virtual void CopyResource(ID3D11Resource*, ID3D11Resource*, uint32_t) = 0;
 		virtual void CopySubresourceRegion(ID3D11Resource*, uint32_t, uint32_t, uint32_t, uint32_t, ID3D11Resource*, uint32_t, const D3D11_BOX*, uint32_t) = 0;
 		virtual HRESULT LZDecompressBuffer(ID3D11Buffer*, uint32_t, ID3D11Buffer*, uint32_t, uint32_t, uint32_t) = 0;
@@ -15,7 +15,7 @@ namespace wdi
 		virtual HRESULT JPEGDecode(ID3D11Resource*, uint32_t, uint32_t, uint32_t, uint32_t, ID3D11Buffer*, uint32_t) = 0;
 		virtual uint64_t InsertFence(uint32_t) = 0;
 		virtual void InsertWaitOnFence(uint32_t, uint64_t) = 0;
-		virtual HRESULT Submit( ) = 0;
+		virtual HRESULT Submit() = 0;
 		virtual void CopyLastErrorCodeToMemory(void*) = 0;
 		virtual void CopyLastErrorCodeToBuffer(ID3D11Buffer*, uint32_t) = 0;
 		virtual void CopyMemoryToMemory(void*, void*, uint64_t) = 0;
@@ -36,17 +36,17 @@ namespace wd
 	class D3D11DmaEngineContextX : public wdi::ID3D11DmaEngineContextX
 	{
 	public:
-		D3D11DmaEngineContextX( ) 
+		D3D11DmaEngineContextX() 
 		{
 			m_RefCount = 1;
 		}
 
-		ULONG AddRef( ) override
+		ULONG AddRef() override
 		{
 			return InterlockedIncrement(&m_RefCount);
 		}
 
-		ULONG Release( ) override
+		ULONG Release() override
 		{
 			ULONG refCount = InterlockedDecrement(&m_RefCount);
 			if (refCount == 0) {
@@ -67,7 +67,7 @@ namespace wd
 			if (riid == __uuidof(wdi::IGraphicsUnknown))
 			{
 				*ppvObject = static_cast<wdi::IGraphicsUnknown*>(this);
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 
@@ -86,7 +86,7 @@ namespace wd
 #endif
 
 
-		D3D11_DEVICE_CONTEXT_TYPE GetType( ) override;
+		D3D11_DEVICE_CONTEXT_TYPE GetType() override;
 		void CopyResource(ID3D11Resource*, ID3D11Resource*, uint32_t) override;
 		void CopySubresourceRegion(ID3D11Resource*, uint32_t, uint32_t, uint32_t, uint32_t, ID3D11Resource*, uint32_t, const D3D11_BOX*, uint32_t) override;
 		HRESULT LZDecompressBuffer(ID3D11Buffer*, uint32_t, ID3D11Buffer*, uint32_t, uint32_t, uint32_t) override;
@@ -96,7 +96,7 @@ namespace wd
 		HRESULT JPEGDecode(ID3D11Resource*, uint32_t, uint32_t, uint32_t, uint32_t, ID3D11Buffer*, uint32_t) override;
 		uint64_t InsertFence(uint32_t) override;
 		void InsertWaitOnFence(uint32_t, uint64_t) override;
-		HRESULT Submit( ) override;
+		HRESULT Submit() override;
 		void CopyLastErrorCodeToMemory(void*) override;
 		void CopyLastErrorCodeToBuffer(ID3D11Buffer*, uint32_t) override;
 		void CopyMemoryToMemory(void*, void*, uint64_t) override;

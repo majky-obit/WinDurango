@@ -112,7 +112,7 @@ namespace wd
 	class texture_1d : public wdi::ID3D11Texture1D
 	{
 	public:
-		texture_1d(::ID3D11Texture1D* texture) : wrapped_interface(texture) { wrapped_interface->AddRef( ); }
+		texture_1d(::ID3D11Texture1D* texture) : wrapped_interface(texture) { wrapped_interface->AddRef(); }
 
 		IGU_DEFINE_REF
 
@@ -121,7 +121,7 @@ namespace wd
 			if (riid == __uuidof(wdi::ID3D11Texture1D))
 			{
 				*ppvObject = this;
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 
@@ -180,7 +180,7 @@ namespace wd
 
 		UINT GetEvictionPriority() override
 		{
-			return wrapped_interface->GetEvictionPriority( );
+			return wrapped_interface->GetEvictionPriority();
 		}
 
 		void GetDescriptor(wdi::D3D11X_DESCRIPTOR_RESOURCE* descriptor) override
@@ -194,7 +194,7 @@ namespace wd
 	class texture_2d : public wdi::ID3D11Texture2D
 	{
 	public:
-		texture_2d(::ID3D11Texture2D* texture) : wrapped_interface(texture) { wrapped_interface->AddRef( ); }
+		texture_2d(::ID3D11Texture2D* texture) : wrapped_interface(texture) { wrapped_interface->AddRef(); }
 
 		IGU_DEFINE_REF
 
@@ -203,7 +203,7 @@ namespace wd
 			if (riid == __uuidof(wdi::ID3D11Texture2D) || riid == __uuidof(wdi::ID3D11Resource))
 			{
 				*ppvObject = this;
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 
@@ -261,9 +261,9 @@ namespace wd
 			wrapped_interface->SetEvictionPriority(EvictionPriority);
 		}
 
-		UINT GetEvictionPriority( ) override
+		UINT GetEvictionPriority() override
 		{
-			return wrapped_interface->GetEvictionPriority( );
+			return wrapped_interface->GetEvictionPriority();
 		}
 
 		void GetDescriptor(wdi::D3D11X_DESCRIPTOR_RESOURCE* descriptor) override
@@ -277,7 +277,7 @@ namespace wd
 	class texture_3d : public wdi::ID3D11Texture3D
 	{
 	public:
-		texture_3d(::ID3D11Texture3D* texture) : wrapped_interface(texture) { wrapped_interface->AddRef( ); }
+		texture_3d(::ID3D11Texture3D* texture) : wrapped_interface(texture) { wrapped_interface->AddRef(); }
 
 		IGU_DEFINE_REF
 
@@ -286,7 +286,7 @@ namespace wd
 			if (riid == __uuidof(wdi::ID3D11Texture3D) || riid == __uuidof(wdi::ID3D11Resource))
 			{
 				*ppvObject = this;
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 
@@ -344,9 +344,9 @@ namespace wd
 			wrapped_interface->SetEvictionPriority(EvictionPriority);
 		}
 
-		UINT GetEvictionPriority( ) override
+		UINT GetEvictionPriority() override
 		{
-			return wrapped_interface->GetEvictionPriority( );
+			return wrapped_interface->GetEvictionPriority();
 		}
 
 		void GetDescriptor(wdi::D3D11X_DESCRIPTOR_RESOURCE* descriptor) override
@@ -360,7 +360,7 @@ namespace wd
 	class buffer : public wdi::ID3D11Buffer
 	{
 	public:
-		buffer(::ID3D11Buffer* buffer) : wrapped_interface(buffer) { wrapped_interface->AddRef( ); }\
+		buffer(::ID3D11Buffer* buffer) : wrapped_interface(buffer) { wrapped_interface->AddRef(); }\
 
 		IGU_DEFINE_REF
 
@@ -369,7 +369,7 @@ namespace wd
 			if (riid == __uuidof(wdi::ID3D11Buffer))
 			{
 				*ppvObject = this;
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 			TRACE_INTERFACE_NOT_HANDLED("buffer");
@@ -426,9 +426,9 @@ namespace wd
 			wrapped_interface->SetEvictionPriority(EvictionPriority);
 		}
 
-		UINT GetEvictionPriority( ) override
+		UINT GetEvictionPriority() override
 		{
-			return wrapped_interface->GetEvictionPriority( );
+			return wrapped_interface->GetEvictionPriority();
 		}
 
 		void GetDescriptor(wdi::D3D11X_DESCRIPTOR_RESOURCE* descriptor) override
