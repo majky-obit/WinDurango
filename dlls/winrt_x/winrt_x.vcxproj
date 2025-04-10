@@ -551,6 +551,7 @@
     <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.h" />
     <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyView.h" />
     <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.UserPartyAssociation.h" />
+    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.System.GetTokenAndSignatureResult.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectedStorage\ConnectedStorage.cpp" />
@@ -948,6 +949,7 @@
     <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.cpp" />
     <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyView.cpp" />
     <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.UserPartyAssociation.cpp" />
+    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.System.GetTokenAndSignatureResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

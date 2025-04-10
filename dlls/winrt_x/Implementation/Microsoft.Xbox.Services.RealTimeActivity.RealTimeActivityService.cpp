@@ -25,12 +25,13 @@ namespace winrt::Microsoft::Xbox::Services::RealTimeActivity::implementation
 {
     void RealTimeActivityService::Activate()
     {
+        printf("[RealTimeActivityService] Activate (function is stubbed)\n");
         return;
     }
     void RealTimeActivityService::Deactivate()
     {
         printf("[RealTimeActivityService] Deactivate (function is stubbed)\n");
-        return;
+        throw hresult_not_implemented( );
     }
     winrt::event_token RealTimeActivityService::RealTimeActivityConnectionStateChange(winrt::Windows::Foundation::EventHandler<winrt::Microsoft::Xbox::Services::RealTimeActivity::RealTimeActivityConnectionState> const& __param0)
     {

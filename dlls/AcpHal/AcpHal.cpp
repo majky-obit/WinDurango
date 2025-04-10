@@ -7,6 +7,7 @@
 #include "../common/debug.h"
 
 #include "contexts.h"
+#include <new>
 
 struct SHAPE_CONTEXTS {
     UINT32 numSrcContexts;
@@ -31,26 +32,7 @@ struct SHAPE_CONTEXTS {
 
 
 HRESULT AcpHalAllocateShapeContexts_X(SHAPE_CONTEXTS* ctx) {
-    if (ctx->numSrcContexts > 0)
-        ctx->srcContextArray = static_cast<SHAPE_SRC_CONTEXT*>(malloc(sizeof(SHAPE_SRC_CONTEXT) * ctx->numSrcContexts));
-
-    if (ctx->numEqCompContexts > 0)
-        ctx->eqCompContextArray = static_cast<SHAPE_EQCOMP_CONTEXT*>(malloc(sizeof(SHAPE_EQCOMP_CONTEXT) * ctx->numEqCompContexts));
-
-    if (ctx->numFiltVolContexts > 0)
-        ctx->filtVolContextArray = static_cast<SHAPE_FILTVOL_CONTEXT*>(malloc(sizeof(SHAPE_FILTVOL_CONTEXT) * ctx->numFiltVolContexts));
-
-    if (ctx->numDmaContexts > 0)
-        ctx->dmaContextArray = static_cast<SHAPE_DMA_CONTEXT*>(malloc(sizeof(SHAPE_DMA_CONTEXT) * ctx->numDmaContexts));
-
-    if (ctx->numXmaContexts > 0)
-        ctx->xmaContextArray = static_cast<SHAPE_XMA_CONTEXT*>(malloc(sizeof(SHAPE_XMA_CONTEXT) * ctx->numXmaContexts));
-
-    if (ctx->numPcmContexts > 0)
-        ctx->pcmContextArray = static_cast<SHAPE_PCM_CONTEXT*>(malloc(sizeof(SHAPE_PCM_CONTEXT) * ctx->numPcmContexts));
-
-    printf("[AcpHal] allocated shape contexts\n");
-    return S_OK;
+    return E_NOTIMPL;
 }
 
 HRESULT AcpHalReleaseShapeContexts_X() {
@@ -59,10 +41,22 @@ HRESULT AcpHalReleaseShapeContexts_X() {
 }
 
 HRESULT AcpHalCreate_X(IAcpHal** acpInterface) {
-	printf("[WARNING] AcpHalCreate returns back a nullptr, the game is likely to crash!\n");
-	*acpInterface = nullptr;
-    return 0;
+	EnterCriticalSection((LPCRITICAL_SECTION)&criticalSection->LockSemaphore);
+
+    if (!acpInterface)
+    {
+        LeaveCriticalSection((LPCRITICAL_SECTION)&criticalSection->LockSemaphore);
+        return E_INVALIDARG;
+    }
+
+    *acpInterface = new(std::nothrow) IAcpHal();
+
+    LeaveCriticalSection((LPCRITICAL_SECTION)&criticalSection->LockSemaphore);
+
+    return *acpInterface ? S_OK : E_OUTOFMEMORY;
 }
+
+UINT32 AllocAlignment;
 
 HRESULT ApuAlloc_X(
          void** virtualAddress,
@@ -72,9 +66,10 @@ HRESULT ApuAlloc_X(
          UINT32 flags
 )
 {
-    alignmentInBytes = 4;
     DEBUG_PRINT( );
-    return 0;
+    AllocAlignment = alignmentInBytes;
+    *virtualAddress = _aligned_malloc(sizeInBytes, alignmentInBytes);
+    return S_OK;
 }
 
 HRESULT ApuCreateHeap_X(size_t initialSize, size_t maximumSize) {
@@ -84,8 +79,8 @@ HRESULT ApuCreateHeap_X(size_t initialSize, size_t maximumSize) {
 
 HRESULT ApuFree_X(void* virtualAddress) {
     DEBUG_PRINT( );
-    free(virtualAddress);
-    return 0;
+    _aligned_free(virtualAddress);
+    return S_OK;
 }
 
 HRESULT ApuHeapGetState_X(

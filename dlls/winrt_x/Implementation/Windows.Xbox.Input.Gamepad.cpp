@@ -52,7 +52,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     uint64_t Gamepad::Id( )
     {
         //wprintf(L"Gamepad || Gamepad ID ( %d ) Queried!\n", m_id);
-        return m_id;
+        return 1;
     }
     hstring Gamepad::Type( )
     {

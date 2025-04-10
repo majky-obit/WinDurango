@@ -326,7 +326,7 @@ LPVOID VirtualAllocEx_X(
         //printf("VirtualAlloc failed with %i, using backup...\n", GetLastError());
         if ((flAllocationType & 0x2000) != 0)
         {
-            flAllocationType = 0x2000;
+            flAllocationType = 0x2000 | MEM_WRITE_WATCH;
         }
         if ((flAllocationType & 0x1000) != 0)
         {

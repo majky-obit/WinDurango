@@ -30,6 +30,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
 {
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForUserAsync(winrt::Windows::Xbox::System::User user)
     {
+        printf("%s called\n", __FUNCTION__);
         if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( WinDurango::impl::s_userStorage );
         }
@@ -38,6 +39,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForUserAsync(winrt::Windows::Xbox::System::User user, hstring serviceConfigurationId)
     {
+        printf("%s called\n", __FUNCTION__);
         if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( WinDurango::impl::s_userStorage );
         }
@@ -46,6 +48,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForMachineAsync()
     {
+        printf("%s called\n", __FUNCTION__);
         if (machineStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             machineStorageSpace = winrt::make<implementation::ConnectedStorageSpace>( WinDurango::impl::s_machineStorage );
         }
@@ -54,6 +57,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetForMachineAsync(hstring serviceConfigurationId)
     {
+        printf("%s called\n", __FUNCTION__);
         if (machineStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             machineStorageSpace = winrt::make<implementation::ConnectedStorageSpace>(WinDurango::impl::s_machineStorage);
         }
@@ -62,6 +66,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetSyncOnDemandForUserAsync(winrt::Windows::Xbox::System::User user)
     {
+        printf("%s called\n", __FUNCTION__);
         if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>(WinDurango::impl::s_userStorage);
         }
@@ -70,6 +75,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Storage::ConnectedStorageSpace> ConnectedStorageSpace::GetSyncOnDemandForUserAsync(winrt::Windows::Xbox::System::User user, hstring serviceConfigurationId)
     {
+        printf("%s called\n", __FUNCTION__);
         if (userStorageSpace == Storage::ConnectedStorageSpace(nullptr)) {
             userStorageSpace = winrt::make<implementation::ConnectedStorageSpace>(WinDurango::impl::s_userStorage);
         }
@@ -78,18 +84,22 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     winrt::Windows::Xbox::System::User ConnectedStorageSpace::User()
     {
-        return System::implementation::User::Users( ).GetAt(0);
+        printf("%s called\n", __FUNCTION__);
+        return System::implementation::User::Users( ).GetAt(1);
     }
     hstring ConnectedStorageSpace::ServiceConfigurationId()
     {
+        printf("%s called\n", __FUNCTION__);
         throw hresult_not_implemented();
     }
     bool ConnectedStorageSpace::IsReadOnly()
     {
-        throw hresult_not_implemented();
+        printf("%s called\n", __FUNCTION__);
+        return false;
     }
     winrt::Windows::Xbox::Storage::ConnectedStorageContainer ConnectedStorageSpace::CreateContainer(hstring const& containerName)
     {
+        printf("%s called\n", __FUNCTION__);
 		if (WinDurango::impl::s_userStorage == nullptr || WinDurango::impl::s_machineStorage == nullptr)
 			assert("s_userStorage is null");
 
@@ -108,20 +118,24 @@ namespace winrt::Windows::Xbox::Storage::implementation
 
     winrt::Windows::Foundation::IAsyncAction ConnectedStorageSpace::DeleteContainerAsync(hstring containerName)
     {
+        printf("%s called\n", __FUNCTION__);
         co_await m_connectedStorage->DeleteContainer(containerName);
         containers.Remove(containerName);
     }
 
     winrt::Windows::Xbox::Storage::ContainerInfoQueryResult ConnectedStorageSpace::CreateContainerInfoQuery(hstring const& containerNamePrefix)
     {
+        printf("%s called\n", __FUNCTION__);
         return winrt::make<winrt::Windows::Xbox::Storage::implementation::ContainerInfoQueryResult>(containerNamePrefix, m_connectedStorage);
     }
     winrt::Windows::Foundation::IAsyncOperation<int32_t> ConnectedStorageSpace::GetRemainingBytesInQuotaAsync()
     {
+        printf("%s called\n", __FUNCTION__);
         throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<int64_t> ConnectedStorageSpace::GetRemainingBytesInQuota64Async()
     {
+        printf("%s called\n", __FUNCTION__);
         throw hresult_not_implemented();
     }
 }

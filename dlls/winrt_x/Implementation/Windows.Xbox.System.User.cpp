@@ -2,6 +2,7 @@
 #include "Windows.Xbox.System.User.h"
 #include "Windows.Xbox.System.User.g.cpp"
 #include "Windows.Xbox.System.UserDisplayInfo.h"
+#include "C:\Users\umidi\source\repos\WinDurangoInput\dlls\winrt_x\x64\Debug\Generated Files\sources\Windows.Xbox.System.GetTokenAndSignatureResult.h"
 
 namespace winrt::Windows::Xbox::System::implementation
 {
@@ -9,14 +10,17 @@ namespace winrt::Windows::Xbox::System::implementation
     //winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserAddedEventArgs>> m_userAddedEvent;
     UserOnlineState User::OnlineState( )
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
         return UserOnlineState::Offline;
     }
     winrt::event_token User::OnlineStateChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::OnlineStateChangedEventArgs> const& handler)
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
         return m_onlineStateChangedEvent.add(handler);
     }
     void User::OnlineStateChanged(winrt::event_token const& token) noexcept
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
         m_onlineStateChangedEvent.remove(token);
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::User> User::Users( )
@@ -37,22 +41,28 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::UserAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserAddedEventArgs> const& handler)
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
         return m_userAddedEvent.add(handler);
     }
     void User::UserAdded(winrt::event_token const& token) noexcept
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
         m_userAddedEvent.remove(token);
     }
     winrt::event_token User::UserRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserRemovedEventArgs> const& handler)
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
         return m_userRemovedEvent.add(handler);
     }
     void User::UserRemoved(winrt::event_token const& token) noexcept
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
         m_userRemovedEvent.remove(token);
     }
     winrt::Windows::Xbox::System::User User::GetUserById(uint32_t id)
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+
         return Users().GetAt(id);
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> User::GetTokenAndSignatureForAllUsersAsync(hstring httpMethod, hstring url, hstring headers)
@@ -72,10 +82,14 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::AudioDeviceAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::AudioDeviceAddedEventArgs> const& handler)
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+
         return {};
     }
     void User::AudioDeviceAdded(winrt::event_token const& token) noexcept
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+
         throw hresult_not_implemented( );
     }
     winrt::event_token User::AudioDeviceRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::AudioDeviceRemovedEventArgs> const& handler)
@@ -100,6 +114,8 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::SignInCompleted(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::SignInCompletedEventArgs> const& handler)
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+
         return {};
     }
     void User::SignInCompleted(winrt::event_token const& token) noexcept
@@ -117,10 +133,14 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::SignOutCompleted(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::SignOutCompletedEventArgs> const& handler)
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+
         throw hresult_not_implemented( );
     }
     void User::SignOutCompleted(winrt::event_token const& token) noexcept
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+
         throw hresult_not_implemented( );
     }
     winrt::event_token User::UserDisplayInfoChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserDisplayInfoChangedEventArgs> const& handler)
@@ -140,7 +160,8 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     uint32_t User::Id( )
     {
-        return m_id;
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+        return 1;
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::IAudioDeviceInfo> User::AudioDevices( )
     {
@@ -154,6 +175,7 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Xbox::System::UserDisplayInfo User::DisplayInfo( )
     {
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
         hstring gamertag = to_hstring(m_id);
         return winrt::make<implementation::UserDisplayInfo>(gamertag);
     }
@@ -178,7 +200,7 @@ namespace winrt::Windows::Xbox::System::implementation
     hstring User::XboxUserHash( )
     {
         printf("!!!! Windows.Xbox.System.User XboxUserHash | NOT IMPLEMENTED-- !!!!\n");
-        return winrt::to_hstring(m_id);
+        return winrt::to_hstring(1);
     }
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Xbox.System.h>
@@ -193,14 +215,17 @@ namespace winrt::Windows::Xbox::System::implementation
 
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> User::GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers)
     {
-        throw hresult_not_implemented( );
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+        co_return winrt::make<GetTokenAndSignatureResult>();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> User::GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers, array_view<uint8_t const> body)
     {
-        throw hresult_not_implemented( );
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+        co_return winrt::make<GetTokenAndSignatureResult>( );
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::System::GetTokenAndSignatureResult> User::GetTokenAndSignatureAsync(hstring httpMethod, hstring url, hstring headers, hstring body)
     {
-        throw hresult_not_implemented( );
+        printf("STUBBED FUNC - %s\n", __FUNCTION__);
+        co_return winrt::make<GetTokenAndSignatureResult>( );
     }
 }

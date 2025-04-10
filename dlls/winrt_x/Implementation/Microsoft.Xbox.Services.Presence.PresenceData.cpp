@@ -26,6 +26,7 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
     PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId)
     {
 		printf("[PresenceData] PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId) called\n");
+        winrt::make<PresenceData>( );
     }
     PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId, winrt::Windows::Foundation::Collections::IVectorView<hstring> const& presenceTokenIds)
     {

@@ -27,10 +27,10 @@ namespace WinDurango::impl
 		static winrt::Windows::Foundation::IAsyncOperation<bool> DoesFolderExist(winrt::hstring path);
 		static winrt::Windows::Foundation::IAsyncOperation<bool> DoesFileExist(winrt::Windows::Storage::StorageFolder folder, winrt::hstring path);
 
+		winrt::hstring m_storagePath;
+
 	private:
 		static winrt::hstring ObtainPackageName( );
-
-		winrt::hstring m_storagePath;
 	};
 
 	inline ConnectedStorage* s_userStorage;

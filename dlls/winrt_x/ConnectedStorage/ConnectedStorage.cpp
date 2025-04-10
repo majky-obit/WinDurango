@@ -12,7 +12,7 @@
 
 winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::CreateContainer(winrt::hstring name) const
 {
-   // printf("[ConnectedStorage] Container %S requested creation\n", name.c_str());
+    printf("[ConnectedStorage] Container %S requested creation\n", name.c_str());
 
     if (!co_await DoesFolderExist(m_storagePath + L"\\" + name))
     {
@@ -20,7 +20,7 @@ winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::Cre
         co_await folder.CreateFolderAsync(name);
     }
 
-	//printf("[ConnectedStorage] Container %S created\n", name.c_str());
+	printf("[ConnectedStorage] Container %S created\n", name.c_str());
 }
 
 winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::Read(

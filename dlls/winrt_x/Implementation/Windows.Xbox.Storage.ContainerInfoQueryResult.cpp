@@ -31,22 +31,28 @@ namespace winrt::Windows::Xbox::Storage::implementation
 {
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo>> ContainerInfoQueryResult::GetContainerInfoAsync(uint32_t startIndex, uint32_t maxNumberOfItems)
     {
+        printf("%s called\n", __FUNCTION__);
         throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo>> ContainerInfoQueryResult::GetContainerInfoAsync()
     {
+        printf("%s called\n", __FUNCTION__);
         throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<uint32_t> ContainerInfoQueryResult::GetItemCountAsync()
     {
+        printf("%s called\n", __FUNCTION__);
         throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo2>> ContainerInfoQueryResult::GetContainerInfo2Async(uint32_t startIndex, uint32_t maxNumberOfItems)
     {
+        printf("%s called\n", __FUNCTION__);
         throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::ContainerInfo2>> ContainerInfoQueryResult::GetContainerInfo2Async()
     {
+
+        printf("%s called\n", __FUNCTION__);
 		co_return co_await m_connectedStorage->GetContainerInfo2Async();
     }
 }
