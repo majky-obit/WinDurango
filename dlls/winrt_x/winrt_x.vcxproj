@@ -538,6 +538,7 @@
     <ClInclude Include="Implementation\Windows.Xbox.Storage.ContainerInfoQueryResult.h" />
     <ClInclude Include="Implementation\Windows.Xbox.System.Console.h" />
     <ClInclude Include="Implementation\Windows.Xbox.System.Console2.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.System.GetTokenAndSignatureResult.h" />
     <ClInclude Include="Implementation\Windows.Xbox.System.Launcher.h" />
     <ClInclude Include="Implementation\Windows.Xbox.System.User.h" />
     <ClInclude Include="Implementation\Windows.Xbox.System.UserDisplayInfo.h" />
@@ -928,6 +929,7 @@
     <ClCompile Include="Implementation\Windows.Xbox.Storage.ContainerInfoQueryResult.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.System.Console.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.System.Console2.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.System.GetTokenAndSignatureResult.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.System.Launcher.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.System.User.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.System.UserDisplayInfo.cpp" />
@@ -942,7 +944,6 @@
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

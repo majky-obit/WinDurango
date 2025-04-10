@@ -1327,7 +1327,9 @@
     <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.UserPartyAssociation.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="utils.h" />
+    <ClCompile Include="Implementation\Windows.Xbox.System.GetTokenAndSignatureResult.cpp">
+      <Filter>Implementation\Windows\Xbox\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.h">
@@ -2492,6 +2494,9 @@
     </ClInclude>
     <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.UserPartyAssociation.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.System.GetTokenAndSignatureResult.h">
+      <Filter>Implementation\Windows\Xbox\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
