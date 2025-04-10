@@ -401,3 +401,4 @@ FodyWeavers.xsd
 /dlls/winrt_x/External/*
 !/dlls/winrt_x/External/Windows.Xbox.Media.GameTransportControls.idl
 !/dlls/winrt_x/External/Windows.UI.Core.idl
+*.idl

@@ -37,7 +37,7 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
     }
     winrt::Microsoft::Xbox::GameChat::ChatManagerSettings ChatManager::ChatSettings()
     {
-        return winrt::make<ChatManagerSettings>( );
+        return winrt::make<ChatManagerSettings>();
     }
     winrt::event_token ChatManager::OnDebugMessage(winrt::Windows::Foundation::EventHandler<winrt::Microsoft::Xbox::GameChat::DebugMessageEventArgs> const& __param0)
     {
@@ -137,7 +137,7 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::GameChat::ChatUser> ChatManager::GetChatUsers()
     {
-		return winrt::single_threaded_vector<winrt::Microsoft::Xbox::GameChat::ChatUser>( ).GetView();
+		return winrt::single_threaded_vector<winrt::Microsoft::Xbox::GameChat::ChatUser>().GetView();
     }
     void ChatManager::MuteUserFromAllChannels(winrt::Microsoft::Xbox::GameChat::ChatUser const& user)
     {

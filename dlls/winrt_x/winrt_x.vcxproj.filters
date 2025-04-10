@@ -159,7 +159,7 @@
       <UniqueIdentifier>{39c5e887-fef6-48c2-9f60-7ddf8b3acdbf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Implementation\Windows\Xbox\SmartGlass">
-      <UniqueIdentifier>{62c64f07-fc9c-45f7-8664-357443828b2c}</UniqueIdentifier>
+      <UniqueIdentifier>{a9003d68-6bbb-43e4-ab6e-f1243e316c7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1246,15 +1246,6 @@
     <ClCompile Include="ConnectedStorage\ConnectedStorage.cpp">
       <Filter>Implementation\WinDurango</Filter>
     </ClCompile>
-    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.QosMetrics.cpp">
-      <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
-    </ClCompile>
-    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.QosMetricsChangedEventArgs.cpp">
-      <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
-    </ClCompile>
-    <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.QosSettings.cpp">
-      <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
-    </ClCompile>
     <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassAuxiliaryStream.cpp">
       <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
     </ClCompile>
@@ -1285,60 +1276,58 @@
     <ClCompile Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntrySurface.cpp">
       <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayer.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayer.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.MultiplayerSessionReference.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.Party.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.Party.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChat.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyChat.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChatMember.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyChatMember.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChatView.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyChatView.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyConfig.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyConfig.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyMember.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyMember.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyMemberDeviceGroup.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyMemberDeviceGroup.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyRosterChangedEventArgs.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyRosterChangedEventArgs.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyView.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyView.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.UserPartyAssociation.cpp">
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.UserPartyAssociation.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
-    <ClCompile Include="x64\Debug\Generated Files\sources\Windows.Xbox.System.GetTokenAndSignatureResult.cpp">
-      <Filter>Implementation\Windows\Xbox\System</Filter>
-    </ClCompile>
+    <ClCompile Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.h">
@@ -2423,13 +2412,7 @@
     <ClInclude Include="Implementation\Windows.Xbox.Input.ControllerInputManager.h">
       <Filter>Implementation\Windows\Xbox\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.QosMetrics.h">
-      <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
-    </ClInclude>
-    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.QosMetricsChangedEventArgs.h">
-      <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
-    </ClInclude>
-    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.QosSettings.h">
+    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntrySurface.h">
       <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
     </ClInclude>
     <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassAuxiliaryStream.h">
@@ -2459,62 +2442,56 @@
     <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntryEventArgs.h">
       <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
     </ClInclude>
-    <ClInclude Include="Implementation\Windows.Xbox.SmartGlass.SmartGlassTextEntrySurface.h">
-      <Filter>Implementation\Windows\Xbox\SmartGlass</Filter>
-    </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayer.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayer.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.MultiplayerSessionReference.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.Party.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.Party.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChat.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyChat.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChatMember.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyChatMember.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyChatView.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyChatView.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyConfig.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyConfig.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyMember.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyMember.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyMemberDeviceGroup.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyMemberDeviceGroup.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyRosterChangedEventArgs.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyRosterChangedEventArgs.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyStateChangedEventArgs.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.PartyView.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyView.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.Multiplayer.UserPartyAssociation.h">
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.UserPartyAssociation.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
-    </ClInclude>
-    <ClInclude Include="x64\Debug\Generated Files\sources\Windows.Xbox.System.GetTokenAndSignatureResult.h">
-      <Filter>Implementation\Windows\Xbox\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

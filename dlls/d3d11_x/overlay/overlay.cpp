@@ -15,7 +15,7 @@ wd::Overlay::Overlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, IDXGI
 
 wd::Overlay::~Overlay()
 {
-	Shutdown( );
+	Shutdown();
 	m_pDevice = nullptr;
 	m_pContext = nullptr;
 	m_pSwapchain = nullptr;
@@ -30,25 +30,25 @@ void wd::Overlay::Initialize()
 	m_pSwapchain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
 	m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView);
 
-	IMGUI_CHECKVERSION( );
-	ImGui::CreateContext( );
-	ImGuiIO& io = ImGui::GetIO( ); (void) io;
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void) io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
 	io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
 
-	ImGui::StyleColorsDark( );
+	ImGui::StyleColorsDark();
 
-	ImGui_ImplUwp_InitForCurrentView( );
+	ImGui_ImplUwp_InitForCurrentView();
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 }
 
 void wd::Overlay::Shutdown()
 {
-	ImGui_ImplDX11_Shutdown( );
-	ImGui_ImplUwp_Shutdown( );
-	ImGui::DestroyContext( );
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplUwp_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void wd::Overlay::EnableKeyboard()
@@ -56,11 +56,11 @@ void wd::Overlay::EnableKeyboard()
 	m_bKeyboard = true;
 }
 
-void wd::Overlay::Present( )
+void wd::Overlay::Present()
 {
-    ImGui_ImplDX11_NewFrame( );
-    ImGui_ImplUwp_NewFrame( );
-    ImGui::NewFrame( );
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplUwp_NewFrame();
+    ImGui::NewFrame();
 
     if (m_bKeyboard)
     {
@@ -142,7 +142,7 @@ void wd::Overlay::Present( )
                         g_KeyboardText[ len + 1 ] = '\0';
                     }
                 }
-                ImGui::SameLine( );
+                ImGui::SameLine();
             }
         }
         else
@@ -158,7 +158,7 @@ void wd::Overlay::Present( )
                         g_KeyboardText[ len + 1 ] = '\0';
                     }
                 }
-                ImGui::SameLine( );
+                ImGui::SameLine();
             }
         }
 
@@ -177,7 +177,7 @@ void wd::Overlay::Present( )
                         g_KeyboardText[ len + 1 ] = '\0';
                     }
                 }
-                ImGui::SameLine( );
+                ImGui::SameLine();
             }
         }
 

@@ -11,6 +11,8 @@
 //Rodrigo Todescatto: For debbuging Forza.
 #define RETURN_IF_FAILED(hr) if (FAILED(hr)) return hr
 #define FORZADEBUG
+#define RETURN_HR(hr) return hr
+#define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
 
 std::vector<HMODULE> loadedMods;
 
@@ -94,23 +96,23 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		if (GamePackage == L"265E1020-Anthem_8wekyb3d8bbwe")
 		{
 			printf("Forza Horizon 2 Demo\n");
-    			*(void**)&P_StartForzaThread_X = (char*)GetModuleHandleW(nullptr) + 0xFE6920;
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_StartForzaThread_X, &D_StartForzaThread_X)));
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionCommit()));
+				*(void**)&P_StartForzaThread_X = (char*)GetModuleHandleW(nullptr) + 0xFE6920;
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_StartForzaThread_X, &D_StartForzaThread_X)));
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionCommit()));
 		}
 		//Rodrigo Todescatto: Forza Horizon 2.
 		if (GamePackage == L"Anthem_8wekyb3d8bbwe")
 		{
 			printf("Forza Horizon 2\n");
-    			*(void**)&P_StartForzaThread_X = (char*)GetModuleHandleW(nullptr) + 0x1081A90;
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_StartForzaThread_X, &D_StartForzaThread_X)));
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionCommit()));
-    			*(void**)&P_FmodThreadProc_X = (char*)GetModuleHandleW(nullptr) + 0x19D3F80;
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_FmodThreadProc_X, &D_FmodThreadProc_X)));
-    			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionCommit()));
+				*(void**)&P_StartForzaThread_X = (char*)GetModuleHandleW(nullptr) + 0x1081A90;
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_StartForzaThread_X, &D_StartForzaThread_X)));
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionCommit()));
+				*(void**)&P_FmodThreadProc_X = (char*)GetModuleHandleW(nullptr) + 0x19D3F80;
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_FmodThreadProc_X, &D_FmodThreadProc_X)));
+				RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionCommit()));
 		}
 		//Rodrigo Todescatto: Forza Motorsport 5.
 		if (GamePackage == L"Forza_8wekyb3d8bbwe")

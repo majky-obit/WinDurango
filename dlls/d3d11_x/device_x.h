@@ -6,9 +6,18 @@
 #include <exception>
 #include <format>
 #include "dxgi_device.h"
+#include "dma_engine.h"
+
+
+#define D3D11_RESOURCE_MISC_TILE_POOL_X 0x4000000
+#define D3D11_RESOURCE_MISC_TILED_X 0x8000000
+#define D3D11_MISC_FLAGS_MASK (D3D11_RESOURCE_MISC_TILE_POOL | D3D11_RESOURCE_MISC_TILED)
+#define D3D11X_RESOURCE_MISC_ESRAM_RESIDENT 0x20000
 
 namespace wdi
 {
+	class ID3D11DeviceContext;
+	class ID3D11BlendState;
 	class ID3D11DeviceContextX;
 	struct D3D11X_COUNTER_SET_DESC;
 	struct D3D11X_DESCRIPTOR_RESOURCE;
@@ -250,6 +259,11 @@ namespace wdi
 		virtual HRESULT (SetGpuMemoryPriority)(UINT Priority) = 0;
 		virtual void (GetGpuHardwareConfiguration)(D3D11X_GPU_HARDWARE_CONFIGURATION* pGpuHardwareConfiguration) = 0;
 	};
+
+	D3DINTERFACE(ID3D11PerformanceDeviceX, 88671610, 712E, 4F1E, 84, AB, 01, B5, 94, 8B, D3, 73) : public ID3D11DeviceX
+	{
+
+	};
 }
 
 namespace wd
@@ -267,10 +281,10 @@ namespace wd
 				return E_POINTER;
 			}
 
-			if (riid == __uuidof(wdi::ID3D11DeviceX) || riid == __uuidof(wdi::ID3D11Device) || riid == __uuidof(wdi::ID3D11Device1) || riid == __uuidof(wdi::ID3D11Device2))
+			if (riid == __uuidof(wdi::ID3D11DeviceX) || riid == __uuidof(wdi::ID3D11Device) || riid == __uuidof(wdi::ID3D11Device1) || riid == __uuidof(wdi::ID3D11Device2) || riid == __uuidof(wdi::ID3D11PerformanceDeviceX))
 			{
 				*ppvObject = static_cast<wdi::ID3D11DeviceX*>(this);
-				AddRef( );
+				AddRef();
 				return S_OK;
 			}
 
@@ -354,10 +368,7 @@ namespace wd
 			return wrapped_interface->CreateClassLinkage(ppLinkage);
 		}
 
-		HRESULT CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, ID3D11BlendState** ppBlendState) override
-		{
-			return wrapped_interface->CreateBlendState(pBlendStateDesc, ppBlendState);
-		}
+		HRESULT CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, wdi::ID3D11BlendState** ppBlendState) override;
 
 		HRESULT CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc, ID3D11DepthStencilState** ppDepthStencilState) override
 		{
@@ -442,31 +453,32 @@ namespace wd
 			//return wrapped_interface->SetPrivateDataInterfaceGraphics(guid, pData);
 		}
 
-		D3D_FEATURE_LEVEL GetFeatureLevel( ) override
+		D3D_FEATURE_LEVEL GetFeatureLevel() override
 		{
-			return wrapped_interface->GetFeatureLevel( );
+			return wrapped_interface->GetFeatureLevel();
 		}
 
-		UINT GetCreationFlags( ) override
+		UINT GetCreationFlags() override
 		{
-			return wrapped_interface->GetCreationFlags( );
+			return wrapped_interface->GetCreationFlags();
 		}
 
-		HRESULT GetDeviceRemovedReason( ) override
+		HRESULT GetDeviceRemovedReason() override
 		{
-			return wrapped_interface->GetDeviceRemovedReason( );
+			return wrapped_interface->GetDeviceRemovedReason();
 		}
 
 		void GetImmediateContext(ID3D11DeviceContext** ppImmediateContext) override;
 
 		HRESULT SetExceptionMode(UINT RaiseFlags) override
 		{
-			return wrapped_interface->SetExceptionMode(RaiseFlags);
+			printf("SetExceptionMode was called!!!\n");
+			return E_NOTIMPL;
 		}
 
-		UINT GetExceptionMode( ) override
+		UINT GetExceptionMode() override
 		{
-			return wrapped_interface->GetExceptionMode( );
+			return wrapped_interface->GetExceptionMode();
 		}
 
 		// ID3D11Device1 methods

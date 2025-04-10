@@ -40,6 +40,7 @@ HRESULT wd::dxgi_factory::CreateSwapChainForHwnd(IGraphicsUnknown* pDevice, HWND
 HRESULT wd::dxgi_factory::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice, IUnknown* pWindow,
 	DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain)
 {
+	printf("CreateSwapChainForCoreWindow was called!!!!!!!\n");
 	IDXGISwapChain1* swap = nullptr;
 	HRESULT hr;
 	pDesc->Flags &= DXGI_SWAPCHAIN_FLAG_MASK;
@@ -55,13 +56,14 @@ HRESULT wd::dxgi_factory::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice
 
 	if (pWindow == nullptr)
 	{
+		printf("pWindow was nullptr!!!!!!!\n");
 		Microsoft::WRL::ComPtr<ABI::Windows::UI::Core::ICoreWindowStatic> coreWindowStatic;
-		RoGetActivationFactory(Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get( ), IID_PPV_ARGS(&coreWindowStatic));
+		RoGetActivationFactory(Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), IID_PPV_ARGS(&coreWindowStatic));
 
 		Microsoft::WRL::ComPtr<ABI::Windows::UI::Core::ICoreWindow> coreWindow;
 		coreWindowStatic->GetForCurrentThread(&coreWindow);
 
-		pWindow = coreWindow.Get( );
+		pWindow = coreWindow.Get();
 
 		hr = wrapped_interface->CreateSwapChainForCoreWindow(pRealDevice, pWindow, pDesc, pRestrictToOutput, &swap);
 
@@ -79,7 +81,7 @@ HRESULT wd::dxgi_factory::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice
 		pRealDevice->GetImmediateContext(&ctx);
 
 		wd::g_Overlay = new wd::Overlay(pRealDevice, ctx, swap);
-		wd::g_Overlay->Initialize( );
+		wd::g_Overlay->Initialize();
 	}
 
 	return hr;
@@ -122,12 +124,12 @@ void wd::dxgi_factory::UnregisterOcclusionStatus(DWORD dwCookie)
 
 BOOL wd::dxgi_factory::IsCurrent()
 {
-	return wrapped_interface->IsCurrent( );
+	return wrapped_interface->IsCurrent();
 }
 
 BOOL wd::dxgi_factory::IsWindowedStereoEnabled()
 {
-	return wrapped_interface->IsWindowedStereoEnabled( );
+	return wrapped_interface->IsWindowedStereoEnabled();
 }
 
 HRESULT wd::dxgi_factory::EnumAdapters(UINT Adapter, wdi::IDXGIAdapter** ppAdapter)

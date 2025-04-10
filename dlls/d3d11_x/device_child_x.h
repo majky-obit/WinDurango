@@ -1,7 +1,6 @@
 #pragma once
 #include <cassert>
 #include <exception>
-
 #include "d3d11_x.h"
 #include "graphics_unknown.h"
 
@@ -17,7 +16,9 @@ namespace wdi
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID guid, UINT DataSize, const void* pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(REFGUID guid, const IUnknown* pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateDataInterfaceGraphics(REFGUID guid, const IGraphicsUnknown* pData) = 0;
+#if !defined(DX_VERSION) || DX_VERSION > MAKEINTVERSION(1, 11)
 		virtual HRESULT STDMETHODCALLTYPE SetName(LPCWSTR pName) = 0;
+#endif
 	};
 }
 
@@ -26,7 +27,7 @@ namespace wd
 	class device_child_x : wdi::ID3D11DeviceChild
 	{
 	public:
-		device_child_x(::ID3D11DeviceChild* device_child) : wrapped_interface(device_child) { wrapped_interface->AddRef( ); }
+		device_child_x(::ID3D11DeviceChild* device_child) : wrapped_interface(device_child) { wrapped_interface->AddRef(); }
 
 		void STDMETHODCALLTYPE GetDevice(ID3D11Device** ppDevice) override
 		{

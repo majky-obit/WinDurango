@@ -138,9 +138,9 @@ WriteEventLog(
     __in const EVENT_DATA_DESCRIPTOR* eventData
 );
 void WINAPI
-PauseEventLogging( );
+PauseEventLogging();
 
 void WINAPI
-ResumeEventLogging( );
+ResumeEventLogging();
 #pragma warning(pop)
 #endif // EtwPlus_H

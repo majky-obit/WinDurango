@@ -240,17 +240,17 @@ typedef struct AcpHal_SHAPE_CONTEXTS {
 class IAcpHal
 {
 public:
-    IAcpHal( );
-    ~IAcpHal( );
+    IAcpHal();
+    ~IAcpHal();
 
 private:
 
 };
 
-IAcpHal::IAcpHal( )
+IAcpHal::IAcpHal()
 {
 }
 
-IAcpHal::~IAcpHal( )
+IAcpHal::~IAcpHal()
 {
 }
