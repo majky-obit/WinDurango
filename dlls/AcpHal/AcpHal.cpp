@@ -40,6 +40,8 @@ HRESULT AcpHalReleaseShapeContexts_X() {
 	return S_OK;
 }
 
+CRITICAL_SECTION* criticalSection{};
+
 HRESULT AcpHalCreate_X(IAcpHal** acpInterface) {
 	EnterCriticalSection((LPCRITICAL_SECTION)&criticalSection->LockSemaphore);
 

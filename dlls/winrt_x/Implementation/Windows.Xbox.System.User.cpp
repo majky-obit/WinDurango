@@ -2,7 +2,7 @@
 #include "Windows.Xbox.System.User.h"
 #include "Windows.Xbox.System.User.g.cpp"
 #include "Windows.Xbox.System.UserDisplayInfo.h"
-#include "C:\Users\umidi\source\repos\WinDurangoInput\dlls\winrt_x\x64\Debug\Generated Files\sources\Windows.Xbox.System.GetTokenAndSignatureResult.h"
+#include "Windows.Xbox.System.GetTokenAndSignatureResult.h"
 
 namespace winrt::Windows::Xbox::System::implementation
 {
