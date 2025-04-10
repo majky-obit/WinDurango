@@ -942,6 +942,7 @@
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
