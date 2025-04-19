@@ -1,5 +1,6 @@
 #pragma once
 #include <inttypes.h>
+#include "contexts.h"
 
 struct ApuHeapState {
 /* 0x0000 */ public: uint32_t bytesFree;
@@ -8,8 +9,48 @@ struct ApuHeapState {
 /* 0x000c */ public: uint32_t maximumBlockSizeAvailable;
 /* 0x0010 */ public: uint32_t allocationCount;
 };
+typedef struct APU_HEAP {
+    void* Cached;
+    void* NonCached;
+    UINT32 CachedSize;
+    UINT32 NonCachedSize;
+} APU_HEAP;
 #define APU_ALLOC_CACHED 0x1;
 typedef uint64_t APU_ADDRESS;
+
+HRESULT InitializeCriticalSectionWrapper( );
+APU_ADDRESS __stdcall TranslateMemoryAddress(PRTL_CRITICAL_SECTION_DEBUG SECTION_DEBUG, const void* address);
+BOOL __stdcall ManageThreadLocalStorage(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
+#pragma once
+
+extern _RTL_CRITICAL_SECTION* criticalSection;
+
+#define E_CRITICAL_SECTION_DEBUG_INFO_NOT_NULL 0x8ACA0001
+#define E_CRITICAL_SECTION_DEBUG_INFO_NOT_FOUND 0x8ACA0002
+
+#define ACPE_E_NOT_INITIALIZED     HRESULT(0x8AC80002)
+#define ACPE_E_RESOURCE_IN_USE     HRESULT(0x8AC80010)
+#define E_CRITICAL_SECTION_DEBUG_INFO_NOT_NULL 0x8ACA0001
+struct SHAPE_CONTEXTS {
+    UINT32 numSrcContexts;
+    UINT32 numEqCompContexts;
+    UINT32 numFiltVolContexts;
+    UINT32 numDmaContexts;
+    UINT32 numXmaContexts;
+    UINT32 numPcmContexts;
+    SHAPE_SRC_CONTEXT* srcContextArray;
+    SHAPE_EQCOMP_CONTEXT* eqCompContextArray;
+    SHAPE_FILTVOL_CONTEXT* filtVolContextArray;
+    SHAPE_DMA_CONTEXT* dmaContextArray;
+    SHAPE_XMA_CONTEXT* xmaContextArray;
+    SHAPE_PCM_CONTEXT* pcmContextArray;
+    APU_ADDRESS apuSrcContextArray;
+    APU_ADDRESS apuEqCompContextArray;
+    APU_ADDRESS apuFiltVolContextArray;
+    APU_ADDRESS apuDmaContextArray;
+    APU_ADDRESS apuXmaContextArray;
+    APU_ADDRESS apuPcmContextArray;
+};
 
 typedef struct AcpHal_SHAPE_PCM_CONTEXT {
     UINT32 bufferStart : 32;
@@ -237,20 +278,36 @@ typedef struct AcpHal_SHAPE_CONTEXTS {
     APU_ADDRESS apuPcmContextArray;
 } AcpHal_SHAPE_CONTEXTS;
 
+#pragma once
+#include <windows.h>
+
 class IAcpHal
 {
 public:
     IAcpHal( );
     ~IAcpHal( );
 
+    // Possibly public API methods would go here later
+
 private:
+    void* m_initFunction;                // Likely a function pointer or vtable
+    CRITICAL_SECTION m_critical1;       // Offset +0x08
+    CRITICAL_SECTION m_critical2;       // Offset +0x20
+    LPCRITICAL_SECTION m_sharedCritical;// From global criticalSection
+    int m_lockCount;                    // lockCount = sharedCritical->LockCount + 1
+    char m_someFlag;                    // LOBYTE set to 0
 
+    // Remaining zeroed memory — treated as reserved/internal state
+    int m_padding;
+    int m_lockCount2;
+    int64_t m_dummy2;
+    int64_t m_threadPtr;
+    int64_t m_lockSem;
+    int64_t m_spinCount;
+    int64_t m_debug1;
+    int64_t m_lockSem2;
+    int64_t m_spinCount2;
+    int64_t m_debug2;
+    int m_lockCount3;
+    int m_lockCount4;
 };
-
-IAcpHal::IAcpHal( )
-{
-}
-
-IAcpHal::~IAcpHal( )
-{
-}
