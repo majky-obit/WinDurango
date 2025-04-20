@@ -1,5 +1,5 @@
 #pragma once
-
+#include "AcpHal.h"
 struct SHAPE_EQCOMP_CONTEXT {
     UINT32 timestamp : 21;
     UINT32 reserved0 : 2;

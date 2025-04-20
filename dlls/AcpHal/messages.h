@@ -1,6 +1,5 @@
 #pragma once
-typedef UINT32 APU_ADDRESS;
-
+typedef uint64_t APU_ADDRESS;
 struct ACP_MESSAGE_AUDIO_FRAME_START
 {
     UINT32 audioFrame;  // Audio frame index

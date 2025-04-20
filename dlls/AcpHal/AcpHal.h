@@ -1,6 +1,10 @@
 #pragma once
 #include <inttypes.h>
 #include "contexts.h"
+#include "messages.h"
+#include <cstdio>
+#pragma once
+typedef uint64_t APU_ADDRESS;
 
 struct ApuHeapState {
 /* 0x0000 */ public: uint32_t bytesFree;
@@ -15,18 +19,9 @@ typedef struct APU_HEAP {
     UINT32 CachedSize;
     UINT32 NonCachedSize;
 } APU_HEAP;
-#define APU_ALLOC_CACHED 0x1;
-typedef uint64_t APU_ADDRESS;
 
-HRESULT InitializeCriticalSectionWrapper( );
-APU_ADDRESS __stdcall TranslateMemoryAddress(PRTL_CRITICAL_SECTION_DEBUG SECTION_DEBUG, const void* address);
-BOOL __stdcall ManageThreadLocalStorage(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
-#pragma once
-
-extern _RTL_CRITICAL_SECTION* criticalSection;
-
-#define E_CRITICAL_SECTION_DEBUG_INFO_NOT_NULL 0x8ACA0001
-#define E_CRITICAL_SECTION_DEBUG_INFO_NOT_FOUND 0x8ACA0002
+static const UINT32 APU_ALLOC_CACHED = 0x00000001;
+static const UINT32 APU_ALLOC_NONCACHED = 0x00000002;
 
 #define ACPE_E_NOT_INITIALIZED     HRESULT(0x8AC80002)
 #define ACPE_E_RESOURCE_IN_USE     HRESULT(0x8AC80010)
@@ -278,36 +273,106 @@ typedef struct AcpHal_SHAPE_CONTEXTS {
     APU_ADDRESS apuPcmContextArray;
 } AcpHal_SHAPE_CONTEXTS;
 
-#pragma once
-#include <windows.h>
+enum ACP_COMMAND_TYPE
+{
+    ACP_COMMAND_TYPE_LOAD_SHAPE_FLOWGRAPH = 1,    
+    ACP_COMMAND_TYPE_REGISTER_MESSAGE,            
+    ACP_COMMAND_TYPE_UNREGISTER_MESSAGE,          
+    ACP_COMMAND_TYPE_START_FLOWGRAPH,             
+    ACP_COMMAND_TYPE_ENABLE_XMA_CONTEXT,          
+    ACP_COMMAND_TYPE_ENABLE_XMA_CONTEXTS,         
+    ACP_COMMAND_TYPE_DISABLE_XMA_CONTEXT,         
+    ACP_COMMAND_TYPE_DISABLE_XMA_CONTEXTS,        
+    ACP_COMMAND_TYPE_UPDATE_SRC_CONTEXT,          
+    ACP_COMMAND_TYPE_UPDATE_EQCOMP_CONTEXT,       
+    ACP_COMMAND_TYPE_UPDATE_FILTVOL_CONTEXT,      
+    ACP_COMMAND_TYPE_UPDATE_DMA_CONTEXT,          
+    ACP_COMMAND_TYPE_UPDATE_PCM_CONTEXT,          
+    ACP_COMMAND_TYPE_UPDATE_XMA_CONTEXT,          
+    ACP_COMMAND_TYPE_INCREMENT_DMA_WRITE_POINTER, 
+    ACP_COMMAND_TYPE_INCREMENT_DMA_READ_POINTER,  
+    ACP_COMMAND_TYPE_INCREMENT_PCM_WRITE_POINTER, 
+    ACP_COMMAND_TYPE_INCREMENT_XMA_WRITE_BUFFER_OFFSET_READ,
+    ACP_COMMAND_TYPE_UPDATE_XMA_READ_BUFFER,      
+    ACP_COMMAND_TYPE_UPDATE_ALL_CONTEXTS,         
+    ACP_COMMAND_TYPE_UPDATE_SRC_CONTEXTS,         
+    ACP_COMMAND_TYPE_UPDATE_EQCOMP_CONTEXTS,      
+    ACP_COMMAND_TYPE_UPDATE_FILTVOL_CONTEXTS,     
+    ACP_COMMAND_TYPE_UPDATE_DMA_READ_CONTEXTS,    
+    ACP_COMMAND_TYPE_UPDATE_DMA_WRITE_CONTEXTS,   
+    ACP_COMMAND_TYPE_UPDATE_PCM_CONTEXTS,         
+    ACP_COMMAND_TYPE_UPDATE_XMA_CONTEXTS,         
 
+    ACP_COMMAND_TYPE_COUNT = ACP_COMMAND_TYPE_UPDATE_XMA_CONTEXTS 
+};
+struct ACP_MESSAGE
+{
+    UINT32 type;                // Message type
+    UINT32 droppedMessageCount; // Count of dropped messages prior to this message
+    UINT32 usec;                // time when this message is constructed
+    union                       // Message data
+    {
+        ACP_MESSAGE_AUDIO_FRAME_START     audioFrameStart;
+        ACP_MESSAGE_FLOWGRAPH_COMPLETED   flowgraphCompleted;
+        ACP_MESSAGE_SHAPE_COMMAND_BLOCKED shapeCommandBlocked;
+        ACP_MESSAGE_COMMAND_COMPLETED     commandCompleted;
+        ACP_MESSAGE_FLOWGRAPH_TERMINATED  flowgraphTerminated;
+        ACP_MESSAGE_ERROR                 error;
+    };
+};
 class IAcpHal
 {
 public:
-    IAcpHal( );
-    ~IAcpHal( );
+    IAcpHal( ) { printf("[IAcpHal] Constructed\n"); }
+    virtual ~IAcpHal( ) { printf("[IAcpHal] Destructed\n"); }
 
-    // Possibly public API methods would go here later
+    // Add virtual destructor to allow safe deletion
+    virtual HRESULT __stdcall Connect(UINT32, UINT32) = 0;
+    virtual HRESULT __stdcall Disconnect( ) = 0;
+    virtual HRESULT __stdcall SubmitCommand(ACP_COMMAND_TYPE, UINT64, UINT32, const void*, APU_ADDRESS) = 0;
+    virtual bool __stdcall PopMessage(ACP_MESSAGE* msg) = 0;
+    virtual UINT32 __stdcall GetNumMessages( ) = 0;
+    virtual void __stdcall Release( ) = 0;
+};
 
-private:
-    void* m_initFunction;                // Likely a function pointer or vtable
-    CRITICAL_SECTION m_critical1;       // Offset +0x08
-    CRITICAL_SECTION m_critical2;       // Offset +0x20
-    LPCRITICAL_SECTION m_sharedCritical;// From global criticalSection
-    int m_lockCount;                    // lockCount = sharedCritical->LockCount + 1
-    char m_someFlag;                    // LOBYTE set to 0
+class AcpHal : public IAcpHal {
+    ULONG m_refCount = 1;
 
-    // Remaining zeroed memory — treated as reserved/internal state
-    int m_padding;
-    int m_lockCount2;
-    int64_t m_dummy2;
-    int64_t m_threadPtr;
-    int64_t m_lockSem;
-    int64_t m_spinCount;
-    int64_t m_debug1;
-    int64_t m_lockSem2;
-    int64_t m_spinCount2;
-    int64_t m_debug2;
-    int m_lockCount3;
-    int m_lockCount4;
+public:
+    AcpHal( ) { printf("[AcpHal] Constructed\n"); }
+    ~AcpHal( ) { printf("[AcpHal] Destructed\n"); }
+
+    // COM reference tracking
+    ULONG AddRef( ) { return ++m_refCount; }
+
+    ULONG ReleaseRef( ) {
+        ULONG ref = --m_refCount;
+        if (ref == 0) {
+            delete this;
+            return 0;
+        }
+        return ref;
+    }
+
+    // IAcpHal methods
+    HRESULT __stdcall Connect(UINT32, UINT32) override { printf("Connect()\n"); return S_OK; }
+    HRESULT __stdcall Disconnect( ) override { printf("Disconnect()\n"); return S_OK; }
+    HRESULT __stdcall SubmitCommand(ACP_COMMAND_TYPE, UINT64, UINT32, const void*, APU_ADDRESS) override {
+        printf("SubmitCommand()\n");
+        return S_OK;
+    }
+    bool __stdcall PopMessage(ACP_MESSAGE* msg) override {
+        printf("PopMessage()\n");
+        if (msg) ZeroMemory(msg, sizeof(*msg));
+        return false;
+    }
+    UINT32 __stdcall GetNumMessages( ) override {
+        printf("GetNumMessages()\n");
+        return 0;
+    }
+    void __stdcall Release( ) override {
+        printf("Release() called\n");
+        ReleaseRef( ); // Properly manages reference count
+    }
+
 };

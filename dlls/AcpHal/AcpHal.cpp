@@ -1,4 +1,4 @@
-// AcpHal.cpp
+﻿// AcpHal.cpp
 #include "pch.h"
 #include "AcpHal.h"
 
@@ -8,10 +8,15 @@
 #include "../common/debug.h"
 #include "contexts.h"
 #include <intsafe.h>
+#include <new>
 
-_RTL_CRITICAL_SECTION* criticalSection = nullptr;
-
+static APU_HEAP g_ApuHeap = { 0 };
 HRESULT AcpHalAllocateShapeContexts_X(SHAPE_CONTEXTS* ctx) {
+    if (!ctx)
+        return E_INVALIDARG;
+
+    memset(ctx, 0, sizeof(SHAPE_CONTEXTS));
+
     if (ctx->numSrcContexts > 0)
         ctx->srcContextArray = static_cast<SHAPE_SRC_CONTEXT*>(malloc(sizeof(SHAPE_SRC_CONTEXT) * ctx->numSrcContexts));
 
@@ -30,45 +35,81 @@ HRESULT AcpHalAllocateShapeContexts_X(SHAPE_CONTEXTS* ctx) {
     if (ctx->numPcmContexts > 0)
         ctx->pcmContextArray = static_cast<SHAPE_PCM_CONTEXT*>(malloc(sizeof(SHAPE_PCM_CONTEXT) * ctx->numPcmContexts));
 
-    printf("[AcpHal] allocated shape contexts\n");
+    printf("[AcpHalAllocateShapeContexts_X] Allocated shape context arrays."); 
     return S_OK;
 }
 
-HRESULT AcpHalReleaseShapeContexts_X() {
+
+HRESULT AcpHalReleaseShapeContexts_X( ) {
     DEBUG_PRINT( );
+
+    // Free any previously allocated context arrays
+    if (g_ApuHeap.NonCached) {
+        free(g_ApuHeap.NonCached);
+        g_ApuHeap.NonCached = NULL;
+        g_ApuHeap.NonCachedSize = 0;
+    }
+
+    if (g_ApuHeap.Cached) {
+        free(g_ApuHeap.Cached);
+        g_ApuHeap.Cached = NULL;
+        g_ApuHeap.CachedSize = 0;
+    }
+    printf("[AcpHal] released shape context memory and reset heap");
     return S_OK;
 }
 
 HRESULT __stdcall AcpHalCreate_X(IAcpHal** acpInterface)
 {
-    EnterCriticalSection((LPCRITICAL_SECTION) &criticalSection->LockSemaphore);
-
     if (!acpInterface)
-    {
-        LeaveCriticalSection((LPCRITICAL_SECTION) &criticalSection->LockSemaphore);
-        return E_INVALIDARG;
-    }
+        return E_POINTER;
 
-    *acpInterface = new IAcpHal( );
+    AcpHal* instance = new (std::nothrow) AcpHal( );
+    if (!instance)
+        return E_OUTOFMEMORY;
 
-    LeaveCriticalSection((LPCRITICAL_SECTION) &criticalSection->LockSemaphore);
-
-    return *acpInterface ? S_OK : E_OUTOFMEMORY;
+    *acpInterface = instance;
+    printf("[AcpHalCreate_X] IAcpHal interface created successfully.\n");
+    return S_OK;
 }
+
+
 
 HRESULT ApuAlloc_X(
-         void** virtualAddress,
-         APU_ADDRESS* physicalAddress,
-         UINT32 sizeInBytes,
-         UINT32 alignmentInBytes,
-         UINT32 flags
+    void** virtualAddress,
+    APU_ADDRESS* physicalAddress,
+    UINT32 sizeInBytes,
+    UINT32 alignmentInBytes,
+    UINT32 flags
 )
 {
-    alignmentInBytes = 4;
-    DEBUG_PRINT( );
-    return 0;
+    if (!virtualAddress || sizeInBytes == 0 || alignmentInBytes == 0)
+        return E_INVALIDARG;
+
+    if ((alignmentInBytes & (alignmentInBytes - 1)) != 0 || alignmentInBytes < 4)
+        return E_INVALIDARG;
+
+    if ((flags != APU_ALLOC_CACHED) && (flags != APU_ALLOC_NONCACHED))
+        return E_INVALIDARG;
+
+    // Use aligned malloc for safe CPU-side simulation
+    void* alignedPtr = _aligned_malloc(sizeInBytes, alignmentInBytes);
+    if (!alignedPtr)
+        return E_OUTOFMEMORY;
+
+    *virtualAddress = alignedPtr;
+
+    // Simulate physical address (if needed)
+    if (physicalAddress)
+        *physicalAddress = reinterpret_cast<APU_ADDRESS>(alignedPtr);
+
+    printf("[ApuAlloc_X] Allocated %u bytes at 0x%p (aligned to %u bytes), flags=0x%X, phys=0x%llX\n",
+        sizeInBytes, alignedPtr, alignmentInBytes, flags,
+        physicalAddress ? *physicalAddress : 0);
+
+    return S_OK;
 }
-static APU_HEAP g_ApuHeap = { 0 };
+
 HRESULT __stdcall ApuCreateHeap_X(UINT32 cachedSizeInBytes, UINT32 nonCachedSizeInBytes)
 {
     if (g_ApuHeap.Cached || g_ApuHeap.NonCached) {
@@ -92,48 +133,21 @@ HRESULT __stdcall ApuCreateHeap_X(UINT32 cachedSizeInBytes, UINT32 nonCachedSize
     g_ApuHeap.NonCachedSize = nonCachedSizeInBytes;
     return S_OK;
 }
-void ReleaseResourceEntry(_RTL_CRITICAL_SECTION* DebugInfo, void* virtualAddress) {
-    // Implementation of the function
-    // Assuming it releases some resources associated with the virtualAddress
-    // This is a placeholder implementation
-    if (DebugInfo && virtualAddress) {
-        // Perform resource release logic here
-    }
-}
 
 HRESULT __stdcall ApuHeapGetState_X(ApuHeapState* apuHeapState, UINT32 flags)
 {
-    _RTL_CRITICAL_SECTION* p_LockSemaphore; // rbx
-    PRTL_CRITICAL_SECTION_DEBUG DebugInfo; // rax
+    DEBUG_PRINT( );
 
-    p_LockSemaphore = (_RTL_CRITICAL_SECTION*)&criticalSection->LockSemaphore;
-    EnterCriticalSection((LPCRITICAL_SECTION)& criticalSection->LockSemaphore);
     if (!apuHeapState)
-        goto LABEL_9;
-    if (flags == 1)
-    {
-        DebugInfo = criticalSection[ 2 ].DebugInfo;
-        goto LABEL_4;
-    }
-    if (flags != 2)
-    {
-    LABEL_9:
-        LeaveCriticalSection(p_LockSemaphore);
-        return E_INVALIDARG;
-    }
-    DebugInfo = (PRTL_CRITICAL_SECTION_DEBUG)*&criticalSection[ 2 ].LockCount;
-LABEL_4:
-    if (DebugInfo)
-    {
-        apuHeapState->allocationCount = (uint32_t)*&DebugInfo[ 1 ].ProcessLocksList.Blink;
-        LeaveCriticalSection(p_LockSemaphore);
-    }
-    else
-    {
-        LeaveCriticalSection(p_LockSemaphore);
-        return E_CRITICAL_SECTION_DEBUG_INFO_NOT_FOUND;
-    }
-    return 0;
+        return E_POINTER;
+
+    apuHeapState->bytesFree = 0; // Not tracked
+    apuHeapState->bytesAllocated = g_ApuHeap.CachedSize + g_ApuHeap.NonCachedSize;
+    apuHeapState->bytesLost = 0; // Not tracked
+    apuHeapState->maximumBlockSizeAvailable = 0; // Not tracked
+    apuHeapState->allocationCount = 0; // Not tracked
+
+    return S_OK;
 }
 
 bool ApuIsVirtualAddressValid_X(
@@ -142,75 +156,28 @@ bool ApuIsVirtualAddressValid_X(
 )
 {
     DEBUG_PRINT( );
-    return 0;
+
+    if (!virtualAddress || physicalAlignmentInBytes == 0)
+        return false;
+
+    uintptr_t addr = reinterpret_cast<uintptr_t>(virtualAddress);
+    bool isAligned = (addr % physicalAlignmentInBytes) == 0;
+    return isAligned;
 }
 
-bool EnsureInitialized(_RTL_CRITICAL_SECTION* criticalSection) {
-    // Placeholder implementation for EnsureInitialized
-    // Assuming it checks if the critical section is initialized
-    return criticalSection && criticalSection->DebugInfo != nullptr;
-}
-
-HRESULT ApuFree_X(void* virtualAddress) {
-    _RTL_CRITICAL_SECTION* DebugInfo; // rcx
-
-    EnterCriticalSection((LPCRITICAL_SECTION)&criticalSection->LockSemaphore);
-    if (EnsureInitialized(criticalSection)) {
-        DebugInfo = (_RTL_CRITICAL_SECTION*)criticalSection[2].DebugInfo;
-        if (virtualAddress < DebugInfo->OwningThread || virtualAddress >= (void*)((char*)DebugInfo->OwningThread + DebugInfo->LockCount))
-            DebugInfo = (_RTL_CRITICAL_SECTION*)*&criticalSection[2].LockCount;
-     
-        ReleaseResourceEntry(DebugInfo, virtualAddress);
-    }
-    LeaveCriticalSection((LPCRITICAL_SECTION)&criticalSection->LockSemaphore);
-    return E_FAIL;
-}
-
-APU_ADDRESS __stdcall ApuMapVirtualAddress_X(const void *virtualAddress) {
-    _RTL_CRITICAL_SECTION *p_LockSemaphore; // rbx
-    PRTL_CRITICAL_SECTION_DEBUG DebugInfo; // rcx
-    char v6; // al
-
-    p_LockSemaphore = (_RTL_CRITICAL_SECTION*)&criticalSection->LockSemaphore;
-    EnterCriticalSection((LPCRITICAL_SECTION) & criticalSection->LockSemaphore);
-    if (EnsureInitialized(criticalSection)) {
-        DebugInfo = criticalSection[2].DebugInfo;
-        if (virtualAddress < DebugInfo->ProcessLocksList.Flink
-            || (v6 = 1, virtualAddress >= DebugInfo->ProcessLocksList.Flink + LODWORD(DebugInfo->CriticalSection))) {
-            v6 = 0;
-        }
-        if (!v6)
-            DebugInfo = (PRTL_CRITICAL_SECTION_DEBUG)*&criticalSection[2].LockCount;
-        return TranslateMemoryAddress(DebugInfo, virtualAddress);
-    }
-    LeaveCriticalSection(p_LockSemaphore);
-    return 0;
-}
-
-APU_ADDRESS __stdcall TranslateMemoryAddress(PRTL_CRITICAL_SECTION_DEBUG SECTION_DEBUG, const void* address)
+HRESULT ApuFree_X(void* virtualAddress)
 {
-    APU_ADDRESS Result; // rdi
-    PRTL_CRITICAL_SECTION_DEBUG DebugInfo; // rcx
+    if (!virtualAddress)
+        return E_INVALIDARG;
 
-    EnterCriticalSection((LPCRITICAL_SECTION)& SECTION_DEBUG->EntryCount);
-    if (address >= SECTION_DEBUG->ProcessLocksList.Flink
-      && address < SECTION_DEBUG->ProcessLocksList.Flink + LODWORD(SECTION_DEBUG->CriticalSection))
-    {
-        for (DebugInfo = (PRTL_CRITICAL_SECTION_DEBUG)*&SECTION_DEBUG->Type;
-              DebugInfo && address >= DebugInfo->ProcessLocksList.Flink;
-              DebugInfo = (PRTL_CRITICAL_SECTION_DEBUG)*&DebugInfo->EntryCount)
-        {
-            if (LOBYTE(DebugInfo->Flags) && address < DebugInfo->ProcessLocksList.Flink + *&DebugInfo->Type)
-            {
-                Result = (APU_ADDRESS)((uintptr_t)address
-                    + (uintptr_t)DebugInfo->ProcessLocksList.Blink >> 32
-                    - (uintptr_t)DebugInfo->ProcessLocksList.Flink);
-                break;
-            }
-        }
-    }
-    LeaveCriticalSection((LPCRITICAL_SECTION)&SECTION_DEBUG->EntryCount);
-    return Result;
+    _aligned_free(virtualAddress);
+    printf("[ApuFree_X] Freed memory at 0x%p\n", virtualAddress);
+    return S_OK;
+}
+
+APU_ADDRESS __stdcall ApuMapVirtualAddress_X(const void* virtualAddress) {
+    DEBUG_PRINT( );
+    return reinterpret_cast<APU_ADDRESS>(virtualAddress);
 }
 
 void* ApuMapApuAddress_X(
@@ -218,13 +185,5 @@ void* ApuMapApuAddress_X(
 )
 {
     DEBUG_PRINT( );
-    return 0;
-}
-
-IAcpHal::IAcpHal( )
-{
-}
-
-IAcpHal::~IAcpHal( )
-{
+    return reinterpret_cast<void*>(apuPhysicalAddress);
 }
