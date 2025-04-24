@@ -54,7 +54,7 @@ See the [Quickstart](https://github.com/WinDurango/WinDurango/wiki/Quickstart) p
 
 ## Building
 
-See [Setup](https://windurango.github.io/Documentation/build-contrib.html) for setup. 
+See [here](https://windurango.github.io/Documentation/build-contrib.html) for instructions on setup. 
 When writing code, check the [STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
 and be sure to run clang-format!
 
