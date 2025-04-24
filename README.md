@@ -10,10 +10,6 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/WinDurango/WinDurango?color=2c9510&label=Contributors)](https://github.com/WinDurango/WinDurango/graphs/contributors)
 [![GitHub Repo stars](https://img.shields.io/github/stars/WinDurango/WinDurango?color=2c9510&)](https://github.com/WinDurango/WinDurango/stargazers)
 
-
-For more information, see the
-[main WinDurango wiki](https://github.com/WinDurango/WinDurango/wiki).
-
 Check out the UI project at [WinDurango.UI](https://github.com/WinDurango-project/WinDurango.UI/)
 
 > [!NOTE]
