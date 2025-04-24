@@ -36,8 +36,7 @@ Discussing illegal activities, such as piracy, (illegal) hacking, doxxing/cyberb
 
 Currently, only Minecraft: Xbox One Edition runs with WinDurango.
 See the [Game compatibility list](https://windurango.github.io/Documentation/playable-games.html)
-for currently tracked games, and feel free to contribute your own updates,
-screenshots, and information there following the [existing conventions](https://github.com/WinDurango/WinDurango-game-compatibility/blob/main/README.md).
+for currently tracked games.
 
 ## Disclaimer
 
@@ -55,8 +54,6 @@ See the [Quickstart](https://github.com/WinDurango/WinDurango/wiki/Quickstart) p
 ## Building
 
 See [here](https://windurango.github.io/Documentation/build-contrib.html) for instructions on setup. 
-When writing code, check the [STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
-and be sure to run clang-format!
 
 ## Contributors Wanted!
 
