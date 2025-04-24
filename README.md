@@ -38,10 +38,6 @@ legally purchased devices and games and information made public on the internet
 (you'd be surprised what's indexed on Google...). We are not any way affliated
 with Microsoft.
 
-## Quickstart
-
-See the [Quickstart](https://github.com/WinDurango/WinDurango/wiki/Quickstart) page.
-
 ## Building
 
 See [here](https://windurango.github.io/Documentation/build-contrib.html) for instructions on setup. 
