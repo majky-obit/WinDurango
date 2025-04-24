@@ -1,4 +1,4 @@
-#include "device_x.h"
+﻿#include "device_x.h"
 #include <stdexcept>
 #include "resource.hpp"
 #include "view.hpp"
@@ -33,21 +33,34 @@ HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D
 	return hr;
 }
 
-HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
+HRESULT wd::device_x::CreateTexture2D(
+	const D3D11_TEXTURE2D_DESC* pDesc,
+	const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Texture2D** ppTexture2D)
 {
+	if (!pDesc || !ppTexture2D)
+		return E_INVALIDARG;
+
+	D3D11_TEXTURE2D_DESC fixedDesc = *pDesc;
+	fixedDesc.MiscFlags &= ~(D3D11_RESOURCE_MISC_TILE_POOL); // 🚫 Fix the bad flag
+
 	ID3D11Texture2D* texture2d = nullptr;
-	HRESULT hr = wrapped_interface->CreateTexture2D(pDesc, pInitialData, &texture2d);
+	HRESULT hr = wrapped_interface->CreateTexture2D(&fixedDesc, pInitialData, &texture2d);
 
-	printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
-
-	if (ppTexture2D != nullptr)
+	if (SUCCEEDED(hr) && texture2d)
 	{
-		*ppTexture2D = SUCCEEDED(hr) ? reinterpret_cast<ID3D11Texture2D*>(new texture_2d(texture2d)) : nullptr;
+		printf("[CreateTexture2D] created texture at 0x%p\n", texture2d);
+		*ppTexture2D = reinterpret_cast<ID3D11Texture2D*>(new texture_2d(texture2d));
+	}
+	else
+	{
+		printf("[CreateTexture2D] failed (HRESULT: 0x%08X)\n", static_cast<unsigned int>(hr));
+		*ppTexture2D = nullptr;
 	}
 
 	return hr;
 }
+
 
 HRESULT wd::device_x::CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Texture3D** ppTexture3D)
@@ -94,9 +107,8 @@ HRESULT wd::device_x::CreateUnorderedAccessView(ID3D11Resource* pResource,
 
 	return hr;
 }
-
 HRESULT wd::device_x::CreateRenderTargetView(ID3D11Resource* pResource, const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
-                                             ID3D11RenderTargetView** ppRTView)
+											 ID3D11RenderTargetView** ppRTView)
 {
 	::ID3D11RenderTargetView* target = nullptr;
 	HRESULT hr = wrapped_interface->CreateRenderTargetView(reinterpret_cast<wd::d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
@@ -341,5 +353,12 @@ HRESULT wd::device_x::SetGpuMemoryPriority(UINT Priority)
 
 void wd::device_x::GetGpuHardwareConfiguration(wdi::D3D11X_GPU_HARDWARE_CONFIGURATION* pGpuHardwareConfiguration)
 {
-	throw std::logic_error("Not implemented");
+	if (!pGpuHardwareConfiguration)
+		return;
+
+	// TODO: Replace these constants with dynamic queries if available
+	pGpuHardwareConfiguration->GpuFrequency = 853'000'000; // 853 MHz (Xbox One)
+	pGpuHardwareConfiguration->HardwareVersion = wdi::D3D11X_HARDWARE_VERSION_XBOX_ONE;
+	pGpuHardwareConfiguration->GpuCuCount = 12; // 12 Compute Units (Xbox One baseline)
 }
+

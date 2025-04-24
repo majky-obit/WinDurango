@@ -1,5 +1,10 @@
 #pragma once
 #include <inttypes.h>
+#include "contexts.h"
+#include "messages.h"
+#include <cstdio>
+#pragma once
+typedef uint64_t APU_ADDRESS;
 
 struct ApuHeapState {
 /* 0x0000 */ public: uint32_t bytesFree;
@@ -8,8 +13,39 @@ struct ApuHeapState {
 /* 0x000c */ public: uint32_t maximumBlockSizeAvailable;
 /* 0x0010 */ public: uint32_t allocationCount;
 };
-#define APU_ALLOC_CACHED 0x1;
-typedef uint64_t APU_ADDRESS;
+typedef struct APU_HEAP {
+    void* Cached;
+    void* NonCached;
+    UINT32 CachedSize;
+    UINT32 NonCachedSize;
+} APU_HEAP;
+
+static const UINT32 APU_ALLOC_CACHED = 0x00000001;
+static const UINT32 APU_ALLOC_NONCACHED = 0x00000002;
+
+#define ACPE_E_NOT_INITIALIZED     HRESULT(0x8AC80002)
+#define ACPE_E_RESOURCE_IN_USE     HRESULT(0x8AC80010)
+#define E_CRITICAL_SECTION_DEBUG_INFO_NOT_NULL 0x8ACA0001
+struct SHAPE_CONTEXTS {
+    UINT32 numSrcContexts;
+    UINT32 numEqCompContexts;
+    UINT32 numFiltVolContexts;
+    UINT32 numDmaContexts;
+    UINT32 numXmaContexts;
+    UINT32 numPcmContexts;
+    SHAPE_SRC_CONTEXT* srcContextArray;
+    SHAPE_EQCOMP_CONTEXT* eqCompContextArray;
+    SHAPE_FILTVOL_CONTEXT* filtVolContextArray;
+    SHAPE_DMA_CONTEXT* dmaContextArray;
+    SHAPE_XMA_CONTEXT* xmaContextArray;
+    SHAPE_PCM_CONTEXT* pcmContextArray;
+    APU_ADDRESS apuSrcContextArray;
+    APU_ADDRESS apuEqCompContextArray;
+    APU_ADDRESS apuFiltVolContextArray;
+    APU_ADDRESS apuDmaContextArray;
+    APU_ADDRESS apuXmaContextArray;
+    APU_ADDRESS apuPcmContextArray;
+};
 
 typedef struct AcpHal_SHAPE_PCM_CONTEXT {
     UINT32 bufferStart : 32;
@@ -237,20 +273,106 @@ typedef struct AcpHal_SHAPE_CONTEXTS {
     APU_ADDRESS apuPcmContextArray;
 } AcpHal_SHAPE_CONTEXTS;
 
+enum ACP_COMMAND_TYPE
+{
+    ACP_COMMAND_TYPE_LOAD_SHAPE_FLOWGRAPH = 1,    
+    ACP_COMMAND_TYPE_REGISTER_MESSAGE,            
+    ACP_COMMAND_TYPE_UNREGISTER_MESSAGE,          
+    ACP_COMMAND_TYPE_START_FLOWGRAPH,             
+    ACP_COMMAND_TYPE_ENABLE_XMA_CONTEXT,          
+    ACP_COMMAND_TYPE_ENABLE_XMA_CONTEXTS,         
+    ACP_COMMAND_TYPE_DISABLE_XMA_CONTEXT,         
+    ACP_COMMAND_TYPE_DISABLE_XMA_CONTEXTS,        
+    ACP_COMMAND_TYPE_UPDATE_SRC_CONTEXT,          
+    ACP_COMMAND_TYPE_UPDATE_EQCOMP_CONTEXT,       
+    ACP_COMMAND_TYPE_UPDATE_FILTVOL_CONTEXT,      
+    ACP_COMMAND_TYPE_UPDATE_DMA_CONTEXT,          
+    ACP_COMMAND_TYPE_UPDATE_PCM_CONTEXT,          
+    ACP_COMMAND_TYPE_UPDATE_XMA_CONTEXT,          
+    ACP_COMMAND_TYPE_INCREMENT_DMA_WRITE_POINTER, 
+    ACP_COMMAND_TYPE_INCREMENT_DMA_READ_POINTER,  
+    ACP_COMMAND_TYPE_INCREMENT_PCM_WRITE_POINTER, 
+    ACP_COMMAND_TYPE_INCREMENT_XMA_WRITE_BUFFER_OFFSET_READ,
+    ACP_COMMAND_TYPE_UPDATE_XMA_READ_BUFFER,      
+    ACP_COMMAND_TYPE_UPDATE_ALL_CONTEXTS,         
+    ACP_COMMAND_TYPE_UPDATE_SRC_CONTEXTS,         
+    ACP_COMMAND_TYPE_UPDATE_EQCOMP_CONTEXTS,      
+    ACP_COMMAND_TYPE_UPDATE_FILTVOL_CONTEXTS,     
+    ACP_COMMAND_TYPE_UPDATE_DMA_READ_CONTEXTS,    
+    ACP_COMMAND_TYPE_UPDATE_DMA_WRITE_CONTEXTS,   
+    ACP_COMMAND_TYPE_UPDATE_PCM_CONTEXTS,         
+    ACP_COMMAND_TYPE_UPDATE_XMA_CONTEXTS,         
+
+    ACP_COMMAND_TYPE_COUNT = ACP_COMMAND_TYPE_UPDATE_XMA_CONTEXTS 
+};
+struct ACP_MESSAGE
+{
+    UINT32 type;                // Message type
+    UINT32 droppedMessageCount; // Count of dropped messages prior to this message
+    UINT32 usec;                // time when this message is constructed
+    union                       // Message data
+    {
+        ACP_MESSAGE_AUDIO_FRAME_START     audioFrameStart;
+        ACP_MESSAGE_FLOWGRAPH_COMPLETED   flowgraphCompleted;
+        ACP_MESSAGE_SHAPE_COMMAND_BLOCKED shapeCommandBlocked;
+        ACP_MESSAGE_COMMAND_COMPLETED     commandCompleted;
+        ACP_MESSAGE_FLOWGRAPH_TERMINATED  flowgraphTerminated;
+        ACP_MESSAGE_ERROR                 error;
+    };
+};
 class IAcpHal
 {
 public:
-    IAcpHal( );
-    ~IAcpHal( );
+    IAcpHal( ) { printf("[IAcpHal] Constructed\n"); }
+    virtual ~IAcpHal( ) { printf("[IAcpHal] Destructed\n"); }
 
-private:
-
+    // Add virtual destructor to allow safe deletion
+    virtual HRESULT __stdcall Connect(UINT32, UINT32) = 0;
+    virtual HRESULT __stdcall Disconnect( ) = 0;
+    virtual HRESULT __stdcall SubmitCommand(ACP_COMMAND_TYPE, UINT64, UINT32, const void*, APU_ADDRESS) = 0;
+    virtual bool __stdcall PopMessage(ACP_MESSAGE* msg) = 0;
+    virtual UINT32 __stdcall GetNumMessages( ) = 0;
+    virtual void __stdcall Release( ) = 0;
 };
 
-IAcpHal::IAcpHal( )
-{
-}
+class AcpHal : public IAcpHal {
+    ULONG m_refCount = 1;
 
-IAcpHal::~IAcpHal( )
-{
-}
+public:
+    AcpHal( ) { printf("[AcpHal] Constructed\n"); }
+    ~AcpHal( ) { printf("[AcpHal] Destructed\n"); }
+
+    // COM reference tracking
+    ULONG AddRef( ) { return ++m_refCount; }
+
+    ULONG ReleaseRef( ) {
+        ULONG ref = --m_refCount;
+        if (ref == 0) {
+            delete this;
+            return 0;
+        }
+        return ref;
+    }
+
+    // IAcpHal methods
+    HRESULT __stdcall Connect(UINT32, UINT32) override { printf("Connect()\n"); return S_OK; }
+    HRESULT __stdcall Disconnect( ) override { printf("Disconnect()\n"); return S_OK; }
+    HRESULT __stdcall SubmitCommand(ACP_COMMAND_TYPE, UINT64, UINT32, const void*, APU_ADDRESS) override {
+        printf("SubmitCommand()\n");
+        return S_OK;
+    }
+    bool __stdcall PopMessage(ACP_MESSAGE* msg) override {
+        printf("PopMessage()\n");
+        if (msg) ZeroMemory(msg, sizeof(*msg));
+        return false;
+    }
+    UINT32 __stdcall GetNumMessages( ) override {
+        printf("GetNumMessages()\n");
+        return 0;
+    }
+    void __stdcall Release( ) override {
+        printf("Release() called\n");
+        ReleaseRef( ); // Properly manages reference count
+    }
+
+};

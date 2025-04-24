@@ -18,3 +18,5 @@ EXPORTS
 	DXGIXSetVLineNotification					=	DXGIXSetVLineNotification_X									@16
 	WD11XNotify									=   WD11XNotify_X												@17
 	WDWaitForKeyboard						    =   WDWaitForKeyboard											@18
+	IID_ID3D11DeviceContextX =   IID_ID3D11DeviceContextX_X									@19
+	IID_ID3D11DeviceX =   IID_ID3D11DeviceX_X											@20

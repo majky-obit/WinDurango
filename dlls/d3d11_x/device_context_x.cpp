@@ -408,10 +408,18 @@ void wd::device_context_x::CopyStructureCount(ID3D11Buffer* pDstBuffer, UINT Dst
 	wrapped_interface->CopyStructureCount(pDstBuffer, DstAlignedByteOffset, pSrcView);
 }
 
-void wd::device_context_x::ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView, const FLOAT ColorRGBA[4])
+void wd::device_context_x::ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView, const FLOAT ColorRGBA[ 4 ])
 {
-	wrapped_interface->ClearRenderTargetView(pRenderTargetView, ColorRGBA);
+
+	if (pRenderTargetView == nullptr)
+	{
+		return;
+	}
+	wrapped_interface->ClearRenderTargetView(reinterpret_cast<wd::render_target_view*>(pRenderTargetView)->wrapped_interface, ColorRGBA);
 }
+
+
+
 
 void wd::device_context_x::ClearUnorderedAccessViewUint(ID3D11UnorderedAccessView* pUnorderedAccessView,
 	const UINT Values[4])
@@ -428,7 +436,7 @@ void wd::device_context_x::ClearUnorderedAccessViewFloat(ID3D11UnorderedAccessVi
 void wd::device_context_x::ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView, UINT ClearFlags,
 	FLOAT Depth, UINT8 Stencil)
 {
-	wrapped_interface->ClearDepthStencilView(pDepthStencilView, ClearFlags, Depth, Stencil);
+	wrapped_interface->ClearDepthStencilView(reinterpret_cast<wd::depth_stencil_view*>(pDepthStencilView)->wrapped_interface, ClearFlags, Depth, Stencil);
 }
 
 void wd::device_context_x::GenerateMips(ID3D11ShaderResourceView* pShaderResourceView)
@@ -1466,10 +1474,30 @@ void wd::device_context_x::InsertWaitOnPresent(UINT Flags, ID3D11Resource* pBack
 }
 
 void wd::device_context_x::ClearRenderTargetViewX(ID3D11RenderTargetView* pRenderTargetView, UINT Flags,
-	const FLOAT ColorRGBA[4])
+												  const FLOAT ColorRGBA[ 4 ])
 {
-	throw std::logic_error("Not implemented");
+	if (!pRenderTargetView)
+	{
+		printf("[ClearRenderTargetViewX] ERROR: pRenderTargetView is null!\n");
+		return;
+	}
+
+	if (!ColorRGBA)
+	{
+		printf("[ClearRenderTargetViewX] ERROR: ColorRGBA is null!\n");
+		return;
+	}
+
+	// Assuming wrapped_interface is your internal ID3D11DeviceContext*
+	wrapped_interface->ClearRenderTargetView(pRenderTargetView, ColorRGBA);
+
+	if (Flags != 0)
+	{
+		// If you're implementing custom flags (X extensions), handle them here.
+		printf("[ClearRenderTargetViewX] Flags were passed, but are not handled: 0x%X\n", Flags);
+	}
 }
+
 
 UINT wd::device_context_x::GetResourceCompression(ID3D11Resource* pResource)
 {

@@ -177,18 +177,26 @@ winrt::Windows::Foundation::IAsyncOperation<bool> WinDurango::impl::ConnectedSto
 }
 
 winrt::Windows::Foundation::IAsyncOperation<bool> WinDurango::impl::ConnectedStorage::DoesFileExist(
-	winrt::Windows::Storage::StorageFolder folder, winrt::hstring path)
+    winrt::Windows::Storage::StorageFolder folder, winrt::hstring path)
 {
-	try
-	{
-		co_await folder.GetFileAsync(path);
-	}
-	catch (...)
-	{
-		co_return false;
-	}
-
-    co_return true;
+    try
+    {
+        co_await folder.GetFileAsync(path);
+        co_return true;
+    }
+    catch (winrt::hresult_error const& ex)
+    {
+        if (ex.code( ) == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))
+        {
+            co_return false; // File does not exist
+        }
+        else
+        {
+            // Log unexpected errors for debugging
+            printf("Unexpected error while checking file existence: %ls\n", ex.message( ).c_str( ));
+            throw; // Re-throw unexpected exceptions
+        }
+    }
 }
 
 winrt::Windows::Foundation::IAsyncAction WinDurango::impl::ConnectedStorage::CreateDirectories(const wchar_t* storageType, winrt::hstring& storagePath)

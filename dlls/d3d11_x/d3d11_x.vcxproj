@@ -113,6 +113,7 @@
     <ClCompile Include="dxgi_factory.cpp" />
     <ClCompile Include="dxgi_object.cpp" />
     <ClCompile Include="dxgi_swapchain.cpp" />
+    <ClCompile Include="dxguid.cpp" />
     <ClCompile Include="graphics_unknown.cpp" />
     <ClCompile Include="overlay\overlay.cpp" />
   </ItemGroup>
