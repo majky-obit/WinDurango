@@ -20,13 +20,8 @@ Check out the UI project at [WinDurango.UI](https://github.com/WinDurango-projec
 > This project is still being worked on, and we **really** need help as we only have a few developers.   
 > If you know C++ and think you can help out, hop into the Discord and let us know. :)
 
-**Interested in supporting the core contributors?** Visit
-[WinDurango Project on Patreon](https://www.patreon.com/WinDurango).
-
 Come chat with us on our [Discord](https://discord.gg/mHN2BgH7MR).
 For developer chat join `#developer` but stay on topic. Lurking is not only fine, but encouraged!
-Please check the [FAQ](https://github.com/WinDurango/WinDurango/wiki/FAQ) page before asking questions.
-We've got jobs/lives/etc, so don't expect instant answers.
 
 Discussing illegal activities, such as piracy, (illegal) hacking, doxxing/cyberbullying, and all other forms of copyright infringement will get you banned.
 
@@ -61,11 +56,6 @@ Have some spare time, know C++ and have knowledge about Windows internals,
 and want to write code for the world's first Microsoft Xbox One compatibility layer?
 Contribute! 
 
-**For general rules and guidelines please see [CONTRIBUTING.md](docs/CONTRIBUTING.md).**
-
 See more projects [good for contributors](https://github.com/WinDurango/WinDurango/labels/good%20first%20issue). 
 It's a good idea to ask on Discord and check the issues page before beginning work on something.
 
-## FAQ
-
-See the [frequently asked questions](https://github.com/WinDurango/WinDurango/wiki/FAQ) page.
