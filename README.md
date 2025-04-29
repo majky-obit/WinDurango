@@ -12,7 +12,7 @@
 
 Check out the UI project at [WinDurango.UI](https://github.com/WinDurango-project/WinDurango.UI/)
 
-<p align="center">
+<p>
   <a href="https://www.youtube.com/watch?v=SZMLML7yZns">
     <img alt="WinDurango logo" src="https://img.youtube.com/vi/SZMLML7yZns/0.jpg">
   </a>
