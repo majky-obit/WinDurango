@@ -12,7 +12,7 @@
 
 Check out the UI project at [WinDurango.UI](https://github.com/WinDurango-project/WinDurango.UI/)
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/SZMLML7yZns/0.jpg)]([https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE](https://www.youtube.com/watch?v=SZMLML7yZns))
+[![WinDurango Alpha 1](https://img.youtube.com/vi/SZMLML7yZns/0.jpg)]([https://www.youtube.com/watch?v=SZMLML7yZns](https://www.youtube.com/watch?v=SZMLML7yZns))
 
 > [!NOTE]
 > This project is still being worked on, and we **really** need help as we only have a few developers.   
