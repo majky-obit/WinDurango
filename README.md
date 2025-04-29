@@ -12,7 +12,7 @@
 
 Check out the UI project at [WinDurango.UI](https://github.com/WinDurango-project/WinDurango.UI/)
 
-[![WinDurango Alpha 1](https://img.youtube.com/vi/SZMLML7yZns/0.jpg)]([https://www.youtube.com/watch?v=SZMLML7yZns](https://www.youtube.com/watch?v=SZMLML7yZns))
+<iframe width="560" height="315" src="https://www.youtube.com/embed/SZMLML7yZns?si=70Si2okG3NU0KKQN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 > [!NOTE]
 > This project is still being worked on, and we **really** need help as we only have a few developers.   
