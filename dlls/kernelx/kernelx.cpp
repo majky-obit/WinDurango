@@ -256,7 +256,60 @@ PVOID XMemAllocDefault_X(SIZE_T dwSize, uint64_t flags) {
 
     return ptr;
 }
+#define MAX_HEAPS 16
 
+static CRITICAL_SECTION g_HeapLocks[MAX_HEAPS];
+static LPVOID g_Heaps[MAX_HEAPS]; // Base addresses
+static DWORD g_HeapFreePages[MAX_HEAPS];
+static DWORD g_HeapTargetPages[MAX_HEAPS];
+static DWORD g_HeapHysteresisPages[MAX_HEAPS];
+
+HRESULT __stdcall XMemSetAllocationHysteresis_X(int heapId, int applyFlag, __int64 hysteresisBytes)
+{
+    if ((heapId & 0xFFFFFFF0) != 0)
+    {
+        SetLastError(ERROR_INVALID_PARAMETER);
+        return E_FAIL;
+    }
+
+    if (applyFlag)
+        heapId |= 0x10;
+
+    int slot = heapId & 0xF;
+
+    // Initialize heap lazily
+    if (!g_Heaps[slot])
+    {
+        g_Heaps[slot] = VirtualAlloc(NULL, 64 * 1024 * 1024, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE); // 64MB heap
+        if (!g_Heaps[slot])
+            return E_FAIL;
+
+        InitializeCriticalSection(&g_HeapLocks[slot]);
+        g_HeapFreePages[slot] = 16; // 16 pages initially free
+        g_HeapTargetPages[slot] = 16;
+    }
+
+    EnterCriticalSection(&g_HeapLocks[slot]);
+
+    DWORD targetPages = (DWORD)((hysteresisBytes + 0x3FFFFF) >> 22); // Each page = 4MB
+    g_HeapHysteresisPages[slot] = targetPages;
+
+    while (g_HeapTargetPages[slot] > targetPages)
+    {
+        LPVOID addr = (LPBYTE)g_Heaps[slot] + ((g_HeapTargetPages[slot] - 1) * 4 * 1024 * 1024); // Page offset
+        if (!VirtualFree(addr, 4 * 1024 * 1024, MEM_DECOMMIT))
+        {
+            LeaveCriticalSection(&g_HeapLocks[slot]);
+            return HRESULT_FROM_WIN32(GetLastError());
+        }
+
+        g_HeapTargetPages[slot]--;
+    }
+
+    LeaveCriticalSection(&g_HeapLocks[slot]);
+    SetLastError(0);
+    return S_OK;
+}
 BOOLEAN __stdcall XMemFreeDefault_X(PVOID pAddress, uint64_t dwAllocAttributes) {
     
     free(pAddress);
@@ -307,36 +360,34 @@ NTSTATUS __fastcall XMemSetAllocationHooks_X(PVOID(__fastcall* XMemAlloc)(SIZE_T
 #define PROTECT_FLAGS_MASK (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY | PAGE_NOACCESS | PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_GUARD | PAGE_NOCACHE)
 #define ALLOCATION_FLAGS_MASK (MEM_COMMIT | MEM_RESERVE | MEM_RESET | MEM_LARGE_PAGES | MEM_PHYSICAL | MEM_TOP_DOWN | MEM_WRITE_WATCH)
 
-LPVOID VirtualAllocEx_X(
-    HANDLE hProcess,
-    LPVOID lpAddress,
-    SIZE_T dwSize,
-    DWORD  flAllocationType,
-    DWORD  flProtect
-)
+LPVOID VirtualAllocEx_X(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect)
 {
     flProtect &= PROTECT_FLAGS_MASK;
     flAllocationType &= ALLOCATION_FLAGS_MASK;
 
-    LPVOID ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
+    DEBUGPRINT("VirtualAllocEx_X: %p, %zu, %x, %x\n", lpAddress, dwSize, flAllocationType, flProtect);
 
-    // backup plan in the case that VirtualAlloc fails despite the flags being masked away
-    if (ret == nullptr)
+    LPVOID ret = VirtualAllocEx(hProcess, lpAddress, dwSize, flAllocationType, flProtect);
+    if (!ret)
     {
-        //printf("VirtualAlloc failed with %i, using backup...\n", GetLastError());
-        if ((flAllocationType & 0x2000) != 0)
+        DWORD err = GetLastError();
+        DEBUGPRINT("VirtualAllocEx failed with error %lu\n", err);
+
+        // fallback to VirtualAlloc only in current process
+        if ((flAllocationType & (MEM_RESERVE | MEM_COMMIT)) != 0)
         {
-            flAllocationType = 0x2000;
+            ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
+            if (!ret)
+            {
+                err = GetLastError();
+                DEBUGPRINT("VirtualAlloc fallback also failed: %lu\n", err);
+            }
         }
-        if ((flAllocationType & 0x1000) != 0)
-        {
-            flAllocationType = 0x1000;
-        }
-        ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
     }
 
     return ret;
 }
+
 
 LPVOID VirtualAlloc_X(
     LPVOID lpAddress,
@@ -385,7 +436,7 @@ BOOL TitleMemoryStatus_X(LPTITLEMEMORYSTATUS Buffer)
     }
 
     NTSTATUS Status = NtQueryInformationProcess(
-        (HANDLE)0xFFFFFFFFFFFFFFFFi64,
+        GetCurrentProcess(),
         (PROCESSINFOCLASS)(0x3A | 0x3A),
         ProcessInformation,
         0x48u,
