@@ -23,6 +23,7 @@
 
 namespace winrt::Windows::Xbox::Management::Deployment::implementation
 {
+
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Management::Deployment::CheckForUpdateResult> PackageTransferManager::CheckForUpdateAsync(winrt::Windows::Xbox::Management::Deployment::IDownloadableContentPackage package)
     {
         throw hresult_not_implemented();
@@ -35,16 +36,19 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     {
         throw hresult_not_implemented();
     }
-    winrt::Windows::Xbox::Management::Deployment::PackageTransferManager PackageTransferManager::Current()
+    winrt::Windows::Xbox::Management::Deployment::PackageTransferManager PackageTransferManager::Current( )
     {
-        if (static_manager == Deployment::PackageTransferManager{ nullptr })
+        static winrt::Windows::Xbox::Management::Deployment::PackageTransferManager static_manager{ nullptr };
+
+        if (!static_manager)
         {
-            static_manager = make<PackageTransferManager>( );
+            static_manager = winrt::make<PackageTransferManager>( );
         }
 
         printf("PackageTransferManager::Current()\n");
         return static_manager;
     }
+
     winrt::Windows::Xbox::Management::Deployment::PackageTransferManager PackageTransferManager::Create(winrt::Windows::ApplicationModel::Package const& package)
     {
         throw hresult_not_implemented();
@@ -66,9 +70,10 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     {
         return 0;
     }
-    winrt::Windows::Xbox::Management::Deployment::PackageTransferStatus PackageTransferManager::TransferStatus()
+    winrt::Windows::Xbox::Management::Deployment::PackageTransferStatus PackageTransferManager::TransferStatus( )
     {
-        throw hresult_not_implemented();
+        printf("PackageTransferManager::TransferStatus() STUBBED\n");
+        return winrt::Windows::Xbox::Management::Deployment::PackageTransferStatus::None;
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferType PackageTransferManager::TransferType()
     {
