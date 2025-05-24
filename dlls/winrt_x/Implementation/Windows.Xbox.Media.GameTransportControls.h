@@ -36,6 +36,7 @@ namespace winrt::Windows::Xbox::Media::implementation
         bool IsPlayEnabled();
         void IsPlayEnabled(bool value);
         bool IsPauseEnabled();
+
         void IsPauseEnabled(bool value);
         bool IsMenuEnabled();
         void IsMenuEnabled(bool value);
