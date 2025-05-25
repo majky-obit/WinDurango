@@ -85,10 +85,17 @@ namespace winrt::Windows::Xbox::Media::implementation
     {
         m_gameTransportControlsButtonPressedEventArgs.remove(token);
     }
-    winrt::event_token GameTransportControls::PropertyChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Xbox::Media::GameTransportControls, winrt::Windows::Xbox::Media::GameTransportControlsPropertyChangedEventArgs> const& handler)
+    winrt::event_token GameTransportControls::PropertyChanged(
+        winrt::Windows::Foundation::TypedEventHandler<
+            winrt::Windows::Xbox::Media::GameTransportControls,
+            winrt::Windows::Xbox::Media::GameTransportControlsPropertyChangedEventArgs> const& handler)
     {
+        // Optional debug logging
+        wprintf(L"[GameTransportControls] PropertyChanged handler added\n");
+
         return m_gameTransportControlsPropertyChangedEventArgs.add(handler);
     }
+
     void GameTransportControls::PropertyChanged(winrt::event_token const& token) noexcept
     {
         m_gameTransportControlsPropertyChangedEventArgs.remove(token);
