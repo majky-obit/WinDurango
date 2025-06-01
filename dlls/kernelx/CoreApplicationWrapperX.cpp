@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CoreApplicationWrapperX.h"
 #include "FrameworkViewSourceWrapper.h"
+using namespace ABI::Windows::ApplicationModel::Core;
 
 HRESULT CoreApplicationWrapperX::GetIids(ULONG* iidCount, IID** iids)
 {
@@ -110,6 +111,11 @@ INT32 CoreApplicationWrapperX::_abi_get_Properties(ABI::Windows::Foundation::Col
 
 HRESULT CoreApplicationWrapperX::QueryInterface(const IID& riid, void** ppvObject)
 {
+	LPOLESTR str = nullptr;
+	StringFromIID(riid, &str);
+	wprintf(L"CoreApplicationWrapperX [QI] IID Requested: %s\n", str);
+	CoTaskMemFree(str);
+
 	if (riid == __uuidof(IActivationFactory) || riid == __uuidof(IUnknown))
 	{
 		*ppvObject = static_cast<IActivationFactory*>(this);
@@ -134,6 +140,13 @@ HRESULT CoreApplicationWrapperX::QueryInterface(const IID& riid, void** ppvObjec
 	if (riid == __uuidof(ICoreApplicationGpuPolicy)) // allow ICoreApplicationResourceAvailabilityX interface
 	{
 		*ppvObject = static_cast<ICoreApplicationGpuPolicy*>(this);
+		AddRef();
+		return S_OK;
+	}
+
+	if (riid == __uuidof(ICoreApplicationExit)) {
+		printf("ICoreApplicationExit CALLED - GAME OVER BRO\n");
+		*ppvObject = this;
 		AddRef();
 		return S_OK;
 	}

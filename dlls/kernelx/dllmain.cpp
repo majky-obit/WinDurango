@@ -1,10 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "hooks.h"
 #include "ForzaThreadHook_X.h"
 #include "kernelx.h"
 #include <Windows.h>
 #include "Shlwapi.h"
-
+#include <audioclient.h>
 // note from unixian: i used this since using appxlauncher requires me attaching to the game after it launches
 #define WINDURANGO_WAIT_FOR_DEBUGGER 1
 
@@ -13,6 +13,11 @@
 #define FORZADEBUG
 
 std::vector<HMODULE> loadedMods;
+
+// All HAPPY DUNGEONS STUFF
+
+////////////////////////////////
+
 
 inline void LoadMods()
 {
@@ -121,6 +126,10 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		if (GamePackage == L"Spire_8wekyb3d8bbwe")
 		{
 			printf("Forza Horizon 2 Presents Fast & Furious");
+		}
+		if (GamePackage == L"HappyDungeons_zyyfzks419954")
+		{
+			printf("Happy Happy Happy Dungeons Dungeons Dungeons\n");
 		}
 #endif
 

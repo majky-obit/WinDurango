@@ -255,8 +255,8 @@ HRESULT CoreWindowWrapperX::QueryInterface(const IID& riid, void** ppvObject)
 	
 	*ppvObject = nullptr;
 
-	return E_NOINTERFACE;
-	//return m_realWindow->QueryInterface(riid, ppvObject);
+	//return E_NOINTERFACE;
+	return m_realWindow->QueryInterface(riid, ppvObject);
 }
 
 ULONG CoreWindowWrapperX::AddRef()
