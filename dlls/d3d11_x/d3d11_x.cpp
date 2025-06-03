@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include "device_context_x.h"
 #include "device_x.h"
-#include "../common/debug.h"
+#include "../common/DebugLogger.h"
 
 HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11DeviceContext** ppImmediateContext)
 {

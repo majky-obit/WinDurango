@@ -1,7 +1,6 @@
 #include "EtwPlus.h"
 #include "pch.h"
 #include <stdio.h>
-#include "../common/debug.h"
 #include "../common/common.h"
 
 VOID DurangoAPI EtxFillCommonFields_v7_X(EVENT_DATA_DESCRIPTOR* eventDataDescriptors, UINT8* buffer, UINT32 bufferSize) {

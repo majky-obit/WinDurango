@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "../common/common.h"
-#include "../common/debug.h"
 
 uint32_t dword_180021AA0[16];
 uint32_t dword_180021A60[16];

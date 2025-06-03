@@ -161,6 +161,9 @@
     <Filter Include="Implementation\Windows\Xbox\SmartGlass">
       <UniqueIdentifier>{a9003d68-6bbb-43e4-ab6e-f1243e316c7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{4b531b63-769a-4159-9dd6-10ef56d7f838}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1327,6 +1330,9 @@
     <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.h">
@@ -2491,6 +2497,9 @@
     </ClInclude>
     <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Logger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
