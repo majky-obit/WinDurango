@@ -1,48 +1,77 @@
-#ifndef DEBUG_LOGGER_H
-#define DEBUG_LOGGER_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
-#include <string>
+#include <cstdio>
+#include <cstring>
 
-enum class LogLevel {
-    Debug,
-    Info,
-    Warning,
-    Error,
-    Fatal,
-    NotImplemented
-};
+// Function to extract the last folder name (project/module name)
+inline const char* ExtractProjectName(const char* filePath) {
+    const char* lastSlash = strrchr(filePath, '/');  // UNIX-like path
+    if (!lastSlash) lastSlash = strrchr(filePath, '\\');  // Windows path
 
-class Logger {
-public:
-    static void Log(LogLevel level, const std::string& message, const char* file, int line, const char* function);
+    if (lastSlash) {
+        const char* secondLastSlash = filePath;  // Start from beginning
+        while (secondLastSlash < lastSlash) {  // Find second-to-last slash
+            const char* temp = strpbrk(secondLastSlash + 1, "/\\");
+            if (temp && temp < lastSlash) secondLastSlash = temp;
+            else break;
+        }
 
-    // Logging APIs
-    static void Debug(const char* message = "");
-    static void Info(const char* message = "");
-    static void Warning(const char* message = "");
-    static void Error(const char* message = "");
-    static void Fatal(const char* message = "");
-    static void NotImplemented(const char* message = "");
-};
+        if (secondLastSlash != filePath) {
+            static char projectName[ 256 ];  // Buffer to store project/module name
+            size_t length = lastSlash - secondLastSlash - 1;  // Get only folder name
+            length = (length < sizeof(projectName) - 1) ? length : sizeof(projectName) - 1;
 
-#if defined(__GNUC__) || defined(__clang__)
+#ifdef _MSC_VER
+            strncpy_s(projectName, sizeof(projectName), secondLastSlash + 1, length);  // MSVC-safe
+#else
+            strncpy(projectName, secondLastSlash + 1, length);  // GCC/Clang-safe
+            projectName[ length ] = '\0';  // Null-terminate
+#endif
+            return projectName;
+        }
+    }
+    return "UnknownProject";  // Fallback if no directory structure found
+}
+
+#ifdef _DEBUG
+
+#if defined(__GNUC__) || defined(__clang__)  // GCC/Clang
 #define FUNCTION_NAME __PRETTY_FUNCTION__
-#elif defined(_MSC_VER)
+#elif defined(_MSC_VER)  // MSVC
 #define FUNCTION_NAME __FUNCSIG__
 #else
 #define FUNCTION_NAME __FUNCTION__
 #endif
 
-// Debug macros
-#ifdef _DEBUG
-#define DEBUG_LOG() Logger::Debug()
-#define DEBUGLOG(fmt, ...) Logger::Debug(fmt, ##__VA_ARGS__)
+// Function to extract only the function name from the full signature
+inline const char* ExtractFunctionName(const char* fullSignature) {
+    const char* paren = strchr(fullSignature, '('); // Find first '('
+    if (paren) {
+        static char functionName[ 256 ]; // Buffer to store function name
+        size_t length = paren - fullSignature; // Length before '('
+        length = (length < sizeof(functionName) - 1) ? length : sizeof(functionName) - 1;
+
+#ifdef _MSC_VER
+        strncpy_s(functionName, sizeof(functionName), fullSignature, length); // Safe for MSVC
 #else
-#define DEBUG_LOG()
-#define DEBUGLOG(fmt, ...)
+        strncpy(functionName, fullSignature, length); // Safe for GCC/Clang
+        functionName[ length ] = '\0'; // Null-terminate
+#endif
+        return functionName;
+    }
+    return fullSignature; // Fallback if '(' not found
+}
+
+// Debug Print Macro (Basic)
+#define DEBUG_LOG() printf("Line: %d --> %s --> %s \r\n", __LINE__,ExtractProjectName(__FILE__) ,ExtractFunctionName(FUNCTION_NAME) )
+
+// Debug Print Macro (Custom Message)
+#define DEBUGLOG(fmt, ...) printf("Line: %d --> %s --> %s " fmt "\r\n", __LINE__ , ExtractProjectName(__FILE__), __FUNCTION__ , ##__VA_ARGS__)
+
+#else
+#define DEBUG_LOG() // No-op in release mode
+#define DEBUGLOG(fmt, ...) // No-op in release mode
 #endif
 
-const char* ExtractProjectName(const char* filePath);
-const char* ExtractFunctionName(const char* fullSignature);
-
-#endif // DEBUG_LOGGER_H
+#endif // DEBUG_H

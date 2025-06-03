@@ -155,7 +155,6 @@
     <ClInclude Include="toml.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DebugLogger.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="DebugLogger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />

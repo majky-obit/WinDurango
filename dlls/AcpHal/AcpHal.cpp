@@ -5,10 +5,10 @@
 #include <basetyps.h>
 #include <cstdio>
 #include <stdlib.h>
-#include "../common/debug.h"
 #include "contexts.h"
 #include <intsafe.h>
 #include <new>
+#include "../common/DebugLogger.h"
 
 static APU_HEAP g_ApuHeap = { 0 };
 HRESULT AcpHalAllocateShapeContexts_X(SHAPE_CONTEXTS* ctx) {

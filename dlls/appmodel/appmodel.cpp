@@ -6,6 +6,7 @@
 #include <strsafe.h>
 #include <string>
 #include <vector>
+#include "../common/DebugLogger.h"
 
 CRITICAL_SECTION CriticalSection;
 __int64 qword_18009E948 = 0;
