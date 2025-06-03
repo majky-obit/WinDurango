@@ -2,8 +2,10 @@
 #include <d3d11_2.h>
 #include "device_context_x.h"
 #include <stdexcept>
-
 #include "view.hpp"
+#include <d3d11.h>
+#include <cassert>
+#include <cstdio>
 
 void wd::device_context_x::GetDevice(ID3D11Device** ppDevice)
 {
@@ -119,10 +121,68 @@ void wd::device_context_x::IASetVertexBuffers(UINT StartSlot, UINT NumBuffers, I
 	}
 }
 
+#include <d3d11.h>
+#include <cassert>
+#include <cstdio>
+
 void wd::device_context_x::GSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
+	if (!wrapped_interface)
+	{
+		printf("GSSetConstantBuffers: wrapped_interface is null.\n");
+		return;
+	}
+
+	if (!ppConstantBuffers)
+	{
+		printf("GSSetConstantBuffers: ppConstantBuffers is null.\n");
+		return;
+	}
+
+	ID3D11Device* contextDevice = nullptr;
+	wrapped_interface->GetDevice(&contextDevice);
+
+	if (!contextDevice)
+	{
+		printf("GSSetConstantBuffers: failed to retrieve context device.\n");
+		return;
+	}
+
+	for (UINT i = 0; i < NumBuffers; ++i)
+	{
+		ID3D11Buffer* buffer = ppConstantBuffers[ i ];
+		if (!buffer)
+		{
+			printf("GSSetConstantBuffers: buffer at index %u is null.\n", i);
+			continue; // Optional: could return instead
+		}
+
+		ID3D11Device* bufferDevice = nullptr;
+		buffer->GetDevice(&bufferDevice);
+
+		if (!bufferDevice)
+		{
+			printf("GSSetConstantBuffers: buffer at index %u has no device.\n", i);
+			contextDevice->Release( );
+			return;
+		}
+
+		if (bufferDevice != contextDevice)
+		{
+			printf("GSSetConstantBuffers: buffer at index %u was created from a different device.\n", i);
+			bufferDevice->Release( );
+			contextDevice->Release( );
+			return;
+		}
+
+		bufferDevice->Release( );
+	}
+
+	contextDevice->Release( );
+
 	wrapped_interface->GSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
 }
+
 
 void wd::device_context_x::GSSetShader(ID3D11GeometryShader* pShader)
 {
