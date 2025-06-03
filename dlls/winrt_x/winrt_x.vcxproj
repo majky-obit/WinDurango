@@ -468,6 +468,12 @@
     <ClInclude Include="Implementation\Windows.Xbox.Media.GameTransportControlsPropertyChangedEventArgs.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Media.SmoothStreamingSessionManager.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Media.SystemMediaTransportControls.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayer.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.h" />
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.Party.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyChat.h" />
     <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.PartyChatMember.h" />
@@ -880,6 +886,12 @@
     <ClCompile Include="Implementation\Windows.Xbox.Media.GameTransportControlsPropertyChangedEventArgs.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Media.SmoothStreamingSessionManager.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Media.SystemMediaTransportControls.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayer.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.cpp" />
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.Party.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyChat.cpp" />
     <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.PartyChatMember.cpp" />
@@ -1013,6 +1025,7 @@
     <Midl Include="External\Windows.Xbox.Management.idl" />
     <Midl Include="External\Windows.Xbox.Media.GameTransportControls.idl" />
     <Midl Include="External\Windows.Xbox.Media.idl" />
+    <Midl Include="External\Windows.Xbox.Multiplayer.idl" />
     <Midl Include="External\Windows.Xbox.Networking.idl" />
     <Midl Include="External\Windows.Xbox.Services.idl" />
     <Midl Include="External\Windows.Xbox.Shell.idl" />

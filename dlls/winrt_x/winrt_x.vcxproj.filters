@@ -1333,6 +1333,24 @@
     <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.UserPartyAssociation.cpp">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayer.cpp">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.cpp">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.cpp">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.cpp">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.cpp">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.cpp">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Implementation\Microsoft.Xbox.GameChat.TextMessageReceivedEventArgs.h">
@@ -2504,6 +2522,24 @@
     <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.UserPartyAssociation.h">
       <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
     </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayer.h">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayerDeviceGroup.h">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GamePlayersChangedEventArgs.h">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.GameSessionReadyEventArgs.h">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MatchStatusChangedEventArgs.h">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Implementation\Windows.Xbox.Multiplayer.MultiplayerSessionReference.h">
+      <Filter>Implementation\Windows\Xbox\Multiplayer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="winrt_x.def" />
@@ -2645,6 +2681,9 @@
       <Filter>External</Filter>
     </Midl>
     <Midl Include="External\Windows.Xbox.SmartGlass.idl">
+      <Filter>External</Filter>
+    </Midl>
+    <Midl Include="External\Windows.Xbox.Multiplayer.idl">
       <Filter>External</Filter>
     </Midl>
   </ItemGroup>
