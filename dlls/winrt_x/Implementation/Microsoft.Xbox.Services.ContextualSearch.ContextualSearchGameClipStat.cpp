@@ -7,22 +7,22 @@ namespace winrt::Microsoft::Xbox::Services::ContextualSearch::implementation
 {
     hstring ContextualSearchGameClipStat::Name()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring ContextualSearchGameClipStat::Value()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring ContextualSearchGameClipStat::MinValue()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring ContextualSearchGameClipStat::MaxValue()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring ContextualSearchGameClipStat::DeltaValue()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

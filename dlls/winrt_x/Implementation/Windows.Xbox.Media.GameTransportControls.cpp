@@ -6,11 +6,11 @@ namespace winrt::Windows::Xbox::Media::implementation
 {
     hstring GameTransportControls::Title()
     {
-        Logger::NotImplemented( ); return L"null";
+        LOG_NOTIMPLEMENTED(); return L"null";
     }
     hstring GameTransportControls::Subtitle()
     {
-        Logger::NotImplemented( ); return L"null";
+        LOG_NOTIMPLEMENTED(); return L"null";
     }
     winrt::Windows::Xbox::Media::GamePlaybackStatus GameTransportControls::PlaybackStatus()
     {

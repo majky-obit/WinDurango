@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     hstring TitlePresenceChangeEventArgs::XboxUserId()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     uint32_t TitlePresenceChangeEventArgs::TitleId()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Presence::TitlePresenceState TitlePresenceChangeEventArgs::TitleState()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

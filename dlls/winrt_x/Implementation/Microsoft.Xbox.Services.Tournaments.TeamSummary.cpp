@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     hstring TeamSummary::Id()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Tournaments::TeamState TeamSummary::TeamState()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     uint64_t TeamSummary::Ranking()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

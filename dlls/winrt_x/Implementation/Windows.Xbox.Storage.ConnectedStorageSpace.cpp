@@ -63,11 +63,11 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     hstring ConnectedStorageSpace::ServiceConfigurationId()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     bool ConnectedStorageSpace::IsReadOnly()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::Storage::ConnectedStorageContainer ConnectedStorageSpace::CreateContainer(hstring const& containerName)
     {
@@ -99,10 +99,10 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<int32_t> ConnectedStorageSpace::GetRemainingBytesInQuotaAsync()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<int64_t> ConnectedStorageSpace::GetRemainingBytesInQuota64Async()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

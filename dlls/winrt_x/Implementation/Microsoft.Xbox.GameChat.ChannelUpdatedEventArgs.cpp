@@ -7,12 +7,12 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
 {
     winrt::Microsoft::Xbox::GameChat::ChatUser ChannelUpdatedEventArgs::ChatUser()
     {
-        Logger::NotImplemented();
+        LOG_NOTIMPLEMENTED();
         throw hresult_not_implemented();
     }
     uint8_t ChannelUpdatedEventArgs::Channel()
     {
-        Logger::NotImplemented();
+        LOG_NOTIMPLEMENTED();
         throw hresult_not_implemented();
     }
 }

@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Social::Manager::implementation
 {
     hstring PreferredColor::PrimaryColor()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring PreferredColor::SecondaryColor()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring PreferredColor::TertiaryColor()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

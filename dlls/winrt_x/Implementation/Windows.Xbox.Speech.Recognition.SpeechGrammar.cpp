@@ -8,26 +8,26 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     bool SpeechGrammar::Enabled()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     void SpeechGrammar::Enabled(bool value)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::Speech::Recognition::SpeechGrammarProbability SpeechGrammar::Probability()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     void SpeechGrammar::Probability(winrt::Windows::Xbox::Speech::Recognition::SpeechGrammarProbability const& value)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     void SpeechGrammar::EnableRule(hstring const& ruleName)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     void SpeechGrammar::DisableRule(hstring const& ruleName)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

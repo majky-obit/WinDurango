@@ -7,10 +7,10 @@ namespace winrt::Windows::Kinect::implementation
 {
     winrt::Windows::Kinect::InfraredFrame InfraredFrameReference::AcquireFrame()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan InfraredFrameReference::RelativeTime()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

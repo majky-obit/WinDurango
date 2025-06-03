@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::System::implementation
 {
     winrt::Windows::Foundation::IAsyncOperation<winrt::Microsoft::Xbox::Services::System::VerifyStringResult> StringService::VerifyStringAsync(hstring stringToVerify)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::System::VerifyStringResult>> StringService::VerifyStringsAsync(winrt::Windows::Foundation::Collections::IVectorView<hstring> stringsToVerify)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

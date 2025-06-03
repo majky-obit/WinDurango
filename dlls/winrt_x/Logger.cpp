@@ -1,34 +1,35 @@
-
 #include "Logger.h"
 #include <ctime>
 #include <fstream>
 #include <iostream>
 #include <mutex>
+#include <windows.h>
+#include "../common/DebugLogger.h"
 
 static std::mutex logMutex;
 static std::ofstream logFile("debug.log", std::ios::app);
 
 static const char* ToString(LogLevel level) {
     switch (level) {
-    case LogLevel::Debug: return "DEBUG";
-    case LogLevel::Info: return "INFO";
-    case LogLevel::Warning: return "WARNING";
-    case LogLevel::Error: return "ERROR";
-    case LogLevel::Fatal: return "FATAL";
+    case LogLevel::Debug:          return "DEBUG";
+    case LogLevel::Info:           return "INFO";
+    case LogLevel::Warning:        return "WARNING";
+    case LogLevel::Error:          return "ERROR";
+    case LogLevel::Fatal:          return "FATAL";
     case LogLevel::NotImplemented: return "NOT_IMPLEMENTED";
-    default: return "UNKNOWN";
+    default:                       return "UNKNOWN";
     }
 }
 
-static const char* LevelColor(LogLevel level) {
+WORD GetConsoleColor(LogLevel level) {
     switch (level) {
-    case LogLevel::Debug: return "\x1B[36m"; // Cyan
-    case LogLevel::Info: return "\x1B[32m";  // Green
-    case LogLevel::Warning: return "\x1B[33m"; // Yellow
-    case LogLevel::Error: return "\x1B[31m"; // Red
-    case LogLevel::Fatal: return "\x1B[41m"; // Red Background
-    case LogLevel::NotImplemented: return "\x1B[35m"; // Magenta
-    default: return "\x1B[0m";
+    case LogLevel::Debug:          return FOREGROUND_BLUE | FOREGROUND_GREEN;
+    case LogLevel::Info:           return FOREGROUND_GREEN;
+    case LogLevel::Warning:        return FOREGROUND_RED | FOREGROUND_GREEN;
+    case LogLevel::Error:          return FOREGROUND_RED;
+    case LogLevel::Fatal:          return BACKGROUND_RED | FOREGROUND_RED | FOREGROUND_INTENSITY;
+    case LogLevel::NotImplemented: return FOREGROUND_RED | FOREGROUND_BLUE;
+    default:                       return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
     }
 }
 
@@ -43,44 +44,69 @@ void Logger::Log(LogLevel level, const std::string& message, const char* file, i
     std::lock_guard<std::mutex> lock(logMutex);
 
     const char* levelStr = ToString(level);
-    const char* color = LevelColor(level);
-    const char* reset = "\x1B[0m";
-
-    std::string func = ExtractFunctionName(function);
+    std::string func = Logger::ExtractFunctionName(function);
     std::string timeStr = CurrentTime( );
+    const char* project = Logger::ExtractProjectName(file);
 
-    // Console
-    std::cout << color << timeStr << " - " << func << " - " << levelStr << " - Line " << line;
+    // Console coloring
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    WORD originalAttributes = 0;
+    if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        originalAttributes = csbi.wAttributes;
+        SetConsoleTextAttribute(hConsole, GetConsoleColor(level));
+    }
+
+    std::cout << timeStr << " - " << project << "::" << func << " - " << levelStr << " - Line " << line;
     if (!message.empty( )) std::cout << " - " << message;
-    std::cout << reset << std::endl;
+    std::cout << std::endl;
 
-    // File
+    if (hConsole) SetConsoleTextAttribute(hConsole, originalAttributes);
+
+    // File logging
     if (logFile.is_open( )) {
-        logFile << timeStr << " - " << func << " - " << levelStr << " - Line " << line;
+        logFile << timeStr << " - " << project << "::" << func << " - " << levelStr << " - Line " << line;
         if (!message.empty( )) logFile << " - " << message;
         logFile << std::endl;
     }
 }
 
-// Shortcuts
-void Logger::Debug(const char* message) { Log(LogLevel::Debug, message, __FILE__, __LINE__, FUNCTION_NAME); }
-void Logger::Info(const char* message) { Log(LogLevel::Info, message, __FILE__, __LINE__, FUNCTION_NAME); }
-void Logger::Warning(const char* message) { Log(LogLevel::Warning, message, __FILE__, __LINE__, FUNCTION_NAME); }
-void Logger::Error(const char* message) { Log(LogLevel::Error, message, __FILE__, __LINE__, FUNCTION_NAME); }
-void Logger::Fatal(const char* message) { Log(LogLevel::Fatal, message, __FILE__, __LINE__, FUNCTION_NAME); }
-void Logger::NotImplemented(const char* message) { Log(LogLevel::NotImplemented, message, __FILE__, __LINE__, FUNCTION_NAME); }
+void Logger::LogNotImplemented(LogLevel level, int line, const char* file, const char* function) {
+    Logger::Log(level, "Feature not implemented", file, line, function);
+}
 
-// Utility
-const char* ExtractProjectName(const char* filePath) {
+void Logger::Debug(const char* message) { Logger::Log(LogLevel::Debug, message, __FILE__, __LINE__, FUNCTION_NAME); }
+void Logger::Info(const char* message) { Logger::Log(LogLevel::Info, message, __FILE__, __LINE__, FUNCTION_NAME); }
+void Logger::Warning(const char* message) { Logger::Log(LogLevel::Warning, message, __FILE__, __LINE__, FUNCTION_NAME); }
+void Logger::Error(const char* message) { Logger::Log(LogLevel::Error, message, __FILE__, __LINE__, FUNCTION_NAME); }
+void Logger::Fatal(const char* message) { Logger::Log(LogLevel::Fatal, message, __FILE__, __LINE__, FUNCTION_NAME); }
+
+void Logger::PrintWithContext(int line, const char* file, const char* function, const char* fmt, va_list args) {
+    char formatted[ 1024 ];
+    vsnprintf(formatted, sizeof(formatted), fmt, args);
+    Logger::Log(LogLevel::NotImplemented, formatted, file, line, function);
+}
+
+void Logger::NotImplemented(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    Logger::PrintWithContext(__LINE__, __FILE__, FUNCTION_NAME, fmt, args);
+    va_end(args);
+}
+
+const char* Logger::ExtractProjectName(const char* filePath) {
     const char* lastSlash = strrchr(filePath, '/');
     if (!lastSlash) lastSlash = strrchr(filePath, '\\');
     if (lastSlash) {
         const char* secondLastSlash = filePath;
         while (secondLastSlash < lastSlash) {
             const char* temp = strpbrk(secondLastSlash + 1, "/\\");
-            if (temp && temp < lastSlash) secondLastSlash = temp;
-            else break;
+            if (temp && temp < lastSlash)
+                secondLastSlash = temp;
+            else
+                break;
         }
+
         if (secondLastSlash != filePath) {
             static char projectName[ 256 ];
             size_t length = lastSlash - secondLastSlash - 1;
@@ -97,7 +123,7 @@ const char* ExtractProjectName(const char* filePath) {
     return "UnknownProject";
 }
 
-const char* ExtractFunctionName(const char* fullSignature) {
+const char* Logger::ExtractFunctionName(const char* fullSignature) {
     const char* paren = strchr(fullSignature, '(');
     if (paren) {
         static char functionName[ 256 ];

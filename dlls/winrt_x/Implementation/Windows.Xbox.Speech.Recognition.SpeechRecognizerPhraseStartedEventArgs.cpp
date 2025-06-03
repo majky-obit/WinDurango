@@ -8,6 +8,6 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     winrt::Windows::Xbox::Speech::Recognition::SpeechRecognizerAudioContext SpeechRecognizerPhraseStartedEventArgs::AudioContext()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

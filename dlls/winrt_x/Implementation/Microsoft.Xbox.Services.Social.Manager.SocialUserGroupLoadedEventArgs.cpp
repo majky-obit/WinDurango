@@ -7,6 +7,6 @@ namespace winrt::Microsoft::Xbox::Services::Social::Manager::implementation
 {
     winrt::Microsoft::Xbox::Services::Social::Manager::XboxSocialUserGroup SocialUserGroupLoadedEventArgs::SocialUserGroup()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

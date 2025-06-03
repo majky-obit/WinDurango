@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::ApplicationModel::State::Internal::implementatio
 {
     void AumidQuery::GetXboxLiveInfo(hstring const& aumid, uint32_t& titleId, winrt::guid& primaryScid, bool& requireXboxLive)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

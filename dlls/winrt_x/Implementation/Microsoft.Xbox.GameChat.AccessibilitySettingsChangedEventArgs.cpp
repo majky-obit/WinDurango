@@ -6,6 +6,6 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
 {
     winrt::Microsoft::Xbox::GameChat::ChatUser AccessibilitySettingsChangedEventArgs::ChatUser()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

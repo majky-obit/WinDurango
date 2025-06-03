@@ -7,26 +7,26 @@ namespace winrt::Microsoft::Xbox::Services::Social::Manager::implementation
 {
     winrt::Windows::Xbox::System::User SocialEvent::User()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Social::Manager::SocialEventType SocialEvent::EventType()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<hstring> SocialEvent::UsersAffected()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     int32_t SocialEvent::ErrorCode()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring SocialEvent::ErrorMessage()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Social::Manager::SocialEventArgs SocialEvent::EventArgs()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

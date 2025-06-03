@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Achievements::implementation
 {
     hstring AchievementRequirement::Id()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring AchievementRequirement::CurrentProgressValue()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring AchievementRequirement::TargetProgressValue()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

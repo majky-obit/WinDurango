@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::Chat::implementation
 {
     winrt::Windows::Foundation::Collections::IVector<winrt::Windows::Xbox::Chat::IChatParticipant> ChatChannel::Participants()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

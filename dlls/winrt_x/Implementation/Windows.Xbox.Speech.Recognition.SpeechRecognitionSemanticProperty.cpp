@@ -8,22 +8,22 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     hstring SpeechRecognitionSemanticProperty::Name()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring SpeechRecognitionSemanticProperty::ValueAsString()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::Speech::Recognition::SpeechRecognitionConfidence SpeechRecognitionSemanticProperty::ConfidenceLevel()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     float SpeechRecognitionSemanticProperty::ConfidenceScore()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Speech::Recognition::SpeechRecognitionSemanticProperty> SpeechRecognitionSemanticProperty::Duplicates()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

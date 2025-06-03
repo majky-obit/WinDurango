@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Matchmaking::implementation
 {
     hstring HopperStatisticsResponse::HopperName()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan HopperStatisticsResponse::EstimatedWaitTime()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     uint32_t HopperStatisticsResponse::PlayersWaitingToMatch()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

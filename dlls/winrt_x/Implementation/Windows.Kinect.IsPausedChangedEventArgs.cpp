@@ -7,6 +7,6 @@ namespace winrt::Windows::Kinect::implementation
 {
     bool IsPausedChangedEventArgs::IsPaused()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

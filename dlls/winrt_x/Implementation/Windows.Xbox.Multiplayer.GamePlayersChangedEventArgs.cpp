@@ -6,14 +6,14 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
 {
     winrt::Windows::Xbox::Multiplayer::MultiplayerSessionReference GamePlayersChangedEventArgs::GameSession()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Multiplayer::GamePlayer> GamePlayersChangedEventArgs::AvailablePlayers()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Multiplayer::GamePlayerDeviceGroup> GamePlayersChangedEventArgs::AvailablePlayersGroupedByDevice()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

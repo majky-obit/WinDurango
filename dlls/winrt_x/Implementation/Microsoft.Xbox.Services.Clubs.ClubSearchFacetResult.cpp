@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Clubs::implementation
 {
     hstring ClubSearchFacetResult::Value()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     uint32_t ClubSearchFacetResult::Count()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

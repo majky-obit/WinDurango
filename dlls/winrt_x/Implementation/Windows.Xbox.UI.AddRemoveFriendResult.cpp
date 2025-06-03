@@ -7,6 +7,6 @@ namespace winrt::Windows::Xbox::UI::implementation
 {
     winrt::Windows::Xbox::UI::AddRemoveFriendResultStatus AddRemoveFriendResult::Status()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

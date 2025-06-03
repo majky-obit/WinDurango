@@ -6,18 +6,18 @@ namespace winrt::Windows::Xbox::ApplicationModel::State::Internal::implementatio
 {
     bool PackageFullNameQuery::IsInbox(hstring const& packageFullName)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     bool PackageFullNameQuery::IsEra(hstring const& packageFullName)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::ApplicationModel::State::Internal::PackageContentType PackageFullNameQuery::GetContentType(hstring const& packageFullName)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     bool PackageFullNameQuery::IsGameCore(hstring const& packageFullName)
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

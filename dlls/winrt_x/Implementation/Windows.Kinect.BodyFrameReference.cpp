@@ -7,10 +7,10 @@ namespace winrt::Windows::Kinect::implementation
 {
     winrt::Windows::Kinect::BodyFrame BodyFrameReference::AcquireFrame()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan BodyFrameReference::RelativeTime()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

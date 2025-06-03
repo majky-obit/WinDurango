@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::ContextualSearch::implementation
 {
     winrt::Windows::Foundation::Uri ContextualSearchGameClipThumbnail::Url()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     uint64_t ContextualSearchGameClipThumbnail::FileSize()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::ContextualSearch::ContextualSearchGameClipThumbnailType ContextualSearchGameClipThumbnail::ThumbnailType()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

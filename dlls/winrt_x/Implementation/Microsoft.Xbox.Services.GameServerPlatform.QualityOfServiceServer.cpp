@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::GameServerPlatform::implementation
 {
     hstring QualityOfServiceServer::ServerFullQualifiedDomainName()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring QualityOfServiceServer::SecureDeviceAddressBase64()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring QualityOfServiceServer::TargetLocation()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

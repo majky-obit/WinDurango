@@ -22,7 +22,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     winrt::event_token Controller::ControllerAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerAddedEventArgs> const& handler)
     {
         wprintf(L"Controller || Controller Added!\n");
-        Logger::NotImplemented(); return {};
+        LOG_NOTIMPLEMENTED(); return {};
     }
     void Controller::ControllerAdded(winrt::event_token const& token) noexcept
     {
@@ -32,7 +32,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     winrt::event_token Controller::ControllerRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerRemovedEventArgs> const& handler)
     {
         wprintf(L"Controller || Controller Removed!\n");
-        Logger::NotImplemented(); return {};
+        LOG_NOTIMPLEMENTED(); return {};
     }
     void Controller::ControllerRemoved(winrt::event_token const& token) noexcept
     {
@@ -42,7 +42,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     winrt::event_token Controller::ControllerPairingChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerPairingChangedEventArgs> const& handler)
     {
         wprintf(L"Controller || ControllerPairingChanged!\n");
-        Logger::NotImplemented(); return {};
+        LOG_NOTIMPLEMENTED(); return {};
     }
     void Controller::ControllerPairingChanged(winrt::event_token const& token) noexcept
     {
@@ -52,7 +52,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     winrt::event_token Controller::ControllerOrderChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::ControllerOrderChangedEventArgs> const& handler)
     {
         wprintf(L"Controller || ControllerOrderChanged!\n");
-        Logger::NotImplemented(); return {};
+        LOG_NOTIMPLEMENTED(); return {};
     }
     void Controller::ControllerOrderChanged(winrt::event_token const& token) noexcept
     {
@@ -72,12 +72,12 @@ namespace winrt::Windows::Xbox::Input::implementation
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::IController> Controller::GetControllersOrderedLeftToRight(winrt::Windows::Xbox::Input::ControllerOrderFilter const& orderFilter)
     {
         wprintf(L"Controller || GetControllersOrderedLeftToRight!\n");
-        Logger::NotImplemented(); return {};
+        LOG_NOTIMPLEMENTED(); return {};
         
     }
     uint64_t Controller::Id( )
     {
-        Logger::NotImplemented(); return 0;
+        LOG_NOTIMPLEMENTED(); return 0;
     }
     hstring Controller::Type( )
     {
@@ -91,7 +91,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::IAudioDeviceInfo> Controller::AudioDevices( )
     {
         Logger::Warning("[AudioDevices] STUBBED\n");
-        Logger::NotImplemented(); return {};
+        LOG_NOTIMPLEMENTED(); return {};
     }
     winrt::Windows::Xbox::Input::GameControllerVersionInfo Controller::FirmwareVersionInfo( )
     {
@@ -113,10 +113,10 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     uint16_t Controller::HardwareProductId( )
     {
-        Logger::NotImplemented(); return 0;
+        LOG_NOTIMPLEMENTED(); return 0;
     }
     uint16_t Controller::HardwareVendorId( )
     {
-        Logger::NotImplemented(); return 0;
+        LOG_NOTIMPLEMENTED(); return 0;
     }
 }

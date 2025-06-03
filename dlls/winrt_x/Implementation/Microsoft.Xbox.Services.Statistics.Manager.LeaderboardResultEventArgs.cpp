@@ -7,6 +7,6 @@ namespace winrt::Microsoft::Xbox::Services::Statistics::Manager::implementation
 {
     winrt::Microsoft::Xbox::Services::Leaderboard::LeaderboardResult LeaderboardResultEventArgs::Result()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

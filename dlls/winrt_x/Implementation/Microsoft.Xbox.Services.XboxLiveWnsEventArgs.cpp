@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::implementation
 {
     hstring XboxLiveWnsEventArgs::XboxUserId()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring XboxLiveWnsEventArgs::NotificationType()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

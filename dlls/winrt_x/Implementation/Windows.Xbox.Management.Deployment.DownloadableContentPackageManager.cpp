@@ -18,10 +18,10 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     }
     winrt::event_token DownloadableContentPackageManager::DownloadableContentPackageInstallCompletedWithDetails(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Management::Deployment::IDownloadableContentPackageInstallCompletedEventArgs> const& eventHandler)
     {
-        Logger::NotImplemented(); return {};
+        LOG_NOTIMPLEMENTED(); return {};
     }
     void DownloadableContentPackageManager::DownloadableContentPackageInstallCompletedWithDetails(winrt::event_token const& eventCookie) noexcept
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

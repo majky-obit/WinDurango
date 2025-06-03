@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Clubs::implementation
 {
     bool ClubBooleanSetting::Value()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     bool ClubBooleanSetting::CanViewerChangeSetting()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }

@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Achievements::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Achievements::AchievementRequirement> AchievementProgression::Requirements()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::DateTime AchievementProgression::TimeUnlocked()
     {
-        Logger::NotImplemented(); throw hresult_not_implemented();
+        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
     }
 }
