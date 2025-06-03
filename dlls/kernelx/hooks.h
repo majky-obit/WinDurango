@@ -8,6 +8,7 @@
 #include "CurrentAppWrapper.hpp"
 #include "MMDeviceEnumeratorWrapper.h"
 #include <winrt/windows.storage.provider.h>
+#include <atlbase.h>
 
 #define RETURN_HR(hr) return hr
 #define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
@@ -108,10 +109,8 @@ HRESULT __stdcall CoCreateInstance_hook(
 	}
 	return hr;
 }
-
-
-
-HRESULT XWineGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ LPCSTR Import, _Out_ PIMAGE_THUNK_DATA* pThunk)
+/// Made By XWine1 Team
+HRESULT XGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ LPCSTR Import, _Out_ PIMAGE_THUNK_DATA* pThunk)
 {
 	if (ImportModule == nullptr)
 		RETURN_HR(E_INVALIDARG);
@@ -166,12 +165,12 @@ HRESULT XWineGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ 
 	*pThunk = nullptr;
 	return (E_FAIL);
 }
-
-HRESULT XWinePatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
+/// Made By XWine1 Team
+HRESULT XPatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
 {
 	DWORD protect;
 	PIMAGE_THUNK_DATA pThunk;
-	RETURN_IF_FAILED(XWineGetImport(Module, ImportModule, Import, &pThunk));
+	RETURN_IF_FAILED(XGetImport(Module, ImportModule, Import, &pThunk));
 	RETURN_LAST_ERROR_IF(!VirtualProtect(&pThunk->u1.Function, sizeof(ULONG_PTR), PAGE_READWRITE, &protect));
 	pThunk->u1.Function = (ULONG_PTR)Function;
 	RETURN_LAST_ERROR_IF(!VirtualProtect(&pThunk->u1.Function, sizeof(ULONG_PTR), protect, &protect));
@@ -181,9 +180,9 @@ HRESULT XWinePatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In
 HRESULT PatchNeededImports(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
 {
 	PIMAGE_THUNK_DATA pThunk;
-	RETURN_IF_FAILED(XWineGetImport(Module, ImportModule, Import, &pThunk));
+	RETURN_IF_FAILED(XGetImport(Module, ImportModule, Import, &pThunk));
 
-	return XWinePatchImport(Module, ImportModule, Import, Function);
+	return XPatchImport(Module, ImportModule, Import, Function);
 }
 
 HMODULE WINAPI LoadLibraryExW_X(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dwFlags)
@@ -265,7 +264,7 @@ void FixRelativePath(LPCWSTR& lpFileName)
 	}
 }
 
-#include <atlbase.h>
+
 
 HANDLE CreateFile2_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
 	DWORD dwCreationDisposition, LPCREATEFILE2_EXTENDED_PARAMETERS pCreateExParams)
@@ -300,7 +299,7 @@ HMODULE WINAPI LoadLibraryExA_Hook(LPCSTR lpLibFileName, _Reserved_ HANDLE hFile
 		lpLibFileName = convert.c_str();
 	}
 
-	//printf("LoadLibraryExA_Hook-: %s\n", lpLibFileName);
+	printf("LoadLibraryExA_Hook-: %s\n", lpLibFileName);
 
 
 
@@ -334,7 +333,7 @@ HMODULE WINAPI LoadLibraryW_Hook(LPCWSTR lpLibFileName)
 
 		lpLibFileName = convert.data();
 	}
-	//printf("LoadLibraryW_Hook: %ls\n", lpLibFileName);
+	printf("LoadLibraryW_Hook: %ls\n", lpLibFileName);
 
 	HMODULE result = TrueLoadLibraryW(lpLibFileName);
 	PatchNeededImports(result, GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
@@ -420,9 +419,10 @@ HRESULT STDMETHODCALLTYPE CurrentAppActivateInstance_Hook(IActivationFactory* th
 /* Hook for the WinRT RoGetActivationFactory function. */
 inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, void** factory)
 {
+	
 	// Get the raw buffer from the HSTRING
 	const wchar_t* rawString = WindowsGetStringRawBuffer(classId, nullptr);
-
+	printf("WinRT Class Activated: %S\n", rawString);
 	// this might be a lil expensive? evaluate later
 	if (wcscmp(rawString, L"Windows.UI.Core.CoreWindow") != 0)
 		wprintf(L"%ls\n", rawString);
@@ -431,6 +431,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	if (IsClassName(classId, "Windows.ApplicationModel.Store.CurrentApp"))
 	{
+		printf("CLASS: Windows.ApplicationModel.Store.CurrentApp\n");
 		hr = TrueRoGetActivationFactory(classId, iid, factory);
 
 		if (FAILED(hr))
@@ -447,6 +448,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	if (IsClassName(classId, "Windows.ApplicationModel.Core.CoreApplication"))
 	{
+		printf("CLASS: Windows.ApplicationModel.Core.CoreApplication\n");
 		ComPtr<IActivationFactory> realFactory;
 
 		hr = TrueRoGetActivationFactory(HStringReference(RuntimeClass_Windows_ApplicationModel_Core_CoreApplication).Get(), IID_PPV_ARGS(&realFactory));
@@ -461,6 +463,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	if (IsClassName(classId, "Windows.UI.Core.CoreWindow"))
 	{
+		printf("CLASS: Windows.UI.Core.CoreWindow\n");
 		//
 		// for now we just hook GetForCurrentThread to get the CoreWindow but i'll change it later to
 		// wrap ICoreWindowStatic or as zombie said another thing that works is by hooking IFrameworkView::SetWindow
@@ -469,6 +472,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 		ComPtr<ICoreWindowStatic> coreWindowStatic;
 		hr = TrueRoGetActivationFactory(HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), IID_PPV_ARGS(&coreWindowStatic));
 		if (FAILED(hr)) {
+			printf("FAILEDDDDDD\n");
 			return hr;
 		}
 
@@ -521,9 +525,14 @@ HRESULT WINAPI GetActivationFactoryRedirect(PCWSTR str, REFIID riid, void** ppFa
 	if (FAILED(hr = WindowsCreateStringReference(str, wcslen(str), &classNameHeader, &className)))
 		return hr;
 
-	//printf("GetActivationFactoryRedirect: %S\n", str);
+	printf("GetActivationFactoryRedirect: %S\n", str);
 
 	hr = RoGetActivationFactory_Hook(className, riid, ppFactory);
 	WindowsDeleteString(className);
 	return hr;
 }
+
+// ALL HAPPY DUNGEONS STUFF
+
+
+//////////////////////////////////////

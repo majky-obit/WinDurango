@@ -6,7 +6,7 @@
 
 #include "CoreWindowWrapperX.h"
 #include "ICoreWindowX.h"
-
+#include "../common/DebugLogger.h"
 #include "../../Thirdparty/Detours/src/detours.h"
 
 #include <intrin.h>
@@ -17,7 +17,7 @@
 #include <wrl.h>
 #include <string>
 #include <string_view>
-#include <__msvc_string_view.hpp>
+// #include <__msvc_string_view.hpp>
 #include <ntstatus.h>
 
 using namespace Microsoft::WRL;

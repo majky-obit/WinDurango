@@ -6,11 +6,6 @@
 #include <wmistr.h>    // For WMI and ETW structures
 #include "evntprov.h"  // Ensure this file is available
 
-
-
-#ifndef WINAPI
-#define WINAPI __stdcall
-#endif
 #define _DWORD DWORD   // Define _DWORD as DWORD (32-bit unsigned int)
 #define _QWORD UINT64  // Define _QWORD as UINT64 (64-bit unsigned int)
 #define BUFFER_SIZE 64  // Define a reasonable buffer size
@@ -116,20 +111,20 @@ typedef enum _UserIdType {
     UserIdType_Anonymous
 } UserIdType;
 
-VOID WINAPI
+VOID __stdcall
 FillEventCommonFields(
     __out_ecount(1) EVENT_DATA_DESCRIPTOR* eventDataDescriptors,
     __out_ecount(bufferSize) UINT8* buffer,
     __in UINT32 bufferSize
 );
 
-ULONG WINAPI
+ULONG __stdcall
 RegisterEventProvider(__inout EVENT_PROVIDER_DESCRIPTOR* provider, __inout REGHANDLE* handle);
 
-ULONG WINAPI
+ULONG __stdcall
 UnregisterEventProvider(__inout EVENT_PROVIDER_DESCRIPTOR* provider, __inout REGHANDLE* handle);
 
-ULONG WINAPI
+ULONG __stdcall
 WriteEventLog(
     __in const EVENT_DESCRIPTOR_STRUCT* eventDescriptor,
     __in const EVENT_PROVIDER_DESCRIPTOR* providerDescriptor,
@@ -137,10 +132,10 @@ WriteEventLog(
     __in ULONG dataCount,
     __in const EVENT_DATA_DESCRIPTOR* eventData
 );
-void WINAPI
+void __stdcall
 PauseEventLogging( );
 
-void WINAPI
+void __stdcall
 ResumeEventLogging( );
 #pragma warning(pop)
 #endif // EtwPlus_H

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "../common/common.h"
-#include "../common/debug.h"
 
 uint32_t dword_180021AA0[16];
 uint32_t dword_180021A60[16];
@@ -83,7 +82,7 @@ BOOL __stdcall WaitOnAddress_X(volatile void* Address, PVOID CompareAddress, SIZ
 BOOL JobTitleMemoryStatus_X(void* pJob, LPTITLEMEMORYSTATUS Buffer) {
     __int64 jobInfo[7]; // Buffer to store job object memory information
     NTSTATUS status;
-    DEBUG_PRINT();
+    DEBUG_LOG();
     // Validate input parameters
     if (!pJob || !Buffer || Buffer->dwLength != sizeof(TITLEMEMORYSTATUS)) {
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -350,7 +349,7 @@ LPVOID VirtualAlloc_X(
 
 BOOL ToolingMemoryStatus_X(LPTOOLINGMEMORYSTATUS buffer)
 {
-    DEBUG_PRINT();
+    DEBUG_LOG();
     __int64 SystemInformation[4];
 
     if (buffer->dwLength != 40)

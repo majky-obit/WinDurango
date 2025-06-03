@@ -5,7 +5,7 @@
 #include <cstring>
 
 // Function to extract the last folder name (project/module name)
-inline const char* ExtractProjectName(const char* filePath) {
+inline const char* RetrieveProjectName(const char* filePath) {
     const char* lastSlash = strrchr(filePath, '/');  // UNIX-like path
     if (!lastSlash) lastSlash = strrchr(filePath, '\\');  // Windows path
 
@@ -45,7 +45,7 @@ inline const char* ExtractProjectName(const char* filePath) {
 #endif
 
 // Function to extract only the function name from the full signature
-inline const char* ExtractFunctionName(const char* fullSignature) {
+inline const char* RetrieveFunctionName(const char* fullSignature) {
     const char* paren = strchr(fullSignature, '('); // Find first '('
     if (paren) {
         static char functionName[ 256 ]; // Buffer to store function name
@@ -64,14 +64,14 @@ inline const char* ExtractFunctionName(const char* fullSignature) {
 }
 
 // Debug Print Macro (Basic)
-#define DEBUG_PRINT() printf("Line: %d --> %s --> %s \r\n", __LINE__,ExtractProjectName(__FILE__) ,ExtractFunctionName(FUNCTION_NAME) )
+#define DEBUG_LOG() printf("Line: %d --> %s --> %s \r\n", __LINE__, RetrieveProjectName(__FILE__) ,RetrieveFunctionName(FUNCTION_NAME) )
 
 // Debug Print Macro (Custom Message)
-#define DEBUGPRINT(fmt, ...) printf("Line: %d --> %s --> %s " fmt "\r\n", __LINE__ , ExtractProjectName(__FILE__), __FUNCTION__ , ##__VA_ARGS__)
+#define DEBUGLOG(fmt, ...) printf("Line: %d --> %s --> %s " fmt "\r\n", __LINE__ , RetrieveProjectName(__FILE__), __FUNCTION__ , ##__VA_ARGS__)
 
 #else
-#define DEBUG_PRINT() // No-op in release mode
-#define DEBUGPRINT(fmt, ...) // No-op in release mode
+#define DEBUG_LOG() // No-op in release mode
+#define DEBUGLOG(fmt, ...) // No-op in release mode
 #endif
 
 #endif // DEBUG_H

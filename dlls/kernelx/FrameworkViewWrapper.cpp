@@ -33,6 +33,11 @@ HRESULT __stdcall FrameworkViewWrapper::Uninitialize(void)
 
 HRESULT FrameworkViewWrapper::QueryInterface(const IID& riid, void** ppvObject)
 {
+	LPOLESTR str = nullptr;
+	StringFromIID(riid, &str);
+	wprintf(L"FrameworkViewWrapper [QI] IID Requested: %s\n", str);
+	CoTaskMemFree(str);
+
 	if (riid == __uuidof(IFrameworkView) ||
 		riid == __uuidof(IUnknown) ||
 		riid == __uuidof(IInspectable))

@@ -104,6 +104,8 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="FrameworkViewSourceWrapper.h" />
     <ClInclude Include="FrameworkViewWrapper.h" />
+    <ClInclude Include="MMDeviceCollectionWrapper.h" />
+    <ClInclude Include="MMDeviceWrapper.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="ICoreApplicationGpuPolicy.h" />
     <ClInclude Include="ICoreApplicationResourceAvailabilityX.h" />
@@ -123,7 +125,9 @@
     <ClCompile Include="FrameworkViewSourceWrapper.cpp" />
     <ClCompile Include="FrameworkViewWrapper.cpp" />
     <ClCompile Include="kernelx.cpp" />
+    <ClCompile Include="MMDeviceCollectionWrapper.cpp" />
     <ClCompile Include="MMDeviceEnumeratorWrapper.cpp" />
+    <ClCompile Include="MMDeviceWrapper.cpp" />
     <ClCompile Include="MMXboxDeviceEnumeratorWrapper.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
