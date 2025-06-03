@@ -8,8 +8,11 @@
 void* g_pD3D11XEventFunc = nullptr;
 void* g_pWDWaitForKeyboardFunc = nullptr;
 
+
 namespace winrt::Windows::Xbox::UI::implementation
 {
+    winrt::Windows::Xbox::UI::NotificationPositionHint SystemUI::m_notificationPositionHint =
+        winrt::Windows::Xbox::UI::NotificationPositionHint::TopRight;
     winrt::Windows::Foundation::IAsyncAction SystemUI::ShowEpgAsync(winrt::Windows::Xbox::System::IUser requestingUser, winrt::Windows::Foundation::Collections::IIterable<winrt::Windows::Foundation::Collections::IKeyValuePair<hstring, winrt::Windows::Foundation::IInspectable>> propertySet)
     {
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
@@ -114,7 +117,44 @@ namespace winrt::Windows::Xbox::UI::implementation
     }
     void SystemUI::SetNotificationPositionHint(winrt::Windows::Xbox::UI::NotificationPositionHint const& value)
     {
-        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
+		LOG_WARNING("SystemUI::SetNotificationPositionHint called.. Function Stubbed!!!");
+            switch (value)
+            {
+            case winrt::Windows::Xbox::UI::NotificationPositionHint::BottomCenter:
+                LOG_WARNING("SystemUI::SetNotificationPositionHint: Setting NotificationPositionHint to BottomCenter.\n");
+                m_notificationPositionHint = value;
+                break;
+
+            case winrt::Windows::Xbox::UI::NotificationPositionHint::BottomLeft:
+                LOG_WARNING("SystemUI::SetNotificationPositionHint: Setting NotificationPositionHint to BottomLeft.\n");
+                m_notificationPositionHint = value;
+                break;
+
+            case winrt::Windows::Xbox::UI::NotificationPositionHint::BottomRight:
+                LOG_WARNING("SystemUI::SetNotificationPositionHint: Setting NotificationPositionHint to BottomRight.\n");
+                m_notificationPositionHint = value;
+                break;
+
+            case winrt::Windows::Xbox::UI::NotificationPositionHint::TopCenter:
+                LOG_WARNING("SystemUI::SetNotificationPositionHint: Setting NotificationPositionHint to TopCenter.\n");
+                m_notificationPositionHint = value;
+                break;
+
+            case winrt::Windows::Xbox::UI::NotificationPositionHint::TopLeft:
+                LOG_WARNING("SystemUI::SetNotificationPositionHint: Setting NotificationPositionHint to TopLeft.\n");
+                m_notificationPositionHint = value;
+                break;
+
+            case winrt::Windows::Xbox::UI::NotificationPositionHint::TopRight:
+                LOG_WARNING("SystemUI::SetNotificationPositionHint: Setting NotificationPositionHint to TopRight.\n");
+                m_notificationPositionHint = value;
+                break;
+
+            default:
+                LOG_WARNING("SystemUI::SetNotificationPositionHint: Received unknown value! Defaulting to TopRight.\n");
+                m_notificationPositionHint = winrt::Windows::Xbox::UI::NotificationPositionHint::TopRight;
+                break;
+            }
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::UI::WebAuthenticationResult> SystemUI::AuthenticateAsync(winrt::Windows::Xbox::System::IUser requestingUser, winrt::Windows::Xbox::UI::WebAuthenticationOptions options, winrt::Windows::Foundation::Uri requestUri, winrt::Windows::Foundation::Uri callbackUri)
     {

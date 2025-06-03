@@ -34,7 +34,9 @@ namespace winrt::Windows::Xbox::UI::implementation
         static winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::UI::WebAuthenticationResult> AuthenticateAsync(winrt::Windows::Xbox::System::IUser requestingUser, winrt::Windows::Xbox::UI::WebAuthenticationOptions options, winrt::Windows::Foundation::Uri requestUri, winrt::Windows::Foundation::Uri callbackUri);
         static winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::UI::WebAuthenticationResult> AuthenticateAsync(winrt::Windows::Xbox::System::IUser requestingUser, winrt::Windows::Xbox::UI::WebAuthenticationOptions options, winrt::Windows::Foundation::Uri requestUri);
         static winrt::Windows::Foundation::Uri GetCurrentApplicationCallbackUri(winrt::Windows::Xbox::System::IUser const& requestingUser);
+        static winrt::Windows::Xbox::UI::NotificationPositionHint m_notificationPositionHint;
     };
+
 }
 namespace winrt::Windows::Xbox::UI::factory_implementation
 {

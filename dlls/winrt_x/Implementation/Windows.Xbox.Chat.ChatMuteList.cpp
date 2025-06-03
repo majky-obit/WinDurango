@@ -6,10 +6,12 @@ namespace winrt::Windows::Xbox::Chat::implementation
 {
     winrt::event_token ChatMuteList::UserMuteStateChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Chat::UserMuteStateChangedEventArgs> const& handler)
     {
-        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
+		LOG_WARNING("ChatMuteList::UserMuteStateChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Chat::UserMuteStateChangedEventArgs> const& handler) Stubbed!!");
+        return m_muteEvent.add(handler);
     }
     void ChatMuteList::UserMuteStateChanged(winrt::event_token const& token) noexcept
     {
-        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
+		LOG_WARNING("ChatMuteList::UserMuteStateChanged(winrt::event_token const& token) Stubbed!!");
+        m_muteEvent.remove(token);
     }
 }
