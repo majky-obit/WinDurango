@@ -45,7 +45,7 @@ namespace AppModel {
         }
         __int64 __fastcall GetCurrentPackageFullName_X(std::wstring& packageFullName)
         {
-            DEBUG_PRINT( );
+            DEBUG_LOG( );
             packageFullName.clear( );
             //if ((NtCurrentPeb( )->BitField & 0x20) == 0)
             //    return 15700;
@@ -92,7 +92,7 @@ namespace AppModel {
         }
         __int64 __fastcall GetPackagesByPackageFamily_X(LPCWSTR lpSubKey, std::vector<std::wstring>& packageList)
         {
-            DEBUG_PRINT( );
+            DEBUG_LOG( );
             if (lpSubKey == nullptr)
                 return ERROR_INVALID_PARAMETER;
 
@@ -172,12 +172,12 @@ HRESULT CreateRandomAccessStreamOverStream_X(
 
 __int64 __fastcall DllGetActivationFactory_X(HSTRING string, PVOID Ptr)
 {
-    DEBUG_PRINT( ); return 0;
+    DEBUG_LOG( ); return 0;
 }
 
 HRESULT __stdcall DllGetClassObject_X(const IID* const rclsid, const IID* const riid, LPVOID* ppv)
 {
-    DEBUG_PRINT( );    return 0;
+    DEBUG_LOG( );    return 0;
 }
 
 LONG __stdcall GetApplicationUserModelId_X(
@@ -185,31 +185,31 @@ LONG __stdcall GetApplicationUserModelId_X(
         UINT32* applicationUserModelIdLength,
         PWSTR applicationUserModelId)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return GetCurrentApplicationUserModelId_X(applicationUserModelIdLength, applicationUserModelId);
 }
 
 __int64 __fastcall GetApplicationXboxLiveInfo_X(WCHAR* a1, int a2, void* a3, unsigned int a4)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return 0;
 }
 
 LONG __stdcall GetCurrentApplicationUserModelId_X(UINT32* applicationUserModelIdLength, PWSTR applicationUserModelId)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return 0;
 }
 
 LONG __stdcall GetCurrentPackageFamilyName_X(UINT32* packageFamilyNameLength, PWSTR packageFamilyName)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return 0;
 }
 
 LONG __stdcall GetCurrentPackageFullName_X(UINT32* packageFullNameLength, PWSTR packageFullName)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     LONG CurrentPackageFullName; // edi
     UINT32 v5; // edi
     const wchar_t* v6; // r8
@@ -254,14 +254,14 @@ LONG __stdcall GetCurrentPackageFullName_X(UINT32* packageFullNameLength, PWSTR 
 
 LONG __stdcall GetCurrentPackageId_X(UINT32* bufferLength, BYTE* buffer)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return 0;
 }
 
 
 LONG __stdcall GetCurrentPackagePath_X(UINT32* pathLength, PWSTR path)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return 0;
 }
 
@@ -269,45 +269,45 @@ LONG __stdcall GetCurrentPackagePath_X(UINT32* pathLength, PWSTR path)
 
 LONG __stdcall GetPackageFamilyName_X(HANDLE hProcess, UINT32* packageFamilyNameLength, PWSTR packageFamilyName)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return GetCurrentPackageFamilyName_X(packageFamilyNameLength, packageFamilyName);
 }
 
 LONG __stdcall GetPackagePath_X(const PVOID* packageId, const UINT32 reserved, UINT32* pathLength, PWSTR path)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return GetCurrentPackagePath_X(pathLength, path);
 }
 
-void GetPackageXboxLiveInfo_X( ) { DEBUG_PRINT( ); }
+void GetPackageXboxLiveInfo_X( ) { DEBUG_LOG( ); }
 
-void GetProcessXboxLiveInfo_X( ) { DEBUG_PRINT( ); }
+void GetProcessXboxLiveInfo_X( ) { DEBUG_LOG( ); }
 
-void GetXboxLiveTitleId_X( ) { DEBUG_PRINT( ); }
+void GetXboxLiveTitleId_X( ) { DEBUG_LOG( ); }
 
-void PsmBlockAppStateChangeCompletion_X( ) { DEBUG_PRINT( ); }
+void PsmBlockAppStateChangeCompletion_X( ) { DEBUG_LOG( ); }
 
-void PsmRegisterAppStateChangeNotification_X( ) { DEBUG_PRINT( ); }
+void PsmRegisterAppStateChangeNotification_X( ) { DEBUG_LOG( ); }
 
-void PsmShutdownApplication_X( ) { DEBUG_PRINT( ); }
+void PsmShutdownApplication_X( ) { DEBUG_LOG( ); }
 
-void PsmUnblockAppStateChangeCompletion_X( ) { DEBUG_PRINT( ); }
+void PsmUnblockAppStateChangeCompletion_X( ) { DEBUG_LOG( ); }
 
-void PsmWaitForAppResume_X( ) { DEBUG_PRINT( ); }
+void PsmWaitForAppResume_X( ) { DEBUG_LOG( ); }
 
 LONG __stdcall GetPackageId(HANDLE hProcess, UINT32* bufferLength, BYTE* buffer)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return GetCurrentPackageId_X(bufferLength, buffer);
 }
 
 LONG __stdcall GetPackageFullName_X(HANDLE hProcess, UINT32* packageFullNameLength, PWSTR packageFullName)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return GetCurrentPackageFullName_X(packageFullNameLength, packageFullName);
 }
 
-LONG GetCurrentPackageInfo_X(const UINT32 flags, UINT32* bufferLength, BYTE* buffer, UINT32* count) { DEBUG_PRINT( ); return 0; }
+LONG GetCurrentPackageInfo_X(const UINT32 flags, UINT32* bufferLength, BYTE* buffer, UINT32* count) { DEBUG_LOG( ); return 0; }
 
 LONG __stdcall GetPackagesByPackageFamily_X(
     PCWSTR packageFamilyName,
@@ -316,7 +316,7 @@ LONG __stdcall GetPackagesByPackageFamily_X(
     UINT32* bufferLength,
     WCHAR* buffer)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     if (!packageFamilyName || !count || !bufferLength || (*count && !packageFullNames) || (*bufferLength && !buffer))
         return ERROR_INVALID_PARAMETER;
 
@@ -356,7 +356,7 @@ LONG __stdcall GetPackagesByPackageFamily_X(
 
 _int64 __fastcall GetCurrentXboxLiveTitleId_X(int* a1)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     int v4[ 6 ]; // [rsp+20h] [rbp-28h] BYREF
 
     int v1 = 0;
@@ -370,12 +370,12 @@ _int64 __fastcall GetCurrentXboxLiveTitleId_X(int* a1)
 }
 __int64 __fastcall GetSystemXboxLiveInfo_X(int a1, void* a2, unsigned int a3)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return 0;
 }
 LONG __fastcall GetCurrentXboxLiveInfo_X(unsigned int a1, void* a2, unsigned int a3)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     LONG result; // eax
     HMODULE ModuleHandleW; // rax
     UINT32 applicationUserModelIdLength[ 4 ]; // [rsp+20h] [rbp-138h] BYREF
@@ -411,7 +411,7 @@ LONG __fastcall GetCurrentXboxLiveInfo_X(unsigned int a1, void* a2, unsigned int
 }
 LSTATUS __fastcall XblRegReadValue_X(HKEY hKey, LPCWSTR valueName, int expectedType, void* buffer, unsigned int bufferSize)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     DWORD dataType = 0;
     DWORD dataSize = bufferSize;
 
@@ -424,7 +424,7 @@ LSTATUS __fastcall XblRegReadValue_X(HKEY hKey, LPCWSTR valueName, int expectedT
 }
 __int64 __fastcall XblRegReadModuleTitleInfo_X(HINSTANCE a1, const unsigned __int16* a2, void* a3, unsigned int a4)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     unsigned int result;
     HKEY hKey = nullptr;
     int useSystemTitleId = 0;
@@ -449,7 +449,7 @@ __int64 __fastcall XblRegReadModuleTitleInfo_X(HINSTANCE a1, const unsigned __in
 }
 LSTATUS __fastcall XblRegReadTitleInfo_X(HKEY a1, struct _XBOX_LIVE_TITLE_INFO* TitleInfo)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     LSTATUS result; // eax
 
     result = XblRegReadValue_X(a1, L"TitleId", 4, TitleInfo, 4u);
@@ -471,7 +471,7 @@ LSTATUS __fastcall XblRegReadTitleInfo_X(HKEY a1, struct _XBOX_LIVE_TITLE_INFO* 
 
 __int64 __fastcall XblRegOpenModuleKey_X(HMODULE a1, __int64 a2, HKEY* a3)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     unsigned int v4 = 1359;
     WCHAR Filename[ 264 ] = { 0 };
     WCHAR SubKey[ 512 ] = { 0 };
@@ -500,7 +500,7 @@ __int64 __fastcall XblRegOpenModuleKey_X(HMODULE a1, __int64 a2, HKEY* a3)
 
 void __fastcall PsmCli::UnregisterAppStateChangeNotification(PsmCli* instance, struct _PSM_APPSTATE_REGISTRATION* a2)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     _LIST_ENTRY* Flink;
     _LIST_ENTRY* Blink;
 
@@ -539,7 +539,7 @@ void __fastcall PsmCli::UnregisterAppStateChangeNotification(PsmCli* instance, s
 
 void __fastcall PsmUnregisterAppStateChangeNotification_X(struct _PSM_APPSTATE_REGISTRATION* a1)
 {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     if (a1)
         PsmCli::UnregisterAppStateChangeNotification(reinterpret_cast<PsmCli*>(a1), a1);
 }

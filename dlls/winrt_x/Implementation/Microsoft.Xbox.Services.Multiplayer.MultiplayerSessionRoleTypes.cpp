@@ -7,6 +7,6 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
     winrt::Windows::Foundation::Collections::IMapView<hstring, winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerRoleType> MultiplayerSessionRoleTypes::RoleTypes()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

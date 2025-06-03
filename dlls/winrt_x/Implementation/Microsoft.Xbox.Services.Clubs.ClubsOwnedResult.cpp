@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Clubs::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<hstring> ClubsOwnedResult::ClubIds()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     uint32_t ClubsOwnedResult::RemainingClubs()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

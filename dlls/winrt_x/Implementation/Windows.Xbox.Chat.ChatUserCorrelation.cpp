@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::Chat::implementation
 {
     winrt::Windows::Xbox::System::IUser ChatUserCorrelation::User()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

@@ -7,6 +7,6 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::Manager::implementation
 {
     winrt::Windows::Foundation::Collections::IMapView<hstring, hstring> PerformQosMeasurementsEventArgs::AddressToDeviceTokens()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

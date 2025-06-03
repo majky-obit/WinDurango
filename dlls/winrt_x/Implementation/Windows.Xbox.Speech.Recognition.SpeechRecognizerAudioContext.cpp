@@ -8,6 +8,6 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     uint64_t SpeechRecognizerAudioContext::AudioPosition()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

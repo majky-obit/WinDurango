@@ -7,6 +7,6 @@ namespace winrt::Windows::Kinect::implementation
 {
     hstring PropertyChangedEventArgs::PropertyName()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

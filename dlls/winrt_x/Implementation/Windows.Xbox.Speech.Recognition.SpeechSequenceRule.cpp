@@ -8,18 +8,18 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     bool SpeechSequenceRule::EnabledOnLoad()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void SpeechSequenceRule::EnabledOnLoad(bool value)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void SpeechSequenceRule::Clear()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void SpeechSequenceRule::AppendItem(winrt::Windows::Xbox::Speech::Recognition::ISpeechRuleItem const& item)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

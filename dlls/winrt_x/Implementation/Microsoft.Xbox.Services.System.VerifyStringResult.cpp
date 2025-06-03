@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::System::implementation
 {
     winrt::Microsoft::Xbox::Services::System::VerifyStringResultCode VerifyStringResult::ResultCode()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring VerifyStringResult::FirstOffendingSubstring()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Social::implementation
 {
     hstring SocialGroupConstants::Favorite()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring SocialGroupConstants::People()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

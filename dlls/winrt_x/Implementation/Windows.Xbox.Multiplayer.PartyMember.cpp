@@ -6,14 +6,14 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
 {
     hstring PartyMember::XboxUserId()
     {
-        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     bool PartyMember::IsLocal()
     {
-        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::DateTime PartyMember::JoinTime()
     {
-        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

@@ -6,10 +6,10 @@ namespace winrt::Windows::Xbox::Input::implementation
 {
     uint64_t BodyHandPair::BodyTrackingId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void BodyHandPair::BodyTrackingId(uint64_t trackingId)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

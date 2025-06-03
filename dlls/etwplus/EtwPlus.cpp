@@ -5,18 +5,18 @@
 #include "../common/common.h"
 
 VOID DurangoAPI EtxFillCommonFields_v7_X(EVENT_DATA_DESCRIPTOR* eventDataDescriptors, UINT8* buffer, UINT32 bufferSize) {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     // Implementation here
 }
 
 ULONG DurangoAPI EtxRegister_X(EVENT_PROVIDER_DESCRIPTOR* provider, REGHANDLE* handle) {
     // Implementation here
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     return 0;
 }
 
 ULONG DurangoAPI EtxUnregister_X(EVENT_PROVIDER_DESCRIPTOR* provider, REGHANDLE* handle) {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     REGHANDLE v3; // rcx
 
     v3 = *handle;
@@ -36,18 +36,18 @@ ULONG DurangoAPI EtxEventWrite_X(
     __in ULONG dataCount,
     __in const EVENT_DATA_DESCRIPTOR* eventData
 ) {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     // Implementation here
     return 0;
 }
 
 void DurangoAPI EtxSuspendUploading_X( ) {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     // Implementation here
 }
 
 void DurangoAPI
 EtxResumeUploading_X( ) {
-    DEBUG_PRINT( );
+    DEBUG_LOG( );
     // Implementation here
 }

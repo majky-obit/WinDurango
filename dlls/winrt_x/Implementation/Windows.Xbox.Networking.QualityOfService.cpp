@@ -6,18 +6,18 @@ namespace winrt::Windows::Xbox::Networking::implementation
 {
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Networking::MeasureQualityOfServiceResult> QualityOfService::MeasureQualityOfServiceAsync(winrt::Windows::Foundation::Collections::IIterable<winrt::Windows::Xbox::Networking::SecureDeviceAddress> addresses, winrt::Windows::Foundation::Collections::IIterable<winrt::Windows::Xbox::Networking::QualityOfServiceMetric> metrics, uint32_t timeoutInMilliseconds, uint32_t numberOfProbes)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void QualityOfService::PublishPrivatePayload(array_view<uint8_t const> payload)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void QualityOfService::ClearPrivatePayload()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void QualityOfService::ConfigureQualityOfService(uint32_t maxSimultaneousProbeConnections, bool constrainSystemBandwidthUp, bool constrainSystemBandwidthDown)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

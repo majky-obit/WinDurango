@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Leaderboard::implementation
 {
     hstring LeaderboardColumn::DisplayName()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring LeaderboardColumn::StatisticName()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::PropertyType LeaderboardColumn::StatisticType()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

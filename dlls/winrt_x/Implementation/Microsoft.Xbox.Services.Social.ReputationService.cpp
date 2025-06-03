@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Social::implementation
 {
     winrt::Windows::Foundation::IAsyncAction ReputationService::SubmitReputationFeedbackAsync(hstring xboxUserId, winrt::Microsoft::Xbox::Services::Social::ReputationFeedbackType reputationFeedbackType, hstring sessionName, hstring reasonMessage, hstring evidenceResourceId)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction ReputationService::SubmitBatchReputationFeedbackAsync(winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Social::ReputationFeedbackItem> feedbackItems)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

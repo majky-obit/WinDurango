@@ -6,10 +6,10 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<hstring> UserPartyAssociation::QueriedXboxUserIds()
     {
-        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring UserPartyAssociation::PartyId()
     {
-        printf("%s called\n", __FUNCTION__); throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

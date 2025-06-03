@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
 {
     winrt::Windows::Foundation::Collections::PropertySet ContentMetadataPackager::PackageContentMetadata(winrt::guid const& deviceId, winrt::guid const& contentId, hstring const& oneStoreProductId, winrt::Windows::Xbox::Management::Deployment::ContentMetadata const& metadata)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

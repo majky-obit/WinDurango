@@ -7,54 +7,54 @@ namespace winrt::Windows::Kinect::implementation
 {
     winrt::Windows::Kinect::DepthSpacePoint CoordinateMapper::MapCameraPointToDepthSpace(winrt::Windows::Kinect::CameraSpacePoint const& cameraPoint)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::ColorSpacePoint CoordinateMapper::MapCameraPointToColorSpace(winrt::Windows::Kinect::CameraSpacePoint const& cameraPoint)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::CameraSpacePoint CoordinateMapper::MapDepthPointToCameraSpace(winrt::Windows::Kinect::DepthSpacePoint const& depthPoint, uint16_t depth)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::ColorSpacePoint CoordinateMapper::MapDepthPointToColorSpace(winrt::Windows::Kinect::DepthSpacePoint const& depthPoint, uint16_t depth)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void CoordinateMapper::MapDepthFrameToCameraSpace(array_view<uint16_t const> depthFrameData, array_view<winrt::Windows::Kinect::CameraSpacePoint> cameraSpacePoints)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void CoordinateMapper::MapDepthFrameToColorSpace(array_view<uint16_t const> depthFrameData, array_view<winrt::Windows::Kinect::ColorSpacePoint> colorSpacePoints)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void CoordinateMapper::MapDepthFrameToCameraSpaceUsingIBuffer(winrt::Windows::Storage::Streams::IBuffer const& depthFrameData, array_view<winrt::Windows::Kinect::CameraSpacePoint> cameraSpacePoints)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void CoordinateMapper::MapDepthFrameToColorSpaceUsingIBuffer(winrt::Windows::Storage::Streams::IBuffer const& depthFrameData, array_view<winrt::Windows::Kinect::ColorSpacePoint> colorSpacePoints)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void CoordinateMapper::MapColorFrameToDepthSpace(array_view<uint16_t const> depthFrameData, array_view<winrt::Windows::Kinect::DepthSpacePoint> depthSpacePoints)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void CoordinateMapper::MapColorFrameToCameraSpace(array_view<uint16_t const> depthFrameData, array_view<winrt::Windows::Kinect::CameraSpacePoint> cameraSpacePoints)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void CoordinateMapper::MapColorFrameToDepthSpaceUsingIBuffer(winrt::Windows::Storage::Streams::IBuffer const& depthFrameData, array_view<winrt::Windows::Kinect::DepthSpacePoint> depthSpacePoints)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void CoordinateMapper::MapColorFrameToCameraSpaceUsingIBuffer(winrt::Windows::Storage::Streams::IBuffer const& depthFrameData, array_view<winrt::Windows::Kinect::CameraSpacePoint> cameraSpacePoints)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     com_array<winrt::Windows::Foundation::Point> CoordinateMapper::GetDepthFrameToCameraSpaceTable()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

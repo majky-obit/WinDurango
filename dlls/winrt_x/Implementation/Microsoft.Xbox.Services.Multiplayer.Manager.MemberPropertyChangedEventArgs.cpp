@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::Manager::implementation
 {
     winrt::Microsoft::Xbox::Services::Multiplayer::Manager::MultiplayerMember MemberPropertyChangedEventArgs::Member()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring MemberPropertyChangedEventArgs::Properties()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

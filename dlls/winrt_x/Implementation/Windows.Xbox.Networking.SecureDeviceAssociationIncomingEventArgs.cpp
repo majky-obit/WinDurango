@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::Networking::implementation
 {
     winrt::Windows::Xbox::Networking::SecureDeviceAssociation SecureDeviceAssociationIncomingEventArgs::Association()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

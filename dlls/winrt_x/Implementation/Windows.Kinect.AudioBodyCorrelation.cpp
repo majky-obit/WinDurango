@@ -7,6 +7,6 @@ namespace winrt::Windows::Kinect::implementation
 {
     uint64_t AudioBodyCorrelation::BodyTrackingId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

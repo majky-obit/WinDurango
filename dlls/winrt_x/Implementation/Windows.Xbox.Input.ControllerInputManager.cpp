@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::Input::implementation
 {
     winrt::Windows::Xbox::Input::IController ControllerInputManager::GetControllerFromIndex(uint32_t index)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

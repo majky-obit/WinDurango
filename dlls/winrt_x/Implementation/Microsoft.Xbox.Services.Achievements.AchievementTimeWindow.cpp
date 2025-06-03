@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Achievements::implementation
 {
     winrt::Windows::Foundation::DateTime AchievementTimeWindow::StartDate()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::DateTime AchievementTimeWindow::EndDate()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

@@ -7,18 +7,18 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     hstring TournamentReference::DefinitionName()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring TournamentReference::TournamentId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring TournamentReference::Organizer()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring TournamentReference::ServiceConfigurationId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

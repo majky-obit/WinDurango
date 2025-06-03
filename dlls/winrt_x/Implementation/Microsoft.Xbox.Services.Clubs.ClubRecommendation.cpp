@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Clubs::implementation
 {
     winrt::Microsoft::Xbox::Services::Clubs::Club ClubRecommendation::RecommendedClub()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<hstring> ClubRecommendation::Reasons()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

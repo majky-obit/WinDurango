@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     hstring DevicePresenceChangeEventArgs::XboxUserId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Presence::PresenceDeviceType DevicePresenceChangeEventArgs::DeviceType()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     bool DevicePresenceChangeEventArgs::IsUserLoggedOnDevice()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

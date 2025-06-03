@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     hstring PresenceMediaRecord::MediaId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Presence::PresenceMediaIdType PresenceMediaRecord::MediaIdType()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring PresenceMediaRecord::Name()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

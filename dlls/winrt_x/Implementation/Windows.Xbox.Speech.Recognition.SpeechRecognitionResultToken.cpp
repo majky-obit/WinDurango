@@ -8,14 +8,14 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     hstring SpeechRecognitionResultToken::DisplayForm()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring SpeechRecognitionResultToken::LexicalForm()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring SpeechRecognitionResultToken::PronunciationForm()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

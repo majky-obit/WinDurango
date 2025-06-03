@@ -8,6 +8,6 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     winrt::Windows::Xbox::Speech::Recognition::SpeechRecognitionAudioProblem SpeechAudioProblemOccurredEventArgs::Problem()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

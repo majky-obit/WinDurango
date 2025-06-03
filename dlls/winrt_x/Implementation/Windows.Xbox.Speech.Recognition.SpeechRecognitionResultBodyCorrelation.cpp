@@ -8,6 +8,6 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     uint64_t SpeechRecognitionResultBodyCorrelation::BodyTrackingId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

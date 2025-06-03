@@ -6,10 +6,10 @@ namespace winrt::Windows::Xbox::ApplicationModel::State::Internal::implementatio
 {
     winrt::Windows::Xbox::ApplicationModel::State::Internal::IAppInfo AppInfo::FindByAumid(hstring const& aumid)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::ApplicationModel::State::Internal::IAppInfo> AppInfo::FindByTitleId(uint32_t titleId)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

@@ -7,6 +7,6 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::Manager::implementation
 {
     winrt::Microsoft::Xbox::Services::Multiplayer::Manager::MultiplayerMember HostChangedEventArgs::HostMember()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

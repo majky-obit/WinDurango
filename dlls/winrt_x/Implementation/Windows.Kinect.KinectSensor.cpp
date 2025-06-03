@@ -11,68 +11,68 @@ namespace winrt::Windows::Kinect::implementation
     }
     winrt::Windows::Foundation::Collections::IObservableMap<hstring, winrt::Windows::Kinect::KinectSensor> KinectSensor::Sensors()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::event_token KinectSensor::IsPausedChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Kinect::KinectSensor, winrt::Windows::Kinect::IsPausedChangedEventArgs> const& value)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void KinectSensor::IsPausedChanged(winrt::event_token const& token) noexcept
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void KinectSensor::Open()
     {
-        printf("[KinectSensor] Open\n");
+        Logger::Warning("[KinectSensor] Open\n");
     }
     void KinectSensor::Close()
     {
-        printf("[KinectSensor] Close\n");
+        Logger::Warning("[KinectSensor] Close\n");
     }
     bool KinectSensor::IsOpen()
     {
-        printf("[KinectSensor] IsOpen\n");
+        Logger::Warning("[KinectSensor] IsOpen\n");
         return false;
     }
     bool KinectSensor::IsPaused()
     {
-        printf("[KinectSensor] IsPaused\n");
+        Logger::Warning("[KinectSensor] IsPaused\n");
         return false;
     }
     winrt::Windows::Kinect::ColorFrameSource KinectSensor::ColorFrameSource()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::DepthFrameSource KinectSensor::DepthFrameSource()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::BodyFrameSource KinectSensor::BodyFrameSource()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::BodyIndexFrameSource KinectSensor::BodyIndexFrameSource()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::InfraredFrameSource KinectSensor::InfraredFrameSource()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::AudioSource KinectSensor::AudioSource()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::MultiSourceFrameReader KinectSensor::OpenMultiSourceFrameReader(winrt::Windows::Kinect::FrameSourceTypes const& enabledFrameSourceTypes)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::CoordinateMapper KinectSensor::CoordinateMapper()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring KinectSensor::UniqueKinectId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

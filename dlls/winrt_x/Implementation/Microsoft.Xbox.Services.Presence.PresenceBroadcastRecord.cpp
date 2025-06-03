@@ -7,22 +7,22 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     hstring PresenceBroadcastRecord::BroadcastId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring PresenceBroadcastRecord::Session()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring PresenceBroadcastRecord::Provider()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     uint32_t PresenceBroadcastRecord::ViewerCount()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::DateTime PresenceBroadcastRecord::StartTime()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

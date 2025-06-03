@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::Networking::implementation
 {
     hstring ErrorMessages::GetMessageForError(uint32_t errorCode)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

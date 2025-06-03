@@ -48,7 +48,7 @@ HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11Device
 }
 HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags, VOID* pVirtualAddress, UINT NumPages, const UINT* pPageList)
 {
-    DEBUGPRINT( );
+    DEBUGLOG( );
     HANDLE hDevice = INVALID_HANDLE_VALUE;
     HRESULT result = 0;
     DWORD accessFlags = 0;

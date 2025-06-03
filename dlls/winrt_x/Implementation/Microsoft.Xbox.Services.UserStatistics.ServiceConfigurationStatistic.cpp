@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::UserStatistics::implementation
 {
     hstring ServiceConfigurationStatistic::ServiceConfigurationId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::UserStatistics::Statistic> ServiceConfigurationStatistic::Statistics()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

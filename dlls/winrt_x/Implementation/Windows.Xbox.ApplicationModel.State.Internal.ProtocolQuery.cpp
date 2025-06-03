@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::ApplicationModel::State::Internal::implementatio
 {
     winrt::Windows::Foundation::Collections::IVectorView<hstring> ProtocolQuery::FindAumidsForScheme(hstring const& scheme)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

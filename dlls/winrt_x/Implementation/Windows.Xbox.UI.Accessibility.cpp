@@ -7,10 +7,10 @@ namespace winrt::Windows::Xbox::UI::implementation
 {
     void Accessibility::SetSpeechToTextPositionHint(winrt::Windows::Xbox::UI::SpeechToTextPositionHint const& position)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void Accessibility::SendSpeechToTextString(hstring const& speakerName, hstring const& content, winrt::Windows::Xbox::UI::SpeechToTextType const& type)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

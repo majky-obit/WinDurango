@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Clubs::implementation
 {
     hstring ClubStringSetting::Value()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<hstring> ClubStringSetting::AllowedValues()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     bool ClubStringSetting::CanViewerChangeSetting()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     winrt::Microsoft::Xbox::Services::Presence::PresenceDeviceType PresenceDeviceRecord::DeviceType()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::Presence::PresenceTitleRecord> PresenceDeviceRecord::PresenceTitleRecords()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

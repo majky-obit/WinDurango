@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::System::implementation
 {
     hstring Console2::ApplicationSpecificDeviceId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

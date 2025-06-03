@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Social::implementation
 {
     hstring SocialRelationshipChangeEventArgs::CallerXboxUserId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Social::SocialNotificationType SocialRelationshipChangeEventArgs::SocialNotification()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<hstring> SocialRelationshipChangeEventArgs::XboxUserIds()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

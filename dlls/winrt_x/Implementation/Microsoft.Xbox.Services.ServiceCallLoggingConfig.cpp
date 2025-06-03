@@ -6,18 +6,22 @@ namespace winrt::Microsoft::Xbox::Services::implementation
 {
     winrt::Microsoft::Xbox::Services::ServiceCallLoggingConfig ServiceCallLoggingConfig::SingletonInstance()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void ServiceCallLoggingConfig::Enable()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void ServiceCallLoggingConfig::Disable()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void ServiceCallLoggingConfig::RegisterForProtocolActivation()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

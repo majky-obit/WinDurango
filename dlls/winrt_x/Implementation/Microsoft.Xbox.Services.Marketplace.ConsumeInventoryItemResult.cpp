@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Marketplace::implementation
 {
     winrt::Windows::Foundation::Uri ConsumeInventoryItemResult::ConsumableUrl()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     uint32_t ConsumeInventoryItemResult::ConsumableBalance()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring ConsumeInventoryItemResult::TransactionId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

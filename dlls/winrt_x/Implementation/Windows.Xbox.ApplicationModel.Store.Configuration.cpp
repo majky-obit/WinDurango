@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::ApplicationModel::Store::implementation
 {
     hstring Configuration::MarketplaceId()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

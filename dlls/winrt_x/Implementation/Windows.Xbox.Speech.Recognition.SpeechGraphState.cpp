@@ -8,10 +8,10 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     void SpeechGraphState::AddTransition(winrt::Windows::Xbox::Speech::Recognition::ISpeechRuleItem const& item, float weight, winrt::Windows::Xbox::Speech::Recognition::SpeechGraphState const& targetState)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::Speech::Recognition::SpeechGraphStateType SpeechGraphState::StateType()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

@@ -7,14 +7,14 @@ namespace winrt::Windows::Kinect::implementation
 {
     winrt::Windows::Kinect::FrameSourceTypes FrameCapturedEventArgs::FrameType()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Kinect::FrameCapturedStatus FrameCapturedEventArgs::FrameStatus()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan FrameCapturedEventArgs::RelativeTime()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

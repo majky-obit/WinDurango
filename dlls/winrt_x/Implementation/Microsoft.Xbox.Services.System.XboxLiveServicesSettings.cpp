@@ -7,30 +7,30 @@ namespace winrt::Microsoft::Xbox::Services::System::implementation
 {
     winrt::Microsoft::Xbox::Services::System::XboxLiveServicesSettings XboxLiveServicesSettings::SingletonInstance()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::event_token XboxLiveServicesSettings::LogCallRouted(winrt::Windows::Foundation::EventHandler<winrt::Microsoft::Xbox::Services::XboxLiveLogCallEventArgs> const& __param0)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void XboxLiveServicesSettings::LogCallRouted(winrt::event_token const& __param0) noexcept
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::XboxServicesDiagnosticsTraceLevel XboxLiveServicesSettings::DiagnosticsTraceLevel()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void XboxLiveServicesSettings::DiagnosticsTraceLevel(winrt::Microsoft::Xbox::Services::XboxServicesDiagnosticsTraceLevel const& value)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::event_token XboxLiveServicesSettings::WnsEventRecevied(winrt::Windows::Foundation::EventHandler<winrt::Microsoft::Xbox::Services::XboxLiveWnsEventArgs> const& __param0)
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     void XboxLiveServicesSettings::WnsEventRecevied(winrt::event_token const& __param0) noexcept
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

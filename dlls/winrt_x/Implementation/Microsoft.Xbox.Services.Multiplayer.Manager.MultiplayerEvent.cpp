@@ -7,26 +7,26 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::Manager::implementation
 {
     int32_t MultiplayerEvent::ErrorCode()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring MultiplayerEvent::ErrorMessage()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IInspectable MultiplayerEvent::Context()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::Manager::MultiplayerEventType MultiplayerEvent::EventType()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::Manager::MultiplayerEventArgs MultiplayerEvent::EventArgs()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::Manager::MultiplayerSessionType MultiplayerEvent::SessionType()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

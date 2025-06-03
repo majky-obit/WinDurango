@@ -7,17 +7,17 @@ namespace winrt::Windows::Xbox::Services::implementation
 {
     hstring XboxLiveConfiguration::TitleId()
     {
-		printf("TODO: XboxLiveConfiguration::TitleId\n");
+		Logger::Warning("TODO: XboxLiveConfiguration::TitleId\n");
         return L"0";
     }
     hstring XboxLiveConfiguration::PrimaryServiceConfigId()
     {
-        printf("TODO: XboxLiveConfiguration::PrimaryServiceConfigId\n");
+        Logger::Warning("TODO: XboxLiveConfiguration::PrimaryServiceConfigId\n");
         return L"000013";
     }
     hstring XboxLiveConfiguration::SandboxId()
     {
-        printf("TODO: XboxLiveConfiguration::SandboxId\n");
+        Logger::Warning("TODO: XboxLiveConfiguration::SandboxId\n");
         return L"0";
     }
 }

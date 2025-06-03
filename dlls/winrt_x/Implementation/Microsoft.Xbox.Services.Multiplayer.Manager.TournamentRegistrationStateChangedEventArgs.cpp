@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::Manager::implementation
 {
     winrt::Microsoft::Xbox::Services::Tournaments::TournamentRegistrationState TournamentRegistrationStateChangedEventArgs::RegistrationState()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Tournaments::TournamentRegistrationReason TournamentRegistrationStateChangedEventArgs::RegistrationReason()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

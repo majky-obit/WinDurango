@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
     winrt::Windows::Foundation::TimeSpan MultiplayerPeerToPeerRequirements::LatencyMaximum()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     uint64_t MultiplayerPeerToPeerRequirements::BandwidthMinimumInKilobitsPerSecond()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }

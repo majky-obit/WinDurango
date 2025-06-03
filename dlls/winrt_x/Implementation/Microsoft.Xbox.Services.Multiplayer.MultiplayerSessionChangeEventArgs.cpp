@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionReference MultiplayerSessionChangeEventArgs::SessionReference()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     hstring MultiplayerSessionChangeEventArgs::Branch()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
     uint64_t MultiplayerSessionChangeEventArgs::ChangeNumber()
     {
-        throw hresult_not_implemented();
+        Logger::NotImplemented(); throw hresult_not_implemented();
     }
 }
