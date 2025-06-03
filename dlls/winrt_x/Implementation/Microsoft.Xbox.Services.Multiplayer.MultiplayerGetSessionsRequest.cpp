@@ -7,86 +7,86 @@ namespace winrt::Microsoft::Xbox::Services::Multiplayer::implementation
 {
     MultiplayerGetSessionsRequest::MultiplayerGetSessionsRequest(hstring const& serviceConfigurationId, uint32_t maxItems)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring MultiplayerGetSessionsRequest::ServiceConfigurationId()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     uint32_t MultiplayerGetSessionsRequest::MaxItems()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     bool MultiplayerGetSessionsRequest::IncludePrivateSessions()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::IncludePrivateSessions(bool value)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     bool MultiplayerGetSessionsRequest::IncludeReservations()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::IncludeReservations(bool value)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     bool MultiplayerGetSessionsRequest::IncludeInactiveSessions()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::IncludeInactiveSessions(bool value)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring MultiplayerGetSessionsRequest::XboxUserIdFilter()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::XboxUserIdFilter(hstring const& value)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<hstring> MultiplayerGetSessionsRequest::XboxUserIdsFilter()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::XboxUserIdsFilter(winrt::Windows::Foundation::Collections::IVectorView<hstring> const& xboxUserIds)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring MultiplayerGetSessionsRequest::KeywordFilter()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::KeywordFilter(hstring const& value)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring MultiplayerGetSessionsRequest::SessionTemplateNameFilter()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::SessionTemplateNameFilter(hstring const& value)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionVisibility MultiplayerGetSessionsRequest::VisibilityFilter()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::VisibilityFilter(winrt::Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionVisibility const& value)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     uint32_t MultiplayerGetSessionsRequest::ContractVersionFilter()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void MultiplayerGetSessionsRequest::ContractVersionFilter(uint32_t value)
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

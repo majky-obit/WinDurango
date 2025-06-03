@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Multiplayer::PartyMember> PartyMemberDeviceGroup::Members()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

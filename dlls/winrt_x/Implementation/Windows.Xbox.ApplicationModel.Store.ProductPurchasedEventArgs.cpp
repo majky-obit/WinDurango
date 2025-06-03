@@ -7,6 +7,6 @@ namespace winrt::Windows::Xbox::ApplicationModel::Store::implementation
 {
     hstring ProductPurchasedEventArgs::Receipt()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

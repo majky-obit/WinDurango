@@ -7,18 +7,18 @@ namespace winrt::Microsoft::Xbox::Services::Social::implementation
 {
     hstring XboxSocialRelationship::XboxUserId()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     bool XboxSocialRelationship::IsFavorite()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     bool XboxSocialRelationship::IsFollowingCaller()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::Collections::IVectorView<hstring> XboxSocialRelationship::SocialNetworks()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

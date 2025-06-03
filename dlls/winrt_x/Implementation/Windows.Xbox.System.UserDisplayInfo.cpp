@@ -6,29 +6,29 @@ namespace winrt::Windows::Xbox::System::implementation
 {
     hstring UserDisplayInfo::Gamertag()
     {
-        LOG_NOTIMPLEMENTED();
+        LOG_NOT_IMPLEMENTED();
         hstring gamertag = L"durangler" + m_gamertag;
         return gamertag;
     }
     uint32_t UserDisplayInfo::GamerScore()
     {
-        LOG_NOTIMPLEMENTED(); return 0;
+        LOG_NOT_IMPLEMENTED(); return 0;
     }
     hstring UserDisplayInfo::ApplicationDisplayName()
     {
-        LOG_NOTIMPLEMENTED();
+        LOG_NOT_IMPLEMENTED();
         return winrt::to_hstring("WinDurango");
     }
     hstring UserDisplayInfo::GameDisplayName()
     {
 
-        LOG_NOTIMPLEMENTED();
+        LOG_NOT_IMPLEMENTED();
         hstring gamertag = L"durangler" + m_gamertag;
         return gamertag;
     }
     int32_t UserDisplayInfo::Reputation()
     {
-        LOG_NOTIMPLEMENTED();
+        LOG_NOT_IMPLEMENTED();
         return 1;
     }
     winrt::Windows::Xbox::System::UserAgeGroup UserDisplayInfo::AgeGroup()
@@ -38,7 +38,7 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Foundation::Collections::IVectorView<uint32_t> UserDisplayInfo::Privileges()
     {   
-        LOG_NOTIMPLEMENTED();
+        LOG_NOT_IMPLEMENTED();
         auto vector = winrt::single_threaded_vector<uint32_t>();
         vector.Append(1);
         return vector.GetView();

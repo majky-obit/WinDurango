@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Tournaments::implementation
 {
     hstring TeamChangeEventArgs::OrganizerId()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring TeamChangeEventArgs::TournamentId()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring TeamChangeEventArgs::TeamId()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::TitleStorage::implementation
 {
     winrt::Windows::Storage::Streams::IBuffer TitleStorageBlobResult::BlobBuffer()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::TitleStorage::TitleStorageBlobMetadata TitleStorageBlobResult::BlobMetadata()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

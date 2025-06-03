@@ -6,14 +6,14 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
 {
     double ChatPerformanceTime::MinTimeInMilliseconds()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     double ChatPerformanceTime::MaxTimeInMilliseconds()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     double ChatPerformanceTime::AverageTimeInMilliseconds()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

@@ -1,4 +1,5 @@
 #include "Logger.h"
+
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -43,12 +44,11 @@ static std::string CurrentTime( ) {
 void Logger::Log(LogLevel level, const std::string& message, const char* file, int line, const char* function) {
     std::lock_guard<std::mutex> lock(logMutex);
 
-    const char* levelStr = ToString(level);
-    std::string func = Logger::ExtractFunctionName(function);
     std::string timeStr = CurrentTime( );
+    std::string func = Logger::ExtractFunctionName(function);
     const char* project = Logger::ExtractProjectName(file);
+    const char* levelStr = ToString(level);
 
-    // Console coloring
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     WORD originalAttributes = 0;
@@ -57,19 +57,57 @@ void Logger::Log(LogLevel level, const std::string& message, const char* file, i
         SetConsoleTextAttribute(hConsole, GetConsoleColor(level));
     }
 
-    std::cout << timeStr << " - " << project << "::" << func << " - " << levelStr << " - Line " << line;
+    switch (level) {
+    case LogLevel::Debug:
+        std::cout << timeStr << " - Debug - " << project << " - " << func;
+        break;
+    case LogLevel::Info:
+        std::cout << timeStr << " - Info";
+        break;
+    case LogLevel::Warning:
+        std::cout << timeStr << " - Warning - " << project << " - " << func;
+        break;
+    case LogLevel::Error:
+    case LogLevel::Fatal:
+        std::cout << timeStr << " - " << levelStr << " - " << project << " - " << func << " - Line " << line;
+        break;
+    case LogLevel::NotImplemented:
+        std::cout << timeStr << " - " << project << " - " << func << " - NOT_IMPLEMENTED";
+        break;
+    default:
+        std::cout << timeStr << " - " << levelStr;
+        break;
+    }
+
     if (!message.empty( )) std::cout << " - " << message;
     std::cout << std::endl;
 
     if (hConsole) SetConsoleTextAttribute(hConsole, originalAttributes);
 
-    // File logging
+    // File log (flat format)
     if (logFile.is_open( )) {
-        logFile << timeStr << " - " << project << "::" << func << " - " << levelStr << " - Line " << line;
-        if (!message.empty( )) logFile << " - " << message;
+        logFile << timeStr
+            << " - " << project
+            << " - " << func
+            << " - " << levelStr;
+        if (level == LogLevel::Error || level == LogLevel::Fatal)
+            logFile << " - Line " << line;
+        if (!message.empty( ))
+            logFile << " - " << message;
         logFile << std::endl;
     }
 }
+
+#if __cpp_lib_source_location >= 201907L
+#include <source_location>
+
+void Logger::Log(LogLevel level, const std::string& message, const std::source_location& location) {
+    Logger::Log(level, message,
+                location.file_name( ),
+                static_cast<int>(location.line( )),
+                location.function_name( ));
+}
+#endif
 
 void Logger::LogNotImplemented(LogLevel level, int line, const char* file, const char* function) {
     Logger::Log(level, "Feature not implemented", file, line, function);
@@ -87,55 +125,59 @@ void Logger::PrintWithContext(int line, const char* file, const char* function, 
     Logger::Log(LogLevel::NotImplemented, formatted, file, line, function);
 }
 
-void Logger::NotImplemented(const char* fmt, ...) {
+void Logger::NotImplemented(const char* file, int line, const char* function, const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    Logger::PrintWithContext(__LINE__, __FILE__, FUNCTION_NAME, fmt, args);
+    Logger::PrintWithContext(line, file, function, fmt, args);
     va_end(args);
 }
 
 const char* Logger::ExtractProjectName(const char* filePath) {
     const char* lastSlash = strrchr(filePath, '/');
     if (!lastSlash) lastSlash = strrchr(filePath, '\\');
-    if (lastSlash) {
-        const char* secondLastSlash = filePath;
-        while (secondLastSlash < lastSlash) {
-            const char* temp = strpbrk(secondLastSlash + 1, "/\\");
-            if (temp && temp < lastSlash)
-                secondLastSlash = temp;
-            else
-                break;
-        }
+    const char* fileName = lastSlash ? lastSlash + 1 : filePath;
 
-        if (secondLastSlash != filePath) {
-            static char projectName[ 256 ];
-            size_t length = lastSlash - secondLastSlash - 1;
-            length = (length < sizeof(projectName) - 1) ? length : sizeof(projectName) - 1;
+    const char* dot = strrchr(fileName, '.');
+    static char project[ 256 ];
+    size_t length = dot ? (size_t) (dot - fileName) : strlen(fileName);
+    length = (length < sizeof(project) - 1) ? length : sizeof(project) - 1;
+
 #ifdef _MSC_VER
-            strncpy_s(projectName, sizeof(projectName), secondLastSlash + 1, length);
+    strncpy_s(project, sizeof(project), fileName, length);
 #else
-            strncpy(projectName, secondLastSlash + 1, length);
-            projectName[ length ] = '\0';
+    strncpy(project, fileName, length);
+    project[ length ] = '\0';
 #endif
-            return projectName;
-        }
-    }
-    return "UnknownProject";
+    return project;
 }
+
 
 const char* Logger::ExtractFunctionName(const char* fullSignature) {
     const char* paren = strchr(fullSignature, '(');
-    if (paren) {
-        static char functionName[ 256 ];
-        size_t length = paren - fullSignature;
-        length = (length < sizeof(functionName) - 1) ? length : sizeof(functionName) - 1;
-#ifdef _MSC_VER
-        strncpy_s(functionName, sizeof(functionName), fullSignature, length);
-#else
-        strncpy(functionName, fullSignature, length);
-        functionName[ length ] = '\0';
-#endif
-        return functionName;
+    if (!paren)
+        return fullSignature;
+
+    const char* end = paren;
+    const char* lastColon = nullptr;
+
+    for (const char* p = fullSignature; p < end; ++p) {
+        if (p[ 0 ] == ':' && p[ 1 ] == ':')
+            lastColon = p;
     }
-    return fullSignature;
+
+    const char* start = lastColon ? lastColon + 2 : fullSignature;
+
+    static char functionName[ 256 ];
+    size_t length = (size_t) (end - start);
+    length = (length < sizeof(functionName) - 1) ? length : sizeof(functionName) - 1;
+
+#ifdef _MSC_VER
+    strncpy_s(functionName, sizeof(functionName), start, length);
+#else
+    strncpy(functionName, start, length);
+    functionName[ length ] = '\0';
+#endif
+
+    return functionName;
 }
+

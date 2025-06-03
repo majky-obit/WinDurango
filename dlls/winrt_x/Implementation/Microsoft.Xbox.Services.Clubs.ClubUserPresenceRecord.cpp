@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::Clubs::implementation
 {
     hstring ClubUserPresenceRecord::Xuid()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::DateTime ClubUserPresenceRecord::LastSeen()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Microsoft::Xbox::Services::Clubs::ClubUserPresence ClubUserPresenceRecord::LastSeenState()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

@@ -6,26 +6,26 @@ namespace winrt::Windows::Xbox::SmartGlass::implementation
 {
     winrt::Windows::Devices::Sensors::Accelerometer SmartGlassSensors::Accelerometer()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 
     winrt::Windows::Devices::Sensors::Compass SmartGlassSensors::Compass()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 
     winrt::Windows::Devices::Sensors::Gyrometer SmartGlassSensors::Gyrometer()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 
     winrt::Windows::Devices::Sensors::Inclinometer SmartGlassSensors::Inclinometer()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 
     winrt::Windows::Devices::Sensors::OrientationSensor SmartGlassSensors::OrientationSensor()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

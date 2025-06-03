@@ -6,14 +6,14 @@ namespace winrt::Microsoft::Xbox::Services::EntertainmentProfile::implementation
 {
     bool EntertainmentProfileListContainsItemResult::IsContained()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring EntertainmentProfileListContainsItemResult::ProviderId()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring EntertainmentProfileListContainsItemResult::Provider()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

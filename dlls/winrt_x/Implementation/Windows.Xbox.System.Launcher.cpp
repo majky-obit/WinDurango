@@ -6,6 +6,6 @@ namespace winrt::Windows::Xbox::System::implementation
 {
     winrt::Windows::Foundation::IAsyncOperation<bool> Launcher::NavigateBackAsync()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

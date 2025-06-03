@@ -6,22 +6,22 @@ namespace winrt::Windows::Xbox::Networking::implementation
 {
     hstring SecureDeviceSocketDescription::Name()
     {
-        LOG_NOTIMPLEMENTED(); return L"";
+        LOG_NOT_IMPLEMENTED(); return L"";
     }
     winrt::Windows::Xbox::Networking::SecureIpProtocol SecureDeviceSocketDescription::IpProtocol()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     uint16_t SecureDeviceSocketDescription::BoundPortRangeLower()
     {
-        LOG_NOTIMPLEMENTED(); return 0;
+        LOG_NOT_IMPLEMENTED(); return 0;
     }
     uint16_t SecureDeviceSocketDescription::BoundPortRangeUpper()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::Networking::SecureDeviceSocketUsage SecureDeviceSocketDescription::AllowedUsages()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

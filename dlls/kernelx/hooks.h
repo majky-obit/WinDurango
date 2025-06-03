@@ -8,6 +8,7 @@
 #include "CurrentAppWrapper.hpp"
 #include "MMDeviceEnumeratorWrapper.h"
 #include <winrt/windows.storage.provider.h>
+#include <atlbase.h>
 
 #define RETURN_HR(hr) return hr
 #define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
@@ -108,8 +109,8 @@ HRESULT __stdcall CoCreateInstance_hook(
 	}
 	return hr;
 }
-
-HRESULT XWineGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ LPCSTR Import, _Out_ PIMAGE_THUNK_DATA* pThunk)
+/// Made By XWine1 Team
+HRESULT XGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ LPCSTR Import, _Out_ PIMAGE_THUNK_DATA* pThunk)
 {
 	if (ImportModule == nullptr)
 		RETURN_HR(E_INVALIDARG);
@@ -164,12 +165,12 @@ HRESULT XWineGetImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ 
 	*pThunk = nullptr;
 	return (E_FAIL);
 }
-
-HRESULT XWinePatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
+/// Made By XWine1 Team
+HRESULT XPatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
 {
 	DWORD protect;
 	PIMAGE_THUNK_DATA pThunk;
-	RETURN_IF_FAILED(XWineGetImport(Module, ImportModule, Import, &pThunk));
+	RETURN_IF_FAILED(XGetImport(Module, ImportModule, Import, &pThunk));
 	RETURN_LAST_ERROR_IF(!VirtualProtect(&pThunk->u1.Function, sizeof(ULONG_PTR), PAGE_READWRITE, &protect));
 	pThunk->u1.Function = (ULONG_PTR)Function;
 	RETURN_LAST_ERROR_IF(!VirtualProtect(&pThunk->u1.Function, sizeof(ULONG_PTR), protect, &protect));
@@ -179,9 +180,9 @@ HRESULT XWinePatchImport(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In
 HRESULT PatchNeededImports(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _In_ PCSTR Import, _In_ PVOID Function)
 {
 	PIMAGE_THUNK_DATA pThunk;
-	RETURN_IF_FAILED(XWineGetImport(Module, ImportModule, Import, &pThunk));
+	RETURN_IF_FAILED(XGetImport(Module, ImportModule, Import, &pThunk));
 
-	return XWinePatchImport(Module, ImportModule, Import, Function);
+	return XPatchImport(Module, ImportModule, Import, Function);
 }
 
 HMODULE WINAPI LoadLibraryExW_X(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dwFlags)
@@ -263,7 +264,7 @@ void FixRelativePath(LPCWSTR& lpFileName)
 	}
 }
 
-#include <atlbase.h>
+
 
 HANDLE CreateFile2_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
 	DWORD dwCreationDisposition, LPCREATEFILE2_EXTENDED_PARAMETERS pCreateExParams)

@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Matchmaking::implementation
 {
     hstring CreateMatchTicketResponse::MatchTicketId()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::TimeSpan CreateMatchTicketResponse::EstimatedWaitTime()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

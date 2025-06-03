@@ -7,14 +7,14 @@ namespace winrt::Microsoft::Xbox::Services::GameServerPlatform::implementation
 {
     hstring GameServerPortMapping::PortName()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     uint32_t GameServerPortMapping::InternalPortNumber()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     uint32_t GameServerPortMapping::ExternalPortNumber()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

@@ -7,10 +7,10 @@ namespace winrt::Microsoft::Xbox::Services::Privacy::implementation
 {
     hstring PermissionDenyReason::Reason()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     hstring PermissionDenyReason::RestrictedSetting()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }

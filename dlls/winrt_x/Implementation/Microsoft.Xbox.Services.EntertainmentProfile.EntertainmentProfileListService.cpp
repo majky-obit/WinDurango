@@ -7,6 +7,6 @@ namespace winrt::Microsoft::Xbox::Services::EntertainmentProfile::implementation
 {
     winrt::Microsoft::Xbox::Services::EntertainmentProfile::EntertainmentProfileListXboxOnePins EntertainmentProfileListService::XboxOnePins()
     {
-        LOG_NOTIMPLEMENTED(); throw hresult_not_implemented();
+        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
 }
