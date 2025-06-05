@@ -38,6 +38,15 @@ Currently, only **Minecraft: Xbox One Edition** runs with WinDurango.
 See the [Game compatibility list](https://windurango.github.io/Documentation/playable-games.html)
 for currently tracked games.
 
+## Releases
+
+Head over to the [releases page](https://github.com/WinDurango/WinDurango/releases) for stable builds.
+Stable builds are manually curated snapshots that have gone through basic
+testing. Nightly builds are generated automatically from the latest commits and
+may contain unfinished features or regressions. If you run into issues while
+using a nightly build, please report them on the
+[issue tracker](https://github.com/WinDurango/WinDurango/issues).
+
 ## Disclaimer
 
 The goal of this project is to experiment, research, and educate on the topic
