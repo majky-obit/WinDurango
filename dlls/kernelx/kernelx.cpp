@@ -229,7 +229,7 @@ void GetSystemOSVersion_X(LPSYSTEMOSVERSIONINFO VersionInformation) {
     int edx = cpuInfo[3];
 
     VersionInformation->MajorVersion = LOBYTE(ebx);             // Lowest 8 bits of EBX
-    VersionInformation->MinorVersion = HIBYTE(HIDWORD(eax));    // Highest 8 bits of EAX
+    VersionInformation->MinorVersion = HIBYTE(HIWORD(eax));     // Highest 8 bits of EAX
 
     VersionInformation->Revision = LOWORD(edx);                 // Lowest 16 bits of EDX
     VersionInformation->BuildNumber = LOWORD(eax);              // Lowest 16 bits of EAX     
