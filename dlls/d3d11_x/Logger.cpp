@@ -47,7 +47,6 @@ static std::string CurrentTime( ) {
         return "Unknown Time";
     }
 }
-
 void Logger::Log(LogLevel level, const std::string& message, const char* file, int line, const char* function) {
     std::lock_guard<std::mutex> lock(logMutex);
 
