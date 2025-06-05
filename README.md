@@ -12,6 +12,8 @@
 
 Check out the UI project at [WinDurango.UI](https://github.com/WinDurango-project/WinDurango.UI/)
 
+WinDurango is an experimental compatibility layer and emulator for **Xbox One** games on Windows. It aims to recreate the console environment so titles can run natively on PC hardware. Development is still in its early stages.
+
 <p>
   <a href="https://www.youtube.com/watch?v=SZMLML7yZns">
     <img alt="WinDurango logo" src="https://img.youtube.com/vi/SZMLML7yZns/0.jpg">
@@ -31,7 +33,8 @@ Discussing illegal activities, such as piracy, (illegal) hacking, doxxing/cyberb
 [![GitHub Latest Release](https://img.shields.io/badge/Latest-Release-green?color=2c9510&)](https://github.com/WinDurango/WinDurango/releases)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/WinDurango/WinDurango/msbuild.yml?label=Nightly&color=2c9510&)](https://github.com/WinDurango/WinDurango/actions)
 
-Currently, only Minecraft: Xbox One Edition runs with WinDurango.
+The project's long term goal is to run commercial Xbox One titles on PC hardware through a free and open-source compatibility layer.
+Currently, only **Minecraft: Xbox One Edition** runs with WinDurango.
 See the [Game compatibility list](https://windurango.github.io/Documentation/playable-games.html)
 for currently tracked games.
 
@@ -46,14 +49,15 @@ with Microsoft.
 
 ## Building
 
-See [here](https://windurango.github.io/Documentation/build-contrib.html) for instructions on setup. 
+See [docs/BUILDING.md](docs/BUILDING.md) for setup instructions.
 
 ## Contributors Wanted!
 
-Have some spare time, know C++ and have knowledge about Windows internals, 
-and want to write code for the world's first Microsoft Xbox One compatibility layer?
-Contribute! 
+Have some spare time and know C++? Help build the world's first Xbox One compatibility layer!
+Check the [open issues](https://github.com/WinDurango/WinDurango/issues) and the
+[good first issue](https://github.com/WinDurango/WinDurango/labels/good%20first%20issue) label,
+then come chat with us on [Discord](https://discord.gg/mHN2BgH7MR) before starting work.
 
-See more projects [good for contributors](https://github.com/WinDurango/WinDurango/labels/good%20first%20issue). 
-It's a good idea to ask on Discord and check the issues page before beginning work on something.
+## License
 
+WinDurango is licensed under the [GNU General Public License, version 3](LICENSE.txt).
