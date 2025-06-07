@@ -130,77 +130,17 @@ void wd::device_context_x::IASetVertexBuffers(UINT StartSlot, UINT NumBuffers, I
 
 void wd::device_context_x::GSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
-<<<<<<< Updated upstream
-        if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
-        {
-                ID3D11Buffer* modifiedBuffers[D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT];
-                for (UINT i = 0; i < NumBuffers; ++i)
-                {
-                        modifiedBuffers[i] = reinterpret_cast<wd::buffer*>(ppConstantBuffers[i])->wrapped_interface;
-                }
-
-                wrapped_interface->GSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
-        }
-        else
-        {
-                wrapped_interface->GSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
-        }
-=======
-	if (!wrapped_interface)
+	::ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ] = {};
+	for (UINT i = 0; i < NumBuffers; i++)
 	{
-		LOG_FATAL("GSSetConstantBuffers: wrapped_interface is null.\n");
-		return;
+		if (ppConstantBuffers[ i ] == nullptr)
+			modifiedBuffers[ i ] = 0;
+		else
+			modifiedBuffers[ i ] = reinterpret_cast<wd::buffer*>(ppConstantBuffers[ i ])->wrapped_interface;
 	}
 
-	if (!ppConstantBuffers)
-	{
-		LOG_FATAL("GSSetConstantBuffers: ppConstantBuffers is null.\n");
-		return;
-	}
+	wrapped_interface->GSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
 
-	ID3D11Device* contextDevice = nullptr;
-	wrapped_interface->GetDevice(&contextDevice);
-
-	if (!contextDevice)
-	{
-		LOG_ERROR("GSSetConstantBuffers: failed to retrieve context device.\n");
-		return;
-	}
-
-	for (UINT i = 0; i < NumBuffers; ++i)
-	{
-		ID3D11Buffer* buffer = ppConstantBuffers[ i ];
-		if (!buffer)
-		{
-			LOG_ERROR("GSSetConstantBuffers: buffer at index %u is null.\n", i);
-			continue; // Optional: could return instead
-		}
-
-		ID3D11Device* bufferDevice = nullptr;
-		buffer->GetDevice(&bufferDevice);
-
-		if (!bufferDevice)
-		{
-			LOG_ERROR("GSSetConstantBuffers: buffer at index %u has no device.\n", i);
-			contextDevice->Release( );
-			return;
-		}
-
-		if (bufferDevice != contextDevice)
-		{
-			LOG_WARNING("GSSetConstantBuffers: buffer at index %u was created from a different device.\n", i);
-			bufferDevice->Release( );
-			contextDevice->Release( );
-			return;
-		}
-
-		bufferDevice->Release( );
-	}
-
-	contextDevice->Release( );
-
-	wrapped_interface->GSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
->>>>>>> Stashed changes
 }
 
 
