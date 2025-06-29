@@ -266,7 +266,20 @@ extern "C" {
 	void fMFPutWorkItemEx() { PA = mfplat.oMFPutWorkItemEx; runASM(); }
 	void fMFPutWorkItemEx2() { PA = mfplat.oMFPutWorkItemEx2; runASM(); }
 	void fMFRemovePeriodicCallback() { PA = mfplat.oMFRemovePeriodicCallback; runASM(); }
-	void fMFResetDXGIDeviceManagerX() { PA = mfplat.oMFResetDXGIDeviceManagerX; runASM(); }
+
+	HRESULT __stdcall MFResetDXGIDeviceManager_X(
+	IMFDXGIDeviceManager* pDeviceManager, IUnknown* pD3DDevice, UINT resetToken)
+	{
+		if (!pDeviceManager || !pD3DDevice)
+			return E_INVALIDARG;
+
+		HRESULT hr = pDeviceManager->ResetDevice(pD3DDevice, resetToken);
+		if (hr == E_NOINTERFACE)
+			hr = E_INVALIDARG;
+
+		return hr;
+	}
+
 	void fMFScheduleWorkItem() { PA = mfplat.oMFScheduleWorkItem; runASM(); }
 	void fMFScheduleWorkItemEx() { PA = mfplat.oMFScheduleWorkItemEx; runASM(); }
 	void fMFSerializeAttributesToStream() { PA = mfplat.oMFSerializeAttributesToStream; runASM(); }

@@ -116,7 +116,7 @@ EXPORTS
 	MFPutWorkItemEx=fMFPutWorkItemEx @114
 	MFPutWorkItemEx2=fMFPutWorkItemEx2 @115
 	MFRemovePeriodicCallback=fMFRemovePeriodicCallback @116
-	MFResetDXGIDeviceManagerX=fMFResetDXGIDeviceManagerX @117
+	MFResetDXGIDeviceManagerX= MFResetDXGIDeviceManager_X @117
 	MFScheduleWorkItem=fMFScheduleWorkItem @118
 	MFScheduleWorkItemEx=fMFScheduleWorkItemEx @119
 	MFSerializeAttributesToStream=fMFSerializeAttributesToStream @120

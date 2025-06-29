@@ -23,7 +23,7 @@ HRESULT __stdcall FrameworkViewWrapper::Load(HSTRING entryPoint)
 
 HRESULT __stdcall FrameworkViewWrapper::Run(void)
 {
-	return m_realView->Run();
+		return m_realView->Run();
 }
 
 HRESULT __stdcall FrameworkViewWrapper::Uninitialize(void)
