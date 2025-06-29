@@ -11,15 +11,15 @@
 
 namespace winrt::Microsoft::Xbox::Services::implementation
 {
-    XboxLiveContext::XboxLiveContext(winrt::Windows::Xbox::System::User const& user)
+    XboxLiveContext::XboxLiveContext(winrt::Windows::Xbox::System::User const& user) : m_user(user)
     {
         Logger::Info("[Microsoft::Xbox::Services::XboxLiveContext] Constructor called\n");
-        //m_MultiplayerService = winrt::make<Multiplayer::implementation::MultiplayerService>();
     }
-    winrt::Windows::Xbox::System::User XboxLiveContext::User()
+
+    winrt::Windows::Xbox::System::User XboxLiveContext::User( )
     {
-        LOG_NOT_IMPLEMENTED();
-        throw hresult_not_implemented();
+        LOG_WARNING("XboxLiveContext::User Is Stubbed ");
+        return m_user;
     }
     winrt::Microsoft::Xbox::Services::Social::ProfileService XboxLiveContext::ProfileService()
     {

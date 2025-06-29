@@ -32,6 +32,9 @@ namespace winrt::Microsoft::Xbox::Services::implementation
         winrt::Microsoft::Xbox::Services::EntertainmentProfile::EntertainmentProfileListService EntertainmentProfileListService();
         winrt::Microsoft::Xbox::Services::XboxLiveContextSettings Settings();
         winrt::Microsoft::Xbox::Services::XboxLiveAppConfiguration AppConfig();
+    private:
+        winrt::Windows::Xbox::System::User m_user{ nullptr };
+
     };
 }
 namespace winrt::Microsoft::Xbox::Services::factory_implementation

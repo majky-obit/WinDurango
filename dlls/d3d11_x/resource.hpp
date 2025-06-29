@@ -1,6 +1,7 @@
 #pragma once
 #include "device_child_x.h"
 #include "device_context_x.h"
+#include "Logger.h"
 
 namespace wdi
 {
@@ -57,52 +58,53 @@ namespace wd
 	public:
 		void GetDevice(ID3D11Device** ppDevice) override
 		{
+			LOG_NOT_IMPLEMENTED( );
 			throw std::logic_error("Not implemented");
 		}
 
 		HRESULT GetPrivateData(const GUID& guid, UINT* pDataSize, void* pData) override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		HRESULT SetPrivateData(const GUID& guid, UINT DataSize, const void* pData) override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		HRESULT SetPrivateDataInterface(const GUID& guid, const IUnknown* pData) override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		HRESULT SetPrivateDataInterfaceGraphics(const GUID& guid, const IGraphicsUnknown* pData) override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		HRESULT SetName(LPCWSTR pName) override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		void GetType(D3D11_RESOURCE_DIMENSION* pResourceDimension) override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		void SetEvictionPriority(UINT EvictionPriority) override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		UINT GetEvictionPriority() override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		void GetDescriptor(wdi::D3D11X_DESCRIPTOR_RESOURCE* descriptor) override
 		{
-			throw std::logic_error("Not implemented");
+			LOG_NOT_IMPLEMENTED( ); throw std::logic_error("Not implemented");
 		}
 
 		::ID3D11Resource* wrapped_interface;

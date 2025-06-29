@@ -129,7 +129,12 @@ HRESULT CoreApplicationWrapperX::QueryInterface(const IID& riid, void** ppvObjec
 		AddRef();
 		return S_OK;
 	}
-
+	if (riid == __uuidof(ICoreApplicationExit))
+	{
+		*ppvObject = this;
+		AddRef();
+		return S_OK;
+	}
 	if (riid == __uuidof(ICoreApplicationResourceAvailabilityX)) // allow ICoreApplicationResourceAvailabilityX interface
 	{
 		*ppvObject = static_cast<ICoreApplicationResourceAvailabilityX*>(this);

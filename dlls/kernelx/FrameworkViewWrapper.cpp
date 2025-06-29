@@ -39,6 +39,7 @@ HRESULT FrameworkViewWrapper::QueryInterface(const IID& riid, void** ppvObject)
 	CoTaskMemFree(str);
 
 	if (riid == __uuidof(IFrameworkView) ||
+		riid == __uuidof(ICoreApplicationExit) ||
 		riid == __uuidof(IUnknown) ||
 		riid == __uuidof(IInspectable))
 	{
