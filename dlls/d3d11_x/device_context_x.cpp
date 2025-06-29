@@ -477,7 +477,26 @@ void wd::device_context_x::ClearDepthStencilView(ID3D11DepthStencilView* pDepthS
 
 void wd::device_context_x::GenerateMips(ID3D11ShaderResourceView* pShaderResourceView)
 {
-	wrapped_interface->GenerateMips(pShaderResourceView);
+	ID3D11ShaderResourceView* unwrappedSRV = nullptr;
+
+	if (pShaderResourceView)
+	{
+		wdi::ID3D11ShaderResourceView* wdi_srv = nullptr;
+		HRESULT hr = pShaderResourceView->QueryInterface(__uuidof(wdi::ID3D11ShaderResourceView),
+														  reinterpret_cast<void**>(&wdi_srv));
+		if (SUCCEEDED(hr) && wdi_srv)
+		{
+			auto wrapped = static_cast<wd::shader_resource_view*>(wdi_srv);
+			unwrappedSRV = wrapped->wrapped_interface;
+			wdi_srv->Release( );
+		}
+		else
+		{
+			unwrappedSRV = pShaderResourceView; // passthrough if native
+		}
+	}
+
+	wrapped_interface->GenerateMips(unwrappedSRV);
 }
 
 void wd::device_context_x::SetResourceMinLOD(ID3D11Resource* pResource, FLOAT MinLOD)
