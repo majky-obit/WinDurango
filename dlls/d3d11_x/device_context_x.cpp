@@ -80,20 +80,35 @@ void wd::device_context_x::Unmap(ID3D11Resource* pResource, UINT Subresource)
 
 void wd::device_context_x::PSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
 {
-	if (ppConstantBuffers != nullptr && *ppConstantBuffers != nullptr)
+	ID3D11Buffer* buffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ] = {};
+
+	for (UINT i = 0; i < NumBuffers; ++i)
 	{
-		ID3D11Buffer* modifiedBuffers[ D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT ];
-		for (UINT i = 0; i < NumBuffers; ++i)
+		if (ppConstantBuffers && ppConstantBuffers[ i ])
 		{
-			modifiedBuffers[ i ] = reinterpret_cast<wd::buffer*>(ppConstantBuffers[ i ])->wrapped_interface;
+			wdi::ID3D11Buffer* wdi_buf = nullptr;
+			HRESULT hr = ppConstantBuffers[ i ]->QueryInterface(__uuidof(wdi::ID3D11Buffer), reinterpret_cast<void**>(&wdi_buf));
+			if (SUCCEEDED(hr) && wdi_buf != nullptr)
+			{
+				auto wrapped = static_cast<wd::buffer*>(wdi_buf);
+				buffers[ i ] = wrapped->wrapped_interface;
+				wdi_buf->Release( );
+			}
+			else
+			{
+				buffers[ i ] = ppConstantBuffers[ i ]; // passthrough if not wrapped
+			}
 		}
-		wrapped_interface->PSSetConstantBuffers(StartSlot, NumBuffers, modifiedBuffers);
+		else
+		{
+			buffers[ i ] = nullptr;
+		}
 	}
-	else
-	{
-		wrapped_interface->PSSetConstantBuffers(StartSlot, NumBuffers, ppConstantBuffers);
-	}
+
+	wrapped_interface->PSSetConstantBuffers(StartSlot, NumBuffers, buffers);
 }
+
+
 
 void wd::device_context_x::IASetInputLayout(ID3D11InputLayout* pInputLayout)
 {
@@ -529,11 +544,41 @@ void wd::device_context_x::DSSetConstantBuffers(UINT StartSlot, UINT NumBuffers,
 	}
 }
 
-void wd::device_context_x::CSSetUnorderedAccessViews(UINT StartSlot, UINT NumUAVs,
-	ID3D11UnorderedAccessView* const* ppUnorderedAccessViews, const UINT* pUAVInitialCounts)
+void wd::device_context_x::CSSetUnorderedAccessViews(
+	UINT StartSlot,
+	UINT NumUAVs,
+	ID3D11UnorderedAccessView* const* ppUnorderedAccessViews,
+	const UINT* pUAVInitialCounts)
 {
-	wrapped_interface->CSSetUnorderedAccessViews(StartSlot, NumUAVs, ppUnorderedAccessViews, pUAVInitialCounts);
+	ID3D11UnorderedAccessView* unwrappedUAVs[ D3D11_PS_CS_UAV_REGISTER_COUNT ] = {};
+
+	for (UINT i = 0; i < NumUAVs; ++i)
+	{
+		if (ppUnorderedAccessViews && ppUnorderedAccessViews[ i ])
+		{
+			wdi::ID3D11UnorderedAccessView* wdi_uav = nullptr;
+			HRESULT hr = ppUnorderedAccessViews[ i ]->QueryInterface(__uuidof(wdi::ID3D11UnorderedAccessView),
+																   reinterpret_cast<void**>(&wdi_uav));
+			if (SUCCEEDED(hr) && wdi_uav)
+			{
+				auto wrapped = static_cast<wd::unordered_access_view*>(wdi_uav);
+				unwrappedUAVs[ i ] = wrapped->wrapped_interface;
+				wdi_uav->Release( );
+			}
+			else
+			{
+				unwrappedUAVs[ i ] = ppUnorderedAccessViews[ i ]; // passthrough if native
+			}
+		}
+		else
+		{
+			unwrappedUAVs[ i ] = nullptr;
+		}
+	}
+
+	wrapped_interface->CSSetUnorderedAccessViews(StartSlot, NumUAVs, unwrappedUAVs, pUAVInitialCounts);
 }
+
 
 void wd::device_context_x::CSSetSamplers(UINT StartSlot, UINT NumSamplers, ID3D11SamplerState* const* ppSamplers)
 {
