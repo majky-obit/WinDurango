@@ -1,22 +1,20 @@
 #include "EtwPlus.h"
 #include "pch.h"
 #include <stdio.h>
-#include "../common/common.h"
-#include "../common/DebugLogger.h"
-
+#include "../common/Logger.h"
+          
 VOID __stdcall EtxFillCommonFields_v7_X(EVENT_DATA_DESCRIPTOR* eventDataDescriptors, UINT8* buffer, UINT32 bufferSize) {
-    DEBUG_LOG();
+	LOG_NOT_IMPLEMENTED("[EtxFillCommonFields_v7_X] Not implemented yet.");
     // Implementation here
 }
 
 ULONG __stdcall EtxRegister_X(EVENT_PROVIDER_DESCRIPTOR* provider, REGHANDLE* handle) {
-    // Implementation here
-    	DEBUG_LOG();
+	LOG_NOT_IMPLEMENTED("[EtxRegister_X] Not implemented yet.");
     return 0;
 }
 
 ULONG __stdcall EtxUnregister_X(EVENT_PROVIDER_DESCRIPTOR* provider, REGHANDLE* handle) {
-    	DEBUG_LOG();
+	LOG_NOT_IMPLEMENTED("[EtxUnregister_X] Not implemented yet.");
     REGHANDLE v3; // rcx
 
     v3 = *handle;
@@ -36,18 +34,18 @@ ULONG __stdcall EtxEventWrite_X(
     __in ULONG dataCount,
     __in const EVENT_DATA_DESCRIPTOR* eventData
 ) {
-    	DEBUG_LOG();
+	LOG_NOT_IMPLEMENTED("[EtxEventWrite_X] Not implemented yet.");
     // Implementation here
     return 0;
 }
 
 void __stdcall EtxSuspendUploading_X( ) {
-    	DEBUG_LOG();
+	LOG_NOT_IMPLEMENTED("[EtxSuspendUploading_X] Not implemented yet.");
     // Implementation here
 }
 
 void __stdcall
 EtxResumeUploading_X( ) {
-    	DEBUG_LOG();
+	LOG_NOT_IMPLEMENTED("[EtxResumeUploading_X] Not implemented yet.");
     // Implementation here
 }

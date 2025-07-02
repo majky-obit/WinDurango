@@ -23,6 +23,7 @@ HRESULT __stdcall FrameworkViewWrapper::Load(HSTRING entryPoint)
 
 HRESULT __stdcall FrameworkViewWrapper::Run(void)
 {
+
 		return m_realView->Run();
 }
 
@@ -35,7 +36,7 @@ HRESULT FrameworkViewWrapper::QueryInterface(const IID& riid, void** ppvObject)
 {
 	LPOLESTR str = nullptr;
 	StringFromIID(riid, &str);
-	wprintf(L"FrameworkViewWrapper [QI] IID Requested: %s\n", str);
+	LOG_INFO_W(L"FrameworkViewWrapper [QI] IID Requested: %s\n", str);
 	CoTaskMemFree(str);
 
 	if (riid == __uuidof(IFrameworkView) ||

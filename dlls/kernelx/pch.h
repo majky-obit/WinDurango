@@ -6,9 +6,8 @@
 
 #include "CoreWindowWrapperX.h"
 #include "ICoreWindowX.h"
-#include "../common/DebugLogger.h"
 #include "../../Thirdparty/Detours/src/detours.h"
-
+#include "..\common\Logger.h"
 #include <intrin.h>
 #include <winternl.h>
 #include <cstdint>

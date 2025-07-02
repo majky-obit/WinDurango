@@ -7,7 +7,7 @@ namespace winrt::Microsoft::Xbox::Services::Presence::implementation
 {
     PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId)
     {
-		Logger::Warning("[PresenceData] PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId) called\n");
+		LOG_WARNING("[PresenceData] PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId) called\n");
     }
     PresenceData::PresenceData(hstring const& serviceConfigurationId, hstring const& presenceId, winrt::Windows::Foundation::Collections::IVectorView<hstring> const& presenceTokenIds)
     {

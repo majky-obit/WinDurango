@@ -13,7 +13,7 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::OnlineStateChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::OnlineStateChangedEventArgs> const& handler)
     {
-		Logger::Info("User::OnlineStateChanged() called");
+		LOG_INFO("User::OnlineStateChanged() called");
         return m_onlineStateChangedEvent.add(handler);
     }
     void User::OnlineStateChanged(winrt::event_token const& token) noexcept
@@ -22,13 +22,13 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::User> User::Users()
     {
-		wprintf(L"User || Users Queried!\n");
+		LOG_INFO_W(L"User || Users Queried!\n");
         if (staticUsers == Foundation::Collections::IVector<winrt::Windows::Xbox::System::User>(nullptr) || staticUsers.Size( ) == 0) {
             staticUsers = winrt::single_threaded_vector<System::User>( );
 
             for (int i = 0; i < 4; i++)
             {
-                wprintf(L"User || User %d Created!\n", i);
+                LOG_INFO_W(L"User || User %d Created!\n", i);
                 staticUser = winrt::make<User>(i);
                 staticUsers.Append(staticUser);
                 continue;

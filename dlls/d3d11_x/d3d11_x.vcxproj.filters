@@ -57,9 +57,6 @@
     </ClCompile>
     <ClCompile Include="dxgi_object.cpp" />
     <ClCompile Include="dxguid.cpp" />
-    <ClCompile Include="Logger.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d11_x.h" />
@@ -123,9 +120,6 @@
     <ClInclude Include="dxgi_object.hpp">
       <Filter>wrappers\shared</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
@@ -163,9 +157,6 @@
     </Filter>
     <Filter Include="overlay">
       <UniqueIdentifier>{c54987f8-e8bd-47e3-8940-2740f44a8f49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Logger">
-      <UniqueIdentifier>{3bb4479b-5009-4411-b1cf-b73fc7eda530}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

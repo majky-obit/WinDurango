@@ -187,7 +187,7 @@ HRESULT PatchNeededImports(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _
 
 HMODULE WINAPI LoadLibraryExW_X(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dwFlags)
 {
-	printf("LoadLibraryExW_X: %S\n", lpLibFileName);
+	LOG_INFO("LoadLibraryExW_X: %S\n", lpLibFileName);
 	if (wcscmp(lpLibFileName, L"xaudio2_9.dll") == 0 ||
 		wcscmp(lpLibFileName, L"xaudio2_9d.dll") == 0)
 	{
@@ -270,7 +270,10 @@ HANDLE CreateFile2_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShare
 	DWORD dwCreationDisposition, LPCREATEFILE2_EXTENDED_PARAMETERS pCreateExParams)
 {
 	FixRelativePath(lpFileName);
-
+	if (_DEBUG)
+	{
+		LOG_INFO("CreateFile2_Hook: %ls", lpFileName);
+	}
 	return TrueCreateFile2(lpFileName, dwDesiredAccess, dwShareMode, dwCreationDisposition, pCreateExParams);
 }
 
@@ -299,7 +302,7 @@ HMODULE WINAPI LoadLibraryExA_Hook(LPCSTR lpLibFileName, _Reserved_ HANDLE hFile
 		lpLibFileName = convert.c_str();
 	}
 
-	printf("LoadLibraryExA_Hook-: %s\n", lpLibFileName);
+	LOG_INFO("LoadLibraryExA_Hook-: %s\n", lpLibFileName);
 
 
 
@@ -308,7 +311,7 @@ HMODULE WINAPI LoadLibraryExA_Hook(LPCSTR lpLibFileName, _Reserved_ HANDLE hFile
 	// Print last error if failed
 	if (result == NULL)
 	{
-		printf("LoadLibraryExA_Hook failed: %d\n", GetLastError());
+		LOG_ERROR("LoadLibraryExA_Hook failed: %d\n", GetLastError());
 	}
 
 	PatchNeededImports(result, GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
@@ -333,7 +336,7 @@ HMODULE WINAPI LoadLibraryW_Hook(LPCWSTR lpLibFileName)
 
 		lpLibFileName = convert.data();
 	}
-	printf("LoadLibraryW_Hook: %ls\n", lpLibFileName);
+	LOG_INFO("LoadLibraryW_Hook: %ls\n", lpLibFileName);
 
 	HMODULE result = TrueLoadLibraryW(lpLibFileName);
 	PatchNeededImports(result, GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
@@ -422,16 +425,16 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 	
 	// Get the raw buffer from the HSTRING
 	const wchar_t* rawString = WindowsGetStringRawBuffer(classId, nullptr);
-	printf("WinRT Class Activated: %S\n", rawString);
+	LOG_INFO("WinRT Class Activated: %S\n", rawString);
 	// this might be a lil expensive? evaluate later
 	if (wcscmp(rawString, L"Windows.UI.Core.CoreWindow") != 0)
-		wprintf(L"%ls\n", rawString);
+		LOG_INFO_W(L"%ls\n", rawString);
 
 	auto hr = 0;
 
 	if (IsClassName(classId, "Windows.ApplicationModel.Store.CurrentApp"))
 	{
-		printf("CLASS: Windows.ApplicationModel.Store.CurrentApp\n");
+		LOG_INFO("CLASS: Windows.ApplicationModel.Store.CurrentApp\n");
 		hr = TrueRoGetActivationFactory(classId, iid, factory);
 
 		if (FAILED(hr))
@@ -448,7 +451,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	if (IsClassName(classId, "Windows.ApplicationModel.Core.CoreApplication"))
 	{
-		printf("CLASS: Windows.ApplicationModel.Core.CoreApplication\n");
+		LOG_INFO("CLASS: Windows.ApplicationModel.Core.CoreApplication\n");
 		ComPtr<IActivationFactory> realFactory;
 
 		hr = TrueRoGetActivationFactory(HStringReference(RuntimeClass_Windows_ApplicationModel_Core_CoreApplication).Get(), IID_PPV_ARGS(&realFactory));
@@ -463,7 +466,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	if (IsClassName(classId, "Windows.UI.Core.CoreWindow"))
 	{
-		printf("CLASS: Windows.UI.Core.CoreWindow\n");
+		LOG_INFO("CLASS: Windows.UI.Core.CoreWindow\n");
 		//
 		// for now we just hook GetForCurrentThread to get the CoreWindow but i'll change it later to
 		// wrap ICoreWindowStatic or as zombie said another thing that works is by hooking IFrameworkView::SetWindow
@@ -472,7 +475,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 		ComPtr<ICoreWindowStatic> coreWindowStatic;
 		hr = TrueRoGetActivationFactory(HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), IID_PPV_ARGS(&coreWindowStatic));
 		if (FAILED(hr)) {
-			printf("FAILEDDDDDD\n");
+			LOG_ERROR("FAILEDDDDDD\n");
 			return hr;
 		}
 
@@ -525,7 +528,7 @@ HRESULT WINAPI GetActivationFactoryRedirect(PCWSTR str, REFIID riid, void** ppFa
 	if (FAILED(hr = WindowsCreateStringReference(str, wcslen(str), &classNameHeader, &className)))
 		return hr;
 
-	printf("GetActivationFactoryRedirect: %S\n", str);
+	LOG_INFO("GetActivationFactoryRedirect: %S\n", str);
 
 	hr = RoGetActivationFactory_Hook(className, riid, ppFactory);
 	WindowsDeleteString(className);

@@ -7,6 +7,7 @@
 #include "../kernelx/CoreWindowWrapperX.h"
 #include "overlay/overlay.h"
 #include <d3d11_2.h>
+#include "../common/Logger.h"
 
 #define DXGI_SWAPCHAIN_FLAG_MASK DXGI_SWAP_CHAIN_FLAG_NONPREROTATED | DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE \
 		| DXGI_SWAP_CHAIN_FLAG_RESTRICTED_CONTENT | DXGI_SWAP_CHAIN_FLAG_RESTRICT_SHARED_RESOURCE_DRIVER | DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY | DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT \
@@ -49,7 +50,7 @@ HRESULT wd::dxgi_factory::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice
 	hr = pDevice->QueryInterface(__uuidof(wdi::IGraphicsUnwrap), (void**)&pRealDevice);
 	if (FAILED(hr))
 	{
-		printf("CRITICAL: dxgi_factory::CreateSwapChainForCoreWindow -> failed to unwrap device, this is a critical leak!\n");
+		LOG_FATAL("CRITICAL: dxgi_factory::CreateSwapChainForCoreWindow -> failed to unwrap device, this is a critical leak!\n");
 		return hr;
 	}
 
@@ -132,7 +133,7 @@ BOOL wd::dxgi_factory::IsWindowedStereoEnabled()
 
 HRESULT wd::dxgi_factory::EnumAdapters(UINT Adapter, wdi::IDXGIAdapter** ppAdapter)
 {
-	printf("WARN: dxgi_factory::EnumAdapters does not wrap IDXGIAdapter!!!\n");
+	LOG_WARNING("WARN: dxgi_factory::EnumAdapters does not wrap IDXGIAdapter!!!\n");
 	return wrapped_interface->EnumAdapters(Adapter, reinterpret_cast<IDXGIAdapter**>(ppAdapter));
 }
 
@@ -154,6 +155,6 @@ HRESULT wd::dxgi_factory::CreateSwapChain(IGraphicsUnknown* pDevice, DXGI_SWAP_C
 
 HRESULT wd::dxgi_factory::CreateSoftwareAdapter(HMODULE Module, wdi::IDXGIAdapter** ppAdapter)
 {
-	printf("WARN: dxgi_factory::CreateSoftwareAdapter does not wrap IDXGIAdapter!!!\n");
+	LOG_WARNING("WARN: dxgi_factory::CreateSoftwareAdapter does not wrap IDXGIAdapter!!!\n");
 	return wrapped_interface->CreateSoftwareAdapter(Module, reinterpret_cast<IDXGIAdapter**>(ppAdapter));
 }

@@ -4,6 +4,7 @@
 
 #include "d3d11_x.h"
 #include "graphics_unknown.h"
+#include "../common/Logger.h"
 
 namespace wdi
 {
@@ -30,7 +31,7 @@ namespace wd
 
 		void STDMETHODCALLTYPE GetDevice(ID3D11Device** ppDevice) override
 		{
-			printf("WARN: device_child_x::GetDevice returns a PC device!!\n");
+			LOG_WARNING("WARN: device_child_x::GetDevice returns a PC device!!\n");
 			wrapped_interface->GetDevice(ppDevice);
 		}
 

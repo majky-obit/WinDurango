@@ -8,7 +8,7 @@ namespace winrt::Windows::Xbox::Speech::Recognition::implementation
 {
     winrt::Windows::Xbox::Speech::Recognition::SpeechRecognizer SpeechRecognizerFactory::CreateSpeechRecognizerForLocale(uint16_t requestedLanguageId)
     {
-        Logger::Info("SpeechRecognizerFactory::CreateSpeechRecognizerForLocale\n");
+        LOG_INFO("SpeechRecognizerFactory::CreateSpeechRecognizerForLocale\n");
         return 0;
     }
 }

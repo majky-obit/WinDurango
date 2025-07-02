@@ -1,49 +1,51 @@
 #include "pch.h"
 #include "CoreApplicationWrapperX.h"
 #include "FrameworkViewSourceWrapper.h"
+#include "../common/Logger.h"
+
 using namespace ABI::Windows::ApplicationModel::Core;
 
 HRESULT CoreApplicationWrapperX::GetIids(ULONG* iidCount, IID** iids)
 {
-	printf("GetIids\n");
+	LOG_INFO("GetIids\n");
 	return m_realFactory->GetIids(iidCount, iids);
 }
 
 HRESULT CoreApplicationWrapperX::GetRuntimeClassName(HSTRING* className)
 {
-	printf("GetRuntimeClassName\n");
+	LOG_INFO("GetRuntimeClassName\n");
 	return m_realFactory->GetRuntimeClassName(className);
 }
 
 HRESULT CoreApplicationWrapperX::GetTrustLevel(TrustLevel* trustLevel)
 {
-	printf("GetTrustLevel\n");
+	LOG_INFO("GetTrustLevel\n");
 	return m_realFactory->GetTrustLevel(trustLevel);
 }
 
 INT32 CoreApplicationWrapperX::_abi_add_Resuming(__FIEventHandler_1_IInspectable* handler, EventRegistrationToken* token)
 {
-	printf("_abi_add_Resuming\n");
+	LOG_INFO("_abi_add_Resuming\n");
 	//return m_realCoreApplication->add_Resuming(handler, token);
 	return S_OK;
 }
 
 INT32 CoreApplicationWrapperX::_abi_remove_Resuming(EventRegistrationToken token)
 {
-	printf("_abi_remove_Resuming\n");
+	LOG_INFO("_abi_remove_Resuming\n");
 	return m_realCoreApplication->remove_Resuming(token);
 }
 
 INT32 CoreApplicationWrapperX::_abi_add_Suspending(__FIEventHandler_1_Windows__CApplicationModel__CSuspendingEventArgs* handler, EventRegistrationToken* token)
 {
-	printf("_abi_add_Suspending\n");
+	LOG_INFO("_abi_add_Suspending\n");
 	//return m_realCoreApplication->add_Suspending(handler, token);
 	return S_OK;
 }
 
 INT32 CoreApplicationWrapperX::_abi_remove_Suspending(EventRegistrationToken token)
 {
-	printf("_abi_remove_Suspending\n");
+	LOG_INFO("_abi_remove_Suspending\n");
 	return m_realCoreApplication->remove_Suspending(token);
 }
 
@@ -51,20 +53,20 @@ HRESULT CoreApplicationWrapperX::_abi_get_ResourceAvailability(ResourceAvailabil
 {
 	// TODO: Stubbed for now.
 	*resourceAvailability = ResourceAvailability_Full;
-	printf("_abi_get_ResourceAvailability\n");
+	LOG_INFO("_abi_get_ResourceAvailability\n");
 	return S_OK;
 }
 
 HRESULT CoreApplicationWrapperX::_abi_add_ResourceAvailabilityChanged(winrt::Windows::Foundation::EventHandler<IInspectable>* handler, EventRegistrationToken* token)
 {
-	printf("_abi_add_ResourceAvailabilityChanged\n");
+	LOG_INFO("_abi_add_ResourceAvailabilityChanged\n");
 	//Stubbed at this moment.
 	return 0;
 }
 
 HRESULT CoreApplicationWrapperX::_abi_remove_ResourceAvailabilityChanged(EventRegistrationToken token)
 {
-	printf("_abi_remove_ResourceAvailabilityChanged\n");
+	LOG_INFO("_abi_remove_ResourceAvailabilityChanged\n");
 	//Stubbed at this moment.
 	return 0;
 }
@@ -83,13 +85,13 @@ HRESULT CoreApplicationWrapperX::set_DisableKinectGpuReservation(bool value)
 
 INT32 CoreApplicationWrapperX::_abi_GetCurrentView(ABI::Windows::ApplicationModel::Core::ICoreApplicationView** value)
 {
-	printf("[CoreApplicationWrapperX] ---> _abi_GetCurrentView\n");
+	LOG_INFO("[CoreApplicationWrapperX] ---> _abi_GetCurrentView\n");
 	return m_realCoreApplication->GetCurrentView(value);
 }
 
 INT32 CoreApplicationWrapperX::_abi_Run(ABI::Windows::ApplicationModel::Core::IFrameworkViewSource* viewSource)
 {
-	printf("_abi_Run\n");
+	LOG_INFO("_abi_Run\n");
 
 	// Wrap the ViewSource and pass it to the original function
 	FrameworkViewSourceWrapper* wrappedViewSource = new FrameworkViewSourceWrapper(viewSource);
@@ -98,13 +100,13 @@ INT32 CoreApplicationWrapperX::_abi_Run(ABI::Windows::ApplicationModel::Core::IF
 
 INT32 CoreApplicationWrapperX::_abi_get_Id(HSTRING* value)
 {
-	printf("_abi_get_Id\n");
+	LOG_INFO("_abi_get_Id\n");
 	return m_realCoreApplication->get_Id(value);
 }
 
 INT32 CoreApplicationWrapperX::_abi_get_Properties(ABI::Windows::Foundation::Collections::IPropertySet** value)
 {
-	printf("_abi_get_Properties\n");
+	LOG_INFO("_abi_get_Properties\n");
 	return m_realCoreApplication->get_Properties(value);
 }
 
@@ -113,9 +115,16 @@ HRESULT CoreApplicationWrapperX::QueryInterface(const IID& riid, void** ppvObjec
 {
 	LPOLESTR str = nullptr;
 	StringFromIID(riid, &str);
-	wprintf(L"CoreApplicationWrapperX [QI] IID Requested: %s\n", str);
+	LOG_INFO_W(L"CoreApplicationWrapperX [QI] IID Requested: %s\n", str);
 	CoTaskMemFree(str);
+	if (riid == __uuidof(ICoreApplicationExit))
+	{
+		LOG_ERROR_W(L"CoreApplicationWrapperX [QI] IID Requested: Patched\n", str);
 
+		*ppvObject = this;
+		AddRef();
+		return S_OK;
+	}
 	if (riid == __uuidof(IActivationFactory) || riid == __uuidof(IUnknown))
 	{
 		*ppvObject = static_cast<IActivationFactory*>(this);
@@ -129,12 +138,7 @@ HRESULT CoreApplicationWrapperX::QueryInterface(const IID& riid, void** ppvObjec
 		AddRef();
 		return S_OK;
 	}
-	if (riid == __uuidof(ICoreApplicationExit))
-	{
-		*ppvObject = this;
-		AddRef();
-		return S_OK;
-	}
+
 	if (riid == __uuidof(ICoreApplicationResourceAvailabilityX)) // allow ICoreApplicationResourceAvailabilityX interface
 	{
 		*ppvObject = static_cast<ICoreApplicationResourceAvailabilityX*>(this);
@@ -150,7 +154,7 @@ HRESULT CoreApplicationWrapperX::QueryInterface(const IID& riid, void** ppvObjec
 	}
 
 	if (riid == __uuidof(ICoreApplicationExit)) {
-		printf("ICoreApplicationExit CALLED - GAME OVER BRO\n");
+		LOG_ERROR("ICoreApplicationExit CALLED - GAME OVER BRO\n");
 		*ppvObject = this;
 		AddRef();
 		return S_OK;

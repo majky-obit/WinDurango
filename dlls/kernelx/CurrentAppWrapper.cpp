@@ -5,7 +5,7 @@ HRESULT XboxUserLicenseInformationWrapperX::QueryInterface(const IID& riid, void
 {
 	LPOLESTR str = nullptr;
 	StringFromIID(riid, &str);
-	wprintf(L"XboxUserLicenseInformationWrapperX: [QI] IID Requested: %s\n", str);
+	LOG_INFO_W(L"XboxUserLicenseInformationWrapperX: [QI] IID Requested: %s\n", str);
 	CoTaskMemFree(str);
 
 	if (riid == __uuidof(IXboxUserLicenseInformation))
@@ -51,7 +51,7 @@ HRESULT XboxUserLicenseInformationWrapperX::GetTrustLevel(TrustLevel* trustLevel
 
 HRESULT XboxUserLicenseInformationWrapperX::get_CurrentLicenseUserXuid(winrt::hstring* value)
 {
-	printf("[XboxUserLicenseInformationWrapperX] get_CurrentLicenseUserXuid\n");
+	LOG_INFO("[XboxUserLicenseInformationWrapperX] get_CurrentLicenseUserXuid\n");
 	*value = winrt::to_hstring(123);
 	return S_OK;
 }
@@ -60,7 +60,7 @@ HRESULT LicenseInformationWrapperX::QueryInterface(const IID& riid, void** ppvOb
 {
 	LPOLESTR str = nullptr;
 	StringFromIID(riid, &str);
-	wprintf(L"LicenseInformationWrapperX: [QI] IID Requested: %s\n", str);
+	LOG_INFO_W(L"LicenseInformationWrapperX: [QI] IID Requested: %s\n", str);
 	CoTaskMemFree(str);
 
 	if (riid == __uuidof(ILicenseInformationX))
@@ -84,7 +84,7 @@ HRESULT LicenseInformationWrapperX::QueryInterface(const IID& riid, void** ppvOb
 		OLECHAR iidwstr[sizeof(iidstr)];
 		StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
 		WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
-		printf("[LicenseInformationWrapperX] Interface Not Implemented: %s\n", iidstr);
+		LOG_FATAL("[LicenseInformationWrapperX] Interface Not Implemented: %s\n", iidstr);
 	}
 
 	*ppvObject = nullptr;
@@ -126,27 +126,27 @@ HRESULT LicenseInformationWrapperX::get_ProductLicenses(
 	ABI::Windows::Foundation::Collections::__FIMapView_2_HSTRING_Windows__CApplicationModel__CStore__CProductLicense_t**
 	value)
 {
-	printf("[LicenseInformationWrapperX] get_ProductLicenses\n");
+	LOG_INFO("[LicenseInformationWrapperX] get_ProductLicenses\n");
 	return E_NOTIMPL;
 }
 
 HRESULT LicenseInformationWrapperX::get_IsActive(boolean* value)
 {
-	printf("[LicenseInformationWrapperX] get_IsActive\n");
+	LOG_INFO("[LicenseInformationWrapperX] get_IsActive\n");
 	*value = true;
 	return S_OK;
 }
 
 HRESULT LicenseInformationWrapperX::get_IsTrial(boolean* value)
 {
-	printf("[LicenseInformationWrapperX] get_IsTrial\n");
+	LOG_INFO("[LicenseInformationWrapperX] get_IsTrial\n");
 	*value = false;
 	return S_OK;
 }
 
 HRESULT LicenseInformationWrapperX::get_ExpirationDate(ABI::Windows::Foundation::DateTime* value)
 {
-	printf("[LicenseInformationWrapperX] get_ExpirationDate\n");
+	LOG_INFO("[LicenseInformationWrapperX] get_ExpirationDate\n");
 	DateTime time;
 	time.UniversalTime = UINT64_MAX;
 
@@ -158,7 +158,7 @@ HRESULT LicenseInformationWrapperX::add_LicenseChanged(
 	ABI::Windows::ApplicationModel::Store::ILicenseChangedEventHandler* handler, EventRegistrationToken* cookie)
 {
 	HRESULT hr = m_realLicenseInformation->add_LicenseChanged(handler, cookie);
-	printf("[LicenseInformationWrapperX] add_LicenseChanged\n");
+	LOG_INFO("[LicenseInformationWrapperX] add_LicenseChanged\n");
 
 	if (SUCCEEDED(hr))
 		handler->Invoke();
@@ -168,7 +168,7 @@ HRESULT LicenseInformationWrapperX::add_LicenseChanged(
 
 HRESULT LicenseInformationWrapperX::remove_LicenseChanged(EventRegistrationToken cookie)
 {
-	printf("[LicenseInformationWrapperX] remove_LicenseChanged\n");
+	LOG_INFO("[LicenseInformationWrapperX] remove_LicenseChanged\n");
 	return E_NOTIMPL;
 }
 
@@ -176,7 +176,7 @@ HRESULT __stdcall CurrentAppWrapperX::QueryInterface(REFIID riid, void** ppvObje
 {
 	LPOLESTR str = nullptr;
 	StringFromIID(riid, &str);
-	wprintf(L"CurrentAppWrapperX [QI] IID Requested: %s\n", str);
+	LOG_INFO_W(L"CurrentAppWrapperX [QI] IID Requested: %s\n", str);
 	CoTaskMemFree(str);
 
 	if (riid == __uuidof(ICurrentAppX))
@@ -193,7 +193,7 @@ HRESULT __stdcall CurrentAppWrapperX::QueryInterface(REFIID riid, void** ppvObje
 		OLECHAR iidwstr[sizeof(iidstr)];
 		StringFromGUID2(riid, iidwstr, ARRAYSIZE(iidwstr));
 		WideCharToMultiByte(CP_UTF8, 0, iidwstr, -1, iidstr, sizeof(iidstr), nullptr, nullptr);
-		printf("[CurrentAppWrapperX] Interface Not Implemented: %s\n", iidstr);
+		LOG_FATAL("[CurrentAppWrapperX] Interface Not Implemented: %s\n", iidstr);
 	}
 
 	*ppvObject = nullptr;
@@ -218,25 +218,25 @@ ULONG __stdcall CurrentAppWrapperX::Release()
 
 HRESULT CurrentAppWrapperX::GetIids(ULONG* iidCount, IID** iids)
 {
-	printf("[CurrentAppWrapperX] GetIids\n");
+	LOG_INFO("[CurrentAppWrapperX] GetIids\n");
 	return m_realCurrentApp->GetIids(iidCount, iids);
 }
 
 HRESULT CurrentAppWrapperX::GetRuntimeClassName(HSTRING* className)
 {
-	printf("[CurrentAppWrapperX] GetRuntimeClassName\n");
+	LOG_INFO("[CurrentAppWrapperX] GetRuntimeClassName\n");
 	return m_realCurrentApp->GetRuntimeClassName(className);
 }
 
 HRESULT CurrentAppWrapperX::GetTrustLevel(TrustLevel* trustLevel)
 {
-	printf("[CurrentAppWrapperX] GetTrustLevel\n");
+	LOG_INFO("[CurrentAppWrapperX] GetTrustLevel\n");
 	return m_realCurrentApp->GetTrustLevel(trustLevel);
 }
 
 HRESULT CurrentAppWrapperX::get_LicenseInformation(ABI::Windows::ApplicationModel::Store::ILicenseInformation** value)
 {
-	printf("[CurrentAppWrapperX] get_LicenseInformation\n");
+	LOG_INFO("[CurrentAppWrapperX] get_LicenseInformation\n");
 	return E_NOTIMPL;
 }
 

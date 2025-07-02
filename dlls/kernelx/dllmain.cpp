@@ -33,7 +33,7 @@ inline void LoadMods()
 		if (!ret)
 		{
 			DWORD error = GetLastError();
-			printf("Error creating Mods directory: %d\n", error);
+			LOG_INFO("Error creating Mods directory: %d\n", error);
 		}
 		
 	}*/
@@ -59,7 +59,7 @@ inline void LoadMods()
 				if (loadedModule != nullptr)
 				{
 					loadedMods.push_back(loadedModule);
-					printf("Loaded mod: %S\n", modPath);
+					LOG_INFO("Loaded mod: %S\n", modPath);
 				}
 			}
 		} while (FindNextFileW(hFind, &findData));
@@ -98,7 +98,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//Rodrigo Todescatto: Forza Horizon 2 Demo.
 		if (GamePackage == L"265E1020-Anthem_8wekyb3d8bbwe")
 		{
-			printf("Forza Horizon 2 Demo\n");
+			LOG_INFO("Forza Horizon 2 Demo\n");
     			*(void**)&P_StartForzaThread_X = (char*)GetModuleHandleW(nullptr) + 0xFE6920;
     			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
     			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_StartForzaThread_X, &D_StartForzaThread_X)));
@@ -107,7 +107,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//Rodrigo Todescatto: Forza Horizon 2.
 		if (GamePackage == L"Anthem_8wekyb3d8bbwe")
 		{
-			printf("Forza Horizon 2\n");
+			LOG_INFO("Forza Horizon 2\n");
     			*(void**)&P_StartForzaThread_X = (char*)GetModuleHandleW(nullptr) + 0x1081A90;
     			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
     			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_StartForzaThread_X, &D_StartForzaThread_X)));
@@ -120,21 +120,21 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//Rodrigo Todescatto: Forza Motorsport 5.
 		if (GamePackage == L"Forza_8wekyb3d8bbwe")
 		{
-			printf("Forza Motorsport 5");
+			LOG_INFO("Forza Motorsport 5");
 		}
 		//Rodrigo Todescatto: Forza Horizon 2 Presents Fast & Furious.
 		if (GamePackage == L"Spire_8wekyb3d8bbwe")
 		{
-			printf("Forza Horizon 2 Presents Fast & Furious");
+			LOG_INFO("Forza Horizon 2 Presents Fast & Furious");
 		}
 		if (GamePackage == L"HappyDungeons_zyyfzks419954")
 		{
-			printf("Happy Happy Happy Dungeons Dungeons Dungeons\n");
+			LOG_INFO("Happy Dungeons\n");
 		}
 #endif
 
 #if WINDURANGO_WAIT_FOR_DEBUGGER
-		printf("Waiting for debugger...\n");
+		LOG_INFO("Waiting for debugger...\n");
 		while (!IsDebuggerPresent())
 			Sleep(1);
 #endif

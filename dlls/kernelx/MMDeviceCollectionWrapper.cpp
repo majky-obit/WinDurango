@@ -13,7 +13,7 @@ HRESULT STDMETHODCALLTYPE MMDeviceCollectionWrapper::QueryInterface(REFIID riid,
 {
     LPOLESTR str = nullptr;
     StringFromIID(riid, &str);
-    wprintf(L"[QueryInterface] IID requested: %ls\n", str);
+    LOG_INFO_W(L"[QueryInterface] IID requested: %ls\n", str);
     CoTaskMemFree(str);
     if (!ppvObject) return E_POINTER;
 
@@ -45,7 +45,7 @@ ULONG STDMETHODCALLTYPE MMDeviceCollectionWrapper::Release()
 
 HRESULT STDMETHODCALLTYPE MMDeviceCollectionWrapper::GetCount(UINT* pcDevices)
 {
-    printf("[MMDeviceCollectionWrapper] GetCount called\n");
+    LOG_INFO("[MMDeviceCollectionWrapper] GetCount called\n");
     return m_realCollection->GetCount(pcDevices);
 }
 

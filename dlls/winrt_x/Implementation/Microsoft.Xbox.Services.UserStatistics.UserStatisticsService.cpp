@@ -24,7 +24,7 @@ namespace winrt::Microsoft::Xbox::Services::UserStatistics::implementation
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Microsoft::Xbox::Services::UserStatistics::UserStatisticsResult>> UserStatisticsService::GetMultipleUserStatisticsAsync(winrt::Windows::Foundation::Collections::IVectorView<hstring> xboxUserIds, hstring serviceConfigurationId, winrt::Windows::Foundation::Collections::IVectorView<hstring> statisticNames)
     {
 		for (uint32_t i = 0; i < statisticNames.Size( ); i++) {
-            printf("[UserStatisticsService] GetMultipleUserStatisticsAsync [Statistic (%u)] [%ls]\n", i, statisticNames.GetAt(i).c_str( ));
+            LOG_INFO("[UserStatisticsService] GetMultipleUserStatisticsAsync [Statistic (%u)] [%ls]\n", i, statisticNames.GetAt(i).c_str( ));
 		}
 
 		co_return winrt::single_threaded_vector<UserStatisticsResult>( ).GetView( );

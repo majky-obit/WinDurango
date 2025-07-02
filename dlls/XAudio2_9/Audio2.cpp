@@ -2,6 +2,7 @@
 #include <xaudio2.h>
 #include <wrl.h>
 #include <stdio.h>
+#include "../common/Logger.h"
 
 #define WAVE_FORMAT_XMA2 0x166
 
@@ -258,26 +259,26 @@ HRESULT STDAPICALLTYPE CreateXAudio2Object(
 
 HRESULT STDAPICALLTYPE CreateAudioReverb_X()
 {
-    printf("[XAudio]: CreateAudioReverb_X IS STUBBED\n");
+    LOG_WARNING("[XAudio]: CreateAudioReverb_X IS STUBBED\n");
     return S_OK;
 }
 HRESULT STDAPICALLTYPE CreateAudioVolumeMeter_X()
 {
-    printf("[XAudio]: CreateAudioVolumeMeter_X IS STUBBED\n");
+    LOG_WARNING("[XAudio]: CreateAudioVolumeMeter_X IS STUBBED\n");
     return S_OK;
 }
 HRESULT STDAPICALLTYPE CreateFX_X()
 {
-    printf("[XAudio]: CreateFX_X IS STUBBED\n");
+    LOG_WARNING("[XAudio]: CreateFX_X IS STUBBED\n");
     return S_OK;
 }
 HRESULT STDAPICALLTYPE X3DAudioCalculate_X()
 {
-    printf("[XAudio]: X3DAudioCalculate_X IS STUBBED\n");
+    LOG_WARNING("[XAudio]: X3DAudioCalculate_X IS STUBBED\n");
     return S_OK;
 }
 HRESULT STDAPICALLTYPE X3DAudioInitialize_X()
 {
-    printf("[XAudio]: X3DAudioInitialize_X IS STUBBED\n");
+    LOG_WARNING("[XAudio]: X3DAudioInitialize_X IS STUBBED\n");
     return S_OK;
 }

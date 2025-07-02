@@ -1,5 +1,6 @@
 #include "dxgi_adapter.h"
 #include "dxgi_factory.h"
+#include "../common/Logger.h"
 
 HRESULT wd::dxgi_adapter::GetParent(const IID& riid, void** ppParent)
 {
@@ -31,6 +32,6 @@ HRESULT wd::dxgi_adapter::GetDesc(DXGI_ADAPTER_DESC* pDesc)
 
 HRESULT wd::dxgi_adapter::CheckInterfaceSupport(const GUID& InterfaceName, LARGE_INTEGER* pUMDVersion)
 {
-	printf("WARN: dxgi_adapter::CheckInterfaceSupport is likely to fail due no support for d3d11.x!!!\n");
+	LOG_WARNING("WARN: dxgi_adapter::CheckInterfaceSupport is likely to fail due no support for d3d11.x!!!\n");
 	return wrapped_interface->CheckInterfaceSupport(InterfaceName, pUMDVersion);
 }

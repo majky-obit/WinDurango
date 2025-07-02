@@ -91,7 +91,7 @@ namespace winrt::Windows::Xbox::Media::implementation
             winrt::Windows::Xbox::Media::GameTransportControlsPropertyChangedEventArgs> const& handler)
     {
         // Optional debug logging
-        wprintf(L"[GameTransportControls] PropertyChanged handler added\n");
+        LOG_INFO_W(L"[GameTransportControls] PropertyChanged handler added\n");
 
         return m_gameTransportControlsPropertyChangedEventArgs.add(handler);
     }

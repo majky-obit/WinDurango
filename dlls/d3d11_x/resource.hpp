@@ -1,7 +1,7 @@
 #pragma once
 #include "device_child_x.h"
 #include "device_context_x.h"
-#include "Logger.h"
+#include "../common/Logger.h"
 
 namespace wdi
 {
@@ -136,7 +136,7 @@ namespace wd
 
 		void GetDevice(ID3D11Device** ppDevice) override
 		{
-			printf("WARN: texture_1d::GetDevice returns a PC device!!\n");
+			LOG_WARNING("WARN: texture_1d::GetDevice returns a PC device!!\n");
 			wrapped_interface->GetDevice(ppDevice);
 		}
 
@@ -218,7 +218,7 @@ namespace wd
 
 		void GetDevice(ID3D11Device** ppDevice) override
 		{
-			printf("WARN: texture_2d::GetDevice returns a PC device!!\n");
+			LOG_WARNING("WARN: texture_2d::GetDevice returns a PC device!!\n");
 			wrapped_interface->GetDevice(ppDevice);
 		}
 
@@ -300,7 +300,7 @@ namespace wd
 
 		void GetDevice(ID3D11Device** ppDevice) override
 		{
-			printf("WARN: texture_3d::GetDevice returns a PC device!!\n");
+			LOG_WARNING("WARN: texture_3d::GetDevice returns a PC device!!\n");
 			wrapped_interface->GetDevice(ppDevice);
 		}
 
@@ -381,7 +381,7 @@ namespace wd
 
 		void GetDevice(ID3D11Device** ppDevice) override
 		{
-			printf("WARN: buffer::GetDevice returns a PC device!!\n");
+			LOG_WARNING("WARN: buffer::GetDevice returns a PC device!!\n");
 			wrapped_interface->GetDevice(ppDevice);
 		}
 

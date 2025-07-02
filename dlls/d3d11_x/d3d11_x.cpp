@@ -5,8 +5,7 @@
 #include <d3d11.h>
 #include "device_context_x.h"
 #include "device_x.h"
-#include "../common/DebugLogger.h"
-#include "Logger.h"
+#include "../common/Logger.h"
 
 HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11DeviceContext** ppImmediateContext)
 {
@@ -49,7 +48,6 @@ HRESULT CreateDevice(UINT Flags, wdi::ID3D11Device** ppDevice, wdi::ID3D11Device
 }
 HRESULT __stdcall D3DMapEsramMemory_X(UINT Flags, VOID* pVirtualAddress, UINT NumPages, const UINT* pPageList)
 {
-    DEBUGLOG( );
     HANDLE hDevice = INVALID_HANDLE_VALUE;
     HRESULT result = 0;
     DWORD accessFlags = 0;

@@ -24,7 +24,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 {
     if (dwReason == DLL_PROCESS_ATTACH) {
-        Logger::Info("[winrt_x] DllMain invoked");
+        LOG_INFO("[winrt_x] DllMain invoked");
         CreateThread(nullptr, 0, ThreadProc, nullptr, 0, nullptr);
     }
 

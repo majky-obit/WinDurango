@@ -2,6 +2,7 @@
 #include "Windows.Xbox.Input.NavigationController.h"
 #include "Windows.Xbox.Input.NavigationController.g.cpp"
 
+
 namespace winrt::Windows::Xbox::Input::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::INavigationController> NavigationController::NavigationControllers()

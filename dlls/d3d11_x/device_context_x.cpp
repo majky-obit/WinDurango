@@ -6,7 +6,7 @@
 #include <d3d11.h>
 #include <cassert>
 #include <cstdio>
-#include "Logger.h"
+#include "../common/Logger.h"
 
 void wd::device_context_x::GetDevice(ID3D11Device** ppDevice)
 {
