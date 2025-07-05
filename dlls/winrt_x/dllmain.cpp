@@ -1,5 +1,5 @@
 #include "pch.h"
-
+#include "../common/Config.h"
 #include "ConnectedStorage/ConnectedStorage.h"
 
 DWORD WINAPI ThreadProc(LPVOID lpParam)
