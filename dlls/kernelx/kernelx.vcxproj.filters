@@ -31,6 +31,7 @@
     <ClCompile Include="MMDeviceCollectionWrapper.cpp">
       <Filter>MMDeviceEnumerator\MMDeviceCollection</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkInformationWrapperX.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -77,6 +78,7 @@
     <ClInclude Include="MMDeviceCollectionWrapper.h">
       <Filter>MMDeviceEnumerator\MMDeviceCollection</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkInformationWrapperX.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Exports.def" />

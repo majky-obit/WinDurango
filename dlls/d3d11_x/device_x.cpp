@@ -68,12 +68,12 @@ HRESULT wd::device_x::CreateTexture2D(
 
 	if (SUCCEEDED(hr) && texture2d)
 	{
-		LOG_INFO("[CreateTexture2D] created texture at 0x%p\n", texture2d);
+		// LOG_INFO("[CreateTexture2D] created texture at 0x%p\n", texture2d);
 		*ppTexture2D = reinterpret_cast<ID3D11Texture2D*>(new texture_2d(texture2d));
 	}
 	else
 	{
-		LOG_INFO("[CreateTexture2D] failed (HRESULT: 0x%08X)\n", static_cast<unsigned int>(hr));
+		// LOG_INFO("[CreateTexture2D] failed (HRESULT: 0x%08X)\n", static_cast<unsigned int>(hr));
 		*ppTexture2D = nullptr;
 	}
 

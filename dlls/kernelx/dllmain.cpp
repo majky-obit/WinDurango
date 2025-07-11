@@ -1,22 +1,4 @@
-﻿/*
-================================================================================
-DISCLAIMER AND LICENSE REQUIREMENT
-
-This code is provided with the condition that if you use, modify, or distribute
-this code in your project, you are required to make your project open source
-under a license compatible with the GNU General Public License (GPL) or a
-similarly strong copyleft license.
-
-By using this code, you agree to:
-1. Disclose your complete source code of any project incorporating this code.
-2. Include this disclaimer in any copies or substantial portions of this file.
-3. Provide clear attribution to the original author.
-
-If you do not agree to these terms, you do not have permission to use this code.
-
-================================================================================
-*/
-#include "pch.h"
+﻿#include "pch.h"
 #include "hooks.h"
 #include "ForzaThreadHook_X.h"
 #include "kernelx.h"
@@ -24,18 +6,14 @@ If you do not agree to these terms, you do not have permission to use this code.
 #include "Shlwapi.h"
 #include <audioclient.h>
 // note from unixian: i used this since using appxlauncher requires me attaching to the game after it launches
-#define WINDURANGO_WAIT_FOR_DEBUGGER 1
+// #define WINDURANGO_WAIT_FOR_DEBUGGER 1
+#define WINDURANGO_WAIT_FOR_DEBUGGER 0
 
 //Rodrigo Todescatto: For debbuging Forza.
 #define RETURN_IF_FAILED(hr) if (FAILED(hr)) return hr
 #define FORZADEBUG
 
 std::vector<HMODULE> loadedMods;
-
-// All HAPPY DUNGEONS STUFF
-
-////////////////////////////////
-
 
 inline void LoadMods()
 {
@@ -51,7 +29,7 @@ inline void LoadMods()
 		if (!ret)
 		{
 			DWORD error = GetLastError();
-			LOG_INFO("Error creating Mods directory: %d\n", error);
+			printf("Error creating Mods directory: %d\n", error);
 		}
 		
 	}*/
@@ -77,7 +55,7 @@ inline void LoadMods()
 				if (loadedModule != nullptr)
 				{
 					loadedMods.push_back(loadedModule);
-					LOG_INFO("Loaded mod: %S\n", modPath);
+					printf("Loaded mod: %S\n", modPath);
 				}
 			}
 		} while (FindNextFileW(hFind, &findData));
@@ -116,7 +94,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//Rodrigo Todescatto: Forza Horizon 2 Demo.
 		if (GamePackage == L"265E1020-Anthem_8wekyb3d8bbwe")
 		{
-			LOG_INFO("Forza Horizon 2 Demo\n");
+			printf("Forza Horizon 2 Demo\n");
     			*(void**)&P_StartForzaThread_X = (char*)GetModuleHandleW(nullptr) + 0xFE6920;
     			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
     			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_StartForzaThread_X, &D_StartForzaThread_X)));
@@ -125,7 +103,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//Rodrigo Todescatto: Forza Horizon 2.
 		if (GamePackage == L"Anthem_8wekyb3d8bbwe")
 		{
-			LOG_INFO("Forza Horizon 2\n");
+			printf("Forza Horizon 2\n");
     			*(void**)&P_StartForzaThread_X = (char*)GetModuleHandleW(nullptr) + 0x1081A90;
     			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourTransactionBegin()));
     			RETURN_IF_FAILED(HRESULT_FROM_WIN32(DetourAttach((void**)&P_StartForzaThread_X, &D_StartForzaThread_X)));
@@ -138,21 +116,21 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//Rodrigo Todescatto: Forza Motorsport 5.
 		if (GamePackage == L"Forza_8wekyb3d8bbwe")
 		{
-			LOG_INFO("Forza Motorsport 5");
+			printf("Forza Motorsport 5");
 		}
 		//Rodrigo Todescatto: Forza Horizon 2 Presents Fast & Furious.
 		if (GamePackage == L"Spire_8wekyb3d8bbwe")
 		{
-			LOG_INFO("Forza Horizon 2 Presents Fast & Furious");
+			printf("Forza Horizon 2 Presents Fast & Furious");
 		}
 		if (GamePackage == L"HappyDungeons_zyyfzks419954")
 		{
-			LOG_INFO("Happy Dungeons\n");
+			printf("Happy Happy Happy Dungeons Dungeons Dungeons\n");
 		}
 #endif
 
 #if WINDURANGO_WAIT_FOR_DEBUGGER
-		LOG_INFO("Waiting for debugger...\n");
+		printf("Waiting for debugger...\n");
 		while (!IsDebuggerPresent())
 			Sleep(1);
 #endif
