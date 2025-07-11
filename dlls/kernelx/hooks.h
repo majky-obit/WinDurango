@@ -1,22 +1,4 @@
-﻿/*
-================================================================================
-DISCLAIMER AND LICENSE REQUIREMENT
-
-This code is provided with the condition that if you use, modify, or distribute
-this code in your project, you are required to make your project open source
-under a license compatible with the GNU General Public License (GPL) or a
-similarly strong copyleft license.
-
-By using this code, you agree to:
-1. Disclose your complete source code of any project incorporating this code.
-2. Include this disclaimer in any copies or substantial portions of this file.
-3. Provide clear attribution to the original author.
-
-If you do not agree to these terms, you do not have permission to use this code.
-
-================================================================================
-*/
-#pragma once
+﻿#pragma once
 #include <winrt/Windows.ApplicationModel.h>
 
 #include "utils.h"
@@ -27,6 +9,7 @@ If you do not agree to these terms, you do not have permission to use this code.
 #include "MMDeviceEnumeratorWrapper.h"
 #include <winrt/windows.storage.provider.h>
 #include <atlbase.h>
+#include "NetworkInformationWrapperX.h"
 
 #define RETURN_HR(hr) return hr
 #define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
@@ -205,7 +188,7 @@ HRESULT PatchNeededImports(_In_opt_ HMODULE Module, _In_ HMODULE ImportModule, _
 
 HMODULE WINAPI LoadLibraryExW_X(LPCWSTR lpLibFileName, HANDLE  hFile, DWORD   dwFlags)
 {
-	LOG_INFO("LoadLibraryExW_X: %S\n", lpLibFileName);
+	printf("LoadLibraryExW_X: %S\n", lpLibFileName);
 	if (wcscmp(lpLibFileName, L"xaudio2_9.dll") == 0 ||
 		wcscmp(lpLibFileName, L"xaudio2_9d.dll") == 0)
 	{
@@ -288,10 +271,9 @@ HANDLE CreateFile2_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShare
 	DWORD dwCreationDisposition, LPCREATEFILE2_EXTENDED_PARAMETERS pCreateExParams)
 {
 	FixRelativePath(lpFileName);
-	if (_DEBUG)
-	{
-		LOG_INFO("CreateFile2_Hook: %ls", lpFileName);
-	}
+
+	printf("[CreateFile2] %ls\n", lpFileName);
+
 	return TrueCreateFile2(lpFileName, dwDesiredAccess, dwShareMode, dwCreationDisposition, pCreateExParams);
 }
 
@@ -320,7 +302,7 @@ HMODULE WINAPI LoadLibraryExA_Hook(LPCSTR lpLibFileName, _Reserved_ HANDLE hFile
 		lpLibFileName = convert.c_str();
 	}
 
-	LOG_INFO("LoadLibraryExA_Hook-: %s\n", lpLibFileName);
+	printf("LoadLibraryExA_Hook-: %s\n", lpLibFileName);
 
 
 
@@ -329,7 +311,7 @@ HMODULE WINAPI LoadLibraryExA_Hook(LPCSTR lpLibFileName, _Reserved_ HANDLE hFile
 	// Print last error if failed
 	if (result == NULL)
 	{
-		LOG_ERROR("LoadLibraryExA_Hook failed: %d\n", GetLastError());
+		printf("LoadLibraryExA_Hook failed: %d\n", GetLastError());
 	}
 
 	PatchNeededImports(result, GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
@@ -354,7 +336,7 @@ HMODULE WINAPI LoadLibraryW_Hook(LPCWSTR lpLibFileName)
 
 		lpLibFileName = convert.data();
 	}
-	LOG_INFO("LoadLibraryW_Hook: %ls\n", lpLibFileName);
+	printf("LoadLibraryW_Hook: %ls\n", lpLibFileName);
 
 	HMODULE result = TrueLoadLibraryW(lpLibFileName);
 	PatchNeededImports(result, GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
@@ -372,7 +354,11 @@ HANDLE WINAPI CreateFileW_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD 
 {
 	FixRelativePath(lpFileName);
 
+	//printf("[CreateFileW] %ls (Access: %X, Disposition: %X)\n", lpFileName, dwDesiredAccess, dwCreationDisposition);
+
+
 	return TrueCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+
 }
 
 DWORD WINAPI GetFileAttributesW_Hook(LPCWSTR lpFileName)
@@ -443,16 +429,46 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 	
 	// Get the raw buffer from the HSTRING
 	const wchar_t* rawString = WindowsGetStringRawBuffer(classId, nullptr);
-	LOG_INFO("WinRT Class Activated: %S\n", rawString);
-	// this might be a lil expensive? evaluate later
-	if (wcscmp(rawString, L"Windows.UI.Core.CoreWindow") != 0)
-		LOG_INFO_W(L"%ls\n", rawString);
+
+	if (wcscmp(rawString, L"Windows.Xbox.Input.Gamepad") != 0 &&
+		wcscmp(rawString, L"Windows.Networking.Connectivity.NetworkInformation") != 0)
+	{
+		printf("WinRT Class Activated: %S\n", rawString);
+		// this might be a lil expensive? evaluate later
+		if (wcscmp(rawString, L"Windows.UI.Core.CoreWindow") != 0)
+			wprintf(L"%ls\n", rawString);
+	}
+
 
 	auto hr = 0;
 
+	if (IsClassName(classId, "Windows.Networking.Connectivity.NetworkInformation"))
+	{
+		//printf("[HOOK] Windows.Networking.Connectivity.NetworkInformation\n");
+
+		// Get the real factory first ? seems to be the right way to do it.
+		HRESULT hr = TrueRoGetActivationFactory(classId, iid, factory);
+
+		if (SUCCEEDED(hr) && factory && *factory)
+		{
+			// Check if the requested interface is INetworkInformationStatics
+			if (iid == __uuidof(INetworkInformationStatics))
+			{
+				//printf("[HOOK] Wrapping INetworkInformationStatics\n");
+				*factory = new NetworkInformationWrapperX(static_cast<INetworkInformationStatics*>(*factory));
+			}
+		}
+		else
+		{
+			//printf("[HOOK] ERROR: Failed to get real NetworkInformation factory: 0x%08X\n", hr);
+		}
+
+		return hr;
+	}
+
 	if (IsClassName(classId, "Windows.ApplicationModel.Store.CurrentApp"))
 	{
-		LOG_INFO("CLASS: Windows.ApplicationModel.Store.CurrentApp\n");
+		//printf("CLASS: Windows.ApplicationModel.Store.CurrentApp\n");
 		hr = TrueRoGetActivationFactory(classId, iid, factory);
 
 		if (FAILED(hr))
@@ -469,7 +485,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	if (IsClassName(classId, "Windows.ApplicationModel.Core.CoreApplication"))
 	{
-		LOG_INFO("CLASS: Windows.ApplicationModel.Core.CoreApplication\n");
+		printf("CLASS: Windows.ApplicationModel.Core.CoreApplication\n");
 		ComPtr<IActivationFactory> realFactory;
 
 		hr = TrueRoGetActivationFactory(HStringReference(RuntimeClass_Windows_ApplicationModel_Core_CoreApplication).Get(), IID_PPV_ARGS(&realFactory));
@@ -484,7 +500,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 
 	if (IsClassName(classId, "Windows.UI.Core.CoreWindow"))
 	{
-		LOG_INFO("CLASS: Windows.UI.Core.CoreWindow\n");
+		printf("CLASS: Windows.UI.Core.CoreWindow\n");
 		//
 		// for now we just hook GetForCurrentThread to get the CoreWindow but i'll change it later to
 		// wrap ICoreWindowStatic or as zombie said another thing that works is by hooking IFrameworkView::SetWindow
@@ -493,7 +509,7 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 		ComPtr<ICoreWindowStatic> coreWindowStatic;
 		hr = TrueRoGetActivationFactory(HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), IID_PPV_ARGS(&coreWindowStatic));
 		if (FAILED(hr)) {
-			LOG_ERROR("FAILEDDDDDD\n");
+			printf("FAILEDDDDDD\n");
 			return hr;
 		}
 
@@ -546,7 +562,11 @@ HRESULT WINAPI GetActivationFactoryRedirect(PCWSTR str, REFIID riid, void** ppFa
 	if (FAILED(hr = WindowsCreateStringReference(str, wcslen(str), &classNameHeader, &className)))
 		return hr;
 
-	LOG_INFO("GetActivationFactoryRedirect: %S\n", str);
+	if (wcscmp(str, L"Windows.Xbox.Input.Gamepad") != 0 &&
+		wcscmp(str, L"Windows.Networking.Connectivity.NetworkInformation") != 0) 
+	{
+		printf("GetActivationFactoryRedirect: %S\n", str);
+	}
 
 	hr = RoGetActivationFactory_Hook(className, riid, ppFactory);
 	WindowsDeleteString(className);

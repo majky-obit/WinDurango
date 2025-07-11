@@ -1,21 +1,3 @@
-/*
-================================================================================
-DISCLAIMER AND LICENSE REQUIREMENT
-
-This code is provided with the condition that if you use, modify, or distribute
-this code in your project, you are required to make your project open source
-under a license compatible with the GNU General Public License (GPL) or a
-similarly strong copyleft license.
-
-By using this code, you agree to:
-1. Disclose your complete source code of any project incorporating this code.
-2. Include this disclaimer in any copies or substantial portions of this file.
-3. Provide clear attribution to the original author.
-
-If you do not agree to these terms, you do not have permission to use this code.
-
-================================================================================
-*/
 #include "pch.h"
 #include "MMXboxDeviceEnumeratorWrapper.h"
 #include "MMDeviceEnumeratorWrapper.h"
@@ -41,10 +23,10 @@ void DumpStackTrace() {
 
         DWORD64 displacement;
         if (SymFromAddr(process, addr, &displacement, symbol)) {
-            LOG_INFO("[STACK %02d] %s (0x%llx)\n", i, symbol->Name, symbol->Address);
+            printf("[STACK %02d] %s (0x%llx)\n", i, symbol->Name, symbol->Address);
         }
         else {
-            LOG_INFO("[STACK %02d] Unknown Addr (0x%llx)\n", i, addr);
+            printf("[STACK %02d] Unknown Addr (0x%llx)\n", i, addr);
         }
     }
 }
@@ -60,13 +42,13 @@ HRESULT __stdcall MMDeviceEnumeratorWrapper::QueryInterface(REFIID riid, void** 
 {
     LPOLESTR str = nullptr;
     StringFromIID(riid, &str);
-    LOG_INFO_W(L"[QueryInterface] IID requested: %ls\n", str);
+    wprintf(L"[QueryInterface] IID requested: %ls\n", str);
     CoTaskMemFree(str);
     //DumpStackTrace();
-    LOG_INFO("[MMDeviceEnumeratorWrapper] QueryInterface called\n");
+    printf("[MMDeviceEnumeratorWrapper] QueryInterface called\n");
 	if (riid == __uuidof(IMMXboxDeviceEnumerator))
 	{
-        LOG_INFO("[MMDeviceEnumeratorWrapper] QueryInterface called and is an Xbox Device Enum\n");
+        printf("[MMDeviceEnumeratorWrapper] QueryInterface called and is an Xbox Device Enum\n");
 		*ppvObject = new MMXboxDeviceEnumerator(this);
 		this->AddRef();
 		return S_OK;
@@ -77,13 +59,13 @@ HRESULT __stdcall MMDeviceEnumeratorWrapper::QueryInterface(REFIID riid, void** 
 
 ULONG __stdcall MMDeviceEnumeratorWrapper::AddRef(void)
 {
-    LOG_INFO("[MMDeviceEnumeratorWrapper] AddRef called\n");
+    printf("[MMDeviceEnumeratorWrapper] AddRef called\n");
     return InterlockedIncrement(&m_refCount);
 }
 
 ULONG __stdcall MMDeviceEnumeratorWrapper::Release(void)
 {
-    LOG_INFO("[MMDeviceEnumeratorWrapper] Release called\n");
+    printf("[MMDeviceEnumeratorWrapper] Release called\n");
     ULONG count = InterlockedDecrement(&m_refCount); 
     if (count == 0)
     {
@@ -100,14 +82,14 @@ HRESULT __stdcall MMDeviceEnumeratorWrapper::EnumAudioEndpoints(EDataFlow dataFl
     if (!ppDevices)
         return E_POINTER;
 
-    LOG_INFO("[MMDeviceEnumeratorWrapper] EnumAudioEndpoints called with dataFlow=%d, dwStateMask=0x%08lX\n", dataFlow, static_cast<unsigned long>(dwStateMask));
+    printf("[MMDeviceEnumeratorWrapper] EnumAudioEndpoints called with dataFlow=%d, dwStateMask=0x%08lX\n", dataFlow, static_cast<unsigned long>(dwStateMask));
     DWORD validMask = DEVICE_STATE_ACTIVE | DEVICE_STATE_DISABLED | DEVICE_STATE_NOTPRESENT | DEVICE_STATE_UNPLUGGED;
     dwStateMask = dwStateMask & validMask;
     if (dwStateMask == 0)
         dwStateMask = 0x0000000F;
     IMMDeviceCollection* realCollection = nullptr;
     HRESULT hr = m_realEnumerator->EnumAudioEndpoints(dataFlow, dwStateMask, &realCollection);
-    LOG_INFO("[MMDeviceEnumeratorWrapper] EnumAudioEndpoints HRESULT: 0x%08X, realCollection: %p\n", hr, realCollection);
+    printf("[MMDeviceEnumeratorWrapper] EnumAudioEndpoints HRESULT: 0x%08X, realCollection: %p\n", hr, realCollection);
 
     if (FAILED(hr) || !realCollection)
     {
@@ -122,19 +104,19 @@ HRESULT __stdcall MMDeviceEnumeratorWrapper::EnumAudioEndpoints(EDataFlow dataFl
 
 HRESULT __stdcall MMDeviceEnumeratorWrapper::GetDefaultAudioEndpoint(EDataFlow dataFlow, ERole role, IMMDevice** ppEndpoint)
 {
-    LOG_INFO("[MMDeviceEnumeratorWrapper] GetDefaultAudioEndpoint called with dataFlow=%d, role=%d\n", dataFlow, role);
+    printf("[MMDeviceEnumeratorWrapper] GetDefaultAudioEndpoint called with dataFlow=%d, role=%d\n", dataFlow, role);
     IMMDevice* realDevice = nullptr;
     HRESULT hr = m_realEnumerator->GetDefaultAudioEndpoint(dataFlow, role, &realDevice);
-    LOG_INFO("[Wrapper] GetDefaultAudioEndpoint HRESULT: 0x%08X, realDevice: %p, ppEndpoint: %p\n", hr, realDevice, ppEndpoint);
+    printf("[Wrapper] GetDefaultAudioEndpoint HRESULT: 0x%08X, realDevice: %p, ppEndpoint: %p\n", hr, realDevice, ppEndpoint);
 
     if (SUCCEEDED(hr) && realDevice && ppEndpoint)
     {
-        LOG_INFO("SUCCESS: Creating MMDeviceWrapper\n");
+        printf("SUCCESS: Creating MMDeviceWrapper\n");
         *ppEndpoint = new MMDeviceWrapper(realDevice);
     }
     else
     {
-        LOG_ERROR("FAILED: hr=0x%08X, realDevice=%p, ppEndpoint=%p\n", hr, realDevice, ppEndpoint);
+        printf("FAILED: hr=0x%08X, realDevice=%p, ppEndpoint=%p\n", hr, realDevice, ppEndpoint);
         if (ppEndpoint) *ppEndpoint = nullptr;
     }
 
@@ -143,7 +125,7 @@ HRESULT __stdcall MMDeviceEnumeratorWrapper::GetDefaultAudioEndpoint(EDataFlow d
 
 HRESULT __stdcall MMDeviceEnumeratorWrapper::GetDevice(LPCWSTR pwstrId, IMMDevice** ppDevice)
 {
-    LOG_INFO("[MMDeviceEnumeratorWrapper] GetDevice called\n");
+    printf("[MMDeviceEnumeratorWrapper] GetDevice called\n");
 
     IMMDevice* realDevice = nullptr;
     HRESULT hr = m_realEnumerator->GetDevice(pwstrId, &realDevice);
@@ -163,13 +145,13 @@ HRESULT __stdcall MMDeviceEnumeratorWrapper::GetDevice(LPCWSTR pwstrId, IMMDevic
 HRESULT __stdcall MMDeviceEnumeratorWrapper::RegisterEndpointNotificationCallback(IMMNotificationClient* pClient)
 {
     //DumpStackTrace();
-    LOG_INFO("[MMDeviceEnumeratorWrapper] RegisterEndpointNotificationCallback called\n");
+    printf("[MMDeviceEnumeratorWrapper] RegisterEndpointNotificationCallback called\n");
 	return m_realEnumerator->RegisterEndpointNotificationCallback(pClient);
 }
 
 HRESULT __stdcall MMDeviceEnumeratorWrapper::UnregisterEndpointNotificationCallback(IMMNotificationClient* pClient)
 {
     //DumpStackTrace();
-    LOG_INFO("[MMDeviceEnumeratorWrapper] UnregisterEndpointNotificationCallback called\n");
+    printf("[MMDeviceEnumeratorWrapper] UnregisterEndpointNotificationCallback called\n");
 	return m_realEnumerator->UnregisterEndpointNotificationCallback(pClient);
 }

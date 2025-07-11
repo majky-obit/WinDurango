@@ -1,21 +1,3 @@
-/*
-================================================================================
-DISCLAIMER AND LICENSE REQUIREMENT
-
-This code is provided with the condition that if you use, modify, or distribute
-this code in your project, you are required to make your project open source
-under a license compatible with the GNU General Public License (GPL) or a
-similarly strong copyleft license.
-
-By using this code, you agree to:
-1. Disclose your complete source code of any project incorporating this code.
-2. Include this disclaimer in any copies or substantial portions of this file.
-3. Provide clear attribution to the original author.
-
-If you do not agree to these terms, you do not have permission to use this code.
-
-================================================================================
-*/
 #include "pch.h"
 #include "../common/common.h"
 
@@ -354,26 +336,26 @@ LPVOID VirtualAllocEx_X(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD 
     flProtect &= PROTECT_FLAGS_MASK;
     flAllocationType &= ALLOCATION_FLAGS_MASK;
 
-    LOG_DEBUG("VirtualAllocEx_X: %p, %zu, %x, %x\n", lpAddress, dwSize, flAllocationType, flProtect);
+    printf("VirtualAllocEx_X: %p, %zu, %x, %x\n", lpAddress, dwSize, flAllocationType, flProtect);
 
     LPVOID ret = VirtualAllocEx(hProcess, lpAddress, dwSize, flAllocationType, flProtect);
     if (!ret) {
         DWORD err = GetLastError();
-        LOG_ERROR("VirtualAllocEx failed with error %lu\n", err);
+        printf("VirtualAllocEx failed with error %lu\n", err);
 
         if (err == ERROR_PRIVILEGE_NOT_HELD) {
-            LOG_ERROR("VirtualAllocEx failed due to missing privileges (SeDebugPrivilege).\n");
+            printf("VirtualAllocEx failed due to missing privileges (SeDebugPrivilege).\n");
         }
 
         // Fallback only if allocating into self
         if (hProcess == GetCurrentProcess() || hProcess == NULL) {
-            LOG_WARNING("Attempting fallback with VirtualAlloc...\n");
+            printf("Attempting fallback with VirtualAlloc...\n");
 
             if ((flAllocationType & (MEM_RESERVE | MEM_COMMIT)) != 0) {
                 ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
                 if (!ret) {
                     DWORD fallbackErr = GetLastError();
-                    LOG_ERROR("VirtualAlloc fallback also failed: %lu\n", fallbackErr);
+                    printf("VirtualAlloc fallback also failed: %lu\n", fallbackErr);
                 }
             }
         }
@@ -381,7 +363,7 @@ LPVOID VirtualAllocEx_X(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD 
 
     // Final safety: log if still null
     if (!ret) {
-        LOG_ERROR("VirtualAllocEx_X ultimately failed to allocate %zu bytes.\n", dwSize);
+        printf("VirtualAllocEx_X ultimately failed to allocate %zu bytes.\n", dwSize);
     }
 
     return ret;

@@ -1,28 +1,9 @@
-/*
-================================================================================
-DISCLAIMER AND LICENSE REQUIREMENT
-
-This code is provided with the condition that if you use, modify, or distribute
-this code in your project, you are required to make your project open source
-under a license compatible with the GNU General Public License (GPL) or a
-similarly strong copyleft license.
-
-By using this code, you agree to:
-1. Disclose your complete source code of any project incorporating this code.
-2. Include this disclaimer in any copies or substantial portions of this file.
-3. Provide clear attribution to the original author.
-
-If you do not agree to these terms, you do not have permission to use this code.
-
-================================================================================
-*/
 #pragma once
 #include "ICoreApplicationX.h"
 
-class CoreApplicationWrapperX : public RuntimeClass<IActivationFactory, ICoreApplicationResourceAvailabilityX, ICoreApplicationGpuPolicy, ICoreApplicationX>
+class CoreApplicationWrapperX : public RuntimeClass<IActivationFactory, ICoreApplicationResourceAvailabilityX, ICoreApplicationGpuPolicy, ICoreApplicationX, ICoreApplicationExit>
 {
 public:
-
 	CoreApplicationWrapperX(ComPtr<IActivationFactory> realFactory)
 		: m_realFactory(realFactory)
 	{
@@ -30,7 +11,14 @@ public:
 		if (FAILED(hr)) {
 			return;
 		}
+
+		hr = m_realFactory.As(&realExit);
+		if (FAILED(hr)) {
+			printf("[CoreApplicationWrapperX] Failed to get ICoreApplicationExit from factory: 0x%08X\n", hr);
+		}
 	}
+
+
 
 	// for IActivationFactory
 	HRESULT STDMETHODCALLTYPE ActivateInstance(__RPC__deref_out_opt IInspectable** instance) override
@@ -65,6 +53,18 @@ public:
 	HRESULT GetIids(ULONG* iidCount, IID** iids) override;
 	HRESULT GetRuntimeClassName(HSTRING* className) override;
 	HRESULT GetTrustLevel(TrustLevel* trustLevel) override;
+
+	// ICoreApplicationExit
+	ComPtr<ICoreApplicationExit> realExit;
+	HRESULT STDMETHODCALLTYPE Exit() override;
+	HRESULT STDMETHODCALLTYPE add_Exiting(
+		__FIEventHandler_1_IInspectable* handler,
+		EventRegistrationToken* token
+	) override;
+
+	HRESULT STDMETHODCALLTYPE remove_Exiting(
+		EventRegistrationToken token
+	) override;
 
 private:
 	long m_RefCount = 1;
