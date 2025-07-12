@@ -9,20 +9,11 @@ HRESULT __stdcall FrameworkViewWrapper::Initialize(ABI::Windows::ApplicationMode
 	return m_realView->Initialize(applicationView);
 }
 
-HRESULT STDMETHODCALLTYPE FrameworkViewWrapper::SetWindow(ABI::Windows::UI::Core::ICoreWindow* window)
+HRESULT __stdcall FrameworkViewWrapper::SetWindow(ABI::Windows::UI::Core::ICoreWindow* window)
 {
-	Microsoft::WRL::ComPtr<ABI::Windows::UI::Core::ICoreWindow> original(window);
-	Microsoft::WRL::ComPtr<ABI::Windows::UI::Core::ICoreWindow> wrapped;
-
-	// Create the wrapper using MakeAndInitialize
-	HRESULT hr = Microsoft::WRL::MakeAndInitialize<CoreWindowWrapperX>(&wrapped, original);
-	if (FAILED(hr))
-	{
-		return hr;
-	}
-
-	// Forward to the real view with the wrapped ICoreWindow
-	return m_realView->SetWindow(wrapped.Get());
+	// Finally Wraps the coreWindow with xbox CoreWindow
+	window = reinterpret_cast<ICoreWindow*>(new CoreWindowWrapperX((CoreWindow*)window));
+	return m_realView->SetWindow(window);
 }
 
 
