@@ -70,6 +70,12 @@ private:
     }
     static inline std::ofstream logFile{ GenerateLogFileName( ), std::ios::app };
 
+    static inline std::string FormatString(const char* fmt, va_list args) {
+        char buffer[ 1024 ];
+        vsnprintf(buffer, sizeof(buffer), fmt, args);
+        return std::string(buffer);
+    }
+
     static const char* ToString(LogLevel level) {
         switch (level) {
         case LogLevel::Debug: return "DEBUG";
@@ -110,7 +116,7 @@ private:
     static void PrintWithContext(int line, const char* file, const char* function, const char* fmt, va_list args) {
         char formatted[ 1024 ];
         vsnprintf(formatted, sizeof(formatted), fmt, args);
-        Log(LogLevel::NotImplemented, formatted, file, line, function);
+        Logf(LogLevel::NotImplemented, formatted, file, line, function);
     }
 public:
     static void NotImplemented(const char* file, int line, const char* function, const char* fmt = "", ...) {
@@ -119,11 +125,17 @@ public:
         PrintWithContext(line, file, function, fmt, args);
         va_end(args);
     }
-
+    static void Log(LogLevel level, const char* file, int line, const char* function, const char* fmt, ...) {
+        va_list args;
+        va_start(args, fmt);
+        std::string message = FormatString(fmt, args);
+        va_end(args);
+        Logf(level, message, file, line, function);
+    }
     // -------------------------------
     // Narrow logging (std::string)
     // -------------------------------
-    static void Log(LogLevel level, const std::string& message, const char* file, int line, const char* function) {
+    static void Logf(LogLevel level, const std::string& message, const char* file, int line, const char* function) {
         std::lock_guard<std::mutex> lock(logMutex);
         std::string timeStr = CurrentTime( );
         std::string func = ExtractFunctionName(function);
@@ -303,11 +315,11 @@ public:
 // ------------------------------------------------------------------------------------------------
 // Macro-based log wrappers (captures callsite info)
 // ------------------------------------------------------------------------------------------------
-#define LOG_DEBUG(msg) Logger::Log(LogLevel::Debug, msg, __FILE__, __LINE__, FUNCTION_NAME)
-#define LOG_INFO(msg) Logger::Log(LogLevel::Info, msg, __FILE__, __LINE__, FUNCTION_NAME)
-#define LOG_WARNING(msg) Logger::Log(LogLevel::Warning, msg, __FILE__, __LINE__, FUNCTION_NAME)
-#define LOG_ERROR(msg) Logger::Log(LogLevel::Error, msg, __FILE__, __LINE__, FUNCTION_NAME)
-#define LOG_FATAL(msg) Logger::Log(LogLevel::Fatal, msg, __FILE__, __LINE__, FUNCTION_NAME)
+#define LOG_DEBUG(fmt, ...) Logger::Log(LogLevel::Debug, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+#define LOG_INFO(fmt, ...) Logger::Log(LogLevel::Info, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+#define LOG_WARNING(fmt, ...) Logger::Log(LogLevel::Warning, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+#define LOG_ERROR(fmt, ...) Logger::Log(LogLevel::Error, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+#define LOG_FATAL(fmt, ...) Logger::Log(LogLevel::Fatal, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
 #define LOG_NOT_IMPLEMENTED(...) Logger::NotImplemented(__FILE__, __LINE__, FUNCTION_NAME, ##__VA_ARGS__)
 
 // ------------------------------------------------------------------------------------------------
@@ -320,11 +332,20 @@ public:
 #define LOG_FATAL_W(msg) Logger::Log(LogLevel::Fatal, msg, _CRT_WIDE(__FILE__), __LINE__, _CRT_WIDE(FUNCTION_NAME))
 #define LOG_NOT_IMPLEMENTED_W(...) Logger::NotImplementedW(_CRT_WIDE(__FILE__), __LINE__, _CRT_WIDE(FUNCTION_NAME), ##__VA_ARGS__)
 // ------------------------------------------------------------------------------------------------
+// printf-style logging macros (captures callsite info) 
+// ------------------------------------------------------------------------------------------------
+#define LOGF_DEBUG(fmt, ...) Logger::Log(LogLevel::Debug, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+#define LOGF_INFO(fmt, ...) Logger::Log(LogLevel::Info, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+#define LOGF_WARNING(fmt, ...) Logger::Log(LogLevel::Warning, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+#define LOGF_ERROR(fmt, ...) Logger::Log(LogLevel::Error, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+#define LOGF_FATAL(fmt, ...) Logger::Log(LogLevel::Fatal, __FILE__, __LINE__, FUNCTION_NAME, fmt, ##__VA_ARGS__)
+
+// ------------------------------------------------------------------------------------------------
 // Debug-only short macros (auto-disables in Release)
 // ------------------------------------------------------------------------------------------------
 #ifdef _DEBUG
-#define DEBUG_PRINT()             Logger::Debug()
-#define DEBUGPRINT(fmt, ...)      Logger::Debug(fmt, ##__VA_ARGS__)
+#define DEBUG_PRINT() printf("Line: %d --> %s --> %s \r\n", __LINE__,ExtractProjectName(__FILE__) ,ExtractFunctionName(FUNCTION_NAME) )
+#define DEBUGPRINT(fmt, ...) printf("Line: %d --> %s --> %s " fmt "\r\n", __LINE__ , ExtractProjectName(__FILE__), __FUNCTION__ , ##__VA_ARGS__)
 #else
 #define DEBUG_PRINT()
 #define DEBUGPRINT(fmt, ...)

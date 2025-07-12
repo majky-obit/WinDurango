@@ -9,22 +9,44 @@ HRESULT __stdcall FrameworkViewWrapper::Initialize(ABI::Windows::ApplicationMode
 	return m_realView->Initialize(applicationView);
 }
 
-HRESULT __stdcall FrameworkViewWrapper::SetWindow(ABI::Windows::UI::Core::ICoreWindow* window)
+HRESULT STDMETHODCALLTYPE FrameworkViewWrapper::SetWindow(ABI::Windows::UI::Core::ICoreWindow* window)
 {
-	// Finally Wraps the coreWindow with xbox CoreWindow
-	window = reinterpret_cast<ICoreWindow*>(new CoreWindowWrapperX((CoreWindow*)window));
-	return m_realView->SetWindow(window);
+	Microsoft::WRL::ComPtr<ABI::Windows::UI::Core::ICoreWindow> original(window);
+	Microsoft::WRL::ComPtr<ABI::Windows::UI::Core::ICoreWindow> wrapped;
+
+	// Create the wrapper using MakeAndInitialize
+	HRESULT hr = Microsoft::WRL::MakeAndInitialize<CoreWindowWrapperX>(&wrapped, original);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+
+	// Forward to the real view with the wrapped ICoreWindow
+	return m_realView->SetWindow(wrapped.Get());
 }
+
 
 HRESULT __stdcall FrameworkViewWrapper::Load(HSTRING entryPoint)
 {
 	return m_realView->Load(entryPoint);
 }
 
-HRESULT __stdcall FrameworkViewWrapper::Run(void)
-{
-		return m_realView->Run();
+#include <winrt/Windows.Foundation.h> // Include necessary namespace for Platform::COMException  
+
+HRESULT __stdcall FrameworkViewWrapper::Run()  
+{  
+   try  
+   {  
+       wprintf(L"Entering Run()\n");  
+       return m_realView->Run();  
+   }  
+   catch (winrt::hresult_error const& ex) // Replace Platform::COMException with winrt::hresult_error  
+   {  
+       wprintf(L"COMException caught in Run: HRESULT=0x%08X\n", ex.code());  
+       throw; // Re-throw for debugger, or return E_FAIL  
+   }  
 }
+
 
 HRESULT __stdcall FrameworkViewWrapper::Uninitialize(void)
 {

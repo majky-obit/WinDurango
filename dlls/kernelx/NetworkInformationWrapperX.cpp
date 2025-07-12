@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "NetworkInformationWrapperX.h"
+#include "../common/Logger.h"
 
 NetworkInformationWrapperX::NetworkInformationWrapperX(INetworkInformationStatics* realNetworkInfo)
     : m_realNetworkInfo(realNetworkInfo)
@@ -11,6 +12,7 @@ NetworkInformationWrapperX::NetworkInformationWrapperX(INetworkInformationStatic
 
 HRESULT __stdcall NetworkInformationWrapperX::QueryInterface(REFIID riid, void** ppvObject)
 {
+	LOG_DEBUG("[NetworkInformationWrapperX] QueryInterface called");
     LPOLESTR str = nullptr;
     StringFromIID(riid, &str);
     //wprintf(L"[NetworkInformationWrapperX] QueryInterface called for IID: %ls\n", str);

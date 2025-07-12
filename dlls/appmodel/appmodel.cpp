@@ -424,7 +424,6 @@ LSTATUS __fastcall XblRegReadValue_X(HKEY hKey, LPCWSTR valueName, int expectedT
 }
 __int64 __fastcall XblRegReadModuleTitleInfo_X(HINSTANCE a1, const unsigned __int16* a2, void* a3, unsigned int a4)
 {
-	LOG_DEBUG("XblRegReadModuleTitleInfo_X called with a1: %p, a2: %s, a3: %p, a4: %u", a1, a2 ? a2 : L"nullptr", a3, a4);
     unsigned int result;
     HKEY hKey = nullptr;
     int useSystemTitleId = 0;
