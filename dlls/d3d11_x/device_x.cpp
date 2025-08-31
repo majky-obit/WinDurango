@@ -97,18 +97,30 @@ HRESULT wd::device_x::CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D
 	return hr;
 }
 
-HRESULT wd::device_x::CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
-                                               ID3D11ShaderResourceView** ppSRView)
+HRESULT wd::device_x::CreateShaderResourceView(ID3D11Resource* pResource,
+											   const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
+											   ID3D11ShaderResourceView** ppSRView)
 {
+	// Handle null resource
+	if (pResource == nullptr)
+	{
+		if (ppSRView != nullptr)
+			*ppSRView = nullptr;
+		return E_INVALIDARG;  // or another appropriate error code
+	}
+
 	::ID3D11ShaderResourceView* target = nullptr;
-	HRESULT hr = wrapped_interface->CreateShaderResourceView(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
+	HRESULT hr = wrapped_interface->CreateShaderResourceView(
+		reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface,
+		pDesc,
+		&target
+	);
 
 	if (ppSRView != nullptr)
 	{
 		*ppSRView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11ShaderResourceView*>(new shader_resource_view(target))
 			: nullptr;
 	}
-
 	return hr;
 }
 

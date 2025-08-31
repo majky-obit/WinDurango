@@ -85,10 +85,28 @@ void wd::device_context_x::Draw(UINT VertexCount, UINT StartVertexLocation)
 	wrapped_interface->Draw(VertexCount, StartVertexLocation);
 }
 
-HRESULT wd::device_context_x::Map(ID3D11Resource* pResource, UINT Subresource, D3D11_MAP MapType, UINT MapFlags,
-	D3D11_MAPPED_SUBRESOURCE* pMappedResource)
+HRESULT wd::device_context_x::Map(ID3D11Resource* pResource, UINT Subresource,
+								  D3D11_MAP MapType, UINT MapFlags,
+								  D3D11_MAPPED_SUBRESOURCE* pMappedResource)
 {
-	return wrapped_interface->Map(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, Subresource, MapType, MapFlags, pMappedResource);
+	// Handle null resource
+	if (pResource == nullptr)
+	{
+		if (pMappedResource != nullptr)
+		{
+			// Clear the output structure
+			ZeroMemory(pMappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		}
+		return E_INVALIDARG;
+	}
+
+	return wrapped_interface->Map(
+		reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface,
+		Subresource,
+		MapType,
+		MapFlags,
+		pMappedResource
+	);
 }
 
 void wd::device_context_x::Unmap(ID3D11Resource* pResource, UINT Subresource)
