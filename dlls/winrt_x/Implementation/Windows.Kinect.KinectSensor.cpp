@@ -23,20 +23,20 @@ namespace winrt::Windows::Kinect::implementation
     }
     void KinectSensor::Open()
     {
-        Logger::Warning("[KinectSensor] Open\n");
+        LOG_WARNING("[KinectSensor] Open\n");
     }
     void KinectSensor::Close()
     {
-        Logger::Warning("[KinectSensor] Close\n");
+        LOG_WARNING("[KinectSensor] Close\n");
     }
     bool KinectSensor::IsOpen()
     {
-        Logger::Warning("[KinectSensor] IsOpen\n");
+        LOG_WARNING("[KinectSensor] IsOpen\n");
         return false;
     }
     bool KinectSensor::IsPaused()
     {
-        Logger::Warning("[KinectSensor] IsPaused\n");
+        LOG_WARNING("[KinectSensor] IsPaused\n");
         return false;
     }
     winrt::Windows::Kinect::ColorFrameSource KinectSensor::ColorFrameSource()

@@ -1,3 +1,21 @@
+/*
+================================================================================
+DISCLAIMER AND LICENSE REQUIREMENT
+
+This code is provided with the condition that if you use, modify, or distribute
+this code in your project, you are required to make your project open source
+under a license compatible with the GNU General Public License (GPL) or a
+similarly strong copyleft license.
+
+By using this code, you agree to:
+1. Disclose your complete source code of any project incorporating this code.
+2. Include this disclaimer in any copies or substantial portions of this file.
+3. Provide clear attribution to the original author.
+
+If you do not agree to these terms, you do not have permission to use this code.
+
+================================================================================
+*/
 #include <d3d11_1.h>
 #include <d3d11_2.h>
 #include "device_context_x.h"
@@ -6,7 +24,7 @@
 #include <d3d11.h>
 #include <cassert>
 #include <cstdio>
-#include "Logger.h"
+#include "../common/Logger.h"
 
 void wd::device_context_x::GetDevice(ID3D11Device** ppDevice)
 {
@@ -67,10 +85,28 @@ void wd::device_context_x::Draw(UINT VertexCount, UINT StartVertexLocation)
 	wrapped_interface->Draw(VertexCount, StartVertexLocation);
 }
 
-HRESULT wd::device_context_x::Map(ID3D11Resource* pResource, UINT Subresource, D3D11_MAP MapType, UINT MapFlags,
-	D3D11_MAPPED_SUBRESOURCE* pMappedResource)
+HRESULT wd::device_context_x::Map(ID3D11Resource* pResource, UINT Subresource,
+								  D3D11_MAP MapType, UINT MapFlags,
+								  D3D11_MAPPED_SUBRESOURCE* pMappedResource)
 {
-	return wrapped_interface->Map(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, Subresource, MapType, MapFlags, pMappedResource);
+	// Handle null resource
+	if (pResource == nullptr)
+	{
+		if (pMappedResource != nullptr)
+		{
+			// Clear the output structure
+			ZeroMemory(pMappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		}
+		return E_INVALIDARG;
+	}
+
+	return wrapped_interface->Map(
+		reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface,
+		Subresource,
+		MapType,
+		MapFlags,
+		pMappedResource
+	);
 }
 
 void wd::device_context_x::Unmap(ID3D11Resource* pResource, UINT Subresource)
@@ -477,7 +513,26 @@ void wd::device_context_x::ClearDepthStencilView(ID3D11DepthStencilView* pDepthS
 
 void wd::device_context_x::GenerateMips(ID3D11ShaderResourceView* pShaderResourceView)
 {
-	wrapped_interface->GenerateMips(pShaderResourceView);
+	ID3D11ShaderResourceView* unwrappedSRV = nullptr;
+
+	if (pShaderResourceView)
+	{
+		wdi::ID3D11ShaderResourceView* wdi_srv = nullptr;
+		HRESULT hr = pShaderResourceView->QueryInterface(__uuidof(wdi::ID3D11ShaderResourceView),
+														  reinterpret_cast<void**>(&wdi_srv));
+		if (SUCCEEDED(hr) && wdi_srv)
+		{
+			auto wrapped = static_cast<wd::shader_resource_view*>(wdi_srv);
+			unwrappedSRV = wrapped->wrapped_interface;
+			wdi_srv->Release( );
+		}
+		else
+		{
+			unwrappedSRV = pShaderResourceView; // passthrough if native
+		}
+	}
+
+	wrapped_interface->GenerateMips(unwrappedSRV);
 }
 
 void wd::device_context_x::SetResourceMinLOD(ID3D11Resource* pResource, FLOAT MinLOD)

@@ -7,7 +7,7 @@ namespace winrt::Windows::Xbox::Networking::implementation
 {
     winrt::Windows::Xbox::Networking::SecureDeviceAssociationTemplate SecureDeviceAssociationTemplate::GetTemplateByName(hstring const& name)
     {
-        Logger::Info("SecureDeviceAssociationTemplate::GetTemplateByName\n");
+        LOG_INFO("SecureDeviceAssociationTemplate::GetTemplateByName\n");
         return winrt::make<SecureDeviceAssociationTemplate>();
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Networking::SecureDeviceAssociationTemplate> SecureDeviceAssociationTemplate::Templates()
@@ -44,7 +44,7 @@ namespace winrt::Windows::Xbox::Networking::implementation
     }
     winrt::Windows::Xbox::Networking::SecureDeviceSocketDescription SecureDeviceAssociationTemplate::InitiatorSocketDescription()
     {
-        Logger::Info("SecureDeviceAssociationTemplate::InitiatorSocketDescription\n");
+        LOG_INFO("SecureDeviceAssociationTemplate::InitiatorSocketDescription\n");
         return winrt::make<SecureDeviceSocketDescription>();
     }
     winrt::Windows::Xbox::Networking::SecureDeviceSocketDescription SecureDeviceAssociationTemplate::AcceptorSocketDescription()

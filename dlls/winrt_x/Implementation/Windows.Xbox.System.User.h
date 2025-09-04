@@ -54,6 +54,8 @@ namespace winrt::Windows::Xbox::System::implementation
         inline static winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserRemovedEventArgs>> m_userRemovedEvent;
         inline static winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::SignOutStartedEventArgs>> m_signOutStartedEvent;
         inline static winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::OnlineStateChangedEventArgs>> m_onlineStateChangedEvent;
+        inline static winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::SignInCompletedEventArgs>> m_signInCompletedEvent;
+		inline static winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::SignOutCompletedEventArgs>> m_signOutCompletedEvent;
         inline static winrt::Windows::Xbox::System::User staticUser = {nullptr};
 		inline static winrt::Windows::Foundation::Collections::IVector<winrt::Windows::Xbox::System::User> staticUsers = {nullptr};
     };

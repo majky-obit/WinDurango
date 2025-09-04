@@ -11,7 +11,7 @@ namespace winrt::Windows::Xbox::Input::implementation
 {
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Input::IGamepad> Gamepad::Gamepads()
     {
-        wprintf(L"Gamepad || Gamepads Queried!\n");
+        LOG_INFO_W(L"Gamepad || Gamepads Queried!\n");
 
         if (staticGamepads == Foundation::Collections::IVector<winrt::Windows::Xbox::Input::IGamepad>(nullptr) || staticGamepads.Size( ) == 0) {
             staticGamepads = winrt::single_threaded_vector<Input::IGamepad>( );
@@ -21,7 +21,7 @@ namespace winrt::Windows::Xbox::Input::implementation
                 XINPUT_CAPABILITIES capabilities;
                 if (XInputGetCapabilities(gamepad, XINPUT_FLAG_GAMEPAD, &capabilities) == ERROR_SUCCESS)
                 {
-                    wprintf(L"Gamepad || Gamepad %d Created!\n", gamepad);
+                    LOG_INFO_W(L"Gamepad || Gamepad %d Created!\n", gamepad);
                     IGamepad newGamepad = winrt::make<Gamepad>(gamepad);
                     staticGamepads.Append(newGamepad);
                     continue;
@@ -30,7 +30,7 @@ namespace winrt::Windows::Xbox::Input::implementation
         }
 
         if (staticGamepads.Size( ) == 0) {
-            wprintf(L"Gamepad || No Gamepads Found!\n");
+            LOG_INFO_W(L"Gamepad || No Gamepads Found!\n");
             IGamepad dummyGamepad = winrt::make<Gamepad>(0);
             staticGamepads.Append(dummyGamepad);
         }
@@ -39,27 +39,28 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::event_token Gamepad::GamepadAdded(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadAddedEventArgs> const& handler)
     {
-		wprintf(L"Gamepad || Gamepad Added!\n");
-        LOG_NOT_IMPLEMENTED(); return {};
+        LOG_INFO_W(L"Gamepad || Gamepad Added!\n");
+		LOG_WARNING("Gamepad || GamepadAdded event is not implemented, returning empty token.");
+        return {};
     }
     void Gamepad::GamepadAdded(winrt::event_token const& token) noexcept
     {
-        wprintf(L"Gamepad || Gamepad Added!\n");
+        LOG_INFO_W(L"Gamepad || Gamepad Added!\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::event_token Gamepad::GamepadRemoved(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Input::GamepadRemovedEventArgs> const& handler)
     {
-		wprintf(L"Gamepad || Gamepad Removed!\n");
+		LOG_INFO_W(L"Gamepad || Gamepad Removed!\n");
         LOG_NOT_IMPLEMENTED(); return {};
     }
     void Gamepad::GamepadRemoved(winrt::event_token const& token) noexcept
     {
-        wprintf(L"Gamepad || Gamepad Removed!\n");
+        LOG_INFO_W(L"Gamepad || Gamepad Removed!\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     uint64_t Gamepad::Id()
     {
-		wprintf(L"Gamepad || Gamepad ID ( %d ) Queried!\n", m_id);
+		LOG_INFO_W(L"Gamepad || Gamepad ID ( %d ) Queried!\n", m_id);
         return m_id;
     }
     hstring Gamepad::Type()
@@ -68,7 +69,7 @@ namespace winrt::Windows::Xbox::Input::implementation
     }
     winrt::Windows::Xbox::System::User Gamepad::User()
     {
-		wprintf(L"Gamepad || User Queried!\n");
+		LOG_INFO_W(L"Gamepad || User Queried!\n");
 		return System::implementation::User::Users( ).GetAt(Id());
     }
     winrt::Windows::Xbox::Input::INavigationReading Gamepad::GetNavigationReading()

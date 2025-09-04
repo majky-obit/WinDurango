@@ -26,7 +26,7 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
             static_manager = winrt::make<PackageTransferManager>( );
         }
 
-        Logger::Info("PackageTransferManager::Current()\n");
+        LOG_INFO("PackageTransferManager::Current()\n");
         return static_manager;
     }
 
@@ -40,7 +40,7 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     }
     bool PackageTransferManager::IsChunkInstalled(uint32_t chunkId)
     {
-        Logger::Warning("PackageTransferManager::IsChunkInstalled() STUBBED\n");
+        LOG_WARNING("PackageTransferManager::IsChunkInstalled() STUBBED\n");
         return true;
     }
     bool PackageTransferManager::AreChunksInstalled(winrt::Windows::Foundation::Collections::IIterable<uint32_t> const& chunkIds)
@@ -53,7 +53,7 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferStatus PackageTransferManager::TransferStatus( )
     {
-        Logger::Warning("PackageTransferManager::TransferStatus() STUBBED\n");
+        LOG_WARNING("PackageTransferManager::TransferStatus() STUBBED\n");
         return winrt::Windows::Xbox::Management::Deployment::PackageTransferStatus::None;
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferType PackageTransferManager::TransferType()

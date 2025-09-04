@@ -13,7 +13,7 @@ namespace winrt::Microsoft::Xbox::Services::implementation
 {
     XboxLiveContext::XboxLiveContext(winrt::Windows::Xbox::System::User const& user) : m_user(user)
     {
-        Logger::Info("[Microsoft::Xbox::Services::XboxLiveContext] Constructor called\n");
+        LOG_INFO("[Microsoft::Xbox::Services::XboxLiveContext] Constructor called\n");
     }
 
     winrt::Windows::Xbox::System::User XboxLiveContext::User( )

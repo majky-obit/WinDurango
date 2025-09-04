@@ -6,12 +6,12 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
 {
     winrt::Windows::Xbox::Management::Deployment::PackageTransferWatcher PackageTransferWatcher::Create(winrt::Windows::ApplicationModel::Package const& package, winrt::Windows::Foundation::Collections::IIterable<uint32_t> const& chunkIds)
     {
-		Logger::Warning("PackageTransferWatcher::Create\n");
+		LOG_WARNING("PackageTransferWatcher::Create\n");
 		return winrt::make<winrt::Windows::Xbox::Management::Deployment::implementation::PackageTransferWatcher>();
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferWatcher PackageTransferWatcher::Create(winrt::Windows::ApplicationModel::Package const& package)
     {
-		Logger::Warning("PackageTransferWatcher::Create\n");
+		LOG_WARNING("PackageTransferWatcher::Create\n");
 		return winrt::make<winrt::Windows::Xbox::Management::Deployment::implementation::PackageTransferWatcher>();
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferWatcher PackageTransferWatcher::CreateForChunkSpecifiers(winrt::Windows::ApplicationModel::Package const& package, winrt::Windows::Xbox::Management::Deployment::ChunkSpecifiers const& specifiers)
@@ -44,34 +44,34 @@ namespace winrt::Windows::Xbox::Management::Deployment::implementation
     }
     void PackageTransferWatcher::ProgressChanged(winrt::event_token const& cookie) noexcept
     {
-        Logger::Warning("PackageTransferWatcher::ProgressChanged\n");
+        LOG_WARNING("PackageTransferWatcher::ProgressChanged\n");
     }
     winrt::event_token PackageTransferWatcher::TransferCompleted(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Xbox::Management::Deployment::PackageTransferWatcher, winrt::Windows::Xbox::Management::Deployment::TransferCompletedEventArgs> const& handler)
     {
-		Logger::Warning("PackageTransferWatcher::TransferCompleted\n");
+		LOG_WARNING("PackageTransferWatcher::TransferCompleted\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void PackageTransferWatcher::TransferCompleted(winrt::event_token const& cookie) noexcept
     {
-		Logger::Warning("PackageTransferWatcher::TransferCompleted\n");
+		LOG_WARNING("PackageTransferWatcher::TransferCompleted\n");
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferStatus PackageTransferWatcher::TransferStatus()
     {
-		Logger::Warning("PackageTransferWatcher::TransferStatus\n");
+		LOG_WARNING("PackageTransferWatcher::TransferStatus\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Xbox::Management::Deployment::PackageTransferType PackageTransferWatcher::TransferType()
     {
-		Logger::Warning("PackageTransferWatcher::TransferType\n");
+		LOG_WARNING("PackageTransferWatcher::TransferType\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::event_token PackageTransferWatcher::TransferStatusChanged(winrt::Windows::Foundation::TypedEventHandler<winrt::Windows::Xbox::Management::Deployment::PackageTransferWatcher, winrt::Windows::Xbox::Management::Deployment::TransferStatusChangedEventArgs> const& handler)
     {
-		Logger::Warning("PackageTransferWatcher::TransferStatusChanged\n");
+		LOG_WARNING("PackageTransferWatcher::TransferStatusChanged\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     void PackageTransferWatcher::TransferStatusChanged(winrt::event_token const& cookie) noexcept
     {
-		Logger::Warning("PackageTransferWatcher::TransferStatusChanged\n");
+		LOG_WARNING("PackageTransferWatcher::TransferStatusChanged\n");
     }
 }

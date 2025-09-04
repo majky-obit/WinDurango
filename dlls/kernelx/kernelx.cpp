@@ -82,7 +82,6 @@ BOOL __stdcall WaitOnAddress_X(volatile void* Address, PVOID CompareAddress, SIZ
 BOOL JobTitleMemoryStatus_X(void* pJob, LPTITLEMEMORYSTATUS Buffer) {
     __int64 jobInfo[7]; // Buffer to store job object memory information
     NTSTATUS status;
-    DEBUG_LOG();
     // Validate input parameters
     if (!pJob || !Buffer || Buffer->dwLength != sizeof(TITLEMEMORYSTATUS)) {
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -337,26 +336,26 @@ LPVOID VirtualAllocEx_X(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD 
     flProtect &= PROTECT_FLAGS_MASK;
     flAllocationType &= ALLOCATION_FLAGS_MASK;
 
-    DEBUGLOG("VirtualAllocEx_X: %p, %zu, %x, %x\n", lpAddress, dwSize, flAllocationType, flProtect);
+    printf("VirtualAllocEx_X: %p, %zu, %x, %x\n", lpAddress, dwSize, flAllocationType, flProtect);
 
     LPVOID ret = VirtualAllocEx(hProcess, lpAddress, dwSize, flAllocationType, flProtect);
     if (!ret) {
         DWORD err = GetLastError();
-        DEBUGLOG("VirtualAllocEx failed with error %lu\n", err);
+        printf("VirtualAllocEx failed with error %lu\n", err);
 
         if (err == ERROR_PRIVILEGE_NOT_HELD) {
-            DEBUGLOG("VirtualAllocEx failed due to missing privileges (SeDebugPrivilege).\n");
+            printf("VirtualAllocEx failed due to missing privileges (SeDebugPrivilege).\n");
         }
 
         // Fallback only if allocating into self
         if (hProcess == GetCurrentProcess() || hProcess == NULL) {
-            DEBUGLOG("Attempting fallback with VirtualAlloc...\n");
+            printf("Attempting fallback with VirtualAlloc...\n");
 
             if ((flAllocationType & (MEM_RESERVE | MEM_COMMIT)) != 0) {
                 ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
                 if (!ret) {
                     DWORD fallbackErr = GetLastError();
-                    DEBUGLOG("VirtualAlloc fallback also failed: %lu\n", fallbackErr);
+                    printf("VirtualAlloc fallback also failed: %lu\n", fallbackErr);
                 }
             }
         }
@@ -364,7 +363,7 @@ LPVOID VirtualAllocEx_X(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD 
 
     // Final safety: log if still null
     if (!ret) {
-        DEBUGLOG("VirtualAllocEx_X ultimately failed to allocate %zu bytes.\n", dwSize);
+        printf("VirtualAllocEx_X ultimately failed to allocate %zu bytes.\n", dwSize);
     }
 
     return ret;
@@ -382,7 +381,6 @@ LPVOID VirtualAlloc_X(
 }
 BOOL ToolingMemoryStatus_X(LPTOOLINGMEMORYSTATUS buffer)
 {
-    DEBUG_LOG();
     __int64 SystemInformation[4];
 
     if (buffer->dwLength != 40)

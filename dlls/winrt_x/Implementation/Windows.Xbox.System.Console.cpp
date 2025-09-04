@@ -18,6 +18,7 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     hstring Console::ApplicationSpecificDeviceId()
     {
-        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
+		LOG_WARNING("ApplicationSpecificDeviceId called Stub, returning dummy value");
+        return L"00000000-0000-0000-0000-000000000001";
     }
 }

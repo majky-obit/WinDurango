@@ -5,7 +5,6 @@
 
 namespace winrt::Windows::Xbox::System::implementation
 {
-    //winrt::event<winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserAddedEventArgs>> m_userAddedEvent;
     UserOnlineState User::OnlineState()
     {
 
@@ -13,7 +12,7 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::OnlineStateChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::OnlineStateChangedEventArgs> const& handler)
     {
-		Logger::Info("User::OnlineStateChanged() called");
+		LOG_INFO("User::OnlineStateChanged() called");
         return m_onlineStateChangedEvent.add(handler);
     }
     void User::OnlineStateChanged(winrt::event_token const& token) noexcept
@@ -22,13 +21,13 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::User> User::Users()
     {
-		wprintf(L"User || Users Queried!\n");
+		LOG_INFO_W(L"User || Users Queried!\n");
         if (staticUsers == Foundation::Collections::IVector<winrt::Windows::Xbox::System::User>(nullptr) || staticUsers.Size( ) == 0) {
             staticUsers = winrt::single_threaded_vector<System::User>( );
 
             for (int i = 0; i < 4; i++)
             {
-                wprintf(L"User || User %d Created!\n", i);
+                LOG_INFO_W(L"User || User %d Created!\n", i);
                 staticUser = winrt::make<User>(i);
                 staticUsers.Append(staticUser);
                 continue;
@@ -95,11 +94,11 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::SignInCompleted(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::SignInCompletedEventArgs> const& handler)
     {
-        LOG_NOT_IMPLEMENTED(); return {};
+        return m_signInCompletedEvent.add(handler);
     }
     void User::SignInCompleted(winrt::event_token const& token) noexcept
     {
-        LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
+        m_signInCompletedEvent.remove(token);
     }
     winrt::event_token User::SignOutStarted(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::SignOutStartedEventArgs> const& handler)
     {
@@ -111,11 +110,11 @@ namespace winrt::Windows::Xbox::System::implementation
     }
     winrt::event_token User::SignOutCompleted(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::SignOutCompletedEventArgs> const& handler)
     {
-        LOG_NOT_IMPLEMENTED(); return {};
+        return m_signOutCompletedEvent.add(handler);
     }
     void User::SignOutCompleted(winrt::event_token const& token) noexcept
     {
-        LOG_NOT_IMPLEMENTED(); return;
+        m_signOutCompletedEvent.remove(token);
     }
     winrt::event_token User::UserDisplayInfoChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::System::UserDisplayInfoChangedEventArgs> const& handler)
     {

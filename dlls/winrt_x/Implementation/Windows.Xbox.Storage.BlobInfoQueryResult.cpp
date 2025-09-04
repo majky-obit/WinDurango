@@ -11,7 +11,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
 {
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::BlobInfo>> BlobInfoQueryResult::GetBlobInfoAsync(uint32_t startIndex, uint32_t maxNumberOfItems)
     {
-        Logger::Warning("GetBlobInfoAsync");
+        LOG_WARNING("GetBlobInfoAsync");
         co_await winrt::resume_background( );
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Storage::BlobInfo>> BlobInfoQueryResult::GetBlobInfoAsync()
@@ -20,7 +20,7 @@ namespace winrt::Windows::Xbox::Storage::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<uint32_t> BlobInfoQueryResult::GetItemCountAsync()
     {
-        Logger::Warning("GetItemCountAsync");
+        LOG_WARNING("GetItemCountAsync");
         co_await winrt::resume_background( );
     }
 }

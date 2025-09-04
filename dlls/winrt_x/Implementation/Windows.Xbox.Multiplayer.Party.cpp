@@ -13,73 +13,73 @@ namespace winrt::Windows::Xbox::Multiplayer::implementation
 
     winrt::Windows::Foundation::IAsyncAction Party::RegisterGameSessionAsync(winrt::Windows::Xbox::System::User actingUser, winrt::Windows::Xbox::Multiplayer::MultiplayerSessionReference sessionReference)
     {
-        Logger::Info("Registering game session for user\n");
+        LOG_INFO("Registering game session for user\n");
         co_await winrt::resume_background( );
-        Logger::Info("Game session registered successfully.\n");
+        LOG_INFO("Game session registered successfully.\n");
         co_return;
     }
     winrt::Windows::Foundation::IAsyncAction Party::RegisterMatchSessionAsync(winrt::Windows::Xbox::System::User actingUser, winrt::Windows::Xbox::Multiplayer::MultiplayerSessionReference sessionReference)
     {
-		Logger::Info("Registering match session for user\n");
+        LOG_INFO("Registering match session for user\n");
         co_await winrt::resume_background();
-        Logger::Info("Match session registered successfully.\n");
+        LOG_INFO("Match session registered successfully.\n");
         co_return;
     }
 
     winrt::Windows::Foundation::IAsyncAction Party::InviteToPartyAsync(winrt::Windows::Xbox::System::User actingUser, winrt::Windows::Foundation::Collections::IVectorView<hstring> usersToInvite)
     {
-		Logger::Info("Inviting users to party\n");
+        LOG_INFO("Inviting users to party\n");
         co_await winrt::resume_background();
         for (auto const& userId : usersToInvite)
         {
-            printf("Inviting user: %ls\n", userId.c_str());
+            LOG_INFO("Inviting user: %ls\n", userId.c_str());
         }
-        Logger::Info("Invitations sent successfully.\n");
+        LOG_INFO("Invitations sent successfully.\n");
         co_return;
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Xbox::Multiplayer::PartyView> Party::GetPartyViewAsync()
     {
-		Logger::Info("Retrieving party view\n");
+        LOG_INFO("Retrieving party view\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction Party::AddLocalUsersAsync(winrt::Windows::Xbox::System::User actingUser, winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::System::User> localUsersToAdd)
     {
-		Logger::Info("Adding local users to party\n");
+        LOG_INFO("Adding local users to party\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction Party::PullInactivePlayersAsync(winrt::Windows::Xbox::System::User actingUser, winrt::Windows::Xbox::Multiplayer::MultiplayerSessionReference sessionReference)
     {
-		Logger::Info("Pulling inactive players from session\n");
+		LOG_INFO("Pulling inactive players from session\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction Party::PullReservedPlayersAsync(winrt::Windows::Xbox::System::User actingUser, winrt::Windows::Xbox::Multiplayer::MultiplayerSessionReference sessionReference)
     {
-		Logger::Info("Pulling reserved players from session\n");
+		LOG_INFO("Pulling reserved players from session\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Multiplayer::GamePlayer>> Party::GetAvailableGamePlayersAsync(winrt::Windows::Xbox::System::User actingUser)
     {
-		Logger::Info("Retrieving available game players for user\n");
+		LOG_INFO("Retrieving available game players for user\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::Xbox::Multiplayer::GamePlayerDeviceGroup>> Party::GetAvailableGamePlayersGroupedByDeviceAsync(winrt::Windows::Xbox::System::User actingUser)
     {
-		Logger::Info("Retrieving available game players grouped by device for user\n");
+		LOG_INFO("Retrieving available game players grouped by device for user\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::Windows::Foundation::IAsyncAction Party::SwitchPartyTitleAsync(winrt::Windows::Xbox::System::User actingUser)
     {
-		Logger::Info("Switching party title for user\n");
+		LOG_INFO("Switching party title for user\n");
         LOG_NOT_IMPLEMENTED(); throw hresult_not_implemented();
     }
     winrt::event_token Party::GameSessionReady(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Multiplayer::GameSessionReadyEventArgs> const& handler)
     {
-		Logger::Info("Subscribing to GameSessionReady event\n");
+		LOG_INFO("Subscribing to GameSessionReady event\n");
         return m_gameSessionReadyEvent.add(handler);
     }
     void Party::GameSessionReady(winrt::event_token const& token) noexcept
     {
-		Logger::Info("Unsubscribing from GameSessionReady event\n");
+		LOG_INFO("Unsubscribing from GameSessionReady event\n");
         m_gameSessionReadyEvent.remove(token);
     }
     winrt::event_token Party::PartyStateChanged(winrt::Windows::Foundation::EventHandler<winrt::Windows::Xbox::Multiplayer::PartyStateChangedEventArgs> const& handler)

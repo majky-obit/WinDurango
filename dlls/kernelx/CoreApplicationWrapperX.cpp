@@ -3,6 +3,30 @@
 #include "FrameworkViewSourceWrapper.h"
 using namespace ABI::Windows::ApplicationModel::Core;
 
+HRESULT CoreApplicationWrapperX::Exit()
+{
+	printf("[CoreApplicationWrapperX] ICoreApplicationExit::Exit() called — forwarding to realExit.\n");
+
+	if (realExit) {
+		return realExit->Exit();
+	}
+
+	printf("[CoreApplicationWrapperX] WARNING: realExit is null!\n");
+	return E_FAIL;
+}
+
+HRESULT CoreApplicationWrapperX::add_Exiting(__FIEventHandler_1_IInspectable* handler, EventRegistrationToken* token)
+{
+	printf("[CoreApplicationWrapperX] add_Exiting called\n");
+	return realExit ? realExit->add_Exiting(handler, token) : E_FAIL;
+}
+
+HRESULT CoreApplicationWrapperX::remove_Exiting(EventRegistrationToken token)
+{
+	printf("[CoreApplicationWrapperX] remove_Exiting called\n");
+	return realExit ? realExit->remove_Exiting(token) : E_FAIL;
+}
+
 HRESULT CoreApplicationWrapperX::GetIids(ULONG* iidCount, IID** iids)
 {
 	printf("GetIids\n");

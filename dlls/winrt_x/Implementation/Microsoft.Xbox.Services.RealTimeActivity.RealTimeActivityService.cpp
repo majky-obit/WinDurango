@@ -11,7 +11,7 @@ namespace winrt::Microsoft::Xbox::Services::RealTimeActivity::implementation
     }
     void RealTimeActivityService::Deactivate()
     {
-        Logger::Warning("[RealTimeActivityService] Deactivate (function is stubbed)\n");
+        LOG_WARNING("[RealTimeActivityService] Deactivate (function is stubbed)\n");
     }
     winrt::event_token RealTimeActivityService::RealTimeActivityConnectionStateChange(winrt::Windows::Foundation::EventHandler<winrt::Microsoft::Xbox::Services::RealTimeActivity::RealTimeActivityConnectionState> const& __param0)
     {

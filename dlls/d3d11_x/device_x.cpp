@@ -1,8 +1,26 @@
-﻿#include "device_x.h"
+﻿/*
+================================================================================
+DISCLAIMER AND LICENSE REQUIREMENT
+
+This code is provided with the condition that if you use, modify, or distribute
+this code in your project, you are required to make your project open source
+under a license compatible with the GNU General Public License (GPL) or a
+similarly strong copyleft license.
+
+By using this code, you agree to:
+1. Disclose your complete source code of any project incorporating this code.
+2. Include this disclaimer in any copies or substantial portions of this file.
+3. Provide clear attribution to the original author.
+
+If you do not agree to these terms, you do not have permission to use this code.
+
+================================================================================
+*/
+#include "device_x.h"
 #include <stdexcept>
 #include "resource.hpp"
 #include "view.hpp"
-#include "../winrt_x/Logger.h"
+#include "../common/Logger.h"
 
 HRESULT wd::device_x::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Buffer** ppBuffer)
@@ -24,7 +42,7 @@ HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D
 	ID3D11Texture1D* texture1d = nullptr;
 	HRESULT hr = wrapped_interface->CreateTexture1D(pDesc, pInitialData, &texture1d);
 
-	printf("[CreateTexture1D] created texture at 0x%llX\n", texture1d);
+	LOG_INFO("[CreateTexture1D] created texture at 0x%llX\n", texture1d);
 
 	if (ppTexture1D != nullptr)
 	{
@@ -50,12 +68,12 @@ HRESULT wd::device_x::CreateTexture2D(
 
 	if (SUCCEEDED(hr) && texture2d)
 	{
-		printf("[CreateTexture2D] created texture at 0x%p\n", texture2d);
+		// LOG_INFO("[CreateTexture2D] created texture at 0x%p\n", texture2d);
 		*ppTexture2D = reinterpret_cast<ID3D11Texture2D*>(new texture_2d(texture2d));
 	}
 	else
 	{
-		printf("[CreateTexture2D] failed (HRESULT: 0x%08X)\n", static_cast<unsigned int>(hr));
+		// LOG_INFO("[CreateTexture2D] failed (HRESULT: 0x%08X)\n", static_cast<unsigned int>(hr));
 		*ppTexture2D = nullptr;
 	}
 
@@ -69,7 +87,7 @@ HRESULT wd::device_x::CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D
 	ID3D11Texture3D* texture3d = nullptr;
 	HRESULT hr = wrapped_interface->CreateTexture3D(pDesc, pInitialData, &texture3d);
 
-	printf("[CreateTexture3D] created texture at 0x%llX\n", texture3d);
+	LOG_INFO("[CreateTexture3D] created texture at 0x%llX\n", texture3d);
 
 	if (ppTexture3D != nullptr)
 	{
@@ -79,18 +97,30 @@ HRESULT wd::device_x::CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D
 	return hr;
 }
 
-HRESULT wd::device_x::CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
-                                               ID3D11ShaderResourceView** ppSRView)
+HRESULT wd::device_x::CreateShaderResourceView(ID3D11Resource* pResource,
+											   const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
+											   ID3D11ShaderResourceView** ppSRView)
 {
+	// Handle null resource
+	if (pResource == nullptr)
+	{
+		if (ppSRView != nullptr)
+			*ppSRView = nullptr;
+		return E_INVALIDARG;  // or another appropriate error code
+	}
+
 	::ID3D11ShaderResourceView* target = nullptr;
-	HRESULT hr = wrapped_interface->CreateShaderResourceView(reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface, pDesc, &target);
+	HRESULT hr = wrapped_interface->CreateShaderResourceView(
+		reinterpret_cast<d3d11_resource*>(pResource)->wrapped_interface,
+		pDesc,
+		&target
+	);
 
 	if (ppSRView != nullptr)
 	{
 		*ppSRView = SUCCEEDED(hr) ? reinterpret_cast<ID3D11ShaderResourceView*>(new shader_resource_view(target))
 			: nullptr;
 	}
-
 	return hr;
 }
 
@@ -361,12 +391,22 @@ UINT wd::device_x::GetDebugFlags( )
 	LOG_NOT_IMPLEMENTED( );
 	throw std::logic_error("Not implemented");
 }
-
-void wd::device_x::SetHangCallbacks(wdi::D3D11XHANGBEGINCALLBACK pBeginCallback, wdi::D3D11XHANGPRINTCALLBACK pPrintCallback,
-								wdi::D3D11XHANGDUMPCALLBACK pDumpCallback)
+wdi::D3D11XHANGBEGINCALLBACK m_HangBeginCallback = nullptr;
+wdi::D3D11XHANGPRINTCALLBACK m_HangPrintCallback = nullptr;
+wdi::D3D11XHANGDUMPCALLBACK  m_HangDumpCallback = nullptr;
+void wd::device_x::SetHangCallbacks(
+	wdi::D3D11XHANGBEGINCALLBACK pBeginCallback,
+	wdi::D3D11XHANGPRINTCALLBACK pPrintCallback,
+	wdi::D3D11XHANGDUMPCALLBACK pDumpCallback)
 {
-	LOG_NOT_IMPLEMENTED( );
-	throw std::logic_error("Not implemented");
+	m_HangBeginCallback = pBeginCallback;
+	m_HangPrintCallback = pPrintCallback;
+	m_HangDumpCallback = pDumpCallback;
+
+	LOG_INFO("SetHangCallbacks called: BeginCallback=%p, PrintCallback=%p, DumpCallback=%p",
+			 pBeginCallback, pPrintCallback, pDumpCallback);
+
+	// No-op on PC, but you may simulate hang behavior in testing by manually calling these.
 }
 
 void wd::device_x::ReportGpuHang(UINT Flags)

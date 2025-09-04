@@ -9,6 +9,7 @@
 #include "MMDeviceEnumeratorWrapper.h"
 #include <winrt/windows.storage.provider.h>
 #include <atlbase.h>
+#include "NetworkInformationWrapperX.h"
 
 #define RETURN_HR(hr) return hr
 #define RETURN_LAST_ERROR_IF(cond) if (cond) return HRESULT_FROM_WIN32(GetLastError())
@@ -271,6 +272,8 @@ HANDLE CreateFile2_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShare
 {
 	FixRelativePath(lpFileName);
 
+	printf("[CreateFile2] %ls\n", lpFileName);
+
 	return TrueCreateFile2(lpFileName, dwDesiredAccess, dwShareMode, dwCreationDisposition, pCreateExParams);
 }
 
@@ -351,7 +354,11 @@ HANDLE WINAPI CreateFileW_Hook(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD 
 {
 	FixRelativePath(lpFileName);
 
+	//printf("[CreateFileW] %ls (Access: %X, Disposition: %X)\n", lpFileName, dwDesiredAccess, dwCreationDisposition);
+
+
 	return TrueCreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+
 }
 
 DWORD WINAPI GetFileAttributesW_Hook(LPCWSTR lpFileName)
@@ -422,16 +429,46 @@ inline HRESULT WINAPI RoGetActivationFactory_Hook(HSTRING classId, REFIID iid, v
 	
 	// Get the raw buffer from the HSTRING
 	const wchar_t* rawString = WindowsGetStringRawBuffer(classId, nullptr);
-	printf("WinRT Class Activated: %S\n", rawString);
-	// this might be a lil expensive? evaluate later
-	if (wcscmp(rawString, L"Windows.UI.Core.CoreWindow") != 0)
-		wprintf(L"%ls\n", rawString);
+
+	if (wcscmp(rawString, L"Windows.Xbox.Input.Gamepad") != 0 &&
+		wcscmp(rawString, L"Windows.Networking.Connectivity.NetworkInformation") != 0)
+	{
+		printf("WinRT Class Activated: %S\n", rawString);
+		// this might be a lil expensive? evaluate later
+		if (wcscmp(rawString, L"Windows.UI.Core.CoreWindow") != 0)
+			wprintf(L"%ls\n", rawString);
+	}
+
 
 	auto hr = 0;
 
+	if (IsClassName(classId, "Windows.Networking.Connectivity.NetworkInformation"))
+	{
+		//printf("[HOOK] Windows.Networking.Connectivity.NetworkInformation\n");
+
+		// Get the real factory first ? seems to be the right way to do it.
+		HRESULT hr = TrueRoGetActivationFactory(classId, iid, factory);
+
+		if (SUCCEEDED(hr) && factory && *factory)
+		{
+			// Check if the requested interface is INetworkInformationStatics
+			if (iid == __uuidof(INetworkInformationStatics))
+			{
+				//printf("[HOOK] Wrapping INetworkInformationStatics\n");
+				*factory = new NetworkInformationWrapperX(static_cast<INetworkInformationStatics*>(*factory));
+			}
+		}
+		else
+		{
+			//printf("[HOOK] ERROR: Failed to get real NetworkInformation factory: 0x%08X\n", hr);
+		}
+
+		return hr;
+	}
+
 	if (IsClassName(classId, "Windows.ApplicationModel.Store.CurrentApp"))
 	{
-		printf("CLASS: Windows.ApplicationModel.Store.CurrentApp\n");
+		//printf("CLASS: Windows.ApplicationModel.Store.CurrentApp\n");
 		hr = TrueRoGetActivationFactory(classId, iid, factory);
 
 		if (FAILED(hr))
@@ -525,7 +562,11 @@ HRESULT WINAPI GetActivationFactoryRedirect(PCWSTR str, REFIID riid, void** ppFa
 	if (FAILED(hr = WindowsCreateStringReference(str, wcslen(str), &classNameHeader, &className)))
 		return hr;
 
-	printf("GetActivationFactoryRedirect: %S\n", str);
+	if (wcscmp(str, L"Windows.Xbox.Input.Gamepad") != 0 &&
+		wcscmp(str, L"Windows.Networking.Connectivity.NetworkInformation") != 0) 
+	{
+		printf("GetActivationFactoryRedirect: %S\n", str);
+	}
 
 	hr = RoGetActivationFactory_Hook(className, riid, ppFactory);
 	WindowsDeleteString(className);
