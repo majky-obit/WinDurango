@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/Users/majky/Desktop/WinDurango/thirdparty/spdlog"
+    "cmake.sourceDirectory": "C:/Users/majky/Desktop/WinDurango/thirdparty/spdlog",
+    "makefile.makefilePath": "C:\\Users\\majky\\Desktop\\WinDurango\\thirdparty\\Detours\\system.mak"
 }
